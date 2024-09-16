@@ -121,31 +121,9 @@ def get_types(code):
     return var_types
 
 def get_conditionals_and_types_data():
-    cot_examples = []
     examples = []
 
     ds = load_dataset("cruxeval-org/cruxeval")
-    op_insn = """Based on the given Python code, which may contain errors, complete the assert statement with the output when executing the code on the given test case. Do NOT output any extra information, even if the function is incorrect or incomplete. Do NOT output a description for the assert.
-
-n = 17
-f = n
-assert f == 17
-
-"""
-    op_insn_cot = """You are given a function and an input. Complete the assertion with the output of executing the function on the input. First, reason step by step before arriving at an answer. Then, surround the answer as an assertion with [ANSWER] and [/ANSWER] tags.
-
-s = "hi"
-f = s + "a"
-assert f == ??
-
-The code takes a string s and produces the concatenation of s with the string "a", then assigns the result to f.
-To determine the output of executing the code with s set to "hi", we need to concatenate "hi" with "a".
-
-Therefore, the output set to f is "hia".
-
-[ANSWER]assert f == "hia"[/ANSWER]
-
-"""
     for ex in tqdm(ds['test']):
         code_lines = ex['code'].splitlines()
         helpful_parses = re.search(r'([\s\S]*)def f\((.*)\):\s*\n([\s\S]+)', ex['code'])
@@ -165,29 +143,19 @@ Therefore, the output set to f is "hia".
         else:
             code_setup = ""
         modified_code = code_setup + "\n".join(code_lines)
-        prompt = f"{op_insn}{modified_code}\nassert f == "
-        cot_prompt = f"{op_insn_cot}{modified_code}\nassert f == ??\n\n"
+        # prompt = f"{op_insn}{modified_code}\nassert f == "
+        # cot_prompt = f"{op_insn_cot}{modified_code}\nassert f == ??\n\n"
         conditional_evaluation = get_boolean_truth_values(modified_code)
         types = get_types(modified_code)
         if len(types) == 0 and len(conditional_evaluation) == 0: continue
         examples.append((
-            prompt, 
             modified_code,
             ex['output'], 
-            {str((s_i+len(op_insn), e_i+len(op_insn))): truth_val for (s_i, e_i), truth_val in conditional_evaluation.items()},
-            {str((s_i+len(op_insn), e_i+len(op_insn))): var_type for (s_i, e_i), var_type in types.items()},
-            ))
-        cot_examples.append((
-            cot_prompt, 
-            modified_code,
-            ex['output'], 
-            {str((s_i+len(op_insn_cot), e_i+len(op_insn_cot))): truth_val for (s_i, e_i), truth_val in conditional_evaluation.items()},
-            {str((s_i+len(op_insn_cot), e_i+len(op_insn_cot))): var_type for (s_i, e_i), var_type in types.items()}
+            {f"({s_i}, {e_i})": tv for (s_i, e_i), tv in conditional_evaluation.items()},
+            {f"({s_i}, {e_i})": tv for (s_i, e_i), tv in types.items()},
             ))
 
     with open("cot/data/cruxeval.json", "w") as wf:
         json.dump(examples, wf, indent=4)
-    with open("cot/data/cruxeval_cot.json", "w") as wf:
-        json.dump(cot_examples, wf, indent=4)
 get_conditionals_and_types_data()
 
