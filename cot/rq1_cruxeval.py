@@ -9,28 +9,7 @@ sys.path.append(".")
 from src.probe import LinearProbe
 import torch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-op_insn = """Based on the given Python code, which may contain errors, complete the assert statement with the output when executing the code on the given test case. Do NOT output any extra information, even if the function is incorrect or incomplete. Do NOT output a description for the assert.
-
-n = 17
-f = n
-assert f == 17
-
-"""
-op_insn_cot = """You are given a function and an input. Complete the assertion with the output of executing the function on the input. First, reason step by step before arriving at an answer. Then, surround the answer as an assertion with [ANSWER] and [/ANSWER] tags.
-
-s = "hi"
-f = s + "a"
-assert f == ??
-
-The code takes a string s and produces the concatenation of s with the string "a", then assigns the result to f.
-To determine the output of executing the code with s set to "hi", we need to concatenate "hi" with "a".
-
-Therefore, the output set to f is "hia".
-
-[ANSWER]assert f == "hia"[/ANSWER]
-
-"""
+from prompts import op_insn, op_insn_cot
 
 def get_tokenized_data(property_data, prompt, code, suffix, tokenizer):
     sorted_property = []

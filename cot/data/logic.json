@@ -1,0 +1,1073 @@
+[
+    {
+        "code": "s1 = \"hello\"\ns2 = \"world\"\ns3 = s1 + s2\nanswer = s3.islower()",
+        "truth_states": {
+            "(68, 85)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "text, sub = \"hello world\", \"world\"\nanswer = sub in text",
+        "truth_states": {
+            "(44, 55)": "True\n",
+            "(63, 80)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3, 4]\nvar2 = [5, 6, 7, 8]\nanswer = (var1[0] < var2[0]) and (var1[1] < var2[1])",
+        "truth_states": {
+            "(50, 67)": "True\n",
+            "(74, 91)": "True\n",
+            "(49, 92)": "True\n",
+            "(100, 117)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "var1 = [1, 2, 3, 4, 5]\nsum_of_even = sum([var1[i] for i in range(len(var1)) if var1[i] % 2 == 0])\nanswer = sum_of_even / 2",
+        "truth_states": {
+            "(130, 147)": "False\n"
+        },
+        "true_answer": "3.0",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "3"
+    },
+    {
+        "code": "text = \"I love Python programming\"\nanswer = text == \"I love Python programming\"",
+        "truth_states": {
+            "(44, 79)": "True\n",
+            "(87, 104)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "text, sub = \"Hello, World!\", \"Hello\"\nanswer = text.startswith(sub)",
+        "truth_states": {
+            "(74, 91)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = \"hello\"\nvar2 = \"world\"\nanswer = not (var1 == \"hello\" and var2 == \"world\")",
+        "truth_states": {
+            "(88, 105)": "False\n",
+            "(44, 59)": "True\n",
+            "(64, 79)": "True\n",
+            "(44, 79)": "True\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "var1, var2 = 5, 10\nanswer = (var1 > 0) or (var2 > 10)",
+        "truth_states": {
+            "(29, 37)": "True\n",
+            "(43, 52)": "False\n",
+            "(28, 53)": "True\n",
+            "(61, 78)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3]\nvar2 = [1, 2, 3]\nanswer = var1 == var2",
+        "truth_states": {
+            "(43, 55)": "True\n",
+            "(63, 80)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3]\nvar2 = [2, 3, 4]\ncommon_elements = set(var1) & set(var2)\nanswer = len(common_elements) > 0",
+        "truth_states": {
+            "(83, 107)": "True\n",
+            "(115, 132)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3, 4]\nvar2 = [1, 2, 3, 4]\nanswer = var1!= var2",
+        "truth_states": {
+            "(49, 60)": "False\n",
+            "(68, 85)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "var1 = \"python\"\nvar2 = \"Programming\"\nanswer = (var1[0] == var2[0]) and (var1[1] == var2[1])",
+        "truth_states": {
+            "(47, 65)": "False\n",
+            "(72, 90)": "False\n",
+            "(46, 91)": "False\n",
+            "(99, 116)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "var1 = {\"a\": 1, \"b\": 2}\nvar2 = {\"a\": 1, \"b\": 2}\nvar3 = {\"a\": 1, \"b\": 3}\nanswer = var1 == var2 and var2!= var3",
+        "truth_states": {
+            "(81, 93)": "True\n",
+            "(98, 109)": "True\n",
+            "(81, 109)": "True\n",
+            "(117, 134)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "text = \"Hello, world!\"\nhas_w = \"w\" in text\nanswer = \"w\" in text and has_w",
+        "truth_states": {
+            "(31, 42)": "True\n",
+            "(52, 63)": "True\n",
+            "(68, 73)": "True\n",
+            "(52, 73)": "True\n",
+            "(81, 98)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "word = \"Python\"\nvowels = \"aeiou\"\nfor char in word:\n    if char.lower() in vowels:\n        answer = True\n        break\n    else:\n        answer = False",
+        "truth_states": {
+            "(158, 175)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "students = [\"John\", \"Emma\", \"Jim\"]\nstudent_name = \"Jim\"\nanswer = student_name in students",
+        "truth_states": {
+            "(65, 89)": "True\n",
+            "(97, 114)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "my_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nanswer = any([num > 10 for num in my_list])",
+        "truth_states": {
+            "(93, 110)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "num_list = [1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4]\nanswer = num_list.count(num_list[0])",
+        "truth_states": {
+            "(89, 106)": "False\n"
+        },
+        "true_answer": "1",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "1"
+    },
+    {
+        "code": "age = 19\nis_adult = age >= 18\nis_child = not is_adult\nanswer = is_adult or is_child",
+        "truth_states": {
+            "(20, 29)": "True\n",
+            "(63, 71)": "True\n",
+            "(75, 83)": "False\n",
+            "(63, 83)": "True\n",
+            "(91, 108)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3, 4]\nvar2 = [5, 6, 7, 8]\nanswer = not (var1[0] > var2[0])",
+        "truth_states": {
+            "(80, 97)": "False\n",
+            "(54, 71)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "number = 10\nis_even = number % 2 == 0\nanswer = not is_even",
+        "truth_states": {
+            "(22, 37)": "True\n",
+            "(66, 83)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "str1, str2 = \"Python\", \"is\"\nanswer = (str1[0] == str2[0]) or (str1[-1] == str2[-1])",
+        "truth_states": {
+            "(38, 56)": "False\n",
+            "(62, 82)": "False\n",
+            "(37, 83)": "False\n",
+            "(91, 108)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "num1 = 2\nnum2 = 5\nanswer = (num1 < num2) == ((num1 + 2) < (num2 + 2))",
+        "truth_states": {
+            "(27, 69)": "True\n",
+            "(77, 94)": "False\n",
+            "(28, 39)": "True\n",
+            "(45, 68)": "True\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "grades = {\"Alice\": 85, \"Bob\": 90, \"Charlie\": 78}\nstudent_name = \"Alice\"\nanswer = grades.get(student_name, 0) > 80",
+        "truth_states": {
+            "(81, 113)": "True\n",
+            "(121, 138)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nanswer = any(num % 2 == 0 for num in numbers)",
+        "truth_states": {
+            "(95, 112)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3]\nvar2 = [1, 2, 3, 4]\nanswer = var1!= var2 and len(var1)!= len(var2)",
+        "truth_states": {
+            "(46, 57)": "True\n",
+            "(62, 83)": "True\n",
+            "(46, 83)": "True\n",
+            "(91, 108)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = \"Hello, World!\"\nvar2 = \"hello, world!\"\nanswer = var1 == var2",
+        "truth_states": {
+            "(55, 67)": "False\n",
+            "(75, 92)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "var1 = \"apple\"\nvar2 = \"banana\"\nanswer = (var1[0] == var2[0]) or (var1[1] == var2[1])",
+        "truth_states": {
+            "(41, 59)": "False\n",
+            "(65, 83)": "False\n",
+            "(40, 84)": "False\n",
+            "(92, 109)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3]\nvar2 = [1, 2, 4]\nanswer = (var1[0] == var2[0]) and (var1[1] == var2[1]) and (var1[2]!= var2[2])",
+        "truth_states": {
+            "(44, 62)": "True\n",
+            "(69, 87)": "True\n",
+            "(94, 111)": "True\n",
+            "(43, 112)": "True\n",
+            "(120, 137)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "num1 = 10\nnum2 = 15\nanswer = (num1 > 5) and (num2 < 20)",
+        "truth_states": {
+            "(30, 38)": "True\n",
+            "(45, 54)": "True\n",
+            "(29, 55)": "True\n",
+            "(63, 80)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "numbers = [1, 2, 3, 4, 5]\nnum = 5\nanswer = num in numbers",
+        "truth_states": {
+            "(43, 57)": "True\n",
+            "(65, 82)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = 10\nvar2 = 5\nanswer = var1 >= var2 and var1 <= 20",
+        "truth_states": {
+            "(28, 40)": "True\n",
+            "(45, 55)": "True\n",
+            "(28, 55)": "True\n",
+            "(63, 80)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3, 4]\nvar2 = [1, 2, 3, 4]\nanswer = var1 == var2",
+        "truth_states": {
+            "(49, 61)": "True\n",
+            "(69, 86)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3, 4]\nvar2 = [1, 2, 3, 5]\nanswer = (var1[0] == var2[0]) and (var1[1] == var2[1]) and (var1[2] == var2[2]) and (var1[3] == var2[3])",
+        "truth_states": {
+            "(50, 68)": "True\n",
+            "(75, 93)": "True\n",
+            "(100, 118)": "True\n",
+            "(125, 143)": "False\n",
+            "(49, 144)": "False\n",
+            "(152, 169)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "var1 = [1, 2, 3, 4]\nvar2 = [1, 2, 3, 5]\nanswer = var1!= var2",
+        "truth_states": {
+            "(49, 60)": "True\n",
+            "(68, 85)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3, 4]\nvar2 = [5, 6, 7, 8]\nanswer = (var1[0] == var2[0]) or (var1[1] == var2[1])",
+        "truth_states": {
+            "(50, 68)": "False\n",
+            "(74, 92)": "False\n",
+            "(49, 93)": "False\n",
+            "(101, 118)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3, 4]\nvar2 = [1, 3, 4, 5]\nanswer = any([var1[i] == var2[i] for i in range(len(var1))])",
+        "truth_states": {
+            "(108, 125)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "var1 = \"Hello, World!\"\nvar2 = \"hello, world!\"\nanswer = var1.lower() == var2.lower()",
+        "truth_states": {
+            "(55, 83)": "True\n",
+            "(91, 108)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = 10\nvar2 = 5\nvar3 = 20\nanswer = (var1 > var2) and (var3 > var2)",
+        "truth_states": {
+            "(39, 50)": "True\n",
+            "(57, 68)": "True\n",
+            "(38, 69)": "True\n",
+            "(77, 94)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [3, 5, 7, 2]\nanswer = var1[0] < var1[1] and var1[1] < var1[2] and var1[2] < var1[3]",
+        "truth_states": {
+            "(29, 46)": "True\n",
+            "(51, 68)": "True\n",
+            "(73, 90)": "False\n",
+            "(29, 90)": "False\n",
+            "(98, 115)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "list1 = [1, 2, 3, 4, 5]\nlist2 = [5, 4, 3, 2, 1]\nanswer = list1 == list2",
+        "truth_states": {
+            "(57, 71)": "False\n",
+            "(79, 96)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "string = \"Hello, World!\"\nanswer = string.find('W') >= 0",
+        "truth_states": {
+            "(34, 55)": "True\n",
+            "(63, 80)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "def greet(name):\n    return f\"Hello, {name}!\"\ndef greet_anonymous():\n    return greet(\"Anonymous\")\nanswer = greet_anonymous()",
+        "truth_states": {
+            "(133, 150)": "False\n"
+        },
+        "true_answer": "\"Hello, Anonymous!\"",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "Hello, Anonymous!"
+    },
+    {
+        "code": "numbers = [10, 20, 30, 40, 50]\neven_num = [num for num in numbers if num % 2 == 0]\nanswer = len(even_num)",
+        "truth_states": {
+            "(113, 130)": "False\n"
+        },
+        "true_answer": "5",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "3"
+    },
+    {
+        "code": "number = 20\nanswer = (number % 2 == 0) and (number % 3 == 0)",
+        "truth_states": {
+            "(22, 37)": "True\n",
+            "(44, 59)": "False\n",
+            "(21, 60)": "False\n",
+            "(68, 85)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "name = \"John\"\ngreeting = \"Hello, how are you?\"\nanswer = name in greeting",
+        "truth_states": {
+            "(56, 72)": "False\n",
+            "(80, 97)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "num1 = 5\nnum2 = 10\nanswer = num1 >= 5 and (num2 <= 15 or num2 > 20)",
+        "truth_states": {
+            "(28, 37)": "True\n",
+            "(43, 66)": "True\n",
+            "(28, 67)": "True\n",
+            "(75, 92)": "False\n",
+            "(43, 53)": "True\n",
+            "(57, 66)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "var1, var2 = 10, 20\nanswer = var1 < var2 and var2 > 15",
+        "truth_states": {
+            "(29, 40)": "True\n",
+            "(45, 54)": "True\n",
+            "(29, 54)": "True\n",
+            "(62, 79)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3, 4, 5]\nvar2 = [1, 3, 5, 7, 9]\nanswer = all([var1[i] in var2 for i in range(len(var1))])",
+        "truth_states": {
+            "(111, 128)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "str1, str2, str3 = \"apple\", \"banana\", \"cherry\"\nanswer = str1 == str2 or str2 == str3 or str1 == str3",
+        "truth_states": {
+            "(56, 68)": "False\n",
+            "(72, 84)": "False\n",
+            "(88, 100)": "False\n",
+            "(56, 100)": "False\n",
+            "(108, 125)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "num1 = 25\nnum2 = 10\nanswer = num1 > 20 and num1!= num2",
+        "truth_states": {
+            "(29, 38)": "True\n",
+            "(43, 54)": "True\n",
+            "(29, 54)": "True\n",
+            "(62, 79)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "str1 = \"Hello\"\nstr2 = \"World\"\nanswer = str1!= str2 and str1!= \"Universe\"",
+        "truth_states": {
+            "(39, 50)": "True\n",
+            "(55, 72)": "True\n",
+            "(39, 72)": "True\n",
+            "(80, 97)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3, 4]\nanswer = (var1[0] == 1) or (var1[1] == 2) or (var1[2] == 3)",
+        "truth_states": {
+            "(30, 42)": "True\n",
+            "(48, 60)": "True\n",
+            "(66, 78)": "True\n",
+            "(29, 79)": "True\n",
+            "(87, 104)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3]\nvar2 = [1, 2, 3]\nanswer = (var1[0] == var2[0]) and (var1[1] == var2[1]) and (var1[2] == var2[2])",
+        "truth_states": {
+            "(44, 62)": "True\n",
+            "(69, 87)": "True\n",
+            "(94, 112)": "True\n",
+            "(43, 113)": "True\n",
+            "(121, 138)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = 2\nvar2 = 4\nanswer = (var1 % 2 == 0) or (var2 % 2 == 0)",
+        "truth_states": {
+            "(28, 41)": "True\n",
+            "(47, 60)": "True\n",
+            "(27, 61)": "True\n",
+            "(69, 86)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3]\nvar2 = [1, 2, 3]\nanswer = (var1[0] == var2[0]) and (var1[1] == var2[1]) and (var1[2] == var2[2])",
+        "truth_states": {
+            "(44, 62)": "True\n",
+            "(69, 87)": "True\n",
+            "(94, 112)": "True\n",
+            "(43, 113)": "True\n",
+            "(121, 138)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3, 4]\nvar2 = [5, 6, 7, 8]\nanswer = any(x in var1 for x in var2)",
+        "truth_states": {
+            "(85, 102)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "words = [\"apple\", \"banana\", \"cherry\"]\nanswer = any(\"a\" in word for word in words)",
+        "truth_states": {
+            "(89, 106)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nanswer = all(num > 0 for num in numbers)",
+        "truth_states": {
+            "(90, 107)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3, 4]\nvar2 = [1, 2, 3, 4]\nanswer = var1 == var2",
+        "truth_states": {
+            "(49, 61)": "True\n",
+            "(69, 86)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = 5\nvar2 = 7\nanswer = (var1 % 2 == 0) or (var2 % 2 == 0)",
+        "truth_states": {
+            "(28, 41)": "False\n",
+            "(47, 60)": "False\n",
+            "(27, 61)": "False\n",
+            "(69, 86)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "var1 = \"Hello\"\nvar2 = \"Hello\"\nvar3 = \"World\"\nanswer = (var1 == var2) and (var2 == var3)",
+        "truth_states": {
+            "(55, 67)": "True\n",
+            "(74, 86)": "False\n",
+            "(54, 87)": "False\n",
+            "(95, 112)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "var1 = 10\nvar2 = 5\nanswer = (var1 + var2) > 10 and (var1 - var2) > 3",
+        "truth_states": {
+            "(28, 46)": "True\n",
+            "(51, 68)": "True\n",
+            "(28, 68)": "True\n",
+            "(76, 93)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "num1, num2, num3 = 5, 10, 15\nanswer = num1 + num2 == num3 or num2 + num1 == num3",
+        "truth_states": {
+            "(38, 57)": "True\n",
+            "(61, 80)": "True\n",
+            "(38, 80)": "True\n",
+            "(88, 105)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "num_list = [5, 10, 15, 20, 25]\nanswer = all(num % 5 == 0 for num in num_list)",
+        "truth_states": {
+            "(85, 102)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "numbers = [1, 2, 3, 4, 5]\nanswer = all(num > 0 for num in numbers)",
+        "truth_states": {
+            "(74, 91)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "numbers = [1, 2, 3, 4, 5]\nanswer = all(num > 0 for num in numbers)",
+        "truth_states": {
+            "(74, 91)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "nums = [4, 5, 6]\nsum_nums = 15\nfor num in nums:\n    answer = sum_nums == num + num + num\n    if answer:\n        break",
+        "truth_states": {},
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "num1 = 10\nnum2 = 15\nanswer = (num1 > 5) or (num2 < 20)",
+        "truth_states": {
+            "(30, 38)": "True\n",
+            "(44, 53)": "True\n",
+            "(29, 54)": "True\n",
+            "(62, 79)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "num1 = 20\nnum2 = 10\nanswer = (num1 > num2) or (num2 == num1)",
+        "truth_states": {
+            "(30, 41)": "True\n",
+            "(47, 59)": "False\n",
+            "(29, 60)": "True\n",
+            "(68, 85)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "words = [\"hello\", \"world\"]\nanswer = all(len(word) > 4 for word in words)",
+        "truth_states": {
+            "(80, 97)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "var1 = 10\nvar2 = 5\nanswer = (var1 > var2) == True and (var1 < var2) == False",
+        "truth_states": {
+            "(28, 49)": "True\n",
+            "(54, 76)": "True\n",
+            "(28, 76)": "True\n",
+            "(84, 101)": "False\n",
+            "(29, 40)": "True\n",
+            "(55, 66)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3, 4]\nvar2 = [1, 2, 3, 5]\nanswer = var1!= var2",
+        "truth_states": {
+            "(49, 60)": "True\n",
+            "(68, 85)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3, 4]\nvar2 = [5, 6, 7, 8]\nanswer = not (var1 == var2)",
+        "truth_states": {
+            "(75, 92)": "False\n",
+            "(54, 66)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "score = 80\npass_mark = 70\nanswer = score >= pass_mark",
+        "truth_states": {
+            "(35, 53)": "True\n",
+            "(61, 78)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "strings = [\"apple\", \"banana\", \"cherry\", \"date\", \"elderberry\"]\nanswer = all([string[0].lower() == string[0] for string in strings])",
+        "truth_states": {
+            "(138, 155)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "my_list = [1, 2, 3, 4, 5]\nanswer = all([num > 0 for num in my_list])",
+        "truth_states": {
+            "(76, 93)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "num_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nanswer = all([num > 0 for num in num_list])",
+        "truth_states": {
+            "(94, 111)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "words = [\"apple\", \"banana\", \"cherry\"]\nanswer = \"an\" in \"\".join(words)",
+        "truth_states": {
+            "(47, 69)": "True\n",
+            "(77, 94)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "my_list = [\"apple\", \"banana\", \"cherry\"]\nanswer = any([fruit.startswith(\"a\") for fruit in my_list])",
+        "truth_states": {
+            "(106, 123)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "my_list = ['a', 'b', 'c', 'd', 'e']\nanswer = any([char == 'c' for char in my_list])",
+        "truth_states": {
+            "(91, 108)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "def add(a, b):\n    return a + b\nanswer = add(2, 3) == 5",
+        "truth_states": {
+            "(63, 80)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "str_list = ['a', 'b', 'c']\nanswer = all(char.isalpha() for char in str_list)",
+        "truth_states": {
+            "(84, 101)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "words = ['apple', 'banana', 'cherry']\nanswer = all(len(word) > 5 for word in words)",
+        "truth_states": {
+            "(91, 108)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "my_dict = {'apple': 5, 'banana': 3, 'orange': 2}\nanswer = any(value >= 4 for value in my_dict.values())",
+        "truth_states": {
+            "(111, 128)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "fruits = [\"apple\", \"banana\", \"cherry\"]\nanswer = all(len(fruit) > 2 for fruit in fruits)",
+        "truth_states": {
+            "(95, 112)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "words = [\"apple\", \"banana\", \"cherry\"]\nanswer = \"a\" in \"\".join(words)",
+        "truth_states": {
+            "(47, 68)": "True\n",
+            "(76, 93)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "words = [\"apple\", \"banana\", \"cherry\"]\nanswer = all(len(word) > 5 for word in words)",
+        "truth_states": {
+            "(91, 108)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "strings = ['apple', 'banana', 'cherry', 'date']\nanswer = 'a' in strings[0]",
+        "truth_states": {
+            "(57, 74)": "True\n",
+            "(82, 99)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = 'hello'\nvar2 = 'world'\nanswer = any(char in var1 for char in var2)",
+        "truth_states": {
+            "(81, 98)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "list1 = [1, 2, 3]\nlist2 = [4, 5, 6]\nanswer = not (len(list1) == len(list2) and list1 == list2)",
+        "truth_states": {
+            "(102, 119)": "False\n",
+            "(50, 74)": "True\n",
+            "(79, 93)": "False\n",
+            "(50, 93)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "def greet(name):\n    return \"Hello, \" + name\nname = \"Alice\"\nanswer = greet(name).lower() == \"hello, alice\"",
+        "truth_states": {
+            "(69, 106)": "True\n",
+            "(114, 131)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "scores = [60, 80, 70, 90]\naverage = sum(scores) / len(scores)\nanswer = average >= 70",
+        "truth_states": {
+            "(71, 84)": "True\n",
+            "(92, 109)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "list1 = [1, 2, 3]\nlist2 = [4, 5, 6]\nanswer = all(i % 2 == 0 for i in list1) and any(i % 2 == 0 for i in list2)",
+        "truth_states": {
+            "(45, 75)": "False\n",
+            "(80, 110)": "True\n",
+            "(45, 110)": "False\n",
+            "(118, 135)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "var1 = 100\nvar2 = 50\nvar3 = 25\nanswer = (var1 >= var2 and var1 <= var3) or (var1 >= var3 and var1 <= var2)",
+        "truth_states": {
+            "(41, 70)": "False\n",
+            "(76, 105)": "False\n",
+            "(40, 106)": "False\n",
+            "(114, 131)": "False\n",
+            "(41, 53)": "True\n",
+            "(58, 70)": "False\n",
+            "(76, 88)": "True\n",
+            "(93, 105)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "var1 = 10\nvar2 = 5\nvar3 = 20\nanswer = (var1 > var2) and (var1 < var3)",
+        "truth_states": {
+            "(39, 50)": "True\n",
+            "(57, 68)": "True\n",
+            "(38, 69)": "True\n",
+            "(77, 94)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "num1 = 5\nnum2 = 2\nanswer = num1 % 2 == 0 and num2 % 2 == 0",
+        "truth_states": {
+            "(27, 40)": "False\n",
+            "(45, 58)": "True\n",
+            "(27, 58)": "False\n",
+            "(66, 83)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "var1 = 10\nvar2 = 20\nanswer = var1 < var2 or var1 > 15",
+        "truth_states": {
+            "(29, 40)": "True\n",
+            "(44, 53)": "False\n",
+            "(29, 53)": "True\n",
+            "(61, 78)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3]\nvar2 = [1, 2, 4]\nanswer = (var1[0] == var2[0]) and (var1[1] == var2[1]) and (var1[2] == var2[2])",
+        "truth_states": {
+            "(44, 62)": "True\n",
+            "(69, 87)": "True\n",
+            "(94, 112)": "False\n",
+            "(43, 113)": "False\n",
+            "(121, 138)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "numbers = [1, 2, 3, 4, 5]\nanswer = numbers[0] in [1, 2, 3]",
+        "truth_states": {
+            "(35, 58)": "True\n",
+            "(66, 83)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = \"Apple\"\nvar2 = \"Banana\"\nanswer = (var1 > \"A\") and (var2 < \"B\")",
+        "truth_states": {
+            "(41, 51)": "True\n",
+            "(58, 68)": "False\n",
+            "(40, 69)": "False\n",
+            "(77, 94)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = \"Hello\"\nvar2 = \"World\"\nanswer = (len(var1) > 5) or (var2.isalpha())",
+        "truth_states": {
+            "(40, 53)": "False\n",
+            "(59, 73)": "True\n",
+            "(39, 74)": "True\n",
+            "(82, 99)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "num1 = 2\nnum2 = 2\nnum3 = 5\nanswer = (num1 > num2) or (num2 > num3)",
+        "truth_states": {
+            "(37, 48)": "False\n",
+            "(54, 65)": "False\n",
+            "(36, 66)": "False\n",
+            "(74, 91)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = [1, 2, 3]\nvar2 = [2, 3, 4]\nanswer = (var1[0]!= var2[0]) and (var1[1] == var2[1]) and (var1[2] == var2[2])",
+        "truth_states": {
+            "(44, 61)": "True\n",
+            "(68, 86)": "False\n",
+            "(93, 111)": "False\n",
+            "(43, 112)": "False\n",
+            "(120, 137)": "False\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "num_list = [1, 2, 3]\nanswer = not (1 in num_list or 4 in num_list)",
+        "truth_states": {
+            "(74, 91)": "False\n",
+            "(35, 48)": "True\n",
+            "(52, 65)": "False\n",
+            "(35, 65)": "True\n"
+        },
+        "true_answer": "False",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "var1 = 10\nvar2 = 20\nanswer = ((var1 == var2) or (var1 < var2))",
+        "truth_states": {
+            "(31, 43)": "False\n",
+            "(49, 60)": "True\n",
+            "(30, 61)": "True\n",
+            "(70, 87)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "num_list = [1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4]\nanswer = (num_list.count(num_list[0]) == 1) or (num_list.count(num_list[1]) == 1)",
+        "truth_states": {
+            "(55, 87)": "True\n",
+            "(93, 125)": "False\n",
+            "(54, 126)": "True\n",
+            "(134, 151)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "False"
+    },
+    {
+        "code": "var1 = \"Hello\"\nvar2 = \"World\"\nanswer = (var1 > \"H\") and (var2 < \"X\")",
+        "truth_states": {
+            "(40, 50)": "True\n",
+            "(57, 67)": "True\n",
+            "(39, 68)": "True\n",
+            "(76, 93)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    },
+    {
+        "code": "num_list = [10, 20, 30]\nanswer = (num_list[0] % 10 == 0) or (num_list[1] % 10 == 0) or (num_list[2] % 10 == 0)",
+        "truth_states": {
+            "(34, 55)": "True\n",
+            "(61, 82)": "True\n",
+            "(88, 109)": "True\n",
+            "(33, 110)": "True\n",
+            "(118, 135)": "False\n"
+        },
+        "true_answer": "True",
+        "meta-llama/Meta-Llama-3.1-8B-Instruct_answer": "True"
+    }
+]
