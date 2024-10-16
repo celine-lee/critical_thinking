@@ -10,6 +10,7 @@ import sys
 import ipdb
 import traceback
 import ast
+import random
 
 
 def debughook(etype, value, tb):
@@ -44,7 +45,7 @@ def fs_basic(model, tokenizer, examples, max_batch_size):
             code_assert_prefix = re.search(r'^[\s\S]*assert answer == ', ex['code'], re.MULTILINE).group(0).strip()
             query = code_solving_prompt + f"\n\n```\n{code_assert_prefix}"
             queries.append(query)
-        input_ids = tokenizer(queries, padding=True, truncation=True, return_tensors='pt').to(device)
+        input_ids = tokenizer(queries, padding=True, truncation=True, max_length=2048,  return_tensors='pt').to(device)
         model_output = model.generate(**input_ids, return_dict_in_generate=True, max_new_tokens=1024, tokenizer=tokenizer, stop_strings=stop_strings)
         model_predictions = tokenizer.batch_decode(model_output.sequences[:, input_ids.input_ids.shape[-1]:], skip_special_tokens=True)
         for batch_idx, model_prediction in enumerate(model_predictions):
@@ -62,12 +63,15 @@ def fs_basic(model, tokenizer, examples, max_batch_size):
                     predicted_answer = predicted_answer.strip()
                 except:
                     pass
-            is_correct = eval(exs[batch_idx]['true_answer']) == eval(predicted_answer)
+            is_correct = False
+            try: is_correct = eval(exs[batch_idx]['true_answer']) == eval(predicted_answer)
+            except: pass
             outputs.append({
                 "input_example": exs[batch_idx],
                 "query": queries[batch_idx],
                 "model_prediction": model_prediction,
                 "total_compute_tokens": torch.sum(model_output.sequences[batch_idx] != tokenizer.pad_token_id).item(),
+                "generated_tokens": torch.sum(model_output.sequences[batch_idx, input_ids.input_ids.shape[-1]:] != tokenizer.pad_token_id).item(),
                 "answer": predicted_answer,
                 "true_answer": exs[batch_idx]['true_answer'],
                 "correct": is_correct
@@ -85,8 +89,8 @@ def fs_scratchpad(model, tokenizer, examples, max_batch_size):
     ex_idx = 0
     while ex_idx < len(examples):
         exs = examples[ex_idx:min(len(examples), ex_idx+max_batch_size)]
-        queries = [prompt + '\n\n' + scratchpad_query_template.format(code=ex['code']) for ex in exs]
-        input_ids = tokenizer(queries, padding=True, truncation=True, return_tensors='pt').to(device)
+        queries = [prompt + '\n\n' + scratchpad_query_template.format(code=re.search(r'(^[\s\S]*)assert answer == ', ex['code'], re.MULTILINE).group(1).strip()) for ex in exs]
+        input_ids = tokenizer(queries, padding=True, truncation=True, max_length=2048,  return_tensors='pt').to(device)
         model_output = model.generate(**input_ids, return_dict_in_generate=True, max_new_tokens=1024, tokenizer=tokenizer, stop_strings=stop_strings)
         model_predictions = tokenizer.batch_decode(model_output.sequences[:, input_ids.input_ids.shape[-1]:], skip_special_tokens=True)
         for batch_idx, model_prediction in enumerate(model_predictions):
@@ -104,6 +108,7 @@ def fs_scratchpad(model, tokenizer, examples, max_batch_size):
                 "query": queries[batch_idx],
                 "model_prediction": model_prediction,
                 "total_compute_tokens": torch.sum(model_output.sequences[batch_idx] != tokenizer.pad_token_id).item(),
+                "generated_tokens": torch.sum(model_output.sequences[batch_idx, input_ids.input_ids.shape[-1]:] != tokenizer.pad_token_id).item(),
                 "answer": str(final_state['answer']) if "answer" in final_state else None,
                 "true_answer": exs[batch_idx]['true_answer'],
                 "correct": is_correct
@@ -121,30 +126,36 @@ def os_cot(model, tokenizer, examples, max_batch_size):
     ex_idx = 0
     while ex_idx < len(examples):
         exs = examples[ex_idx:min(len(examples), ex_idx+max_batch_size)]
-        queries = [cot_query_template.format(code=ex['code']) for ex in exs]
-        input_ids = tokenizer(queries, padding=True, truncation=True, return_tensors=True).to(device)
+        queries = [cot_query_template.format(code=re.search(r'(^[\s\S]*)assert answer == ', ex['code'], re.MULTILINE).group(0) + "??") for ex in exs]
+        input_ids = tokenizer(queries, padding=True, truncation=True, max_length=2048, return_tensors='pt').to(device)
         model_output = model.generate(**input_ids, return_dict_in_generate=True, max_new_tokens=1024, tokenizer=tokenizer, stop_strings=stop_strings)
         model_predictions = tokenizer.batch_decode(model_output.sequences[:, input_ids.input_ids.shape[-1]:], skip_special_tokens=True)
         for batch_idx, model_prediction in enumerate(model_predictions):
             assert_line = re.search(r'\[ANSWER\](.+?)\[/ANSWER\]', model_prediction)
             predicted_answer = None
             if assert_line: 
+                assert_line = assert_line.group(1)
                 try:
                     tree = ast.parse(assert_line.strip())
                     for node in ast.walk(tree):
                         if isinstance(node, ast.Assert):
-                            if isinstance(node.test.ops[0], ast.Eq) and isinstance(node.test.left, ast.Name) and node.test.left.id == "answer":
+                            if isinstance(node.test.ops[0], ast.Eq):
                                 answer_node = node.test.comparators[0]
                                 (_, _, predicted_answer) = get_code_str_from_tree_node(answer_node, assert_line)
+                                predicted_answer = predicted_answer.strip()
                                 break
-                    predicted_answer = predicted_answer.strip()
                 except:
                     pass
-            is_correct = eval(exs[batch_idx]['true_answer']) == eval(predicted_answer)
+            is_correct = False
+            try:
+                is_correct = (predicted_answer is not None) and (eval(exs[batch_idx]['true_answer']) == eval(predicted_answer))
+            except: 
+                pass
             outputs.append({
                 "query": queries[batch_idx],
                 "model_prediction": model_prediction,
                 "total_compute_tokens": torch.sum( model_output.sequences[batch_idx] != tokenizer.pad_token_id).item(),
+                "generated_tokens": torch.sum(model_output.sequences[batch_idx, input_ids.input_ids.shape[-1]:] != tokenizer.pad_token_id).item(),
                 "answer": predicted_answer,
                 "true_answer": exs[batch_idx]['true_answer'],
                 "correct": is_correct
@@ -159,6 +170,7 @@ def os_cot(model, tokenizer, examples, max_batch_size):
 
 def run_experiment(model_name, examples_file, max_batch_size):
     examples = json.load(open(examples_file))
+    random.shuffle(examples)
     examples = examples[:200]
     total_ex = len(examples)
     modelname = re.search(r'/(.+)', model_name).group(1)
@@ -171,22 +183,29 @@ def run_experiment(model_name, examples_file, max_batch_size):
     print(" ====== FS BASIC ===== ")
     fs_basic_correct, fs_basic_outputs = fs_basic(model, tokenizer, examples, max_batch_size)
     print(f"Correct: {fs_basic_correct} / {total_ex}")
-    print(f"Avg compute tokens: {sum(op['total_compute_tokens'] for op in fs_basic_outputs) / total_ex:.2f}")
+    print(f"Avg tot tokens: {sum(op['total_compute_tokens'] for op in fs_basic_outputs) / total_ex:.2f}")
+    print(f"Avg gen tokens: {sum(op['generated_tokens'] for op in fs_basic_outputs) / total_ex:.2f}")
     with open(f"arrayworld_fs_basic_{modelname}.json", 'w') as wf:
         json.dump(fs_basic_outputs, wf, indent=4)
 
     print(" ====== FS SCRATCHPAD ===== ")
     fs_sp_correct, fs_sp_outputs = fs_scratchpad(model, tokenizer, examples, max_batch_size)
     print(f"Correct: {fs_sp_correct} / {total_ex}")
-    print(f"Avg compute tokens: {sum(op['total_compute_tokens'] for op in fs_sp_outputs) / total_ex:.2f}")
+    print(f"Avg tot tokens: {sum(op['total_compute_tokens'] for op in fs_sp_outputs) / total_ex:.2f}")
+    print(f"Avg gen tokens: {sum(op['generated_tokens'] for op in fs_sp_outputs) / total_ex:.2f}")
     with open(f"arrayworld_fs_sp_{modelname}.json", 'w') as wf:
         json.dump(fs_sp_outputs, wf, indent=4)
 
     print(" ====== OS COT ===== ")
-    os_cot_correct, os_cot_outputs = fs_basic(model, tokenizer, examples, max_batch_size)
+    os_cot_correct, os_cot_outputs = os_cot(model, tokenizer, examples, max_batch_size)
     print(f"Correct: {os_cot_correct} / {total_ex}")
-    print(f"Avg compute tokens: {sum(op['total_compute_tokens'] for op in os_cot_outputs) / total_ex:.2f}")
+    print(f"Avg gen tokens: {sum(op['generated_tokens'] for op in os_cot_outputs) / total_ex:.2f}")
+    print(f"Avg tot tokens: {sum(op['total_compute_tokens'] for op in os_cot_outputs) / total_ex:.2f}")
     with open(f"arrayworld_os_cot_{modelname}.json", 'w') as wf:
         json.dump(os_cot_outputs, wf, indent=4)
 
-run_experiment("meta-llama/Meta-Llama-3.1-8B-Instruct", "arrayworld_Meta-Llama-3.1-8B-Instruct_N20.json", 8)
+# run_experiment("meta-llama/Llama-3.1-70B-Instruct", "uniformed_arrayworld_N20.json", 6)
+
+run_experiment("meta-llama/Llama-3.2-1B-Instruct", "uniformed_arrayworld_N20.json", 12)
+run_experiment("meta-llama/Llama-3.2-3B-Instruct", "uniformed_arrayworld_N20.json", 12)
+run_experiment("meta-llama/Llama-3.1-8B-Instruct", "uniformed_arrayworld_N20.json", 12)
