@@ -68,27 +68,6 @@ Therefore, the output set to f is "hia".
 
 """
 
-cot_query_template = """You are given a snippet of Python code. Complete the assertion with the output of executing the function on the input. First, reason step by step before arriving at an answer. Then, surround the answer as an assertion with [ANSWER] and [/ANSWER] tags.
-
-```
-array = [1, 2, 3]
-idx = 1
-answer = array[idx]
-assert answer == ??
-```
-
-The code takes array `array` and indexes into it with index `idx`, then assigns the result to `answer`.
-To determine the value of `answer` at the end of the code snippet, we need to `1` index of `array`. Since Python is zero-indexed, the answer is the second element of `array`.
-
-Therefore, the output set to `answer` is 2.
-
-[ANSWER]assert answer == 2[/ANSWER]
-
-```
-{code}
-```
-"""
-
 scratchpad_template = """Consider the following program:
 
 ```
@@ -187,10 +166,10 @@ arrayworld_generation_insn = """Following the examples given, write another Pyth
 Make sure the last line in your code snippet is an assert statement testing the answer.
 
 """
+######################### ARRAYWORLD #########################
 
-
-array_world_examples = ["""
-array = [3, 4, 63, 1, "hello", 0, 4, 63]
+array_world_cot_exemplars = [
+    ("""array = [3, 4, 63, 1, "hello", 0, 4, 63]
 idx = 0
 print("hello world")
 idx += 4
@@ -199,69 +178,91 @@ if array[idx] == "hello":
 idx = idx - 1
 answer = array[idx]
 assert answer == 4""", 
-
-"""
-array = "this sentence has 5 words in it".split()
+    """`idx` is initially set to 0.
+Then `4` is added to it.
+At index `4` in `array` is `"hello"`, so we match the condition to subtract `1` from `idx`. `idx` is now `3`.
+Subtract `1` from `idx`. `idx` is now `2`.
+The `2` index of `array` is `4`.
+[ANSWER]assert answer == 4[/ANSWER]"""),
+    ("""array = "this sentence has 5 words in it".split()
 idx = 5
 i = 6
 if idx > 5: 
     idx = 0
 answer = array[idx]
-assert answer == "in"
-""", 
-
-"""
-array = [9, 99, 999, 99999, 9999]
+assert answer == "in" """, 
+    """The `array` variable is the list of words in the sentence: `["this", "sentence", "has", "5", "words", "in", "it"]`.
+`idx` is set to `5`. It undergoes no more change in the code snippet.
+Let's count out the indices and their corresponding array elements:
+0: "this"
+1: "sentence"
+2: "has"
+3: "5"
+4: "words"
+5: "in"
+[ANSWER]assert answer == "in"[/ANSWER]"""),
+    ("""array = [9, 99, 999, 99999, 9999]
 another_array = [99, 99]
 idx = len(another_array)
 idx = idx - 3
 answer = array[idx]
-assert answer == 9999
-""",
+assert answer == 9999""",
+    """`an_array` is set to `[99, 99]`, which has length `2`. 
+`idx` is `2`.
+After subtracting `3` from `idx`, `idx` becomes `-1`.
+The `-1` index of an array in Python is the last element.
+The last element of `array` is `9999`.
+[ANSWER]assert answer == 9999[/ANSWER]""")
 ]
 
 ######################### IDX MANAGEMENT #########################
 
-
-idx_management_cot_query_template = """You are given a snippet of Python code. Complete the assertion with the output of executing the function on the input. First, reason step by step before arriving at an answer. Then, surround the answer as an assertion with [ANSWER] and [/ANSWER] tags.
-
-```
-idx = 1
+idx_management_cot_exemplars = [
+    (
+        """idx = 1
 print("hello world")
 idx *= 1
-assert idx == ??
-```
-
-The code manipulates the value of variable `idx`. It first sets it to 1 then multiplies it by 1, to get the final value `1`.
-
+assert idx == 1""",
+        """The code manipulates the value of variable `idx`. It first sets it to 1 then multiplies it by 1, to get the final value `1`.
 Therefore, the output set to `idx` is 1.
-
-[ANSWER]assert idx == 1[/ANSWER]
-
-```
-{code}
-```
-"""
-
-idx_management_examples = ["""
-idx = 0
+[ANSWER]assert idx == 1[/ANSWER]"""
+    ),
+    (
+        """idx = 0
 idx += 4
 idx = idx - 1
-assert idx == 3""", 
-"""
-idx = 5
+assert idx == 3""",
+        """The variable `idx` is first set to `0`.
+Then `4` is added to `idx` to obtain `4`.
+Then `1` is subtracted to `idx` to obtain `3`.
+Therefore, the output set to `idx` is 3.
+[ANSWER]assert idx == 3[/ANSWER]"""
+    ),
+    (
+        """idx = 5
 i = 6
 if idx > 5: 
     idx = 0
-assert idx == 5
-""", 
-"""
-an_array = [99, 99]
+assert idx == 5""",
+        """The variable `idx` is first set to `5` and `i` is set to `6`.
+`idx` is `5`, which is not greater than `5`, so we do not enter the first conditional.
+At the end of the program, the output set to `idx` is 5.
+[ANSWER]assert idx == 5[/ANSWER]"""
+    ),
+    (
+        """an_array = [99, 99]
 idx = len(an_array)
 idx = idx - 3
-assert idx == -3
-""",
+assert idx == -1""",
+        """`an_array` is set to `[99, 99]`, which has length `2`. 
+`idx` is `2`, which when `3` is subtracted becomes `-1`.
+[ANSWER]assert idx == -1`[/ANSWER]"""
+    )
 ]
+
+python_exc_cot_insn = "You are given a snippet of Python code. Complete the assertion with the output of executing the function on the input. First, reason step by step before arriving at an answer. Then, surround the answer as an assertion with [ANSWER] and [/ANSWER] tags."
+python_exc_cot_query_template = "```\n{code}\n```\n\nLet's think step-by-step.\n{cot}"
+
 
 ######################### COMPO GAP #########################
 
@@ -320,36 +321,38 @@ Answer: No
 Question: {question}
 Answer:'''
 
-
-compgap_cot_prompt = '''Question: Who lived longer, Muhammad Ali or Alan Turing?
-Let's think about this step-by-step.
-Muhammad Ali was 74 years old when he died.
+compgap_exemplars = [
+    (
+        "Who lived longer, Muhammad Ali or Alan Turing?",
+        """Muhammad Ali was 74 years old when he died.
 Alan Turing was 41 years old when he died.
-So the final answer is: Muhammad Ali 
-
-Question: When was the founder of craigslist born?
-Let's think about this step-by-step.
-Craigslist was founded by Craig Newmark.
+So the final answer is: Muhammad Ali"""
+    ),
+    (
+        "When was the founder of craigslist born?",
+        """Craigslist was founded by Craig Newmark.
 Craig Newmark was born on December 6, 1952.
-So the final answer is: December 6, 1952
-
-Question: Who was the maternal grandfather of George Washington?
-Let's think about this step-by-step.
-The mother of George Washington was Mary Ball Washington.
+So the final answer is: December 6, 1952"""
+    ),
+    (
+        "Who was the maternal grandfather of George Washington?",
+        """The mother of George Washington was Mary Ball Washington.
 The father of Mary Ball Washington was Joseph Ball.
-So the final answer is: Joseph Ball 
-
-Question: Are both the directors of Jaws and Casino Royale from the same country? 
-Let's think about this step-by-step.
-The director of Jaws is Steven Spielberg. 
+So the final answer is: Joseph Ball"""
+    ),
+    (
+        "Are both the directors of Jaws and Casino Royale from the same country?",
+        """The director of Jaws is Steven Spielberg. 
 Steven Spielberg is from The United States. 
 The director of Casino Royale is Martin Campbell. 
 Martin Campbell is from New Zealand. 
-So the final answer is: No
+So the final answer is: No"""
+    )
+]
 
-Question: {question}
+qa_cot_template = """Question: {question}
 Let's think about this step-by-step.
-'''
+{cot}"""
 
 
 ######################### TRIViA QA #########################
@@ -371,47 +374,67 @@ Answer: Exile
 Question: {question}
 Answer:'''
 
-
-trivia_cot_prompt = '''Question: Who was the man behind The Chipmunks?
-Let's think about this step-by-step.
-The description for the movie The Chipmunks starts: A struggling songwriter named Dave Seville finds success when he comes across a trio of singing chipmunks...
-So the final answer is: David Seville
-
-Question: Which Lloyd Webber musical premiered in the US on 10th December 1993?
-Let's think about this step-by-step.
-Andrew Lloyd Webber's Sunset Boulevard originally premiered at the West End's Adelphi Theatre in 1993.
-So the final answer is: Sunset Boulevard
-
-Question: Who was the next British Prime Minister after Arthur Balfour?
-Let's think about this step-by-step.
-Balfour resigned as Prime Minister in 1905 and was succeeded by Liberal Party politician Sir Henry Campbell-Bannerman.
-So the final answer is: Sir Henry Campbell-Bannerman
-
-Question: Who had a 70s No 1 hit with Kiss You All Over?
-Let's think about this step-by-step.
-"Kiss You All Over" is a 1978 song performed by the group Exile.
-So the final answer is: Exile
-
-Question: {question}
-Let's think about this step-by-step.
-'''
-
+trivia_cot_exemplars = [
+    (
+        "Who was the man behind The Chipmunks?",
+        """The description for the movie The Chipmunks starts: A struggling songwriter named Dave Seville finds success when he comes across a trio of singing chipmunks...
+So the final answer is: David Seville"""
+    ),
+    (
+        "Which Lloyd Webber musical premiered in the US on 10th December 1993?",
+        """Andrew Lloyd Webber's Sunset Boulevard originally premiered at the West End's Adelphi Theatre in 1993.
+So the final answer is: Sunset Boulevard"""
+    ),
+    (
+        "Who was the next British Prime Minister after Arthur Balfour?",
+        """Balfour resigned as Prime Minister in 1905 and was succeeded by Liberal Party politician Sir Henry Campbell-Bannerman.
+So the final answer is: Sir Henry Campbell-Bannerman"""
+    ),
+    (
+        "Who had a 70s No 1 hit with Kiss You All Over?",
+        """"Kiss You All Over" is a 1978 song performed by the group Exile.
+So the final answer is: Exile"""
+    ),
+]
 
 ######################### INDEXING #########################
 
-indexing_examples = ["""
-array = [3, 4, 63, 1, "hello", 0, 4, 63]
+indexing_cot_exemplars = [
+    (
+        """array = [1, 2, 3]
+idx = 1
+answer = array[idx]
+assert answer == 2""",
+        """The code takes array `array` and indexes into it with index `idx`, then assigns the result to `answer`.
+To determine the value of `answer` at the end of the code snippet, we need to `1` index of `array`. Since Python is zero-indexed, the answer is the second element of `array`.
+Therefore, the output set to `answer` is 2.
+[ANSWER]assert answer == 2[/ANSWER]"""
+    ),
+    ("""array = [3, 4, 63, 1, "hello", 0, 4, 63]
 idx = 6
 answer = array[idx]
-assert answer == 4""", """
-array = "this sentence has 5 words in it".split()
+assert answer == 4""",
+    """The `6` index of the array is `4`.
+[ANSWER]assert answer == 4[/ANSWER]"""),
+    ("""array = "this sentence has 5 words in it".split()
 idx = 5
 answer = array[idx]
-assert answer == "in"
-""", """
-array = [9, 99, 999, 99999, 9999]
+assert answer == "in" """,
+    """The `array` variable is the list of words in the sentence: `["this", "sentence", "has", "5", "words", "in", "it"]`.
+`idx` is set to 5. 
+Let's count out the indices and their corresponding array elements:
+0: "this"
+1: "sentence"
+2: "has"
+3: "5"
+4: "words"
+5: "in"
+[ANSWER]assert answer == "in"[/ANSWER]"""), 
+    ("""array = [9, 99, 999, 99999, 9999]
 idx = -1
 answer = array[idx]
-assert answer == 9999
-""",
+assert answer == 9999""",
+    """The `-1` index of an array in Python is the last element.
+So the answer is 9999.
+[ANSWER]assert answer == 9999[/ANSWER]""")
 ]
