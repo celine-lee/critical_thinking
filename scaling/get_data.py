@@ -6,6 +6,7 @@ import ast
 import subprocess
 from contextlib import contextmanager
 import signal
+import random
 
 from prompts import *
 from datasets import load_dataset
@@ -271,4 +272,101 @@ def make_arrayworld_data_uniform(filename=f"data/arrayworld_Meta-Llama-3.1-8B-In
     with open(filename, "w") as wf:
         json.dump(all_examples, wf, indent=4)
 
-make_arrayworld_data_uniform()
+# make_arrayworld_data_uniform()
+
+
+def make_indexing_from_arrayworld(input_filename="uniformed_arrayworld_N20.json", output_filename="indexing_array_N20.json"):
+    data = json.load(open(input_filename))
+    new_data = []
+    for ex in data:
+        code_lines = ex['code'].splitlines(keepends=True)
+        array = re.search(r'array = (.+)', code_lines[0]).group(1)
+        last_idx_line = len(code_lines) - 1
+        while not code_lines[last_idx_line].lstrip().startswith("answer = array[idx]"):
+            last_idx_line -= 1
+            if last_idx_line == -1: break
+        if last_idx_line == -1: continue
+
+        idx_values = ex['idx_values']
+        for si_ei, answer_idx_val in idx_values.items():
+            parsed_idxes = re.search(r'(\d+), (\d+)', si_ei)
+            s_i = int(parsed_idxes.group(1))
+            e_i = int(parsed_idxes.group(2))
+            if sum(len(line) for line in code_lines[:last_idx_line]) <= s_i and sum(len(line) for line in code_lines[:last_idx_line+1]) >= e_i:
+                break
+        new_data.append({
+            "code": f"array = {array}\nidx = {answer_idx_val}\nanswer = array[idx]\n{code_lines[-1].strip()}", 
+            "true_answer": ex['true_answer']
+        }) 
+
+
+    with open(output_filename, "w") as wf:
+        json.dump(new_data, wf, indent=4)
+
+# make_indexing_from_arrayworld()
+
+def make_idx_management(input_filename="uniformed_arrayworld_N{N}.json", output_filename="idx_management_N{N}.json", N=20):
+    data = json.load(open(input_filename.format(N=N)))
+    idx_val_to_exs = {}
+    for ex in data:
+        code_lines = ex['code'].splitlines(keepends=True)
+
+        use_array_lines = set(line_idx for line_idx, line in enumerate(code_lines) if re.search(r'array', line))
+        new_code_no_assert = "".join(cl for l_idx, cl in enumerate(code_lines) if l_idx not in use_array_lines|{0,len(code_lines)-1}).strip()
+
+        # try to execute candidate code
+        code_output = execute_code(new_code_no_assert + "\nprint(idx)")
+        if code_output is None: 
+            new_code_no_assert = f"idx = {random.randint(0, N)}\n" + new_code_no_assert
+            code_output = execute_code(new_code_no_assert + "\nprint(idx)")
+        if code_output is None: continue
+            
+        code_output = code_output.strip()
+        new_code = f"{new_code_no_assert}\nassert idx == {code_output}"
+
+        final_idx_val = int(code_output)
+        if final_idx_val not in idx_val_to_exs: idx_val_to_exs[final_idx_val] = []
+        idx_val_to_exs[final_idx_val].append({
+            "code": new_code,
+            "true_answer": code_output
+        })
+        
+
+    print("All lengths: ", {idx_val: len(exs) for idx_val, exs in idx_val_to_exs.items()})
+    num_per_idx_val = max(len(exs) for idx_val, exs in idx_val_to_exs.items() if idx_val > -5 and idx_val < N)
+    print("Make them all: ", num_per_idx_val)
+    for idx_val in idx_val_to_exs:
+        while len(idx_val_to_exs[idx_val]) < num_per_idx_val:
+            # get another program and modify it to what we want.
+            random_other_idx_val = random.choice(list(idx_val_to_exs.keys()))
+            random_other_program = random.choice(idx_val_to_exs[random_other_idx_val])
+            try: 
+                other_answer_idx_val = re.search(r'assert idx == (-?\d+)', random_other_program['code']).group(1)
+            except:
+                breakpoint()
+            diff = int(idx_val) -  int(other_answer_idx_val)
+            new_line = f"idx = idx + {diff}\n" if diff > 0 else f"idx = idx - {-1 * diff}\n"
+            old_code_lines = random_other_program['code'].splitlines(keepends=True)
+            new_code = ''.join(old_code_lines[:-1] + [new_line] + old_code_lines[-1:])
+
+            # collect information from new program
+            code_no_assert = ''.join(new_code.splitlines(keepends=True)[:-1]).strip()
+
+            # try to execute candidate code
+            code_output = execute_code(code_no_assert + "\nprint(idx)")
+            if code_output is None: continue
+            code_output = code_output.strip()
+            new_code = f"{code_no_assert}\nassert idx == {code_output}"
+
+            idx_val_to_exs[idx_val].append({
+                "code": new_code,
+                "true_answer": code_output,
+            })
+
+
+    all_examples = [ex for exs in idx_val_to_exs.values() for ex in exs]
+    random.shuffle(all_examples)
+    with open(output_filename.format(N=N), "w") as wf:
+        json.dump(all_examples, wf, indent=4)
+
+make_idx_management()

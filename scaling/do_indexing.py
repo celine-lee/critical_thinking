@@ -1,5 +1,6 @@
 
-from prompts import scratchpad_examples, code_solving_insn, array_world_examples, scratchpad_query_template, scratchpad_template, cot_query_template
+
+from prompts import scratchpad_examples, code_solving_insn, indexing_examples, scratchpad_query_template, scratchpad_template, cot_query_template
 
 import torch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -11,7 +12,6 @@ import ipdb
 import traceback
 import ast
 import random
-import os
 
 
 def debughook(etype, value, tb):
@@ -34,7 +34,7 @@ def get_code_str_from_tree_node(ast_node, og_code):
 
 def fs_basic(model, tokenizer, examples, max_batch_size):
     finish_assert_template = "```\n{code}\n```"
-    code_solving_prompt = code_solving_insn + "\n\n".join(finish_assert_template.format(code=code) for code in array_world_examples)
+    code_solving_prompt = code_solving_insn + "\n\n".join(finish_assert_template.format(code=code.strip()) for code in indexing_examples)
     outputs = []
     correct = 0
     stop_strings = ['```']
@@ -91,7 +91,7 @@ def fs_scratchpad(model, tokenizer, examples, max_batch_size):
     while ex_idx < len(examples):
         exs = examples[ex_idx:min(len(examples), ex_idx+max_batch_size)]
         queries = [prompt + '\n\n' + scratchpad_query_template.format(code=re.search(r'(^[\s\S]*)assert answer == ', ex['code'], re.MULTILINE).group(1).strip()) for ex in exs]
-        input_ids = tokenizer(queries, padding=True, truncation=True, max_length=2048,  return_tensors='pt').to(device)
+        input_ids = tokenizer(queries, padding=True, truncation=True, max_length=2048, return_tensors='pt').to(device)
         model_output = model.generate(**input_ids, return_dict_in_generate=True, max_new_tokens=1024, tokenizer=tokenizer, stop_strings=stop_strings)
         model_predictions = tokenizer.batch_decode(model_output.sequences[:, input_ids.input_ids.shape[-1]:], skip_special_tokens=True)
         for batch_idx, model_prediction in enumerate(model_predictions):
@@ -177,76 +177,49 @@ def run_experiment(model_name, examples_file, max_batch_size):
     total_ex = len(examples)
     modelname = re.search(r'/(.+)', model_name).group(1)
 
-
+    model_config = AutoConfig.from_pretrained(model_name)
+    model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+    tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side='left', truncation_side='left')
+    tokenizer.pad_token_id = tokenizer.eos_token_id
 
     print(" ====== FS BASIC ===== ")
-    filename = f"outputs/arrayworld_fs_basic_{modelname}.json"
-    if os.path.exists(filename):
-        fs_basic_outputs = json.load(open(filename))
-        fs_basic_correct = len([ex for ex in fs_basic_outputs if ex["correct"]])
-    else:
-        model_config = AutoConfig.from_pretrained(model_name)
-        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-        tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side='left', truncation_side='left')
-        tokenizer.pad_token_id = tokenizer.eos_token_id
-        fs_basic_correct, fs_basic_outputs = fs_scratchpad(model, tokenizer, examples, max_batch_size)
-        with open(filename, 'w') as wf:
-            json.dump(fs_basic_outputs, wf, indent=4)
+    fs_basic_correct, fs_basic_outputs = fs_basic(model, tokenizer, examples, max_batch_size)
     print(f"Correct: {fs_basic_correct} / {total_ex}")
     print(f"Avg tot tokens: {sum(op['total_compute_tokens'] for op in fs_basic_outputs) / total_ex:.2f}")
     print(f"Avg gen tokens: {sum(op['generated_tokens'] for op in fs_basic_outputs) / total_ex:.2f}")
+    with open(f"outputs/indexing_fs_basic_{modelname}.json", 'w') as wf:
+        json.dump(fs_basic_outputs, wf, indent=4)
 
     print(" ====== FS SCRATCHPAD ===== ")
-    filename = f"outputs/arrayworld_fs_sp_{modelname}.json"
-    if os.path.exists(filename):
-        fs_sp_outputs = json.load(open(filename))
-        fs_sp_correct = len([ex for ex in fs_sp_outputs if ex["correct"]])
-    else:
-        if model not in locals():
-            model_config = AutoConfig.from_pretrained(model_name)
-            model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-            tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side='left', truncation_side='left')
-            tokenizer.pad_token_id = tokenizer.eos_token_id
-        fs_sp_correct, fs_sp_outputs = fs_scratchpad(model, tokenizer, examples, max_batch_size)
-        with open(filename, 'w') as wf:
-            json.dump(fs_sp_outputs, wf, indent=4)
+    fs_sp_correct, fs_sp_outputs = fs_scratchpad(model, tokenizer, examples, max_batch_size)
     print(f"Correct: {fs_sp_correct} / {total_ex}")
     print(f"Avg tot tokens: {sum(op['total_compute_tokens'] for op in fs_sp_outputs) / total_ex:.2f}")
     print(f"Avg gen tokens: {sum(op['generated_tokens'] for op in fs_sp_outputs) / total_ex:.2f}")
+    with open(f"outputs/indexing_fs_sp_{modelname}.json", 'w') as wf:
+        json.dump(fs_sp_outputs, wf, indent=4)
 
     print(" ====== OS COT ===== ")
-    filename = f"outputs/arrayworld_os_cot_{modelname}.json"
-    if os.path.exists(filename):
-        os_cot_outputs = json.load(open(filename))
-        os_cot_correct = len([ex for ex in os_cot_outputs if ex["correct"]])
-    else:
-        if model not in locals():
-            model_config = AutoConfig.from_pretrained(model_name)
-            model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-            tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side='left', truncation_side='left')
-            tokenizer.pad_token_id = tokenizer.eos_token_id
-        os_cot_correct, os_cot_outputs = os_cot(model, tokenizer, examples, max_batch_size)
-        with open(filename, 'w') as wf:
-            json.dump(os_cot_outputs, wf, indent=4)
+    os_cot_correct, os_cot_outputs = os_cot(model, tokenizer, examples, max_batch_size)
     print(f"Correct: {os_cot_correct} / {total_ex}")
     print(f"Avg gen tokens: {sum(op['generated_tokens'] for op in os_cot_outputs) / total_ex:.2f}")
     print(f"Avg tot tokens: {sum(op['total_compute_tokens'] for op in os_cot_outputs) / total_ex:.2f}")
+    with open(f"outputs/indexing_os_cot_{modelname}.json", 'w') as wf:
+        json.dump(os_cot_outputs, wf, indent=4)
 
-
-run_experiment("meta-llama/Llama-3.2-1B-Instruct", "data/uniformed_arrayworld_N20.json", 12)
-run_experiment("meta-llama/Llama-3.2-3B-Instruct", "data/uniformed_arrayworld_N20.json", 12)
-run_experiment("meta-llama/Llama-3.1-8B-Instruct", "data/uniformed_arrayworld_N20.json", 12)
+# run_experiment("meta-llama/Llama-3.2-1B-Instruct", "data/indexing_array_N20.json", 12)
+# run_experiment("meta-llama/Llama-3.2-3B-Instruct", "data/indexing_array_N20.json", 12)
+# run_experiment("meta-llama/Llama-3.1-8B-Instruct", "data/indexing_array_N20.json", 12)
 
 import glob
 
-def analyze_arrayworld(Ns=[(0,5), (5, 10), (10, 15), (15, 20)], Ls=[(0,3), (3,6), (6, 9), (9, 12)]):
+
+def analyze_indexing(Ns=[(0,5), (5, 10), (10, 15), (15, 20)]):
     data_groups = {}
     for N in Ns:
-        for L in Ls:
-            data_groups[(N, L)] = {}
+            data_groups[N] = {}
 
-    for results_file in glob.glob("outputs/arrayworld*.json"):
-        parsed_experiment_file = re.search(r'arrayworld_(fs_basic|os_cot|fs_sp)_(.+)\.json', results_file)
+    for results_file in glob.glob("outputs/indexing*.json"):
+        parsed_experiment_file = re.search(r'indexing_(fs_basic|os_cot|fs_sp)_(.+)\.json', results_file)
         experiment = parsed_experiment_file.group(1)
         model = parsed_experiment_file.group(2)
 
@@ -255,26 +228,25 @@ def analyze_arrayworld(Ns=[(0,5), (5, 10), (10, 15), (15, 20)], Ls=[(0,3), (3,6)
             code_lines = ex['input_example']['code'].splitlines(keepends=True)
             array = re.search(r'array = (.+)\n', code_lines[0]).group(1)
             this_N = len(eval(array))
-            this_L = len(code_lines) - 2  # -2 for init and end, doesnt make a huge difference
 
             for N in Ns:
                 if this_N < N[-1]: break
-            for L in Ls:
-                if this_L < L[-1]: break
 
-            if model not in data_groups[(N, L)]: data_groups[(N, L)][model] = {}
-            if experiment not in data_groups[(N, L)][model]: data_groups[(N, L)][model][experiment] = {"gen_tokens": [], "correct": 0, "total": 0}
-            data_groups[(N, L)][model][experiment]['gen_tokens'].append(ex['generated_tokens'])
-            data_groups[(N, L)][model][experiment]['correct'] += int(ex['correct'])
-            data_groups[(N, L)][model][experiment]['total'] += 1
+            if model not in data_groups[N]: data_groups[N][model] = {}
+            if experiment not in data_groups[N][model]: data_groups[N][model][experiment] = {"gen_tokens": [], "correct": 0, "total": 0}
+            data_groups[N][model][experiment]['gen_tokens'].append(ex['generated_tokens'])
+            data_groups[N][model][experiment]['correct'] += int(ex['correct'])
+            data_groups[N][model][experiment]['total'] += 1
         
-    for NL_key, NL_val in data_groups.items():
-        print(f"=== N {NL_key[0]} ; L {NL_key[1]} ===")
-        for model, model_info in NL_val.items():
+    for N_key, N_val in data_groups.items():
+        print(f"=== N {N_key} ===")
+        for model, model_info in N_val.items():
             print(f"model: {model}")
             for experiment, model_experiment_info in model_info.items():
                 print(f"experiment: {experiment}")
                 print(f"\tavg gen toks: {sum(model_experiment_info['gen_tokens'])/len(model_experiment_info['gen_tokens']):.2f}")
                 print(f"\taccuracy: {model_experiment_info['correct']} / {model_experiment_info['total']}")
 
-# analyze_arrayworld()
+analyze_indexing()
+
+
