@@ -181,7 +181,7 @@ def load_model(model_name):
     tokenizer.pad_token_id = tokenizer.eos_token_id
     return model, tokenizer
     
-def run_experiment_temperature_based(model, modelname, domain, max_batch_size, num_samples, temperature, num_ex=200):
+def run_experiment_temperature_based(model, modelname, domain, max_batch_size, num_samples, temperature, num_ex):
     if domain == "trivia_qa":
         examples = load_dataset(
             "mandarjoshi/trivia_qa", "rc", split="validation"
@@ -405,15 +405,17 @@ def run_experiment_temperature_based(model, modelname, domain, max_batch_size, n
     print("lengths of incorrect:", got_incorrect_lengths)
 
 
-def run_experiment_exemplar_based(model, modelname, domain, max_batch_size, num_samples, num_ex=200):
+def run_experiment_exemplar_based(model, modelname, domain, max_batch_size, num_samples, num_ex):
     if domain == "trivia_qa":
         examples = load_dataset(
             "mandarjoshi/trivia_qa", "rc", split="validation"
         ).select(
             range(5, 5 + num_ex)
         )  # used the first few to construct the prompts
-        from prompts import trivia_basic_prompt, trivia_cot_prompt
+        from prompts import trivia_basic_prompt, qa_cot_template, trivia_cot_exemplars
         
+        length_buckets = get_length_buckets(trivia_cot_exemplars, num_buckets)
+        trivia_cot_prompts = {length: "\n\n".join(qa_cot_template.format(question=ex[0], cot=ex[1]) for ex in bucket) for length, bucket in length_buckets.items()}
 
         def get_batch(ex_idx, max_batch_size):
             exs = [{} for _ in range(min(max_batch_size, len(examples)-ex_idx))]
@@ -425,8 +427,9 @@ def run_experiment_exemplar_based(model, modelname, domain, max_batch_size, num_
         make_basic_queries = lambda exs: [
             trivia_basic_prompt.format(question=ex['question']) for ex in exs
         ]
+        # TODO
         make_cot_queries = lambda exs: [
-            trivia_cot_prompt.format(question=ex['question']) for ex in exs
+            trivia_cot_prompt + qa_cot_template.format(question=ex["question"], cot="") for ex in exs
         ]
         basic_stop_strings = ["\nQuestion:"]
         cot_stop_strings = ["\nQuestion:"]
@@ -448,31 +451,34 @@ def run_experiment_exemplar_based(model, modelname, domain, max_batch_size, num_
                 ) in exs[batch_idx]["answer"]["normalized_aliases"]
             return is_correct, predicted_answer
     if domain in {"indexing", "idx_management", "arrayworld"}:
-        from prompts import code_solving_insn
+        from prompts import code_solving_insn, python_exc_cot_query_template, python_exc_cot_insn
 
         if domain == "indexing":
-            from prompts import indexing_examples as fs_examples
-            from prompts import cot_query_template
-
+            from prompts import indexing_cot_exemplars as cot_exemplars
+            assert_regex = r"(^[\s\S]*)assert answer == "
             examples = json.load(open("data/indexing_array_N20.json"))
-            assert_regex = r"(^[\s\S]*)assert answer == "
         if domain == "idx_management":
-            from prompts import idx_management_examples as fs_examples
-            from prompts import idx_management_cot_query_template as cot_query_template
-
-            examples = json.load(open("data/idx_management_N20.json"))
+            from prompts import idx_management_cot_exemplars as cot_exemplars
             assert_regex = r"(^[\s\S]*)assert idx == "
+            examples = json.load(open("data/idx_management_N20.json"))
         if domain == "arrayworld":
-            from prompts import array_world_examples as fs_examples
-            from prompts import cot_query_template
-
-            examples = json.load(open("data/uniformed_arrayworld_N20.json"))
+            from prompts import array_world_cot_exemplars as cot_exemplars
             assert_regex = r"(^[\s\S]*)assert answer == "
-        examples = examples[:min(len(examples), num_ex)]
+            examples = json.load(open("data/uniformed_arrayworld_N20.json"))
 
+        fs_examples = [ex[0] for ex in cot_exemplars]
         code_solving_prompt = code_solving_insn + "\n\n".join(
             f"```\n{code.strip()}\n```" for code in fs_examples
         )
+
+        cot_query_template = ""
+        for ex in indexing_cot_exemplars:
+            code_assert_prefix = (
+                re.search(assert_regex, ex[0], re.MULTILINE).group(0)
+            )
+            cot_query_template += "\n\n" + python_exc_cot_query_template.format(code=code_assert_prefix + "??", cot=ex[1])
+
+        examples = examples[:min(len(examples), num_ex)]
         get_batch = lambda examples, ex_idx, max_batch_size: examples[ex_idx : min(len(examples), ex_idx + max_batch_size)]
 
         def make_basic_queries(exs):
@@ -486,8 +492,9 @@ def run_experiment_exemplar_based(model, modelname, domain, max_batch_size, num_
             return queries
 
         make_cot_queries = lambda exs: [
-            cot_query_template.format(
-                code=re.search(assert_regex, ex["code"], re.MULTILINE).group(0) + "??"
+            cot_query_template + python_exc_cot_query_template.format(
+                code=re.search(assert_regex, ex["code"], re.MULTILINE).group(0) + "??",
+                cot=""
             )
             for ex in exs
         ]
@@ -540,8 +547,8 @@ def run_experiment_exemplar_based(model, modelname, domain, max_batch_size, num_
 
             return is_correct, predicted_answer       
     if domain == "compgap":
-        from prompts import qa_basic_prompt, compgap_exemplars
-        
+        from prompts import qa_basic_prompt, compgap_exemplars, qa_cot_template
+        compgap_cot_prompt = "\n\n".join(qa_cot_template.format(question=ex[0], cot=ex[1]) for ex in compgap_exemplars) 
 
         examples = json.load(open("data/bamboogle_prerelease.json"))
         examples = examples[:min(len(examples), num_ex)]
@@ -551,7 +558,7 @@ def run_experiment_exemplar_based(model, modelname, domain, max_batch_size, num_
             qa_basic_prompt.format(question=ex["Question"]) for ex in exs
         ]
         make_cot_queries = lambda exs: [
-            compgap_cot_prompt.format(question=ex["Question"]) for ex in exs
+            compgap_cot_prompt + qa_cot_template.format(question=ex["Question"], cot="") for ex in exs
         ]
         basic_stop_strings = ["\nQuestion:"]
         cot_stop_strings = ["\nQuestion:"]
@@ -625,8 +632,9 @@ def run_experiment_exemplar_based(model, modelname, domain, max_batch_size, num_
     print("lengths of incorrect:", got_incorrect_lengths)
 
 
+
 batch_size = 12
-num_ex = 20
+num_ex = 100
 num_samples = 5
 temperatures = [0.6]
 
