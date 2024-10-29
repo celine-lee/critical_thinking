@@ -10,7 +10,7 @@ import ipdb
 import traceback
 import os
 import ast
-
+from tqdm import tqdm
 
 def debughook(etype, value, tb):
     traceback.print_exception(etype, value, tb)
@@ -19,6 +19,15 @@ def debughook(etype, value, tb):
 
 
 sys.excepthook = debughook
+
+## NOTES
+# could potentially use https://huggingface.co/docs/transformers/en/internal/generation_utils#transformers.ExponentialDecayLengthPenalty for max limit
+# dont know yet how to encourage longer cot though... elegantly.
+# options:
+# temperature sampling
+# random seed choice
+# fs example selection
+
 
 def get_code_str_from_tree_node(ast_node, og_code):
     if 'lineno' not in dir(ast_node):
@@ -29,15 +38,6 @@ def get_code_str_from_tree_node(ast_node, og_code):
     end_index = sum(len(line) for line in code_lines[:ast_node.end_lineno-1]) + ast_node.end_col_offset
     return (start_index, end_index, og_code[start_index:end_index])
 
-
-
-## NOTES
-# could potentially use https://huggingface.co/docs/transformers/en/internal/generation_utils#transformers.ExponentialDecayLengthPenalty for max limit
-# dont know yet how to encourage longer cot though... elegantly.
-# options:
-# temperature sampling
-# random seed choice
-# fs example selection
 
 def fs_basic(
     model,
@@ -51,8 +51,9 @@ def fs_basic(
 ):
     outputs = []
     ex_idx = 0
+    pbar = tqdm(total=len(examples)) 
     while ex_idx < len(examples):
-        exs = get_batch(examples, ex_idx, max_batch_size)
+        exs = get_batch(ex_idx, max_batch_size)
         queries = make_queries(exs)
         input_ids = tokenizer(
             queries, padding=True, truncation=True, max_length=2048, return_tensors="pt"
@@ -97,6 +98,8 @@ def fs_basic(
             )
 
         ex_idx += max_batch_size
+        pbar.update(max_batch_size)
+    pbar.close()
     return outputs
 
 
@@ -114,8 +117,9 @@ def fs_cot(
 ):
     outputs = []
     ex_idx = 0
+    pbar = tqdm(total=len(examples))
     while ex_idx < len(examples):
-        exs = get_batch(examples, ex_idx, max_batch_size)
+        exs = get_batch(ex_idx, max_batch_size)
         queries = make_queries(exs)
         input_ids = tokenizer(
             queries, padding=True, truncation=True, max_length=2048, return_tensors="pt"
@@ -163,6 +167,8 @@ def fs_cot(
             outputs.append(example_output)
 
         ex_idx += max_batch_size
+        pbar.update(max_batch_size)
+    pbar.close()
     return outputs
 
 def load_model(model_name):
@@ -176,7 +182,6 @@ def load_model(model_name):
     return model, tokenizer
     
 def run_experiment(model, modelname, domain, max_batch_size, num_samples, temperature, num_ex=200):
-
     if domain == "trivia_qa":
         examples = load_dataset(
             "mandarjoshi/trivia_qa", "rc", split="validation"
@@ -185,12 +190,12 @@ def run_experiment(model, modelname, domain, max_batch_size, num_samples, temper
         )  # used the first few to construct the prompts
         from prompts import trivia_basic_prompt, trivia_cot_prompt
 
-        def get_batch(examples, ex_idx, max_batch_size):
-            exs = []
-            for key, value in examples.items():
-                for batch_idx in range(ex_idx, min(len(examples), ex_idx + max_batch_size)):
-                    while batch_idx-ex_idx >= len(exs): exs.append({})
-                    exs[batch_idx-ex_idx][key] = value[ex_idx]
+        def get_batch(ex_idx, max_batch_size):
+            exs = [{} for _ in range(min(max_batch_size, len(examples)-ex_idx))]
+            batch = examples[ex_idx:min(len(examples), ex_idx + max_batch_size)]
+            for key in ['question', 'answer']:
+                for batch_idx, value in enumerate(batch[key]):
+                    exs[batch_idx][key] = value
             return exs
         make_basic_queries = lambda exs: [
             trivia_basic_prompt.format(question=ex['question']) for ex in exs
@@ -238,6 +243,7 @@ def run_experiment(model, modelname, domain, max_batch_size, num_samples, temper
 
             examples = json.load(open("data/uniformed_arrayworld_N20.json"))
             assert_regex = r"(^[\s\S]*)assert answer == "
+        examples = examples[:min(len(examples), num_ex)]
 
         code_solving_prompt = code_solving_insn + "\n\n".join(
             f"```\n{code.strip()}\n```" for code in fs_examples
@@ -312,6 +318,8 @@ def run_experiment(model, modelname, domain, max_batch_size, num_samples, temper
         from prompts import qa_basic_prompt, compgap_cot_prompt
 
         examples = json.load(open("data/bamboogle_prerelease.json"))
+        examples = examples[:min(len(examples), num_ex)]
+
         get_batch = lambda examples, ex_idx, max_batch_size: examples[ex_idx : min(len(examples), ex_idx + max_batch_size)]
         make_basic_queries = lambda exs: [
             qa_basic_prompt.format(question=ex["Question"]) for ex in exs
@@ -335,7 +343,6 @@ def run_experiment(model, modelname, domain, max_batch_size, num_samples, temper
                 is_correct = predicted_answer.lower() == exs[batch_idx]['Answer'].lower()
             return is_correct, predicted_answer
 
-    examples = examples[:num_ex]
     total_ex = len(examples)
 
     print(" ====== FS BASIC GREEDY ===== ")
@@ -406,7 +413,9 @@ domains = ["trivia_qa", "compgap", "arrayworld", "indexing", "idx_management"]
 
 for model in models:
     modelname = re.search(r"/(.+)", model).group(1)
+    print(f"===== {modelname} ====")
     model, tokenizer = load_model(model)
     for domain in domains:
+        print(f"---- {domain} ----")
         for temperature in temperatures:
             run_experiment(model, modelname, domain, batch_size, num_samples, temperature, num_ex=num_ex)
