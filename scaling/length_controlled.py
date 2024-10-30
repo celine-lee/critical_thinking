@@ -20,15 +20,6 @@ def debughook(etype, value, tb):
 
 sys.excepthook = debughook
 
-## NOTES
-# could potentially use https://huggingface.co/docs/transformers/en/internal/generation_utils#transformers.ExponentialDecayLengthPenalty for max limit
-# dont know yet how to encourage longer cot though... elegantly.
-# options:
-# temperature sampling
-# random seed choice
-# fs example selection
-
-
 def get_code_str_from_tree_node(ast_node, og_code):
     if 'lineno' not in dir(ast_node):
         print(f"Cannot get codestr for node {ast_node}")
@@ -37,6 +28,22 @@ def get_code_str_from_tree_node(ast_node, og_code):
     start_index = sum(len(line) for line in code_lines[:ast_node.lineno-1]) + ast_node.col_offset
     end_index = sum(len(line) for line in code_lines[:ast_node.end_lineno-1]) + ast_node.end_col_offset
     return (start_index, end_index, og_code[start_index:end_index])
+
+
+from transformers import StoppingCriteria, StoppingCriteriaList
+
+class StopStringCriteria(StoppingCriteria):
+    # Necessary for beam search...
+    def __init__(self, input_len, stop_strings, tokenizer):
+        self.input_len = input_len
+        self.stop_strings = stop_strings
+        self.tokenizer = tokenizer
+
+    def __call__(self, input_ids, scores, **kwargs):
+        # Decode generated tokens and check for the stop string
+        decoded_outputs = self.tokenizer.batch_decode(input_ids[:, self.input_len:], skip_special_tokens=True)
+        return all(any(ss in decoded_output for ss in self.stop_strings) for decoded_output in decoded_outputs)
+
 
 
 def fs_basic(
@@ -115,10 +122,13 @@ def fs_cot(
     num_samples,
     do_sample,
     temperature,
-    num_beams
+    num_beams,
+    output_filename=None
 ):
     outputs = []
-    ex_idx = 0
+    if output_filename and os.path.exists(output_filename):
+        outputs = json.load(open(output_filename))
+    ex_idx = len(outputs)
     pbar = tqdm(total=len(examples))
     while ex_idx < len(examples):
         exs = get_batch(ex_idx, max_batch_size)
@@ -126,18 +136,34 @@ def fs_cot(
         input_ids = tokenizer(
             queries, padding=True, truncation=True, max_length=2048, return_tensors="pt"
         ).to(device)
-        model_output = model.generate(
-            **input_ids,
-            return_dict_in_generate=True,
-            max_new_tokens=2048,
-            tokenizer=tokenizer,
-            stop_strings=stop_strings,
-            num_return_sequences=num_samples,
-            do_sample=do_sample,
-            temperature=temperature,
-            num_beams=num_beams,
-            pad_token_id=tokenizer.eos_token_id,
-        )
+        if num_beams > 1:
+            stop_criteria = StopStringCriteria(input_len=input_ids.input_ids.shape[-1], stop_strings=stop_strings, tokenizer=tokenizer)
+            model_output = model.generate(
+                **input_ids,
+                return_dict_in_generate=True,
+                max_new_tokens=1200,
+                tokenizer=tokenizer,
+                stop_strings=stop_strings,
+                num_return_sequences=num_samples,
+                do_sample=do_sample,
+                temperature=temperature,
+                num_beams=num_beams,
+                stopping_criteria=StoppingCriteriaList([stop_criteria]),
+                pad_token_id=tokenizer.eos_token_id,
+            )
+        else:
+            model_output = model.generate(
+                **input_ids,
+                return_dict_in_generate=True,
+                max_new_tokens=1200,
+                tokenizer=tokenizer,
+                stop_strings=stop_strings,
+                num_return_sequences=num_samples,
+                do_sample=do_sample,
+                temperature=temperature,
+                pad_token_id=tokenizer.eos_token_id,
+            )
+
         model_predictions = tokenizer.batch_decode(
             model_output.sequences[:, input_ids.input_ids.shape[-1] :],
             skip_special_tokens=True,
@@ -168,6 +194,9 @@ def fs_cot(
                     }
                 )
             outputs.append(example_output)
+            if output_filename and (len(outputs) % 5 == 0):
+                with open(output_filename, "w") as wf:
+                    json.dump(outputs, wf, indent=4)
 
         ex_idx += max_batch_size
         pbar.update(max_batch_size)
@@ -380,25 +409,23 @@ def rum_experiment(model, modelname, domain, max_batch_size, num_samples, temper
 
     print(f" ====== FS COT MULTINOMIAL N={num_samples} TEMP {temperature}===== ")
     output_filename = f"outputs/{domain}_fs_cot_temp{int(temperature*100)}_N{num_samples}_{modelname}.json"
-    if os.path.exists(output_filename):
-        fs_cot_outputs = json.load(open(output_filename))
-    else:
-        fs_cot_outputs = fs_cot(
-            model,
-            tokenizer,
-            get_batch,
-            make_cot_queries,
-            examples,
-            get_prediction_and_correctness_cot,
-            max_batch_size,
-            cot_stop_strings,
-            num_samples,
-            True,
-            temperature,
-            1
-        )
-        with open(output_filename, "w") as wf:
-            json.dump(fs_cot_outputs, wf, indent=4)
+    fs_cot_outputs = fs_cot(
+        model,
+        tokenizer,
+        get_batch,
+        make_cot_queries,
+        examples,
+        get_prediction_and_correctness_cot,
+        max_batch_size,
+        cot_stop_strings,
+        num_samples,
+        True,
+        temperature,
+        1,
+        output_filename
+    )
+    with open(output_filename, "w") as wf:
+        json.dump(fs_cot_outputs, wf, indent=4)
 
     fs_cot_correct = len([ex for ex in fs_cot_outputs if any(gen["correct"] for gen in ex['generations'])])
     print(f"(pass@{num_samples}) Correct: {fs_cot_correct} / {total_ex}")
@@ -407,63 +434,31 @@ def rum_experiment(model, modelname, domain, max_batch_size, num_samples, temper
     )
 
 
-    print(f" ====== FS COT BEAMS {num_beams}===== ")
+    print(f" ====== FS COT BEAMS N={num_beams}===== ")
     output_filename = f"outputs/{domain}_fs_cot_beams{num_beams}_{modelname}.json"
-    if os.path.exists(output_filename):
-        fs_cot_outputs = json.load(open(output_filename))
-    else:
-        fs_cot_outputs = fs_cot(
-            model,
-            tokenizer,
-            get_batch,
-            make_cot_queries,
-            examples,
-            get_prediction_and_correctness_cot,
-            max_batch_size,
-            cot_stop_strings,
-            1,
-            False,
-            None,
-            num_beams,
-        )
-        with open(output_filename, "w") as wf:
-            json.dump(fs_cot_outputs, wf, indent=4)
+    fs_cot_outputs = fs_cot(
+        model,
+        tokenizer,
+        get_batch,
+        make_cot_queries,
+        examples,
+        get_prediction_and_correctness_cot,
+        1, # to correctly do beam stopping, need small batch... unless there's something better implement wise
+        cot_stop_strings,
+        1,
+        False,
+        None,
+        num_beams,
+        output_filename
+    )
+    with open(output_filename, "w") as wf:
+        json.dump(fs_cot_outputs, wf, indent=4)
     
     fs_cot_correct = len([ex for ex in fs_cot_outputs if any(gen["correct"] for gen in ex['generations'])])
     print(f"Correct: {fs_cot_correct} / {total_ex}")
     print(
         f"Avg gen tokens: {num_beams} * {sum(op["generations"][0]['generated_tokens'] for op in fs_cot_outputs) / total_ex:.2f}"
     )
-
-
-def run_experiment_exemplar_based(model, modelname, domain, max_batch_size, num_samples, num_ex):
-    if domain == "trivia_qa":
-        examples = load_dataset(
-            "mandarjoshi/trivia_qa", "rc", split="validation"
-        ).select(
-            range(5, 5 + num_ex)
-        )  # used the first few to construct the prompts
-        from prompts import trivia_basic_prompt, qa_cot_template, trivia_cot_exemplars
-        
-        length_buckets = get_length_buckets(trivia_cot_exemplars, num_buckets)
-        trivia_cot_prompts = {length: "\n\n".join(qa_cot_template.format(question=ex[0], cot=ex[1]) for ex in bucket) for length, bucket in length_buckets.items()}
-
-        def get_batch(ex_idx, max_batch_size):
-            exs = [{} for _ in range(min(max_batch_size, len(examples)-ex_idx))]
-            batch = examples[ex_idx:min(len(examples), ex_idx + max_batch_size)]
-            for key in ['question', 'answer']:
-                for batch_idx, value in enumerate(batch[key]):
-                    exs[batch_idx][key] = value
-            return exs
-        make_basic_queries = lambda exs: [
-            trivia_basic_prompt.format(question=ex['question']) for ex in exs
-        ]
-        # TODO
-        make_cot_queries = lambda exs: [
-            trivia_cot_prompt + qa_cot_template.format(question=ex["question"], cot="") for ex in exs
-        ]
-        basic_stop_strings = ["\nQuestion:"]
-        cot_stop_strings = ["\nQuestion:"]
 
 batch_size = 10
 num_ex = 100
@@ -477,11 +472,11 @@ models = [
     "meta-llama/Llama-3.1-8B-Instruct",
 ]
 domains = [
+    "indexing", 
+    "idx_management",
     "trivia_qa", 
     "compgap", 
     "arrayworld", 
-    "indexing", 
-    "idx_management"
 ]
 
 for model in models:
