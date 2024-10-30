@@ -42,59 +42,140 @@ for outputfile in glob.glob(f"outputs/{domain}*.json"):
         correctness.append(len([ex for ex in outputs if ex["correct"]]) / len(outputs))
 
 # everything at once: each table is a domain
+def plot_all():
 
-data = {
-    "Method": methodmodels,
-    "Avg no gen toks": avg_gen_toks,
-    "Correctness": correctness
-}
+    data = {
+        "Method": methodmodels,
+        "Avg no gen toks": avg_gen_toks,
+        "Correctness": correctness
+    }
 
-# Create a DataFrame for the new data
-df = pd.DataFrame(data)
+    # Create a DataFrame for the new data
+    df = pd.DataFrame(data)
 
-# Plotting the new data grouped by model size
-plt.figure(figsize=(10, 6))
+    # Plotting the new data grouped by model size
+    plt.figure(figsize=(10, 6))
 
-# Grouped by model size
-model_1B_best_of_N = df[(df['Method'].str.contains('3.2-1B')) & (df['Method'].str.contains('_N'))]
-model_3B_best_of_N = df[df['Method'].str.contains('3.2-3B') & df['Method'].str.contains('_N')]
-model_8B_best_of_N = df[df['Method'].str.contains('3.1-8B') & df['Method'].str.contains('_N')]
-model_1B_beam = df[df['Method'].str.contains('3.2-1B') & df['Method'].str.contains('_beam')]
-model_3B_beam = df[df['Method'].str.contains('3.2-3B') & df['Method'].str.contains('_beam')]
-model_8B_beam = df[df['Method'].str.contains('3.1-8B') & df['Method'].str.contains('_beam')]
-model_1B_direct = df[df['Method'].str.contains('3.2-1B') & df['Method'].str.contains('_basic')]
-model_3B_direct = df[df['Method'].str.contains('3.2-3B') & df['Method'].str.contains('_basic')]
-model_8B_direct = df[df['Method'].str.contains('3.1-8B') & df['Method'].str.contains('_basic')]
+    # Grouped by model size
+    model_1B_best_of_N = df[(df['Method'].str.contains('3.2-1B')) & (df['Method'].str.contains('_N'))]
+    model_3B_best_of_N = df[df['Method'].str.contains('3.2-3B') & df['Method'].str.contains('_N')]
+    model_8B_best_of_N = df[df['Method'].str.contains('3.1-8B') & df['Method'].str.contains('_N')]
+    model_1B_beam = df[df['Method'].str.contains('3.2-1B') & df['Method'].str.contains('_beam')]
+    model_3B_beam = df[df['Method'].str.contains('3.2-3B') & df['Method'].str.contains('_beam')]
+    model_8B_beam = df[df['Method'].str.contains('3.1-8B') & df['Method'].str.contains('_beam')]
+    model_1B_direct = df[df['Method'].str.contains('3.2-1B') & df['Method'].str.contains('_basic')]
+    model_3B_direct = df[df['Method'].str.contains('3.2-3B') & df['Method'].str.contains('_basic')]
+    model_8B_direct = df[df['Method'].str.contains('3.1-8B') & df['Method'].str.contains('_basic')]
 
-# Plot for each model size and method. color represents model size and line style represents method
-plt.scatter(model_1B_best_of_N['Avg no gen toks'], model_1B_best_of_N['Correctness'], color='red', label='3.2 1B')
-plt.plot(model_1B_best_of_N['Avg no gen toks'], model_1B_best_of_N['Correctness'], linestyle='-')
-plt.scatter(model_3B_best_of_N['Avg no gen toks'], model_3B_best_of_N['Correctness'], color='blue', label='3.2 3B')
-plt.plot(model_3B_best_of_N['Avg no gen toks'], model_3B_best_of_N['Correctness'], linestyle='-')
-plt.scatter(model_8B_best_of_N['Avg no gen toks'], model_8B_best_of_N['Correctness'], color='purple', label='3.1 8B')
-plt.plot(model_8B_best_of_N['Avg no gen toks'], model_8B_best_of_N['Correctness'], linestyle='-')
+    # Plot for each model size and method. color represents model size and line style represents method
+    plt.scatter(model_1B_best_of_N['Avg no gen toks'], model_1B_best_of_N['Correctness'], color='red', marker=".", label='3.2 1B')
+    plt.plot(model_1B_best_of_N['Avg no gen toks'], model_1B_best_of_N['Correctness'], color='red', linestyle='-')
+    plt.scatter(model_3B_best_of_N['Avg no gen toks'], model_3B_best_of_N['Correctness'], color='blue', marker=".", label='3.2 3B')
+    plt.plot(model_3B_best_of_N['Avg no gen toks'], model_3B_best_of_N['Correctness'], linestyle='-')
+    plt.scatter(model_8B_best_of_N['Avg no gen toks'], model_8B_best_of_N['Correctness'], color='purple', marker=".", label='3.1 8B')
+    plt.plot(model_8B_best_of_N['Avg no gen toks'], model_8B_best_of_N['Correctness'], linestyle='-')
 
-plt.scatter(model_1B_beam['Avg no gen toks'], model_1B_beam['Correctness'], color='red', label='3.2 1B')
-plt.plot(model_1B_beam['Avg no gen toks'], model_1B_beam['Correctness'], linestyle='--')
-plt.scatter(model_3B_beam['Avg no gen toks'], model_3B_beam['Correctness'], color='blue', label='3.2 3B')
-plt.plot(model_3B_beam['Avg no gen toks'], model_3B_beam['Correctness'], linestyle='--')
-plt.scatter(model_8B_beam['Avg no gen toks'], model_8B_beam['Correctness'], color='purple', label='3.1 8B')
-plt.plot(model_8B_beam['Avg no gen toks'], model_8B_beam['Correctness'], linestyle='--')
+    plt.scatter(model_1B_beam['Avg no gen toks'], model_1B_beam['Correctness'], color='red', marker="x")
+    plt.plot(model_1B_beam['Avg no gen toks'], model_1B_beam['Correctness'], linestyle='--')
+    plt.scatter(model_3B_beam['Avg no gen toks'], model_3B_beam['Correctness'], color='blue', marker="x")
+    plt.plot(model_3B_beam['Avg no gen toks'], model_3B_beam['Correctness'], linestyle='--')
+    plt.scatter(model_8B_beam['Avg no gen toks'], model_8B_beam['Correctness'], color='purple', marker="x")
+    plt.plot(model_8B_beam['Avg no gen toks'], model_8B_beam['Correctness'], linestyle='--')
 
-plt.scatter(model_1B_direct['Avg no gen toks'], model_1B_direct['Correctness'], color='red', label='3.2 1B')
-plt.plot(model_1B_direct['Avg no gen toks'], model_1B_direct['Correctness'], linestyle=':')
-plt.scatter(model_3B_direct['Avg no gen toks'], model_3B_direct['Correctness'], color='blue', label='3.2 3B')
-plt.plot(model_3B_direct['Avg no gen toks'], model_3B_direct['Correctness'], linestyle=':')
-plt.scatter(model_8B_direct['Avg no gen toks'], model_8B_direct['Correctness'], color='purple', label='3.1 8B')
-plt.plot(model_8B_direct['Avg no gen toks'], model_8B_direct['Correctness'], linestyle=':')
+    plt.scatter(model_1B_direct['Avg no gen toks'], model_1B_direct['Correctness'], color='red', marker="^")
+    plt.plot(model_1B_direct['Avg no gen toks'], model_1B_direct['Correctness'], linestyle=':')
+    plt.scatter(model_3B_direct['Avg no gen toks'], model_3B_direct['Correctness'], color='blue', marker="^")
+    plt.plot(model_3B_direct['Avg no gen toks'], model_3B_direct['Correctness'], linestyle=':')
+    plt.scatter(model_8B_direct['Avg no gen toks'], model_8B_direct['Correctness'], color='purple', marker="^")
+    plt.plot(model_8B_direct['Avg no gen toks'], model_8B_direct['Correctness'], linestyle=':')
 
-# Adding labels and title
-plt.xlabel('Average No. of Generated Tokens')
-plt.ylabel('Correctness')
-plt.ylim(0, 1)
-plt.title(f'Correctness vs. Avg No. of Generated Tokens ({domain})')
-plt.legend(title='Scaling Test-time compute')
-plt.show()
+    # Adding labels and title
+    plt.xlabel('Average No. of Generated Tokens')
+    plt.ylabel('Correctness')
+    plt.ylim(0, 1)
+    plt.title(f'Correctness vs. Avg No. of Generated Tokens ({domain})')
+    plt.legend(title='Scaling Test-time compute')
+    plt.show()
 
 # grouped by model: each table is a domain and model, showing difference in methods
+
+def plot_by_model():
+
+    for (model, color) in ["3.2-1B", "3.2-3B", "3.1-8B"]:
+        
+        methods = [mm for mm in methodmodels if model in mm]
+        relevant_avg_gen_toks = [avg_gen_toks[idx] for idx, mm in enumerate(methodmodels) if model in mm]
+        relevant_correctness = [correctness[idx] for idx, mm in enumerate(methodmodels) if model in mm]
+        data = {
+            "Method": methods,
+            "Avg no gen toks": relevant_avg_gen_toks,
+            "Correctness": relevant_correctness
+        }
+
+        # Create a DataFrame for the new data
+        df = pd.DataFrame(data)
+
+        # Plotting the new data grouped by model size
+        plt.figure(figsize=(10, 6))
+
+        # Grouped by model size
+        best_of_N = df[(df['Method'].str.contains('_N'))]
+        beam = df[df['Method'].str.contains('_beam')]
+        direct = df[df['Method'].str.contains('_basic')]
+
+        # Plot for each model size and method. color represents model size and line style represents method
+        plt.scatter(best_of_N['Avg no gen toks'], best_of_N['Correctness'], color=color, marker=".")
+        plt.plot(best_of_N['Avg no gen toks'], best_of_N['Correctness'], color=color, linestyle='-')
+        plt.scatter(beam['Avg no gen toks'], beam['Correctness'], color=color, marker="x")
+        plt.plot(beam['Avg no gen toks'], beam['Correctness'], color=color, linestyle='--')
+        plt.scatter(direct['Avg no gen toks'], direct['Correctness'], color=color, marker="^")
+        plt.plot(direct['Avg no gen toks'], direct['Correctness'], color=color, linestyle=':')
+
+        # Adding labels and title
+        plt.xlabel('Average No. of Generated Tokens')
+        plt.ylabel('Correctness')
+        plt.ylim(0, 1)
+        plt.title(f'Correctness vs. Avg No. of Generated Tokens ({domain} {model})')
+        plt.legend(title='Scaling Test-time compute')
+        plt.show()
+
 # grouped by method: each table is a domain and method, showing difference in models
+def plot_by_method():
+
+    for (method, marker, linestyle) in [("fs_basic", "^", ':'), ("_N", ".", '-'), ("_beam", "x", '--')]:
+        
+        models = [mm for mm in methodmodels if method in mm]
+        relevant_avg_gen_toks = [avg_gen_toks[idx] for idx, mm in enumerate(methodmodels) if method in mm]
+        relevant_correctness = [correctness[idx] for idx, mm in enumerate(methodmodels) if method in mm]
+        data = {
+            "Model": models,
+            "Avg no gen toks": relevant_avg_gen_toks,
+            "Correctness": relevant_correctness
+        }
+
+        # Create a DataFrame for the new data
+        df = pd.DataFrame(data)
+
+        # Plotting the new data grouped by model size
+        plt.figure(figsize=(10, 6))
+
+        # Grouped by model size
+        llama_1b = df[df['Model'].str.contains('3.2-1B')]
+        llama_3b = df[df['Model'].str.contains('3.2-3B')]
+        llama_8b = df[df['Model'].str.contains('3.1-8B')]
+
+        # Plot for each model size and method. color represents model size and line style represents method
+        plt.scatter(llama_1b['Avg no gen toks'], llama_1b['Correctness'], color='red', marker=marker)
+        plt.plot(llama_1b['Avg no gen toks'], llama_1b['Correctness'], color='red', linestyle=linestyle)
+        plt.scatter(llama_3b['Avg no gen toks'], llama_3b['Correctness'], color='blue', marker=marker)
+        plt.plot(llama_3b['Avg no gen toks'], llama_3b['Correctness'], color='blue', linestyle=linestyle)
+        plt.scatter(llama_8b['Avg no gen toks'], llama_8b['Correctness'], color='purple', marker=marker)
+        plt.plot(llama_8b['Avg no gen toks'], llama_8b['Correctness'], color='purple', linestyle=linestyle)
+
+        # Adding labels and title
+        plt.xlabel('Average No. of Generated Tokens')
+        plt.ylabel('Correctness')
+        plt.ylim(0, 1)
+        plt.title(f'Correctness vs. Avg No. of Generated Tokens ({domain} {method})')
+        plt.legend(title='Scaling Test-time compute')
+        plt.show()
