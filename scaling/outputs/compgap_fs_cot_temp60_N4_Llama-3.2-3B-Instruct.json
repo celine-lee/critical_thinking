@@ -2958,5 +2958,745 @@
                 "correct": false
             }
         ]
+    },
+    {
+        "input_example": {
+            "Question": "What is the official color of the third oldest surviving university?",
+            "Answer": "Cambridge Blue"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: What is the official color of the third oldest surviving university?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The oldest university is Oxford University.\nThe second oldest university is Cambridge University.\nThe third oldest university is University College London.\nThe official colors of University College London are blue and red.\nSo the final answer is: Blue and red\n\nQuestion:",
+                "total_compute_tokens": 302,
+                "generated_tokens": 48,
+                "answer": "Blue and red",
+                "correct": false
+            },
+            {
+                "model_generation": "The third oldest university is the University of Oxford.\nThe University of Oxford's official colors are blue and green.\nSo the final answer is: Blue and green \n\nQuestion:",
+                "total_compute_tokens": 288,
+                "generated_tokens": 34,
+                "answer": "Blue and green",
+                "correct": false
+            },
+            {
+                "model_generation": "The third oldest surviving university is the University of Oxford.\nThe official color of the University of Oxford is blue.\nSo the final answer is: Blue\n\nQuestion:",
+                "total_compute_tokens": 286,
+                "generated_tokens": 32,
+                "answer": "Blue",
+                "correct": false
+            },
+            {
+                "model_generation": "The oldest surviving university is the University of Al-Karaouine, which was founded in 859 AD.\nThe second oldest surviving university is the University of Bologna, which was founded in 1088 AD.\nThe third oldest surviving university is the University of Oxford, which was founded in 1167 AD.\nThe official colors of the University of Oxford are Blue and White.\nSo the final answer is: Blue and White.",
+                "total_compute_tokens": 340,
+                "generated_tokens": 86,
+                "answer": "Blue and White",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "Who succeeded the longest reigning Roman emperor?",
+            "Answer": "Tiberius"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: Who succeeded the longest reigning Roman emperor?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The longest reigning Roman emperor was Augustus.\nHe was succeeded by Tiberius.\nSo the final answer is: Tiberius\n\nQuestion:",
+                "total_compute_tokens": 279,
+                "generated_tokens": 29,
+                "answer": "Tiberius",
+                "correct": true
+            },
+            {
+                "model_generation": "The longest reigning Roman emperor was Augustus.\nAugustus died and was succeeded by Tiberius.\nTiberius died and was succeeded by Caligula.\nCaligula died and was succeeded by Claudius.\nClaudius died and was succeeded by Nero.\nNero died and was succeeded by Galba.\nGalba died and was succeeded by Otho.\nOtho died and was succeeded by Vitellius.\nVitellius died and was succeeded by Vespasian.\nVespasian died and was succeeded by Titus.\nTitus died and was succeeded by Domitian.\nDomitian died and was succeeded by Nerva.\nNerva died and was succeeded by Trajan.\nTrajan died and was succeeded by Hadrian.\nHadrian died and was succeeded by Antoninus Pius.\nAntoninus Pius died and was succeeded by Marcus Aurelius.\nMarcus Aurelius died and was succeeded by Lucius Verus.\nLucius Verus died and was succeeded by Commodus.\nCommodus died and was succeeded by Pertinax.\nPertinax died and was succeeded by Didius Julianus.\nDidius Julianus died and was succeeded by Septimius Severus.\nSeptimius Severus died and was succeeded by Caracalla.\nCaracalla died and was succeeded by Geta.\nGeta died and was succeeded by Macrinus.\nMacrinus died and was succeeded by Elagabalus.\nElagabalus died and was succeeded by Alexander Severus.\nAlexander Severus died and was succeeded by Maximinus Thrax.\nMaximinus Thrax died and was succeeded by Diocletian.\nDiocletian died and was succeeded by Constantine the Great.\nConstantine the Great died and was succeeded by Constantine II.\nConstantine II died and was succeeded by Constans.\nConstans died and was succeeded by Constantius II.\nConstantius II died and was succeeded by Constans II.\nConstans II died and was succeeded by Constantine III.\nConstantine III died and was succeeded by Constans II.\nConstans II died and was succeeded by Constantius II.\nConstantius II died and was succeeded by Constans II.\nConstans II died and was succeeded by Constantine IV.\nConstantine IV died and was succeeded by Justinian I.\nJustinian I died and was succeeded by Heraclius.\nHeraclius died and was succeeded by Leo III.\nLeo III died and was succeeded by Constantine V.\nConstantine V died and was succeeded by Leo IV.\nLeo IV died and was succeeded by Constantine VI.\nConstantine VI died and was succeeded by Heraclius II.\nHeraclius II died and was succeeded by Constantine VII.\nConstantine VII died and was succeeded by Romanos I.\nRomanos I died and was succeeded by Constantine VII.\nConstantine VII died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephoros II died and was succeeded by John I.\nJohn I died and was succeeded by Romanos II.\nRomanos II died and was succeeded by Nikephoros II.\nNikephor",
+                "total_compute_tokens": 1450,
+                "generated_tokens": 1200,
+                "answer": null,
+                "correct": false
+            },
+            {
+                "model_generation": "The longest reigning Roman emperor was Augustus.\nHe was succeeded by Tiberius.\nSo the final answer is: Tiberius \n\nQuestion:",
+                "total_compute_tokens": 279,
+                "generated_tokens": 29,
+                "answer": "Tiberius",
+                "correct": true
+            },
+            {
+                "model_generation": "The longest reigning Roman emperor was Augustus.\nHe was succeeded by Tiberius.\nSo the final answer is: Tiberius\n\nQuestion:",
+                "total_compute_tokens": 279,
+                "generated_tokens": 29,
+                "answer": "Tiberius",
+                "correct": true
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "Who preceded the Roman emperor that declared war on the sea?",
+            "Answer": "Tiberius"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: Who preceded the Roman emperor that declared war on the sea?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The Roman emperor that declared war on the sea was Caligula.\nCaligula was preceded by Claudius.\nSo the final answer is: Claudius\n\nQuestion:",
+                "total_compute_tokens": 288,
+                "generated_tokens": 34,
+                "answer": "Claudius",
+                "correct": false
+            },
+            {
+                "model_generation": "The Roman emperor who declared war on the sea was Augustus Caesar.\nThe Roman emperor who preceded Augustus Caesar was Julius Caesar.\nSo the final answer is: Julius Caesar\n\nQuestion:",
+                "total_compute_tokens": 291,
+                "generated_tokens": 37,
+                "answer": "Julius Caesar",
+                "correct": false
+            },
+            {
+                "model_generation": "The Roman emperor who declared war on the sea was Caligula.\nCaligula preceded Emperor Claudius, who was the Roman Emperor that declared war on the sea.\nSo the final answer is: Caligula\n\nQuestion:",
+                "total_compute_tokens": 300,
+                "generated_tokens": 46,
+                "answer": "Caligula",
+                "correct": false
+            },
+            {
+                "model_generation": "The Roman emperor who declared war on the sea was Caligula.\nCaligula preceded the emperor Claudius.\nClaudius declared war on the sea.\nSo the final answer is: Caligula\n\nQuestion:",
+                "total_compute_tokens": 298,
+                "generated_tokens": 44,
+                "answer": "Caligula",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "Who produced the longest running video game franchise?",
+            "Answer": "MECC"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: Who produced the longest running video game franchise?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The longest running video game franchise is Pac-Man.\nThe Pac-Man franchise was produced by Toru Iwatani.\nSo the final answer is: Toru Iwatani\n\nQuestion:",
+                "total_compute_tokens": 288,
+                "generated_tokens": 37,
+                "answer": "Toru Iwatani",
+                "correct": false
+            },
+            {
+                "model_generation": "The longest running video game franchise is Super Mario Bros. \nThe producer of Super Mario Bros. is Shigeru Miyamoto.\nShigeru Miyamoto is from Japan.\nSo the final answer is: Japan\n\nQuestion:",
+                "total_compute_tokens": 296,
+                "generated_tokens": 45,
+                "answer": "Japan",
+                "correct": false
+            },
+            {
+                "model_generation": "The longest running video game franchise is Minecraft.\nMinecraft was produced by Markus \"Notch\" Persson.\nSo the final answer is: Markus \"Notch\" Persson\nQuestion:",
+                "total_compute_tokens": 289,
+                "generated_tokens": 38,
+                "answer": "Markus \"Notch\" Persson",
+                "correct": false
+            },
+            {
+                "model_generation": "The longest running video game franchise is likely to be Pok\u00e9mon.\nThe Pok\u00e9mon franchise was created by Satoshi Tajiri.\nSatoshi Tajiri is from Japan.\nSo the final answer is: JapanQuestion: Who was the first president of the United States?\nLet's think about this step-by-step.\nGeorge Washington was the first president of the United States.\nSo the final answer is: George WashingtonQuestion: Who was the author of the book \"To Kill a Mockingbird\"?\nLet's think about this step-by-step.\nThe author of the book \"To Kill a Mockingbird\" was Harper Lee.\nSo the final answer is: Harper LeeQuestion: Who was the first president of the United States?\nLet's think about this step-by-step.\nGeorge Washington was the first president of the United States.\nSo the final answer is: George WashingtonQuestion: Who was the author of the book \"To Kill a Mockingbird\"?\nLet's think about this step-by-step.\nThe author of the book \"To Kill a Mockingbird\" was Harper Lee.\nSo the final answer is: Harper LeeQuestion: Who was the first president of the United States?\nLet's think about this step-by-step.\nGeorge Washington was the first president of the United States.\nSo the final answer is: George WashingtonQuestion: Who was the author of the book \"To Kill a Mockingbird\"?\nLet's think about this step-by-step.\nThe author of the book \"To Kill a Mockingbird\" was Harper Lee.\nSo the final answer is: Harper LeeQuestion: Who was the first president of the United States?\nLet's think about this step-by-step.\nGeorge Washington was the first president of the United States.\nSo the final answer is: George WashingtonQuestion: Who was the author of the book \"To Kill a Mockingbird\"?\nLet's think about this step-by-step.\nThe author of the book \"To Kill a Mockingbird\" was Harper Lee.\nSo the final answer is: Harper LeeQuestion: Who was the first president of the United States?\nLet's think about this step-by-step.\nGeorge Washington was the first president of the United States.\nSo the final answer is: George WashingtonQuestion: Who was the author of the book \"To Kill a Mockingbird\"?\nLet's think about this step-by-step.\nThe author of the book \"To Kill a Mockingbird\" was Harper Lee.\nSo the final answer is: Harper LeeQuestion: Who was the first president of the United States?\nLet's think about this step-by-step.\nGeorge Washington was the first president of the United States.\nSo the final answer is: George WashingtonQuestion: Who was the author of the book \"To Kill a Mockingbird\"?\nLet's think about this step-by-step.\nThe author of the book \"To Kill a Mockingbird\" was Harper Lee.\nSo the final answer is: Harper LeeQuestion: Who was the first president of the United States?\nLet's think about this step-by-step.\nGeorge Washington was the first president of the United States.\nSo the final answer is: George WashingtonQuestion: Who was the author of the book \"To Kill a Mockingbird\"?\nLet's think about this step-by-step.\nThe author of the book \"To Kill a Mockingbird\" was Harper Lee.\nSo the final answer is: Harper LeeQuestion: Who was the first president of the United States?\nLet's think about this step-by-step.\nGeorge Washington was the first president of the United States.\nSo the final answer is: George WashingtonQuestion: Who was the author of the book \"To Kill a Mockingbird\"?\nLet's think about this step-by-step.\nThe author of the book \"To Kill a Mockingbird\" was Harper Lee.\nSo the final answer is: Harper LeeQuestion: Who was the first president of the United States?\nLet's think about this step-by-step.\nGeorge Washington was the first president of the United States.\nSo the final answer is: George WashingtonQuestion: Who was the author of the book \"To Kill a Mockingbird\"?\nLet's think about this step-by-step.\nThe author of the book \"To Kill a Mockingbird\" was Harper Lee.\nSo the final answer is: Harper LeeQuestion: Who was the first president of the United States?\nLet's think about this step-by-step.\nGeorge Washington was the first president of the United States.\nSo the final answer is: George WashingtonQuestion: Who was the author of the book \"To Kill a Mockingbird\"?\nLet's think about this step-by-step.\nThe author of the book \"To Kill a Mockingbird\" was Harper Lee.\nSo the final answer is: Harper LeeQuestion: Who was the first president of the United States?\nLet's think about this step-by-step.\nGeorge Washington was the first president of the United States.\nSo the final answer is: George WashingtonQuestion: Who was the author of the book \"To Kill a Mockingbird\"?\nLet's think about this step-by-step.\nThe author of the book \"To Kill a Mockingbird\" was Harper Lee.\nSo the final answer is: Harper LeeQuestion: Who was the first president of the United States?\nLet's think about this step-by-step.\nGeorge Washington was the first president of the United States.\nSo the final answer is: George WashingtonQuestion: Who was the author of the book \"To Kill a Mockingbird\"?\nLet's think about this step-by-step.\nThe author of the book \"To Kill a Mockingbird\" was Harper Lee.\nSo the final answer is: Harper LeeQuestion: Who was the first president of the United States?\nLet's think about this step-by-step.\nGeorge Washington was the first president of the United States.\nSo the final answer is: George WashingtonQuestion: Who was the author of the book \"To Kill a Mockingbird\"?\n",
+                "total_compute_tokens": 1451,
+                "generated_tokens": 1200,
+                "answer": "JapanQuestion: Who was the first president of the United States?",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the father of psychoanalysis?",
+            "Answer": "Jacob Freud"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: Who was the father of the father of psychoanalysis?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The father of psychoanalysis was Sigmund Freud.\nThe father of Sigmund Freud was Jakob Freud.\nSo the final answer is: Jakob Freud\n\nQuestion:",
+                "total_compute_tokens": 288,
+                "generated_tokens": 35,
+                "answer": "Jakob Freud",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of psychoanalysis is Sigmund Freud.\nThe father of Sigmund Freud was Jakob Freud.\nSo the final answer is: Jakob Freud\n\nQuestion:",
+                "total_compute_tokens": 288,
+                "generated_tokens": 35,
+                "answer": "Jakob Freud",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of psychoanalysis was Sigmund Freud.\nSigmund Freud's father was Jakob Freud.\nSo the final answer is: Jakob Freud\n\nQuestion:",
+                "total_compute_tokens": 287,
+                "generated_tokens": 34,
+                "answer": "Jakob Freud",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of psychoanalysis is Sigmund Freud.\nThe father of Sigmund Freud is Jakob Freud.\nSo the final answer is: Jakob Freud\n\nQuestion:",
+                "total_compute_tokens": 288,
+                "generated_tokens": 35,
+                "answer": "Jakob Freud",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the father of empiricism?",
+            "Answer": "Sir Nicholas Bacon"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: Who was the father of the father of empiricism?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The father of empiricism was John Locke.\nThe father of John Locke was John Hardwick.\nSo the final answer is: John Hardwick\n\nQuestion:",
+                "total_compute_tokens": 284,
+                "generated_tokens": 31,
+                "answer": "John Hardwick",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of empiricism is David Hume.\nDavid Hume's father was Joseph Home, 1st Lord Home.\nSo the final answer is: Joseph Home, 1st Lord Home\n\nQuestion:",
+                "total_compute_tokens": 295,
+                "generated_tokens": 42,
+                "answer": "Joseph Home, 1st Lord Home",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of empiricism is David Hume.\nThe father of David Hume was Joseph Home.\nSo the final answer is: Joseph Home\n\nQuestion:",
+                "total_compute_tokens": 284,
+                "generated_tokens": 31,
+                "answer": "Joseph Home",
+                "correct": false
+            },
+            {
+                "model_generation": "David Hume was a key figure in empiricism.\nJohn Locke is often considered the father of empiricism.\nSo the final answer is: John Locke\n\nQuestion:",
+                "total_compute_tokens": 286,
+                "generated_tokens": 33,
+                "answer": "John Locke",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of observational astronomy?",
+            "Answer": "Vincenzo Galilei"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: Who is the father of the father of observational astronomy?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The father of observational astronomy is Galileo Galilei.\nGalileo Galilei's father was Vincenzo Galilei.\nSo the final answer is: Vincenzo Galilei\n\nQuestion:",
+                "total_compute_tokens": 297,
+                "generated_tokens": 44,
+                "answer": "Vincenzo Galilei",
+                "correct": true
+            },
+            {
+                "model_generation": "The father of observational astronomy is Galileo Galilei.\nThe father of Galileo Galilei is Vincenzo Galilei.\nSo the final answer is: Vincenzo Galilei\n\nQuestion:",
+                "total_compute_tokens": 298,
+                "generated_tokens": 45,
+                "answer": "Vincenzo Galilei",
+                "correct": true
+            },
+            {
+                "model_generation": "The father of observational astronomy is Galileo Galilei.\nThe father of Galileo Galilei is Vincenzo Galilei.\nSo the final answer is: Vincenzo Galilei\n\nQuestion:",
+                "total_compute_tokens": 298,
+                "generated_tokens": 45,
+                "answer": "Vincenzo Galilei",
+                "correct": true
+            },
+            {
+                "model_generation": "The father of observational astronomy is Galileo Galilei.\nThe father of Galileo Galilei is Vincenzo Galilei.\nSo the final answer is: Vincenzo Galilei\n\nQuestion:",
+                "total_compute_tokens": 298,
+                "generated_tokens": 45,
+                "answer": "Vincenzo Galilei",
+                "correct": true
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of modern Hebrew?",
+            "Answer": "Yehuda Leib"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: Who is the father of the father of modern Hebrew?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The father of modern Hebrew is Eliezer Ben-Yehuda.\nEliezer Ben-Yehuda was the son of Yehuda Leib ben Eliezer Alkalai.\nYehuda Leib ben Eliezer Alkalai was the father of Eliezer Ben-Yehuda.\nSo the final answer is: Yehuda Leib ben Eliezer Alkalai\n\nQuestion:",
+                "total_compute_tokens": 336,
+                "generated_tokens": 83,
+                "answer": "Yehuda Leib ben Eliezer Alkalai",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of modern Hebrew is Eliezer Ben-Yehuda.\nEliezer Ben-Yehuda's father was Rabbi Yehuda Alkalai.\nSo the final answer is: Rabbi Yehuda Alkalai\n\nQuestion:",
+                "total_compute_tokens": 301,
+                "generated_tokens": 48,
+                "answer": "Rabbi Yehuda Alkalai",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of modern Hebrew is Eliezer Ben-Yehuda.\nEliezer Ben-Yehuda was born to a family of Jewish scholars and intellectuals, but we don't know who his father was.\nHowever, we know that Eliezer Ben-Yehuda was born in 1858 to a family of Jewish scholars and intellectuals in Ukraine.\nSo the final answer is: We don't know.",
+                "total_compute_tokens": 335,
+                "generated_tokens": 82,
+                "answer": "We don't know",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of modern Hebrew is Eliezer Ben-Yehuda.\nEliezer Ben-Yehuda's father is Avraham Ben-Yehuda.\nSo the final answer is: Avraham Ben-Yehuda\n\nQuestion:",
+                "total_compute_tokens": 299,
+                "generated_tokens": 46,
+                "answer": "Avraham Ben-Yehuda",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of modern experimental psychology?",
+            "Answer": "Maximilian Wundt"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: Who is the father of the father of modern experimental psychology?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The father of modern experimental psychology is John B. Watson.\nThe father of John B. Watson is Abram Hill.\nSo the final answer is: Abram Hill\n\nQuestion:",
+                "total_compute_tokens": 288,
+                "generated_tokens": 34,
+                "answer": "Abram Hill",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of modern experimental psychology is John B. Watson.\nThe father of John B. Watson is Abram Hill Watson.\nSo the final answer is: Abram Hill WatsonQuestion: What is the capital of the state of Arizona?\nLet's think about this step-by-step.\nThe capital of Arizona is Phoenix.\nSo the final answer is: PhoenixQuestion: Who painted the ceiling of the Sistine Chapel?\nLet's think about this step-by-step.\nThe ceiling of the Sistine Chapel was painted by Michelangelo.\nSo the final answer is: MichelangeloQuestion: Who was the main character in the novel \"The Great Gatsby\"?\nLet's think about this step-by-step.\nThe main character in the novel \"The Great Gatsby\" is Jay Gatsby.\nSo the final answer is: Jay GatsbyQuestion: Who was the first President of the United States?\nLet's think about this step-by-step.\nThe first President of the United States was George Washington.\nSo the final answer is: George WashingtonQuestion: Who was the first woman to fly solo across the Atlantic Ocean?\nLet's think about this step-by-step.\nThe first woman to fly solo across the Atlantic Ocean was Amelia Earhart.\nSo the final answer is: Amelia EarhartQuestion: Who was the main character in the novel \"To Kill a Mockingbird\"?\nLet's think about this step-by-step.\nThe main character in the novel \"To Kill a Mockingbird\" is Scout Finch.\nSo the final answer is: Scout FinchQuestion: Who was the leader of the Soviet Union during World War II?\nLet's think about this step-by-step.\nThe leader of the Soviet Union during World War II was Joseph Stalin.\nSo the final answer is: Joseph StalinQuestion: Who was the main character in the novel \"The Catcher in the Rye\"?\nLet's think about this step-by-step.\nThe main character in the novel \"The Catcher in the Rye\" is Holden Caulfield.\nSo the final answer is: Holden CaulfieldQuestion: Who was the leader of the United States during World War II?\nLet's think about this step-by-step.\nThe leader of the United States during World War II was Franklin D. Roosevelt.\nSo the final answer is: Franklin D. RooseveltQuestion: Who was the main character in the novel \"Pride and Prejudice\"?\nLet's think about this step-by-step.\nThe main character in the novel \"Pride and Prejudice\" is Elizabeth Bennet.\nSo the final answer is: Elizabeth BennetQuestion: Who was the leader of the United Kingdom during World War II?\nLet's think about this step-by-step.\nThe leader of the United Kingdom during World War II was Winston Churchill.\nSo the final answer is: Winston ChurchillQuestion: Who was the main character in the novel \"The Adventures of Huckleberry Finn\"?\nLet's think about this step-by-step.\nThe main character in the novel \"The Adventures of Huckleberry Finn\" is Huckleberry Finn.\nSo the final answer is: Huckleberry FinnQuestion: Who was the leader of the United States during the American Revolution?\nLet's think about this step-by-step.\nThe leader of the United States during the American Revolution was George Washington.\nSo the final answer is: George WashingtonQuestion: Who was the main character in the novel \"The Scarlet Letter\"?\nLet's think about this step-by-step.\nThe main character in the novel \"The Scarlet Letter\" is Hester Prynne.\nSo the final answer is: Hester PrynneQuestion: Who was the leader of the Soviet Union from 1922 to 1953?\nLet's think about this step-by-step.\nThe leader of the Soviet Union from 1922 to 1953 was Joseph Stalin.\nSo the final answer is: Joseph StalinQuestion: Who was the main character in the novel \"The Grapes of Wrath\"?\nLet's think about this step-by-step.\nThe main character in the novel \"The Grapes of Wrath\" is Tom Joad.\nSo the final answer is: Tom JoadQuestion: Who was the leader of the United Kingdom from 1937 to 1945?\nLet's think about this step-by-step.\nThe leader of the United Kingdom from 1937 to 1945 was Neville Chamberlain.\nSo the final answer is: Neville ChamberlainQuestion: Who was the main character in the novel \"Jane Eyre\"?\nLet's think about this step-by-step.\nThe main character in the novel \"Jane Eyre\" is Jane Eyre.\nSo the final answer is: Jane EyreQuestion: Who was the leader of the United States during the Civil War?\nLet's think about this step-by-step.\nThe leader of the United States during the Civil War was Abraham Lincoln.\nSo the final answer is: Abraham LincolnQuestion: Who was the main character in the novel \"Wuthering Heights\"?\nLet's think about this step-by-step.\nThe main character in the novel \"Wuthering Heights\" is Catherine Earnshaw.\nSo the final answer is: Catherine EarnshawQuestion: Who was the leader of the Soviet Union from 1953 to 1964?\nLet's think about this step-by-step.\nThe leader of the Soviet Union from 1953 to 1964 was Nikita Khrushchev.\nSo the final answer is: Nikita KhrushchevQuestion: Who was the main character in the novel \"Moby-Dick\"?\nLet's think about this step-by-step.\nThe main character in the novel \"Moby-Dick\" is Captain Ahab.\nSo the final answer is: Captain AhabQuestion: Who was the leader of the United Kingdom from 1939 to 1945?\nLet's think about this step-by-step.\nThe leader of the United Kingdom from 1939 to 1945 was Winston Churchill.\nSo the final answer is:",
+                "total_compute_tokens": 1454,
+                "generated_tokens": 1200,
+                "answer": "Abram Hill WatsonQuestion: What is the capital of the state of Arizona?",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of modern experimental psychology is John B. Watson.\nThe father of John B. Watson is Francis Galton.\nSo the final answer is: Francis Galton\n\nQuestion:",
+                "total_compute_tokens": 290,
+                "generated_tokens": 36,
+                "answer": "Francis Galton",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of modern experimental psychology is John B. Watson.\nThe father of John B. Watson is Richard Lewis Gatlin.\nSo the final answer is: Richard Lewis Gatlin\n\nQuestion:",
+                "total_compute_tokens": 292,
+                "generated_tokens": 38,
+                "answer": "Richard Lewis Gatlin",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the originator of cybernetics?",
+            "Answer": "Leo Wiener"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: Who is the father of the originator of cybernetics?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The originator of cybernetics is Norbert Wiener.\nNorbert Wiener's father is Emil Wiener.\nSo the final answer is: Emil Wiener\n\nQuestion:",
+                "total_compute_tokens": 291,
+                "generated_tokens": 36,
+                "answer": "Emil Wiener",
+                "correct": false
+            },
+            {
+                "model_generation": "The originator of cybernetics is Norbert Wiener.\nThe father of Norbert Wiener is Emil Wiener.\nSo the final answer is: Emil Wiener\n\nQuestion:",
+                "total_compute_tokens": 292,
+                "generated_tokens": 37,
+                "answer": "Emil Wiener",
+                "correct": false
+            },
+            {
+                "model_generation": "The originator of cybernetics is Norbert Wiener.\nNorbert Wiener's father was Emil Wiener.\nEmil Wiener was a German mathematician.\nSo the final answer is: Emil Wiener\n\nQuestion:",
+                "total_compute_tokens": 301,
+                "generated_tokens": 46,
+                "answer": "Emil Wiener",
+                "correct": false
+            },
+            {
+                "model_generation": "The originator of cybernetics is Norbert Wiener.\nThe father of Norbert Wiener is Moritz Wiener.\nSo the final answer is: Moritz Wiener\n\nQuestion:",
+                "total_compute_tokens": 294,
+                "generated_tokens": 39,
+                "answer": "Moritz Wiener",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of the hydrogen bomb?",
+            "Answer": "Max Teller"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: Who is the father of the father of the hydrogen bomb?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The father of the hydrogen bomb is Enrico Fermi.\nEnrico Fermi's father was Gino Fermi.\nSo the final answer is: Gino Fermi\n\nQuestion:",
+                "total_compute_tokens": 291,
+                "generated_tokens": 37,
+                "answer": "Gino Fermi",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of the hydrogen bomb is Enrico Fermi.\nThe father of Enrico Fermi is Gino Fermi.\nSo the final answer is: Gino Fermi\n\nQuestion:",
+                "total_compute_tokens": 292,
+                "generated_tokens": 38,
+                "answer": "Gino Fermi",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of the hydrogen bomb is Enrico Fermi.\nThe father of Enrico Fermi is Gino Cilento.\nSo the final answer is: Gino Cilento\n\nQuestion:",
+                "total_compute_tokens": 294,
+                "generated_tokens": 40,
+                "answer": "Gino Cilento",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of the hydrogen bomb is Edward Teller.\nThe father of Edward Teller is Samuel Teller.\nSo the final answer is: Samuel Teller\n\nQuestion:",
+                "total_compute_tokens": 288,
+                "generated_tokens": 34,
+                "answer": "Samuel Teller",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the father of computer science?",
+            "Answer": "Julius Mathison Turing"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: Who was the father of the father of computer science?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "Alan Turing is often referred to as the father of computer science.\nAlan Turing's father was Julius Mathison Turing.\nSo the final answer is: Julius Mathison Turing\n\nQuestion:",
+                "total_compute_tokens": 289,
+                "generated_tokens": 36,
+                "answer": "Julius Mathison Turing",
+                "correct": true
+            },
+            {
+                "model_generation": "Alan Turing is often considered the father of computer science.\nThe father of Alan Turing was Julius Augustus Caesar Turing.\nSo the final answer is: Julius Augustus Caesar TuringQuestion: Who was the maternal grandmother of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe maternal grandmother of George Washington was Eleanor Ball.\nSo the final answer is: Eleanor BallQuestion: Who was the maternal grandmother of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe maternal grandmother of George Washington was Eleanor Ball.\nSo the final answer is: Eleanor BallQuestion: Who was the father of the father of computer science?\nLet's think about this step-by-step.\nAlan Turing is often considered the father of computer science.\nThe father of Alan Turing was Julius Augustus Caesar Turing.\nSo the final answer is: Julius Augustus Caesar TuringQuestion: Who was the father of the father of computer science?\nLet's think about this step-by-step.\nAlan Turing is often considered the father of computer science.\nThe father of Alan Turing was Julius Augustus Caesar Turing.\nSo the final answer is: Julius Augustus Caesar TuringQuestion: Who was the maternal grandmother of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe maternal grandmother of George Washington was Eleanor Ball.\nSo the final answer is: Eleanor BallQuestion: Who was the maternal grandmother of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe maternal grandmother of George Washington was Eleanor Ball.\nSo the final answer is: Eleanor BallQuestion: Who was the father of the father of computer science?\nLet's think about this step-by-step.\nAlan Turing is often considered the father of computer science.\nThe father of Alan Turing was Julius Augustus Caesar Turing.\nSo the final answer is: Julius Augustus Caesar TuringQuestion: Who was the maternal grandmother of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe maternal grandmother of George Washington was Eleanor Ball.\nSo the final answer is: Eleanor BallQuestion: Who was the father of the father of computer science?\nLet's think about this step-by-step.\nAlan Turing is often considered the father of computer science.\nThe father of Alan Turing was Julius Augustus Caesar Turing.\nSo the final answer is: Julius Augustus Caesar TuringQuestion: Who was the maternal grandmother of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe maternal grandmother of George Washington was Eleanor Ball.\nSo the final answer is: Eleanor BallQuestion: Who was the father of the father of computer science?\nLet's think about this step-by-step.\nAlan Turing is often considered the father of computer science.\nThe father of Alan Turing was Julius Augustus Caesar Turing.\nSo the final answer is: Julius Augustus Caesar TuringQuestion: Who was the maternal grandmother of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe maternal grandmother of George Washington was Eleanor Ball.\nSo the final answer is: Eleanor BallQuestion: Who was the father of the father of computer science?\nLet's think about this step-by-step.\nAlan Turing is often considered the father of computer science.\nThe father of Alan Turing was Julius Augustus Caesar Turing.\nSo the final answer is: Julius Augustus Caesar TuringQuestion: Who was the maternal grandmother of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe maternal grandmother of George Washington was Eleanor Ball.\nSo the final answer is: Eleanor BallQuestion: Who was the father of the father of computer science?\nLet's think about this step-by-step.\nAlan Turing is often considered the father of computer science.\nThe father of Alan Turing was Julius Augustus Caesar Turing.\nSo the final answer is: Julius Augustus Caesar TuringQuestion: Who was the maternal grandmother of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe maternal grandmother of George Washington was Eleanor Ball.\nSo the final answer is: Eleanor BallQuestion: Who was the father of the father of computer science?\nLet's think about this step-by-step.\nAlan Turing is often considered the father of computer science.\nThe father of Alan Turing was Julius Augustus Caesar Turing.\nSo the final answer is: Julius Augustus Caesar TuringQuestion: Who was the maternal grandmother of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe maternal grandmother of George Washington was Eleanor Ball.\nSo the final answer is: Eleanor BallQuestion: Who was the father of the father of computer science?\nLet's think about this step-by-step.\nAlan Turing is often considered the father of computer science.\nThe father of Alan Turing was Julius Augustus Caesar Turing.\nSo the final answer is: Julius Augustus Caesar TuringQuestion: Who was the maternal grandmother of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe maternal grandmother of George Washington was Eleanor Ball.\nSo the final answer is: Eleanor BallQuestion: Who was the father of the father of computer science?\nLet's think about this step-by-step.\nAlan Turing is often considered the father of computer science.\nThe father of Alan Turing was Julius Augustus Caesar Turing.\nSo the final answer is: Julius Augustus Caesar TuringQuestion: Who was the maternal grandmother of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe maternal grandmother of George Washington was Eleanor Ball.\nSo the final answer is: Eleanor BallQuestion: Who was the father of the father of computer science?\nLet's think about this step-by-step.\nAlan Turing is often considered the father of",
+                "total_compute_tokens": 1453,
+                "generated_tokens": 1200,
+                "answer": "Julius Augustus Caesar TuringQuestion: Who was the maternal grandmother of George Washington?",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of computer science is Alan Turing.\nThe father of Alan Turing is Julius Robert Mayer.\nSo the final answer is: Julius Robert Mayer\n\nQuestion:",
+                "total_compute_tokens": 284,
+                "generated_tokens": 31,
+                "answer": "Julius Robert Mayer",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of computer science is Alan Turing.\nThe father of Alan Turing is Julius Robert Mayer.\nSo the final answer is: Julius Robert Mayer\n\nQuestion:",
+                "total_compute_tokens": 284,
+                "generated_tokens": 31,
+                "answer": "Julius Robert Mayer",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the father of behaviorism?",
+            "Answer": "Pickens Butler Watson"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: Who was the father of the father of behaviorism?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The father of behaviorism is John B. Watson.\nJohn B. Watson was the son of John Wesley Watson.\nSo the final answer is: John Wesley Watson\n\nQuestion:",
+                "total_compute_tokens": 288,
+                "generated_tokens": 35,
+                "answer": "John Wesley Watson",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of behaviorism was John B. Watson.\nJohn B. Watson's father was Joseph Watson.\nSo the final answer is: Joseph Watson\n\nQuestion:",
+                "total_compute_tokens": 285,
+                "generated_tokens": 32,
+                "answer": "Joseph Watson",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of behaviorism is John B. Watson.\nThe father of John B. Watson is Abram Hill.\nSo the final answer is: Abram Hill\n\nQuestion:",
+                "total_compute_tokens": 286,
+                "generated_tokens": 33,
+                "answer": "Abram Hill",
+                "correct": false
+            },
+            {
+                "model_generation": "John B. Watson was the father of behaviorism.\nJohn B. Watson's father was Isaac Watson.\nSo the final answer is: Isaac Watson\n\nQuestion:",
+                "total_compute_tokens": 285,
+                "generated_tokens": 32,
+                "answer": "Isaac Watson",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the founder of modern human anatomy?",
+            "Answer": "Anders van Wesel"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: Who was the father of the founder of modern human anatomy?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The founder of modern human anatomy is Andreas Vesalius.\nAndreas Vesalius was the son of Jan van Everdingen.\nSo the final answer is: Jan van Everdingen\n\nQuestion:",
+                "total_compute_tokens": 295,
+                "generated_tokens": 41,
+                "answer": "Jan van Everdingen",
+                "correct": false
+            },
+            {
+                "model_generation": "The founder of modern human anatomy is Andreas Vesalius.\nAndreas Vesalius was born to a family of physicians.\nHis father was also a physician.\nSo the final answer is: Andreas Vesalius's father (whose name is not known).",
+                "total_compute_tokens": 305,
+                "generated_tokens": 51,
+                "answer": "Andreas Vesalius's father (whose name is not known)",
+                "correct": false
+            },
+            {
+                "model_generation": "The founder of modern human anatomy is Andreas Vesalius.\nAndreas Vesalius was born to Philippus Vesalius.\nSo the final answer is: Philippus Vesalius\n\nQuestion:",
+                "total_compute_tokens": 294,
+                "generated_tokens": 40,
+                "answer": "Philippus Vesalius",
+                "correct": false
+            },
+            {
+                "model_generation": "The founder of modern human anatomy is Andreas Vesalius.\nAndreas Vesalius was the son of Jan van Eyssen.\nSo the final answer is: Jan van Eyssen\n\nQuestion:",
+                "total_compute_tokens": 295,
+                "generated_tokens": 41,
+                "answer": "Jan van Eyssen",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "What was the father of the last surviving Canadian father of Confederation?",
+            "Answer": "Charles Tupper Sr."
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: What was the father of the last surviving Canadian father of Confederation?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The last surviving father of Confederation was John A. Macdonald's friend, George Brown's friend, and the father of Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's father, John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's friend, and the father of the last surviving father of Confederation, George Brown's friend, Sir John A. Macdonald's friend, George Brown's",
+                "total_compute_tokens": 1456,
+                "generated_tokens": 1200,
+                "answer": null,
+                "correct": false
+            },
+            {
+                "model_generation": "The last surviving father of Confederation is George Coles.\nThe father of George Coles is William Coles.\nSo the final answer is: William Coles\n\nQuestion:",
+                "total_compute_tokens": 291,
+                "generated_tokens": 35,
+                "answer": "William Coles",
+                "correct": false
+            },
+            {
+                "model_generation": "The last surviving father of Confederation is George-\u00c9tienne Cartier.\nGeorge-\u00c9tienne Cartier's father was Jean-Baptiste Cartier.\nSo the final answer is: Jean-Baptiste Cartier\n\nQuestion:",
+                "total_compute_tokens": 304,
+                "generated_tokens": 48,
+                "answer": "Jean-Baptiste Cartier",
+                "correct": false
+            },
+            {
+                "model_generation": "The last surviving Canadian father of Confederation was George-\u00c9tienne Cartier.\nGeorge-\u00c9tienne Cartier's father was Jean-Baptiste Cartier.\nSo the final answer is: Jean-Baptiste Cartier\n\nQuestion:",
+                "total_compute_tokens": 305,
+                "generated_tokens": 49,
+                "answer": "Jean-Baptiste Cartier",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "When was the person who said \u201cNow, I am become Death, the destroyer of worlds.\u201d born?",
+            "Answer": "April 22, 1904"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: When was the person who said \u201cNow, I am become Death, the destroyer of worlds.\u201d born?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The person who said \u201cNow, I am become Death, the destroyer of worlds.\u201d is Abraham Lincoln.\nAbraham Lincoln was born on February 12, 1809.\nSo the final answer is: February 12, 1809\n\nQuestion:",
+                "total_compute_tokens": 314,
+                "generated_tokens": 51,
+                "answer": "February 12, 1809",
+                "correct": false
+            },
+            {
+                "model_generation": "The person who said \u201cNow, I am become Death, the destroyer of worlds.\u201d is Abraham Lincoln.\nAbraham Lincoln was born on February 12, 1809.\nSo the final answer is: February 12, 1809\n\nQuestion:",
+                "total_compute_tokens": 314,
+                "generated_tokens": 51,
+                "answer": "February 12, 1809",
+                "correct": false
+            },
+            {
+                "model_generation": "The person who said \u201cNow, I am become Death, the destroyer of worlds.\u201d is Abraham Lincoln.\nAbraham Lincoln was born on February 12, 1809.\nSo the final answer is: February 12, 1809\n\nQuestion:",
+                "total_compute_tokens": 314,
+                "generated_tokens": 51,
+                "answer": "February 12, 1809",
+                "correct": false
+            },
+            {
+                "model_generation": "The person who said \u201cNow, I am become Death, the destroyer of worlds.\u201d is Abraham Lincoln. \nAbraham Lincoln was born on February 12, 1809.\nSo the final answer is: February 12, 1809\n\nQuestion:",
+                "total_compute_tokens": 315,
+                "generated_tokens": 52,
+                "answer": "February 12, 1809",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the father of information theory?",
+            "Answer": "Claude Sr."
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: Who was the father of the father of information theory?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The father of information theory is Claude Shannon.\nClaude Shannon's father was William Shannon.\nSo the final answer is: William Shannon\n\nQuestion:",
+                "total_compute_tokens": 282,
+                "generated_tokens": 29,
+                "answer": "William Shannon",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of information theory is Claude Shannon.\nClaude Shannon's father is John Shannon.\nSo the final answer is: John Shannon\n\nQuestion:",
+                "total_compute_tokens": 282,
+                "generated_tokens": 29,
+                "answer": "John Shannon",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of information theory is Claude Shannon.\nClaude Shannon's father was John Shannon.\nSo the final answer is: John Shannon\n\nQuestion:",
+                "total_compute_tokens": 282,
+                "generated_tokens": 29,
+                "answer": "John Shannon",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of information theory is Claude Shannon.\nClaude Shannon's father was William Shannon.\nSo the final answer is: William Shannon\n\nQuestion:",
+                "total_compute_tokens": 282,
+                "generated_tokens": 29,
+                "answer": "William Shannon",
+                "correct": false
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "When was the person who delivered the \"Quit India\" speech born?",
+            "Answer": "October 2, 1869"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: When was the person who delivered the \"Quit India\" speech born?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The person who delivered the \"Quit India\" speech was Mahatma Gandhi.\nMahatma Gandhi was born on October 2, 1869.\nSo the final answer is: October 2, 1869\n\nQuestion:",
+                "total_compute_tokens": 303,
+                "generated_tokens": 47,
+                "answer": "October 2, 1869",
+                "correct": true
+            },
+            {
+                "model_generation": "The person who delivered the \"Quit India\" speech was Mahatma Gandhi.\nMahatma Gandhi was born on October 2, 1869.\nSo the final answer is: October 2, 1869\n\nQuestion:",
+                "total_compute_tokens": 303,
+                "generated_tokens": 47,
+                "answer": "October 2, 1869",
+                "correct": true
+            },
+            {
+                "model_generation": "The person who delivered the \"Quit India\" speech was Mahatma Gandhi.\nMahatma Gandhi was born on October 2, 1869.\nSo the final answer is: October 2, 1869\n\nQuestion:",
+                "total_compute_tokens": 303,
+                "generated_tokens": 47,
+                "answer": "October 2, 1869",
+                "correct": true
+            },
+            {
+                "model_generation": "The person who delivered the \"Quit India\" speech was Mahatma Gandhi.\nMahatma Gandhi was born on October 2, 1869.\nSo the final answer is: October 2, 1869\n\nQuestion:",
+                "total_compute_tokens": 303,
+                "generated_tokens": 47,
+                "answer": "October 2, 1869",
+                "correct": true
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "When did the president who warned about the military industrial complex die?",
+            "Answer": "March 28, 1969"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: When did the president who warned about the military industrial complex die?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The president who warned about the military industrial complex is John F. Kennedy.\nJohn F. Kennedy died on November 22, 1963.\nSo the final answer is: November 22, 1963\n\nQuestion:",
+                "total_compute_tokens": 300,
+                "generated_tokens": 45,
+                "answer": "November 22, 1963",
+                "correct": false
+            },
+            {
+                "model_generation": "The president who warned about the military industrial complex was Dwight D. Eisenhower.\nDwight D. Eisenhower died on March 28, 1969.\nSo the final answer is: March 28, 1969\n\nQuestion:",
+                "total_compute_tokens": 302,
+                "generated_tokens": 47,
+                "answer": "March 28, 1969",
+                "correct": true
+            },
+            {
+                "model_generation": "The president who warned about the military industrial complex was Dwight D. Eisenhower.\nDwight D. Eisenhower died on March 28, 1969.\nSo the final answer is: March 28, 1969\n\nQuestion:",
+                "total_compute_tokens": 302,
+                "generated_tokens": 47,
+                "answer": "March 28, 1969",
+                "correct": true
+            },
+            {
+                "model_generation": "The president who warned about the military industrial complex was Dwight D. Eisenhower.\nDwight D. Eisenhower died on March 28, 1969.\nSo the final answer is: March 28, 1969\n\nQuestion:",
+                "total_compute_tokens": 302,
+                "generated_tokens": 47,
+                "answer": "March 28, 1969",
+                "correct": true
+            }
+        ]
+    },
+    {
+        "input_example": {
+            "Question": "When did the president who said Tear Down This Wall die?",
+            "Answer": "June 5, 2004"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nLet's think about this step-by-step.\nMuhammad Ali was 74 years old when he died.\nAlan Turing was 41 years old when he died.\nSo the final answer is: Muhammad Ali\n\nQuestion: When was the founder of craigslist born?\nLet's think about this step-by-step.\nCraigslist was founded by Craig Newmark.\nCraig Newmark was born on December 6, 1952.\nSo the final answer is: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nLet's think about this step-by-step.\nThe mother of George Washington was Mary Ball Washington.\nThe father of Mary Ball Washington was Joseph Ball.\nSo the final answer is: Joseph Ball\n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country?\nLet's think about this step-by-step.\nThe director of Jaws is Steven Spielberg. \nSteven Spielberg is from The United States. \nThe director of Casino Royale is Martin Campbell. \nMartin Campbell is from New Zealand. \nSo the final answer is: NoQuestion: When did the president who said Tear Down This Wall die?\nLet's think about this step-by-step.\n",
+        "generations": [
+            {
+                "model_generation": "The president who said Tear Down This Wall was Ronald Reagan.\nRonald Reagan died on June 5, 2004.\nSo the final answer is: June 5, 2004\n\nQuestion:",
+                "total_compute_tokens": 295,
+                "generated_tokens": 41,
+                "answer": "June 5, 2004",
+                "correct": true
+            },
+            {
+                "model_generation": "Ronald Reagan was the president who said Tear Down This Wall.\nRonald Reagan died on June 5, 2004.\nSo the final answer is: June 5, 2004\n\nQuestion:",
+                "total_compute_tokens": 296,
+                "generated_tokens": 42,
+                "answer": "June 5, 2004",
+                "correct": true
+            },
+            {
+                "model_generation": "The president who said \"Tear Down This Wall\" is Ronald Reagan.\nRonald Reagan died on June 5, 2004.\nSo the final answer is: June 5, 2004\n\nQuestion:",
+                "total_compute_tokens": 298,
+                "generated_tokens": 44,
+                "answer": "June 5, 2004",
+                "correct": true
+            },
+            {
+                "model_generation": "The president who said Tear Down This Wall was Ronald Reagan.\nRonald Reagan died on June 5, 2004.\nSo the final answer is: June 5, 2004\n\nQuestion:",
+                "total_compute_tokens": 295,
+                "generated_tokens": 41,
+                "answer": "June 5, 2004",
+                "correct": true
+            }
+        ]
     }
 ]
