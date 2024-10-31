@@ -109,6 +109,8 @@ def fs_basic(
     pbar.close()
     return outputs
 
+# def get_sequence_scores(model_output):
+
 
 def fs_cot(
     model,
@@ -123,13 +125,17 @@ def fs_cot(
     do_sample,
     temperature,
     num_beams,
-    output_filename=None
+    output_filename
 ):
+    max_batch_size = max_batch_size // num_samples
+    max_batch_size = max_batch_size // num_beams
+    if max_batch_size == 0: max_batch_size = 1
     outputs = []
-    if output_filename and os.path.exists(output_filename):
+    if (num_beams == 1) and os.path.exists(output_filename):
         outputs = json.load(open(output_filename))
     ex_idx = len(outputs)
     pbar = tqdm(total=len(examples))
+    pbar.update(ex_idx)
     while ex_idx < len(examples):
         exs = get_batch(ex_idx, max_batch_size)
         queries = make_queries(exs)
@@ -141,6 +147,7 @@ def fs_cot(
             model_output = model.generate(
                 **input_ids,
                 return_dict_in_generate=True,
+                output_scores=True,
                 max_new_tokens=1200,
                 tokenizer=tokenizer,
                 stop_strings=stop_strings,
@@ -155,6 +162,7 @@ def fs_cot(
             model_output = model.generate(
                 **input_ids,
                 return_dict_in_generate=True,
+                output_scores=True,
                 max_new_tokens=1200,
                 tokenizer=tokenizer,
                 stop_strings=stop_strings,
@@ -163,14 +171,14 @@ def fs_cot(
                 temperature=temperature,
                 pad_token_id=tokenizer.eos_token_id,
             )
-
+        # sequence_scores = get_sequence_scores(model_output) # for now we can use progmax as verifier
         model_predictions = tokenizer.batch_decode(
             model_output.sequences[:, input_ids.input_ids.shape[-1] :],
             skip_special_tokens=True,
         )
         for batch_idx, input_ex in enumerate(exs):
             example_output = {
-                "input_example": exs[batch_idx],
+                "input_example": input_ex,
                 "query": queries[batch_idx],
                 "generations": []
             }
@@ -184,6 +192,7 @@ def fs_cot(
                 ).item()
                 example_output["generations"].append(
                     {
+                        # "score": sequence_scores[output_ids].item(),
                         "model_generation": model_prediction,
                         "total_compute_tokens": torch.sum(
                             model_output.sequences[output_idx] != tokenizer.pad_token_id
@@ -194,7 +203,7 @@ def fs_cot(
                     }
                 )
             outputs.append(example_output)
-            if output_filename and (len(outputs) % 5 == 0):
+            if (len(outputs) % 5 == 0):
                 with open(output_filename, "w") as wf:
                     json.dump(outputs, wf, indent=4)
 
@@ -407,69 +416,69 @@ def rum_experiment(model, modelname, domain, max_batch_size, num_samples, temper
         f"Avg gen tokens: {sum(op['generated_tokens'] for op in fs_basic_outputs) / total_ex:.2f}"
     )
 
-    print(f" ====== FS COT MULTINOMIAL N={num_samples} TEMP {temperature}===== ")
-    output_filename = f"outputs/{domain}_fs_cot_temp{int(temperature*100)}_N{num_samples}_{modelname}.json"
-    fs_cot_outputs = fs_cot(
-        model,
-        tokenizer,
-        get_batch,
-        make_cot_queries,
-        examples,
-        get_prediction_and_correctness_cot,
-        max_batch_size,
-        cot_stop_strings,
-        num_samples,
-        True,
-        temperature,
-        1,
-        output_filename
-    )
-    with open(output_filename, "w") as wf:
-        json.dump(fs_cot_outputs, wf, indent=4)
+    for n_samples in num_samples:
+        print(f" ====== FS COT MULTINOMIAL N={n_samples} TEMP {temperature}===== ")
+        output_filename = f"outputs/{domain}_fs_cot_temp{int(temperature*100)}_N{n_samples}_{modelname}.json"
+        fs_cot_outputs = fs_cot(
+            model,
+            tokenizer,
+            get_batch,
+            make_cot_queries,
+            examples,
+            get_prediction_and_correctness_cot,
+            max_batch_size,
+            cot_stop_strings,
+            n_samples,
+            True,
+            temperature,
+            1,
+            output_filename
+        )
+        with open(output_filename, "w") as wf:
+            json.dump(fs_cot_outputs, wf, indent=4)
 
-    fs_cot_correct = len([ex for ex in fs_cot_outputs if any(gen["correct"] for gen in ex['generations'])])
-    print(f"(pass@{num_samples}) Correct: {fs_cot_correct} / {total_ex}")
-    print(
-        f"Avg gen tokens: {sum(gen['generated_tokens'] for op in fs_cot_outputs for gen in op["generations"]) / total_ex:.2f}"
-    )
+        fs_cot_correct = len([ex for ex in fs_cot_outputs if any(gen["correct"] for gen in ex['generations'])])
+        print(f"(pass@{n_samples}) Correct: {fs_cot_correct} / {total_ex}")
+        print(
+            f"Avg gen tokens: {sum(gen['generated_tokens'] for op in fs_cot_outputs for gen in op["generations"]) / total_ex:.2f}"
+        )
 
+    for n_beams in num_beams:
+        print(f" ====== FS COT BEAMS N={n_beams}===== ")
+        output_filename = f"outputs/{domain}_fs_cot_beams{n_beams}_{modelname}.json"
+        fs_cot_outputs = fs_cot(
+            model,
+            tokenizer,
+            get_batch,
+            make_cot_queries,
+            examples,
+            get_prediction_and_correctness_cot,
+            1, # to correctly do beam stopping, need small batch... unless there's something better implement wise
+            cot_stop_strings,
+            n_beams,
+            False,
+            None,
+            n_beams,
+            output_filename
+        )
+        with open(output_filename, "w") as wf:
+            json.dump(fs_cot_outputs, wf, indent=4)
+        
+        fs_cot_correct = len([ex for ex in fs_cot_outputs if any(gen["correct"] for gen in ex['generations'])])
+        print(f"(pass@{n_beams}) Correct: {fs_cot_correct} / {total_ex}")
+        print(
+            f"Avg gen tokens: {n_beams * sum(gen['generated_tokens'] for op in fs_cot_outputs for gen in op["generations"]) / total_ex:.2f}"
+        )
 
-    print(f" ====== FS COT BEAMS N={num_beams}===== ")
-    output_filename = f"outputs/{domain}_fs_cot_beams{num_beams}_{modelname}.json"
-    fs_cot_outputs = fs_cot(
-        model,
-        tokenizer,
-        get_batch,
-        make_cot_queries,
-        examples,
-        get_prediction_and_correctness_cot,
-        1, # to correctly do beam stopping, need small batch... unless there's something better implement wise
-        cot_stop_strings,
-        1,
-        False,
-        None,
-        num_beams,
-        output_filename
-    )
-    with open(output_filename, "w") as wf:
-        json.dump(fs_cot_outputs, wf, indent=4)
-    
-    fs_cot_correct = len([ex for ex in fs_cot_outputs if any(gen["correct"] for gen in ex['generations'])])
-    print(f"Correct: {fs_cot_correct} / {total_ex}")
-    print(
-        f"Avg gen tokens: {num_beams} * {sum(op["generations"][0]['generated_tokens'] for op in fs_cot_outputs) / total_ex:.2f}"
-    )
-
-batch_size = 10
 num_ex = 100
-num_samples = 5
-num_beams = 5
+num_samples = [4, 9, 16]
+num_beams = [2, 3, 4]
 temperature = 0.6
 
 models = [
-    "meta-llama/Llama-3.2-1B-Instruct",
-    "meta-llama/Llama-3.2-3B-Instruct",
-    "meta-llama/Llama-3.1-8B-Instruct",
+    ("meta-llama/Llama-3.2-1B-Instruct", 64),
+    ("meta-llama/Llama-3.2-3B-Instruct", 48),
+    ("meta-llama/Llama-3.1-8B-Instruct", 16)
 ]
 domains = [
     "indexing", 
@@ -479,7 +488,7 @@ domains = [
     "arrayworld", 
 ]
 
-for model in models:
+for (model, batch_size) in models:
     modelname = re.search(r"/(.+)", model).group(1)
     print(f"===== {modelname} ====")
     model, tokenizer = load_model(model)
