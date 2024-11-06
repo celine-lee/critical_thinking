@@ -119,13 +119,15 @@ def rank_generations(
                 input_ids_to_use = new_input_ids.input_ids[
                     augmented_generation_idxes.index(gen_idx)
                 ]
+                gen_idx_to_use = augmented_generation_idxes.index(gen_idx)
             else:
                 scores_to_use = model_output.scores
                 output_ids_to_use = model_output.sequences[gen_idx]
                 input_ids_to_use = input_ids.input_ids[input_idx]
+                gen_idx_to_use = gen_idx
             input_len = input_ids_to_use.shape[-1]
             answer_scores = [
-                scores_to_use[idx - input_len][gen_idx].log_softmax(dim=-1)[tok_idx]
+                scores_to_use[idx - input_len][gen_idx_to_use].log_softmax(dim=-1)[tok_idx]
                 for (idx, tok_idx) in zip(
                     range(*answer_indices),
                     output_ids_to_use[answer_indices[0] : answer_indices[1]],
@@ -741,20 +743,21 @@ def run_experiment(
 def main():
 
     num_ex = 100
-    num_samples = [4, 9, 16]
+    num_samples = [4, 16]
+    # num_samples = [4, 9, 16]
     temperature = 0.7
 
     models = [
-        ("meta-llama/Llama-3.2-1B-Instruct", 24),
-        ("meta-llama/Llama-3.2-3B-Instruct", 16),
+        # ("meta-llama/Llama-3.2-1B-Instruct", 24),
+        # ("meta-llama/Llama-3.2-3B-Instruct", 16),
         ("meta-llama/Llama-3.1-8B-Instruct", 8),
     ]
     domains = [
-        "indexing",
+        # "indexing",
         "idx_management",
-        "arrayworld",
+        # "arrayworld",
         "trivia_qa",
-        "compgap",
+        # "compgap",
     ]
 
     for (model, batch_size) in models:
