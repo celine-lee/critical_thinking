@@ -45,7 +45,6 @@ class StopStringCriteria(StoppingCriteria):
         return all(any(ss in decoded_output for ss in self.stop_strings) for decoded_output in decoded_outputs)
 
 
-
 def fs_basic(
     model,
     tokenizer,
@@ -109,9 +108,6 @@ def fs_basic(
     pbar.close()
     return outputs
 
-# def get_sequence_scores(model_output):
-
-
 def fs_cot(
     model,
     tokenizer,
@@ -131,7 +127,7 @@ def fs_cot(
     max_batch_size = max_batch_size // num_beams
     if max_batch_size == 0: max_batch_size = 1
     outputs = []
-    if (num_beams == 1) and os.path.exists(output_filename):
+    if os.path.exists(output_filename):
         outputs = json.load(open(output_filename))
     ex_idx = len(outputs)
     pbar = tqdm(total=len(examples))
@@ -394,7 +390,7 @@ def rum_experiment(model, modelname, domain, max_batch_size, num_samples, temper
     total_ex = len(examples)
 
     print(" ====== FS BASIC GREEDY ===== ")
-    output_filename = f"outputs/{domain}_fs_basic_{modelname}.json"
+    output_filename = f"bon_beam_outputs/{domain}_fs_basic_{modelname}.json"
     if os.path.exists(output_filename):
         fs_basic_outputs = json.load(open(output_filename))
     else:
@@ -418,7 +414,7 @@ def rum_experiment(model, modelname, domain, max_batch_size, num_samples, temper
 
     for n_samples in num_samples:
         print(f" ====== FS COT MULTINOMIAL N={n_samples} TEMP {temperature}===== ")
-        output_filename = f"outputs/{domain}_fs_cot_temp{int(temperature*100)}_N{n_samples}_{modelname}.json"
+        output_filename = f"bon_beam_outputs/{domain}_fs_cot_temp{int(temperature*100)}_N{n_samples}_{modelname}.json"
         fs_cot_outputs = fs_cot(
             model,
             tokenizer,
@@ -445,7 +441,7 @@ def rum_experiment(model, modelname, domain, max_batch_size, num_samples, temper
 
     for n_beams in num_beams:
         print(f" ====== FS COT BEAMS N={n_beams}===== ")
-        output_filename = f"outputs/{domain}_fs_cot_beams{n_beams}_{modelname}.json"
+        output_filename = f"bon_beam_outputs/{domain}_fs_cot_beams{n_beams}_{modelname}.json"
         fs_cot_outputs = fs_cot(
             model,
             tokenizer,
@@ -470,28 +466,99 @@ def rum_experiment(model, modelname, domain, max_batch_size, num_samples, temper
             f"Avg gen tokens: {n_beams * sum(gen['generated_tokens'] for op in fs_cot_outputs for gen in op["generations"]) / total_ex:.2f}"
         )
 
-num_ex = 100
-num_samples = [4, 9, 16]
-num_beams = [2, 3, 4]
-temperature = 0.6
+# TODO?
+def select_best_with_icl_verifier(model, output_filename, domain, max_batch_size):
+    examples = json.load(open(output_filename))
+    from verifier_prompts import verification_cot_insn, verification_qa_template, verification_code_template
 
-models = [
-    ("meta-llama/Llama-3.2-1B-Instruct", 64),
-    ("meta-llama/Llama-3.2-3B-Instruct", 48),
-    ("meta-llama/Llama-3.1-8B-Instruct", 16)
-]
-domains = [
-    "indexing", 
-    "idx_management",
-    "trivia_qa", 
-    "compgap", 
-    "arrayworld", 
-]
+    if domain in {"arrayworld", "indexing", "idx_management"}:
+        question_key = "code"
+        verification_template = verification_code_template
+    elif domain in {"trivia_qa", "compgap"}:
+        if domain == "compgap": question_key = "Question"
+        if domain == "trivia_qa": question_key = "question"
+        verification_template = verification_qa_template
 
-for (model, batch_size) in models:
-    modelname = re.search(r"/(.+)", model).group(1)
-    print(f"===== {modelname} ====")
-    model, tokenizer = load_model(model)
-    for domain in domains:
-        print(f"---- {domain} ----")
-        rum_experiment(model, modelname, domain, batch_size, num_samples, temperature, num_beams, num_ex)
+    for e_idx, example in enumerate(examples):
+        correct_icl = []
+        incorrect_icl = []
+        others = examples[:e_idx] + examples[e_idx+1:]
+        for other_ex in others:
+            for gen in other_ex['generations']:
+                if gen["correct"] and len(incorrect_icl) < 2:
+                    correct_icl.append((other_ex["input_example"][question_key], gen["answer"], "[CORRECT]yes[/CORRECT]"))
+                    break
+                elif (not gen["correct"]) and len(correct_icl) < 2:
+                    incorrect_icl.append((other_ex["input_example"][question_key], gen["answer"], "[CORRECT]no[/CORRECT]"))
+                    break
+            if len(correct_icl) >= 2 and len(incorrect_icl) >= 2: break
+        icl_exemplars = correct_icl + incorrect_icl
+        random.shuffle(icl_exemplars)
+
+        queries = []
+        for gen in example["generations"]:
+            verif_prompt = verification_cot_insn + \
+                        "\n\n".join(verification_template.format(
+                            question=question, 
+                            answer=answer, 
+                            correct_with_tags=correct_with_tags) 
+                            for (question, answer, correct_with_tags) in icl_exemplars) + \
+                        "\n\n" + verification_template.format(
+                            question=e_idx["input_example"][question_key],
+                            answer=gen["answer"],
+                            correct_with_tags=""
+                        )
+            queries.append(verif_prompt)
+        input_ids = tokenizer(
+            queries, padding=True, truncation=True, max_length=2048, return_tensors="pt"
+        ).to(device)
+        model_output = model.generate(
+            **input_ids,
+            return_dict_in_generate=True,
+            output_scores=True,
+            max_new_tokens=500,
+            tokenizer=tokenizer,
+            stop_strings=stop_strings,
+            num_return_sequences=num_samples,
+            do_sample=do_sample,
+            temperature=temperature,
+            pad_token_id=tokenizer.eos_token_id,
+        )
+        # sequence_scores = get_sequence_scores(model_output) # for now we can use progmax as verifier
+        model_predictions = tokenizer.batch_decode(
+            model_output.sequences[:, input_ids.input_ids.shape[-1] :],
+            skip_special_tokens=True,
+        )
+        
+
+
+def main():
+
+    num_ex = 100
+    num_samples = [4, 9, 16]
+    num_beams = [2, 3, 4]
+    temperature = 0.6
+
+    models = [
+        ("meta-llama/Llama-3.2-1B-Instruct", 32),
+        ("meta-llama/Llama-3.2-3B-Instruct", 16),
+        ("meta-llama/Llama-3.1-8B-Instruct", 16)
+    ]
+    domains = [
+        "indexing", 
+        "idx_management",
+        "trivia_qa", 
+        "compgap", 
+        "arrayworld", 
+    ]
+
+    for (model, batch_size) in models:
+        modelname = re.search(r"/(.+)", model).group(1)
+        print(f"===== {modelname} ====")
+        model, tokenizer = load_model(model)
+        for domain in domains:
+            print(f"---- {domain} ----")
+            rum_experiment(model, modelname, domain, batch_size, num_samples, temperature, num_beams, num_ex)
+
+if __name__ == '__main__':
+    main()
