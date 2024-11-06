@@ -162,19 +162,22 @@ def get_token_indices(
 
 
 def answer_generations(
-    input_ids, model_output, model, tokenizer, method="continue_so_answer_is"
+    input_ids, batch_size, model_output, model, tokenizer, method="continue_so_answer_is"
 ):
+    input_tok_len = input_ids.input_ids.shape[-1]
+    input_char_lens = [len(tokenizer.decode(input_ids.input_ids[idx], skip_special_tokens=True)) for idx in range(input_ids.input_ids.shape[0])]
     model_predictions = tokenizer.batch_decode(
         model_output.sequences, skip_special_tokens=True,
     )
     model_generations = tokenizer.batch_decode(
-        model_output.sequences[:, input_ids.input_ids.shape[-1] :],
+        model_output.sequences[:, input_tok_len:],
         skip_special_tokens=True,
     )
     new_queries = []
     gens_need_augmenting = []
     extracted_answers_and_indices = [None for _ in model_predictions]
     for gen_idx, model_prediction in enumerate(model_predictions):
+        input_idx = gen_idx // batch_size
         if "So the answer is " in model_prediction:
             answer = (
                 re.search(r"So the answer is (.+)", model_prediction)
@@ -192,8 +195,8 @@ def answer_generations(
                 string_index_start,
                 string_index_end,
                 tokenizer,
-                init_tok_offset=input_ids.input_ids.shape[-1],
-                init_char_offset=len(tokenizer.decode(input_ids.input_ids[gen_idx], skip_special_tokens=True))
+                init_tok_offset=input_tok_len,
+                init_char_offset=input_char_lens[input_idx]
             )
             extracted_answers_and_indices[gen_idx] = (
                 answer,
@@ -325,12 +328,13 @@ def generate(
             attention_mask=input_ids.attention_mask,
             **generation_config,
         )
+        input_char_lens = [len(query) for query in queries]
         (
             new_input_ids,
             answered_model_output,
             augmented_generation_idxes,
             extracted_answers_and_indices,
-        ) = answer_generations(input_ids, model_output, model, tokenizer)
+        ) = answer_generations(input_ids, max_batch_size, model_output, model, tokenizer)
         rankings = rank_generations(
             input_ids,
             num_samples,
@@ -432,7 +436,7 @@ def cot_decode(
             answered_model_output,
             augmented_generation_idxes,
             extracted_answers_and_indices,
-        ) = answer_generations(input_ids, model_output, model, tokenizer)
+        ) = answer_generations(input_ids, max_batch_size, model_output, model, tokenizer)
         rankings = rank_generations(
             input_ids,
             num_samples,
@@ -731,8 +735,8 @@ def main():
     temperature = 0.7
 
     models = [
-        # ("meta-llama/Llama-3.2-1B-Instruct", 24),
-        # ("meta-llama/Llama-3.2-3B-Instruct", 16),
+        ("meta-llama/Llama-3.2-1B-Instruct", 24),
+        ("meta-llama/Llama-3.2-3B-Instruct", 16),
         ("meta-llama/Llama-3.1-8B-Instruct", 8),
     ]
     domains = [
