@@ -40,6 +40,7 @@ def get_code_str_from_tree_node(ast_node, og_code):
 
 
 eot_id = "<|eot_id|>"
+start_header_id = "<|start_header_id|>"
 
 prompt_template = """<|begin_of_text|><|start_header_id|>system<|end_header_id|>
 
@@ -225,7 +226,7 @@ def answer_generations(
         output_scores=True,
         max_new_tokens=512,
         tokenizer=tokenizer,
-        stop_strings=["\n", eot_id],
+        stop_strings=["\n", eot_id, start_header_id],
         do_sample=False,
         pad_token_id=tokenizer.eos_token_id,
     )
@@ -605,7 +606,7 @@ def run_experiment(
             is_correct = normalized_answer == exs[batch_idx]["Answer"].lower()
             return is_correct, normalized_answer
 
-    stop_strings = [eot_id]
+    stop_strings = [eot_id, start_header_id]
     total_ex = len(examples)
 
     experiments = []
