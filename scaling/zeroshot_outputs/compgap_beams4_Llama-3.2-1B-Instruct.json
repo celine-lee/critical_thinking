@@ -1,0 +1,1997 @@
+[
+    {
+        "input_example": {
+            "Question": "Who was president of the United States in the year that Citibank was founded?",
+            "Answer": "james madison"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was president of the United States in the year that Citibank was founded?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "Citibank was founded in 1812, and the United States was founded in 1776. Therefore, it is not possible for Citibank to have been founded in the year that the United States was founded.\n\nHowever, I can tell you that the first bank to be chartered in the United States was the Bank of New York, which was founded in 1784. So the answer is 1784.",
+                "total_compute_tokens": 133,
+                "generated_tokens": 79,
+                "answer": "1784",
+                "correct": false
+            },
+            {
+                "model_generation": "Citibank was founded in 1812, and the United States was founded in 1776. Therefore, it is not possible for Citibank to have been founded in the year that the United States was founded.\n\nHowever, I can tell you that the first bank to be chartered in the United States was the Bank of New York, which was founded in 1784.\n\nIf you'd like to know more about the history of Citibank, I'd be happy to help! So the answer is 1784.",
+                "total_compute_tokens": 155,
+                "generated_tokens": 101,
+                "answer": "1784",
+                "correct": false
+            },
+            {
+                "model_generation": "Citibank was founded in 1812, and the United States was founded in 1776. Therefore, it is not possible for Citibank to have been founded in the year that the United States was founded.\n\nHowever, I can tell you that the first bank to be chartered in the United States was the Bank of New York, which was founded in 1784.\n\nIf you'd like to know more about the history of Citibank, I'd be happy to help. So the answer is 1784.",
+                "total_compute_tokens": 155,
+                "generated_tokens": 101,
+                "answer": "1784",
+                "correct": false
+            },
+            {
+                "model_generation": "Citibank was founded in 1812, and the United States was founded in 1776. Therefore, it is not possible for Citibank to have been founded in the year that the United States was founded.\n\nHowever, I can tell you that the first bank to be chartered in the United States was the Bank of New York, which was founded in 1784.\n\nIf you'd like to know more about Citibank's history, I'd be happy to help! So the answer is 1784.",
+                "total_compute_tokens": 154,
+                "generated_tokens": 100,
+                "answer": "1784",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -0.04180457070469856
+                ],
+                [
+                    2,
+                    -0.04015598073601723
+                ],
+                [
+                    3,
+                    -0.030897365882992744
+                ],
+                [
+                    0,
+                    -0.004809773061424494
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What rocket was the first spacecraft that ever approached Uranus launched on?",
+            "Answer": "Titan IIIE"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat rocket was the first spacecraft that ever approached Uranus launched on?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The first spacecraft to approach Uranus was Voyager 2. So the answer is 2.",
+                "total_compute_tokens": 64,
+                "generated_tokens": 13,
+                "answer": "2",
+                "correct": false
+            },
+            {
+                "model_generation": "The first spacecraft to approach Uranus was Voyager 2, launched on August 20, 1977. So the answer is 1977.",
+                "total_compute_tokens": 74,
+                "generated_tokens": 23,
+                "answer": "1977",
+                "correct": false
+            },
+            {
+                "model_generation": "The first spacecraft to approach Uranus was Voyager 2, which was launched on August 20, 1977. So the answer is 1977.",
+                "total_compute_tokens": 76,
+                "generated_tokens": 25,
+                "answer": "1977",
+                "correct": false
+            },
+            {
+                "model_generation": "The first spacecraft to approach Uranus was Voyager 2, launched by NASA on August 20, 1977. So the answer is 1977.",
+                "total_compute_tokens": 76,
+                "generated_tokens": 25,
+                "answer": "1977",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -0.6471478343009949
+                ],
+                [
+                    3,
+                    -0.4672122895717621
+                ],
+                [
+                    1,
+                    -0.37421509623527527
+                ],
+                [
+                    2,
+                    -0.28163236379623413
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the company that was founded as Sound of Music added to the S&P 500?",
+            "Answer": "1999"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what year was the company that was founded as Sound of Music added to the S&P 500?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The company that was founded as Sound of Music was added to the S&P 500 in 1999. So the answer is 1999.",
+                "total_compute_tokens": 81,
+                "generated_tokens": 23,
+                "answer": "1999",
+                "correct": true
+            },
+            {
+                "model_generation": "The company that was founded as Sound of Music was added to the S&P 500 in 1995. So the answer is 1995.",
+                "total_compute_tokens": 81,
+                "generated_tokens": 23,
+                "answer": "1995",
+                "correct": false
+            },
+            {
+                "model_generation": "The company that was founded as Sound of Music was added to the S&P 500 in 1988. So the answer is 1988.",
+                "total_compute_tokens": 81,
+                "generated_tokens": 23,
+                "answer": "1988",
+                "correct": false
+            },
+            {
+                "model_generation": "The company that was founded as Sound of Music was added to the S&P 500 in 1986. So the answer is 1986.",
+                "total_compute_tokens": 81,
+                "generated_tokens": 23,
+                "answer": "1986",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -0.00139786081854254
+                ],
+                [
+                    2,
+                    -0.0013744744937866926
+                ],
+                [
+                    0,
+                    -0.0011133217485621572
+                ],
+                [
+                    3,
+                    -0.0010057404870167375
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who was the first African American mayor of the most populous city in the United States?",
+            "Answer": "David Dinkins"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was the first African American mayor of the most populous city in the United States?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The first African American mayor of the most populous city in the United States was Tom Bradley, who served as the mayor of Los Angeles from 1973 to 1979. So the answer is  Los Angeles.",
+                "total_compute_tokens": 90,
+                "generated_tokens": 36,
+                "answer": " los angeles",
+                "correct": false
+            },
+            {
+                "model_generation": "The first African American mayor of the most populous city in the United States was Tom Bradley, who served as the mayor of Los Angeles from 1973 to 1977. So the answer is  Los Angeles.",
+                "total_compute_tokens": 90,
+                "generated_tokens": 36,
+                "answer": " los angeles",
+                "correct": false
+            },
+            {
+                "model_generation": "The first African American mayor of the most populous city in the United States was Tom Bradley, who served as the Mayor of Los Angeles from 1973 to 1979. So the answer is  Los Angeles.",
+                "total_compute_tokens": 90,
+                "generated_tokens": 36,
+                "answer": " los angeles",
+                "correct": false
+            },
+            {
+                "model_generation": "The first African American mayor of the most populous city in the United States was Tom Bradley, who served as the Mayor of Los Angeles from 1973 to 1977. So the answer is  Los Angeles.",
+                "total_compute_tokens": 90,
+                "generated_tokens": 36,
+                "answer": " los angeles",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    2,
+                    -0.17675849795341492
+                ],
+                [
+                    3,
+                    -0.17400145530700684
+                ],
+                [
+                    0,
+                    -0.16343700885772705
+                ],
+                [
+                    1,
+                    -0.16212452948093414
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When did the last king from Britain's House of Hanover die?",
+            "Answer": "20 June 1837"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen did the last king from Britain's House of Hanover die?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The last king from the House of Hanover, which ruled the United Kingdom from 1714 to 1901, was King George V. He died on January 20, 1936. So the answer is 1936.",
+                "total_compute_tokens": 92,
+                "generated_tokens": 41,
+                "answer": "1936",
+                "correct": false
+            },
+            {
+                "model_generation": "The last king from the House of Hanover, the British royal house that ruled the United Kingdom from 1714 to 1901, was King George V. He died on January 20, 1936. So the answer is 1936.",
+                "total_compute_tokens": 96,
+                "generated_tokens": 45,
+                "answer": "1936",
+                "correct": false
+            },
+            {
+                "model_generation": "The last king from the House of Hanover, which ruled the United Kingdom from 1714 to 1901, was King George V. He died on January 20, 1936, at the age of 76. So the answer is 1936.",
+                "total_compute_tokens": 99,
+                "generated_tokens": 48,
+                "answer": "1936",
+                "correct": false
+            },
+            {
+                "model_generation": "The last king from the House of Hanover, the British royal house that ruled the United Kingdom from 1714 to 1901, was King George V. He died on January 20, 1936, at the age of 76. So the answer is 1936.",
+                "total_compute_tokens": 103,
+                "generated_tokens": 52,
+                "answer": "1936",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -0.013375572860240936
+                ],
+                [
+                    1,
+                    -0.013058450073003769
+                ],
+                [
+                    2,
+                    -0.010935700498521328
+                ],
+                [
+                    3,
+                    -0.009787739254534245
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When did the president who set the precedent of a two term limit enter office?",
+            "Answer": "April 30, 1789"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen did the president who set the precedent of a two term limit enter office?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The president who set the precedent of a two-term limit is Franklin D. Roosevelt. So the answer is 1933.",
+                "total_compute_tokens": 71,
+                "generated_tokens": 18,
+                "answer": "1933",
+                "correct": false
+            },
+            {
+                "model_generation": "Franklin D. Roosevelt, the 32nd President of the United States, set the precedent of a two-term limit when he was elected to office in 1932 and re-elected in 1936. So the answer is 1932.",
+                "total_compute_tokens": 96,
+                "generated_tokens": 43,
+                "answer": "1932",
+                "correct": false
+            },
+            {
+                "model_generation": "Franklin D. Roosevelt, the 32nd President of the United States, set the precedent of a two-term limit in 1948. So the answer is 1948.",
+                "total_compute_tokens": 83,
+                "generated_tokens": 30,
+                "answer": "1948",
+                "correct": false
+            },
+            {
+                "model_generation": "Franklin D. Roosevelt, the 32nd President of the United States, set the precedent of a two-term limit when he was elected in 1932 and re-elected in 1936. So the answer is 1932.",
+                "total_compute_tokens": 94,
+                "generated_tokens": 41,
+                "answer": "1932",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -0.4347873330116272
+                ],
+                [
+                    3,
+                    -0.08050049096345901
+                ],
+                [
+                    1,
+                    -0.06520391255617142
+                ],
+                [
+                    2,
+                    -0.007204518653452396
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When did the president who set the precedent of a two term limit leave office?",
+            "Answer": "March 4, 1797"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen did the president who set the precedent of a two term limit leave office?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The president who set the precedent of a two-term limit is Franklin D. Roosevelt, who served as the 32nd President of the United States from 1933 to 1945. So the answer is 1933-1945.",
+                "total_compute_tokens": 92,
+                "generated_tokens": 39,
+                "answer": "19331945",
+                "correct": false
+            },
+            {
+                "model_generation": "The president who set the precedent of a two-term limit was Franklin D. Roosevelt. He was the 32nd President of the United States, serving from 1933 to 1945. So the answer is 1933-1945.",
+                "total_compute_tokens": 93,
+                "generated_tokens": 40,
+                "answer": "19331945",
+                "correct": false
+            },
+            {
+                "model_generation": "The president who set the precedent of a two-term limit was Franklin D. Roosevelt, who served from 1933 to 1945. So the answer is 1933-1945.",
+                "total_compute_tokens": 82,
+                "generated_tokens": 29,
+                "answer": "19331945",
+                "correct": false
+            },
+            {
+                "model_generation": "The president who set the precedent of a two-term limit is Franklin D. Roosevelt, who served from 1933 to 1945. So the answer is 1933-1945.",
+                "total_compute_tokens": 82,
+                "generated_tokens": 29,
+                "answer": "19331945",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    3,
+                    -0.20836932957172394
+                ],
+                [
+                    0,
+                    -0.20605187118053436
+                ],
+                [
+                    2,
+                    -0.19477659463882446
+                ],
+                [
+                    1,
+                    -0.16182611882686615
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "How many people died in the second most powerful earthquake ever recorded?",
+            "Answer": "131"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nHow many people died in the second most powerful earthquake ever recorded?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The second most powerful earthquake ever recorded is the Great Chilean Earthquake of 1960, also known as the Valdivia earthquake. It occurred on May 22, 1960, and is estimated to have had a magnitude of 9.5 on the Richter scale.\n\nAccording to the United States Geological Survey (USGS), the estimated death toll from this earthquake was around 2,000 to 6,000 people. So the answer is 2,000 to 6,000 people.",
+                "total_compute_tokens": 140,
+                "generated_tokens": 90,
+                "answer": "2000 to 6000 people",
+                "correct": false
+            },
+            {
+                "model_generation": "The second most powerful earthquake ever recorded is the Great Chilean Earthquake of 1960, also known as the Valdivia earthquake. It occurred on May 22, 1960, and is estimated to have had a magnitude of 9.5 on the Richter scale.\n\nAccording to various sources, including the United States Geological Survey (USGS), the estimated death toll from this earthquake was around 2,000 to 6,000 people. So the answer is 2,000 to 6,000 people.",
+                "total_compute_tokens": 144,
+                "generated_tokens": 94,
+                "answer": "2000 to 6000 people",
+                "correct": false
+            },
+            {
+                "model_generation": "The second most powerful earthquake ever recorded is the Great Chilean Earthquake of 1960, also known as the Valdivia earthquake. It occurred on May 22, 1960, and had a magnitude of 9.5 on the Richter scale. So the answer is 0.",
+                "total_compute_tokens": 105,
+                "generated_tokens": 55,
+                "answer": "0",
+                "correct": false
+            },
+            {
+                "model_generation": "The second most powerful earthquake ever recorded is the Great Chilean Earthquake of 1960, also known as the Valdivia earthquake. It occurred on May 22, 1960, and is estimated to have had a magnitude of 9.5 on the Richter scale. So the answer is 0.",
+                "total_compute_tokens": 109,
+                "generated_tokens": 59,
+                "answer": "0",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    3,
+                    -0.21987512707710266
+                ],
+                [
+                    2,
+                    -0.1906651258468628
+                ],
+                [
+                    0,
+                    -0.18831035494804382
+                ],
+                [
+                    1,
+                    -0.18082556128501892
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Can people who have celiac eat camel meat?",
+            "Answer": "Yes"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nCan people who have celiac eat camel meat?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "Celiac disease is an autoimmune disorder that causes the immune system to react to gluten, a protein found in certain grains, such as wheat, barley, and rye. Camel meat, on the other hand, is a type of red meat that comes from camels, which are domesticated animals.\n\nIn general, people with celiac disease can safely consume camel meat, but there are some considerations to keep in mind:\n\n1. **Cross-contamination**: Camel meat may be processed in facilities that also handle gluten-containing grains, which could lead to cross-contamination. However, many camel meat products are processed in dedicated gluten-free facilities.\n2. **Cross-reactivity**: Some people with celiac disease may experience cross-reactivity with camel meat due to similarities between camel and wheat proteins. This can lead to symptoms similar to celiac disease, such as abdominal pain, diarrhea, and fatigue.\n3. **Limited research**: There is limited research on the safety of camel meat for people with celiac disease. More studies are needed to fully understand the risks and benefits of consuming camel meat.\n\nTo ensure safe consumption, individuals with celiac disease should:\n\n1. **Consult a healthcare professional**: Before consuming camel meat, consult with a healthcare professional or registered dietitian to discuss the potential risks and benefits.\n2. **Choose certified gluten-free products**: Opt for camel meat products that have been certified gluten-free by a reputable third-party organization, such as the Gluten-Free Certification Organization (GFCO) or the Celiac Support Association (CSA).\n3. **Start with small amounts**: If you're new to camel meat, start with small amounts to monitor your body's reaction and adjust as needed.\n\nIn summary, while people with celiac disease can safely consume camel meat, it's essential to take precautions to minimize the risk of cross-contamination and cross-reactivity. Consult with a healthcare professional and choose certified gluten-free products to ensure a safe and enjoyable experience. So the answer is  **yes**, people with celiac disease can eat camel meat, but it's crucial to take necessary precautions to ensure their safety.",
+                "total_compute_tokens": 440,
+                "generated_tokens": 393,
+                "answer": " yes people with celiac disease can eat camel meat but its crucial to take necessary precautions to ensure their safety",
+                "correct": false
+            },
+            {
+                "model_generation": "Celiac disease is an autoimmune disorder that causes the immune system to react to gluten, a protein found in certain grains, such as wheat, barley, and rye. Camel meat, on the other hand, is a type of red meat that comes from camels, which are domesticated animals.\n\nIn general, people with celiac disease can safely consume camel meat, but there are some considerations to keep in mind:\n\n1. **Cross-contamination**: Camel meat may be processed in facilities that also handle gluten-containing grains, which could lead to cross-contamination. However, many camel meat products are processed in dedicated gluten-free facilities.\n2. **Cross-reactivity**: Some people with celiac disease may experience cross-reactivity with camel meat due to similarities between camel and wheat proteins. This can lead to symptoms similar to celiac disease, such as abdominal pain, diarrhea, and fatigue.\n3. **Limited research**: There is limited research on the safety of camel meat for people with celiac disease. More studies are needed to fully understand the risks and benefits of consuming camel meat.\n\nTo ensure safe consumption, individuals with celiac disease should:\n\n1. **Consult a healthcare professional**: Before consuming camel meat, consult with a healthcare professional or registered dietitian to discuss the potential risks and benefits.\n2. **Choose certified gluten-free products**: Opt for camel meat products that have been certified gluten-free by a reputable third-party organization, such as the Gluten-Free Certification Organization (GFCO) or the Celiac Support Association (CSA).\n3. **Start with small amounts**: If you're new to camel meat, start with small amounts to monitor your body's reaction and adjust as needed.\n\nIn summary, while people with celiac disease can safely consume camel meat, it's essential to take precautions to minimize the risk of cross-contamination and cross-reactivity. Consulting with a healthcare professional and choosing certified gluten-free products can help ensure a safe and enjoyable experience. So the answer is  **yes**, people with celiac disease can eat camel meat, but it's crucial to take necessary precautions to ensure their safety.",
+                "total_compute_tokens": 441,
+                "generated_tokens": 394,
+                "answer": " yes people with celiac disease can eat camel meat but its crucial to take necessary precautions to ensure their safety",
+                "correct": false
+            },
+            {
+                "model_generation": "Celiac disease is an autoimmune disorder that causes the immune system to react to gluten, a protein found in certain grains, such as wheat, barley, and rye. Camel meat, on the other hand, is a type of red meat that comes from camels, which are domesticated animals.\n\nIn general, people with celiac disease can safely consume camel meat, but there are some considerations to keep in mind:\n\n1. **Cross-contamination**: Camel meat may be processed in facilities that also handle gluten-containing grains, which could lead to cross-contamination. However, many camel meat products are processed in dedicated gluten-free facilities.\n2. **Cross-reactivity**: Some people with celiac disease may experience cross-reactivity with camel meat due to similarities between camel and wheat proteins. This can lead to symptoms similar to celiac disease, such as abdominal pain, diarrhea, and fatigue.\n3. **Limited research**: There is limited research on the safety of camel meat for people with celiac disease. More studies are needed to fully understand the risks and benefits of consuming camel meat.\n\nTo ensure safe consumption, individuals with celiac disease should:\n\n1. **Consult a healthcare professional**: Before consuming camel meat, consult with a healthcare professional or registered dietitian to discuss the potential risks and benefits.\n2. **Choose certified gluten-free products**: Opt for camel meat products that have been certified gluten-free by a reputable third-party organization, such as the Gluten-Free Certification Organization (GFCO) or the Celiac Support Association (CSA).\n3. **Start with small amounts**: If you're new to camel meat, start with small amounts to monitor your body's reaction and adjust as needed.\n\nIn summary, while people with celiac disease can safely consume camel meat, it's essential to take precautions to minimize the risk of cross-contamination and cross-reactivity. Consult with a healthcare professional and choose certified gluten-free products to ensure a safe and enjoyable dining experience. So the answer is  **yes**, people with celiac disease can eat camel meat, but it's crucial to take necessary precautions to ensure their safety.",
+                "total_compute_tokens": 441,
+                "generated_tokens": 394,
+                "answer": " yes people with celiac disease can eat camel meat but its crucial to take necessary precautions to ensure their safety",
+                "correct": false
+            },
+            {
+                "model_generation": "Celiac disease is an autoimmune disorder that causes the immune system to react to gluten, a protein found in certain grains, such as wheat, barley, and rye. Camel meat, on the other hand, is a type of red meat that comes from camels, which are domesticated animals.\n\nIn general, people with celiac disease can safely consume camel meat, but there are some considerations to keep in mind:\n\n1. **Cross-contamination**: Camel meat may be processed in facilities that also handle gluten-containing grains, which could lead to cross-contamination. However, many camel meat products are processed in dedicated gluten-free facilities.\n2. **Cross-reactivity**: Some people with celiac disease may experience cross-reactivity with camel meat due to similarities between camel and wheat proteins. This can lead to symptoms similar to celiac disease, such as abdominal pain, diarrhea, and fatigue.\n3. **Limited research**: There is limited research on the safety of camel meat for people with celiac disease. More studies are needed to fully understand the risks and benefits of consuming camel meat.\n\nTo ensure safe consumption, individuals with celiac disease should:\n\n1. **Consult a healthcare professional**: Before consuming camel meat, consult with a healthcare professional or registered dietitian to discuss the potential risks and benefits.\n2. **Choose certified gluten-free products**: Opt for camel meat products that have been certified gluten-free by a reputable third-party organization, such as the Gluten-Free Certification Organization (GFCO) or the Celiac Support Association (CSA).\n3. **Start with small amounts**: If you're new to camel meat, start with small amounts to monitor your body's reaction and adjust as needed.\n\nIn summary, while people with celiac disease can safely consume camel meat, it's essential to take precautions to minimize the risk of cross-contamination and cross-reactivity. Consulting with a healthcare professional and choosing certified gluten-free products can help ensure a safe and enjoyable dining experience. So the answer is  **yes**, people with celiac disease can eat camel meat, but it's crucial to take necessary precautions to ensure their safety.",
+                "total_compute_tokens": 442,
+                "generated_tokens": 395,
+                "answer": " yes people with celiac disease can eat camel meat but its crucial to take necessary precautions to ensure their safety",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -0.3322692811489105
+                ],
+                [
+                    2,
+                    -0.32880666851997375
+                ],
+                [
+                    1,
+                    -0.32252219319343567
+                ],
+                [
+                    3,
+                    -0.31804159283638
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What was the final book written by the author of On the Origin of Species?",
+            "Answer": "The Formation of Vegetable Mould Through the Action of Worms"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat was the final book written by the author of On the Origin of Species?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "Charles Darwin's \"On the Origin of Species\" was published in 1859. So the answer is 1859.",
+                "total_compute_tokens": 71,
+                "generated_tokens": 18,
+                "answer": "1859",
+                "correct": false
+            },
+            {
+                "model_generation": "Charles Darwin's final book was \"The Descent of Man, and Selection in Relation to Sex\". So the answer is  \"The Descent of Man, and Selection in Relation to Sex\".",
+                "total_compute_tokens": 74,
+                "generated_tokens": 21,
+                "answer": " the descent of man and selection in relation to sex",
+                "correct": false
+            },
+            {
+                "model_generation": "Charles Darwin wrote \"On the Origin of Species\" in 1859. So the answer is 1859.",
+                "total_compute_tokens": 69,
+                "generated_tokens": 16,
+                "answer": "1859",
+                "correct": false
+            },
+            {
+                "model_generation": "Charles Darwin's final book was \"The Expression of Emotions in Man and Animals\". So the answer is  \"The Expression of Emotions in Man and Animals\".",
+                "total_compute_tokens": 71,
+                "generated_tokens": 18,
+                "answer": " the expression of emotions in man and animals",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    2,
+                    -0.13274353742599487
+                ],
+                [
+                    3,
+                    -0.05939594283699989
+                ],
+                [
+                    1,
+                    -0.04087990149855614
+                ],
+                [
+                    0,
+                    -0.02401288039982319
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the company that built the first steam locomotive to carry passengers on a public rail line founded?",
+            "Answer": "1823"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the company that built the first steam locomotive to carry passengers on a public rail line founded?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The first steam locomotive to carry passengers on a public rail line was invented by Richard Trevithick in 1804. So the answer is 1804.",
+                "total_compute_tokens": 84,
+                "generated_tokens": 26,
+                "answer": "1804",
+                "correct": false
+            },
+            {
+                "model_generation": "The company that built the first steam locomotive to carry passengers on a public rail line was the Liverpool and Manchester Railway. So the answer is 1825.",
+                "total_compute_tokens": 83,
+                "generated_tokens": 25,
+                "answer": "1825",
+                "correct": false
+            },
+            {
+                "model_generation": "The company that built the first steam locomotive to carry passengers on a public rail line was the Liverpool and Manchester Railway, founded in 1830. So the answer is 1830.",
+                "total_compute_tokens": 89,
+                "generated_tokens": 31,
+                "answer": "1830",
+                "correct": false
+            },
+            {
+                "model_generation": "The company that built the first steam locomotive to carry passengers on a public rail line was the Liverpool and Manchester Railway, which was founded in 1830. So the answer is 1830.",
+                "total_compute_tokens": 91,
+                "generated_tokens": 33,
+                "answer": "1830",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -0.5619394779205322
+                ],
+                [
+                    0,
+                    -0.006325750611722469
+                ],
+                [
+                    2,
+                    -0.0018153120763599873
+                ],
+                [
+                    3,
+                    -0.0013585267588496208
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Which Theranos whistleblower is not related to a senior American government official?",
+            "Answer": "Erika Cheung"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhich Theranos whistleblower is not related to a senior American government official?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "One of the most notable whistleblowers associated with the Theranos scandal is Elizabeth Holmes, the founder and former CEO of the company. So the answer is  Elizabeth Holmes.",
+                "total_compute_tokens": 78,
+                "generated_tokens": 27,
+                "answer": " elizabeth holmes",
+                "correct": false
+            },
+            {
+                "model_generation": "One of the most notable whistleblowers associated with the Theranos scandal is Elizabeth Holmes, the founder and former CEO of the company. However, I couldn't find any information that suggests she is not related to a senior American government official. So the answer is  Elizabeth Holmes.",
+                "total_compute_tokens": 99,
+                "generated_tokens": 48,
+                "answer": " elizabeth holmes",
+                "correct": false
+            },
+            {
+                "model_generation": "One of the most notable whistleblowers associated with the Theranos scandal is Elizabeth Holmes, the founder and former CEO of the company. However, I couldn't find any information that suggests she is not a senior American government official. So the answer is  Elizabeth Holmes.",
+                "total_compute_tokens": 97,
+                "generated_tokens": 46,
+                "answer": " elizabeth holmes",
+                "correct": false
+            },
+            {
+                "model_generation": "One of the most notable whistleblowers from the Theranos scandal is Elizabeth Holmes, the founder and former CEO of the company. So the answer is  Elizabeth Holmes.",
+                "total_compute_tokens": 77,
+                "generated_tokens": 26,
+                "answer": " elizabeth holmes",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -0.9450889229774475
+                ],
+                [
+                    2,
+                    -0.6883687376976013
+                ],
+                [
+                    3,
+                    -0.2503952085971832
+                ],
+                [
+                    0,
+                    -0.24044688045978546
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What is the fastest air-breathing manned aircraft mostly made out of?",
+            "Answer": "Titanium"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the fastest air-breathing manned aircraft mostly made out of?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The fastest air-breathing manned aircraft is the Lockheed SR-71 Blackbird, a supersonic reconnaissance plane developed by Lockheed Skunk Works in the 1950s and 1960s. So the answer is  metal. The SR-71 is made mostly out of aluminum and titanium.",
+                "total_compute_tokens": 91,
+                "generated_tokens": 40,
+                "answer": " metal the sr71 is made mostly out of aluminum and titanium",
+                "correct": false
+            },
+            {
+                "model_generation": "The fastest air-breathing manned aircraft is the Concorde, a supersonic jet that was in service from 1976 to 2003. So the answer is  Concorde.",
+                "total_compute_tokens": 82,
+                "generated_tokens": 31,
+                "answer": " concorde",
+                "correct": false
+            },
+            {
+                "model_generation": "The fastest air-breathing manned aircraft is the Lockheed SR-71 Blackbird. So the answer is  metal.",
+                "total_compute_tokens": 68,
+                "generated_tokens": 17,
+                "answer": " metal",
+                "correct": false
+            },
+            {
+                "model_generation": "The fastest air-breathing manned aircraft is the Lockheed SR-71 Blackbird, a supersonic reconnaissance plane developed by Lockheed Skunk Works. So the answer is  metal. The SR-71 is mostly made out of aluminum and titanium.",
+                "total_compute_tokens": 80,
+                "generated_tokens": 29,
+                "answer": " metal the sr71 is mostly made out of aluminum and titanium",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    2,
+                    -1.8749914169311523
+                ],
+                [
+                    0,
+                    -0.7157743573188782
+                ],
+                [
+                    3,
+                    -0.6629520654678345
+                ],
+                [
+                    1,
+                    -0.6314719915390015
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who built the fastest air-breathing manned aircraft?",
+            "Answer": "Lockheed Corporation"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho built the fastest air-breathing manned aircraft?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The Wright brothers, Orville and Wilbur Wright, built the first powered, controlled, and sustained flight of an airplane on December 17, 1903. So the answer is 1903.",
+                "total_compute_tokens": 81,
+                "generated_tokens": 34,
+                "answer": "1903",
+                "correct": false
+            },
+            {
+                "model_generation": "The Wright brothers, Orville and Wilbur Wright, built the first powered, controlled, and sustained flight of an airplane on December 17, 1903, at Kitty Hawk, North Carolina. So the answer is  the Wright brothers.",
+                "total_compute_tokens": 88,
+                "generated_tokens": 41,
+                "answer": " the wright brothers",
+                "correct": false
+            },
+            {
+                "model_generation": "The Wright brothers, Orville and Wilbur Wright, built the first powered, heavier-than-air aircraft. So the answer is  Wright brothers.",
+                "total_compute_tokens": 69,
+                "generated_tokens": 22,
+                "answer": " wright brothers",
+                "correct": false
+            },
+            {
+                "model_generation": "The Wright brothers, Orville and Wilbur Wright, built the first successful powered, heavier-than-air aircraft. So the answer is  Wright brothers.",
+                "total_compute_tokens": 70,
+                "generated_tokens": 23,
+                "answer": " wright brothers",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    2,
+                    -0.6536085605621338
+                ],
+                [
+                    0,
+                    -0.6397297382354736
+                ],
+                [
+                    3,
+                    -0.6340428590774536
+                ],
+                [
+                    1,
+                    -0.49423834681510925
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the author of The Population Bomb born?",
+            "Answer": "May 29, 1932"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the author of The Population Bomb born?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The author of the book \"The Population Bomb\" is Paul Ehrlich. So the answer is 1933.",
+                "total_compute_tokens": 64,
+                "generated_tokens": 17,
+                "answer": "1933",
+                "correct": false
+            },
+            {
+                "model_generation": "Paul Ehrlich, the author of the book \"The Population Bomb\", was born in 1933. So the answer is 1933.",
+                "total_compute_tokens": 70,
+                "generated_tokens": 23,
+                "answer": "1933",
+                "correct": false
+            },
+            {
+                "model_generation": "Paul Ehrlich, the author of the book \"The Population Bomb\", was born in 1936. So the answer is 1936.",
+                "total_compute_tokens": 70,
+                "generated_tokens": 23,
+                "answer": "1936",
+                "correct": false
+            },
+            {
+                "model_generation": "Paul Ehrlich, the author of \"The Population Bomb\", was born in 1936. So the answer is 1936.",
+                "total_compute_tokens": 68,
+                "generated_tokens": 21,
+                "answer": "1936",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -0.9353424310684204
+                ],
+                [
+                    3,
+                    -0.0028681738767772913
+                ],
+                [
+                    2,
+                    -0.002278674626722932
+                ],
+                [
+                    1,
+                    -0.002234833547845483
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When did the author of Annabel Lee enlist in the army?",
+            "Answer": "1827"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen did the author of Annabel Lee enlist in the army?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "Unfortunately, I don't have any information about an author named Annabel Lee. The poem \"Annabel Lee\" is actually a famous poem by Edgar Allan Poe, written in 1849. So the answer is 1849.",
+                "total_compute_tokens": 90,
+                "generated_tokens": 40,
+                "answer": "1849",
+                "correct": false
+            },
+            {
+                "model_generation": "Unfortunately, I don't have any information about an author named Annabel Lee. The poem \"Annabel Lee\" is actually a famous poem by Edgar Allan Poe, and it's one of his most well-known works. So the answer is 1849, when Poe enlisted in the army.",
+                "total_compute_tokens": 95,
+                "generated_tokens": 45,
+                "answer": "1849 when poe enlisted in the army",
+                "correct": false
+            },
+            {
+                "model_generation": "Unfortunately, I don't have any information about an author named Annabel Lee. The poem \"Annabel Lee\" is actually a famous poem by Edgar Allan Poe, written in 1849. It's one of his most beloved and enduring works. So the answer is 1849, when Edgar Allan Poe enlisted in the army.",
+                "total_compute_tokens": 101,
+                "generated_tokens": 51,
+                "answer": "1849 when edgar allan poe enlisted in the army",
+                "correct": false
+            },
+            {
+                "model_generation": "Unfortunately, I don't have any information about an author named Annabel Lee. The poem \"Annabel Lee\" is actually a famous poem by Edgar Allan Poe, written in 1849. It's one of his most well-known works. So the answer is 1849.",
+                "total_compute_tokens": 100,
+                "generated_tokens": 50,
+                "answer": "1849",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -0.3965919613838196
+                ],
+                [
+                    2,
+                    -0.22055868804454803
+                ],
+                [
+                    3,
+                    -0.005984100978821516
+                ],
+                [
+                    0,
+                    -0.005529326386749744
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What was the religion of the inventor of the Polio vaccine?",
+            "Answer": "Jewish"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat was the religion of the inventor of the Polio vaccine?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The inventor of the inactivated poliovirus vaccine (IPV) was Jonas Salk, an American medical researcher. So the answer is  Jonas Salk.",
+                "total_compute_tokens": 75,
+                "generated_tokens": 25,
+                "answer": " jonas salk",
+                "correct": false
+            },
+            {
+                "model_generation": "The inventor of the inactivated poliovirus vaccine (IPV) was Jonas Salk. So the answer is  Jonas Salk.",
+                "total_compute_tokens": 70,
+                "generated_tokens": 20,
+                "answer": " jonas salk",
+                "correct": false
+            },
+            {
+                "model_generation": "The inventor of the inactivated poliovirus vaccine (IPV) was Jonas Salk, an American medical researcher and virologist. So the answer is  Jonas Salk.",
+                "total_compute_tokens": 80,
+                "generated_tokens": 30,
+                "answer": " jonas salk",
+                "correct": false
+            },
+            {
+                "model_generation": "The inventor of the inactivated poliovirus vaccine (IPV) is Jonas Salk, an American medical researcher. So the answer is  Jonas Salk.",
+                "total_compute_tokens": 75,
+                "generated_tokens": 25,
+                "answer": " jonas salk",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -0.21315929293632507
+                ],
+                [
+                    1,
+                    -0.1945783495903015
+                ],
+                [
+                    2,
+                    -0.19368138909339905
+                ],
+                [
+                    3,
+                    -0.19334685802459717
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who was the second wife of the founder of CNN?",
+            "Answer": "Jane Shirley Smith"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was the second wife of the founder of CNN?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The founder of CNN (Cable News Network) was Ted Turner. He was married twice, but I couldn't find any information on a second wife. So the answer is 0.",
+                "total_compute_tokens": 80,
+                "generated_tokens": 32,
+                "answer": "0",
+                "correct": false
+            },
+            {
+                "model_generation": "The founder of CNN (Cable News Network) was Ted Turner. He was married twice, but I couldn't find any information about a second wife. So the answer is 0.",
+                "total_compute_tokens": 80,
+                "generated_tokens": 32,
+                "answer": "0",
+                "correct": false
+            },
+            {
+                "model_generation": "The founder of CNN (Cable News Network) was Ted Turner. He was married twice, but I couldn't find any information about his second wife. So the answer is 0.",
+                "total_compute_tokens": 80,
+                "generated_tokens": 32,
+                "answer": "0",
+                "correct": false
+            },
+            {
+                "model_generation": "The founder of CNN (Cable News Network) was Ted Turner. He was married twice, but I couldn't find any information on a second wife. He was married only once. So the answer is 0.",
+                "total_compute_tokens": 86,
+                "generated_tokens": 38,
+                "answer": "0",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    3,
+                    -0.28063899278640747
+                ],
+                [
+                    2,
+                    -0.21471445262432098
+                ],
+                [
+                    0,
+                    -0.2037721574306488
+                ],
+                [
+                    1,
+                    -0.199567049741745
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When did the first prime minister of the Russian Empire come into office?",
+            "Answer": "November 6, 1905"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen did the first prime minister of the Russian Empire come into office?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The first prime minister of the Russian Empire was Alexander Gorchakov, who served as the Prime Minister of the Russian Empire from 1801 to 1804. So the answer is 1801.",
+                "total_compute_tokens": 85,
+                "generated_tokens": 34,
+                "answer": "1801",
+                "correct": false
+            },
+            {
+                "model_generation": "The first prime minister of the Russian Empire was Alexander Gorchakov, who served as the Prime Minister of the Russian Empire from 1861 to 1862. So the answer is 1861.",
+                "total_compute_tokens": 85,
+                "generated_tokens": 34,
+                "answer": "1861",
+                "correct": false
+            },
+            {
+                "model_generation": "The first prime minister of the Russian Empire was Alexander Gorchakov, who served as the Prime Minister of the Russian Empire from 1801 to 1803. So the answer is 1801.",
+                "total_compute_tokens": 85,
+                "generated_tokens": 34,
+                "answer": "1801",
+                "correct": false
+            },
+            {
+                "model_generation": "The first prime minister of the Russian Empire was Alexander Gorchakov, who served from 1801 to 1804. So the answer is 1801.",
+                "total_compute_tokens": 77,
+                "generated_tokens": 26,
+                "answer": "1801",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -0.016424862667918205
+                ],
+                [
+                    3,
+                    -0.004126656334847212
+                ],
+                [
+                    2,
+                    -0.0039176857098937035
+                ],
+                [
+                    0,
+                    -0.003758867969736457
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What is the primary male hormone derived from?",
+            "Answer": "cholesterol"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the primary male hormone derived from?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The primary male hormone derived from is testosterone. So the answer is  testosterone.",
+                "total_compute_tokens": 56,
+                "generated_tokens": 10,
+                "answer": " testosterone",
+                "correct": false
+            },
+            {
+                "model_generation": "The primary male hormone is testosterone. So the answer is  testosterone.",
+                "total_compute_tokens": 54,
+                "generated_tokens": 8,
+                "answer": " testosterone",
+                "correct": false
+            },
+            {
+                "model_generation": "The primary male hormone is testosterone. It is a steroid hormone that is produced by the testes in males and plays a crucial role in the development and maintenance of male reproductive tissues, such as the prostate gland, seminal vesicles, and epididymis. So the answer is  testosterone.",
+                "total_compute_tokens": 99,
+                "generated_tokens": 53,
+                "answer": " testosterone",
+                "correct": false
+            },
+            {
+                "model_generation": "The primary male hormone derived from the testes is testosterone. So the answer is  testosterone.",
+                "total_compute_tokens": 59,
+                "generated_tokens": 13,
+                "answer": " testosterone",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.059721827507019
+                ],
+                [
+                    2,
+                    -0.769063413143158
+                ],
+                [
+                    3,
+                    -0.6734620928764343
+                ],
+                [
+                    0,
+                    -0.49720317125320435
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "The Filipino statesman who established the government-in-exile during the outbreak of World War II was also the mayor of what city?",
+            "Answer": "Quezon City"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nThe Filipino statesman who established the government-in-exile during the outbreak of World War II was also the mayor of what city?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The Filipino statesman who established the government-in-exile during the outbreak of World War II was also the mayor of Manila. So the answer is  Manila.",
+                "total_compute_tokens": 89,
+                "generated_tokens": 26,
+                "answer": " manila",
+                "correct": false
+            },
+            {
+                "model_generation": "The Filipino statesman who established the government-in-exile during the outbreak of World War II was Manuel L. Quezon. He was the mayor of Manila. So the answer is  Manila.",
+                "total_compute_tokens": 96,
+                "generated_tokens": 33,
+                "answer": " manila",
+                "correct": false
+            },
+            {
+                "model_generation": "The Filipino statesman who established the government-in-exile during the outbreak of World War II was Manuel Quezon. He was the mayor of Manila. So the answer is  Manila.",
+                "total_compute_tokens": 94,
+                "generated_tokens": 31,
+                "answer": " manila",
+                "correct": false
+            },
+            {
+                "model_generation": "The Filipino statesman who established the government-in-exile during the outbreak of World War II was Manuel L. Quezon. So the answer is  Quezon City.",
+                "total_compute_tokens": 89,
+                "generated_tokens": 26,
+                "answer": " quezon city",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    3,
+                    -0.3264199495315552
+                ],
+                [
+                    1,
+                    -0.21994420886039734
+                ],
+                [
+                    2,
+                    -0.21696837246418
+                ],
+                [
+                    0,
+                    -0.13784818351268768
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Where was the person who shared the Nobel Prize in Physics in 1954 with Max Born born?",
+            "Answer": "Oranienburg, Germany"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhere was the person who shared the Nobel Prize in Physics in 1954 with Max Born born?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The person who shared the Nobel Prize in Physics in 1954 with Max Born was Werner Heisenberg. Werner Heisenberg was born in W\u00fcrzburg, Germany. So the answer is  W\u00fcrzburg, Germany.",
+                "total_compute_tokens": 93,
+                "generated_tokens": 36,
+                "answer": " w\u00fcrzburg germany",
+                "correct": false
+            },
+            {
+                "model_generation": "The person who shared the Nobel Prize in Physics in 1954 with Max Born was Werner Heisenberg. He was born in W\u00fcrzburg, Germany. So the answer is  W\u00fcrzburg, Germany.",
+                "total_compute_tokens": 90,
+                "generated_tokens": 33,
+                "answer": " w\u00fcrzburg germany",
+                "correct": false
+            },
+            {
+                "model_generation": "The person who shared the Nobel Prize in Physics in 1954 with Max Born was Werner Heisenberg. So the answer is  Germany.",
+                "total_compute_tokens": 80,
+                "generated_tokens": 23,
+                "answer": " germany",
+                "correct": false
+            },
+            {
+                "model_generation": "The person who shared the Nobel Prize in Physics in 1954 with Max Born was Werner Heisenberg. He was born in Wuppertal, Germany. So the answer is  Wuppertal, Germany.",
+                "total_compute_tokens": 91,
+                "generated_tokens": 34,
+                "answer": " wuppertal germany",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    2,
+                    -0.7962748408317566
+                ],
+                [
+                    1,
+                    -0.18367372453212738
+                ],
+                [
+                    0,
+                    -0.16702347993850708
+                ],
+                [
+                    3,
+                    -0.16239731013774872
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the person who shared the Nobel Prize in Physics in 1954 with Max Born born?",
+            "Answer": "January 8, 1891"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the person who shared the Nobel Prize in Physics in 1954 with Max Born born?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The person who shared the Nobel Prize in Physics in 1954 with Max Born was Werner Heisenberg. Werner Heisenberg was born on December 5, 1901. So the answer is 1901.",
+                "total_compute_tokens": 95,
+                "generated_tokens": 38,
+                "answer": "1901",
+                "correct": false
+            },
+            {
+                "model_generation": "The person who shared the Nobel Prize in Physics in 1954 with Max Born was Werner Heisenberg. Werner Heisenberg was born on February 5, 1901. So the answer is 1901.",
+                "total_compute_tokens": 95,
+                "generated_tokens": 38,
+                "answer": "1901",
+                "correct": false
+            },
+            {
+                "model_generation": "The person who shared the Nobel Prize in Physics in 1954 with Max Born was Werner Heisenberg. He was born on February 5, 1901. So the answer is 1901.",
+                "total_compute_tokens": 92,
+                "generated_tokens": 35,
+                "answer": "1901",
+                "correct": false
+            },
+            {
+                "model_generation": "The person who shared the Nobel Prize in Physics in 1954 with Max Born was Werner Heisenberg. So the answer is 1901.",
+                "total_compute_tokens": 80,
+                "generated_tokens": 23,
+                "answer": "1901",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    3,
+                    -0.5797082185745239
+                ],
+                [
+                    2,
+                    -0.03536897897720337
+                ],
+                [
+                    1,
+                    -0.029622094705700874
+                ],
+                [
+                    0,
+                    -0.013858571648597717
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What was the founding date of the university in which Plotonium was discovered?",
+            "Answer": "March 23, 1868"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat was the founding date of the university in which Plotonium was discovered?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "I couldn't find any information on a scientific term called \"Plotonium.\" It's possible that it's a misspelling or a made-up term. Can you please provide more context or clarify what you mean by \"Plotonium\"? So the answer is  I couldn't find any information on a scientific term called \"Plotonium.\"",
+                "total_compute_tokens": 103,
+                "generated_tokens": 50,
+                "answer": " i couldnt find any information on a scientific term called plotonium",
+                "correct": false
+            },
+            {
+                "model_generation": "I couldn't find any information on a substance called \"Plotonium.\" It's possible that it's a misspelling or a made-up term. Can you provide more context or clarify what Plotonium is? So the answer is  I couldn't find any information on a substance called \"Plotonium.\"",
+                "total_compute_tokens": 98,
+                "generated_tokens": 45,
+                "answer": " i couldnt find any information on a substance called plotonium",
+                "correct": false
+            },
+            {
+                "model_generation": "I couldn't find any information on a substance called \"Plotonium.\" It's possible that it's a misspelling or a made-up term. Can you provide more context or clarify what Plotonium refers to? So the answer is  I couldn't find any information on a substance called \"Plotonium.\"",
+                "total_compute_tokens": 99,
+                "generated_tokens": 46,
+                "answer": " i couldnt find any information on a substance called plotonium",
+                "correct": false
+            },
+            {
+                "model_generation": "I couldn't find any information on a scientific term called \"Plotonium.\" It's possible that it's a misspelling or a made-up term. Can you please provide more context or clarify what Plotonium refers to? So the answer is  I couldn't find any information on a scientific term called \"Plotonium.\"",
+                "total_compute_tokens": 101,
+                "generated_tokens": 48,
+                "answer": " i couldnt find any information on a scientific term called plotonium",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -0.5100921988487244
+                ],
+                [
+                    2,
+                    -0.49154728651046753
+                ],
+                [
+                    3,
+                    -0.49082475900650024
+                ],
+                [
+                    0,
+                    -0.48183920979499817
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "The material out of which the Great Sphinx of Giza is made of is mainly composed of what mineral?",
+            "Answer": "calcite"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nThe material out of which the Great Sphinx of Giza is made of is mainly composed of what mineral?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The Great Sphinx of Giza is made of limestone. So the answer is  limestone.",
+                "total_compute_tokens": 70,
+                "generated_tokens": 12,
+                "answer": " limestone",
+                "correct": false
+            },
+            {
+                "model_generation": "The material out of which the Great Sphinx of Giza is made of is mainly composed of limestone. So the answer is  limestone.",
+                "total_compute_tokens": 79,
+                "generated_tokens": 21,
+                "answer": " limestone",
+                "correct": false
+            },
+            {
+                "model_generation": "The material out of which the Great Sphinx of Giza is made of is limestone. So the answer is  limestone.",
+                "total_compute_tokens": 76,
+                "generated_tokens": 18,
+                "answer": " limestone",
+                "correct": false
+            },
+            {
+                "model_generation": "The material out of which the Great Sphinx of Giza is mainly composed of limestone. So the answer is  limestone.",
+                "total_compute_tokens": 76,
+                "generated_tokens": 18,
+                "answer": " limestone",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -0.9875450134277344
+                ],
+                [
+                    1,
+                    -0.8444657921791077
+                ],
+                [
+                    3,
+                    -0.7993959188461304
+                ],
+                [
+                    2,
+                    -0.7900854349136353
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "The husband of Lady Godiva was Earl of which Anglic kingdom?",
+            "Answer": "Mercia"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nThe husband of Lady Godiva was Earl of which Anglic kingdom?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The husband of Lady Godiva was Leofric, Earl of Mercia. So the answer is  Mercia.",
+                "total_compute_tokens": 67,
+                "generated_tokens": 17,
+                "answer": " mercia",
+                "correct": false
+            },
+            {
+                "model_generation": "The husband of Lady Godiva was Earl Leofric of Mercia. So the answer is  Mercia.",
+                "total_compute_tokens": 66,
+                "generated_tokens": 16,
+                "answer": " mercia",
+                "correct": false
+            },
+            {
+                "model_generation": "The husband of Lady Godiva was Earl Leofric, who was the Earl of Mercia. So the answer is  Mercia.",
+                "total_compute_tokens": 71,
+                "generated_tokens": 21,
+                "answer": " mercia",
+                "correct": false
+            },
+            {
+                "model_generation": "The husband of Lady Godiva was Leofric, Earl of Mercia, not Earl of Wessex. So the answer is  Mercia.",
+                "total_compute_tokens": 73,
+                "generated_tokens": 23,
+                "answer": " mercia",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -0.1466405838727951
+                ],
+                [
+                    1,
+                    -0.1446971595287323
+                ],
+                [
+                    2,
+                    -0.13545726239681244
+                ],
+                [
+                    3,
+                    -0.0757959857583046
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "The machine used to extract honey from honeycombs uses which physical force?",
+            "Answer": "Centrifugal Force"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nThe machine used to extract honey from honeycombs uses which physical force?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The machine used to extract honey from honeycombs uses centrifugal force. So the answer is  Centrifugal force.",
+                "total_compute_tokens": 68,
+                "generated_tokens": 16,
+                "answer": " centrifugal force",
+                "correct": false
+            },
+            {
+                "model_generation": "To extract honey from honeycombs, the physical force used is centrifugal force. So the answer is  Centrifugal force.",
+                "total_compute_tokens": 70,
+                "generated_tokens": 18,
+                "answer": " centrifugal force",
+                "correct": false
+            },
+            {
+                "model_generation": "The machine used to extract honey from honeycombs typically uses centrifugal force. So the answer is  Centrifugal force.",
+                "total_compute_tokens": 69,
+                "generated_tokens": 17,
+                "answer": " centrifugal force",
+                "correct": false
+            },
+            {
+                "model_generation": "The machine used to extract honey from honeycombs typically uses centrifugal force to extract the honey. So the answer is  Centrifugal force.",
+                "total_compute_tokens": 73,
+                "generated_tokens": 21,
+                "answer": " centrifugal force",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -0.17510545253753662
+                ],
+                [
+                    0,
+                    -0.16103316843509674
+                ],
+                [
+                    3,
+                    -0.12806962430477142
+                ],
+                [
+                    2,
+                    -0.12209578603506088
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What is the third letter of the top level domain of the military?",
+            "Answer": "l"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the third letter of the top level domain of the military?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "To find the third letter of the top-level domain of the military, I'll break it down step by step:\n\n1. The top-level domain of the military is \"military\".\n2. The word \"military\" has 8 letters: M-I-L-I-T-A-R-Y.\n3. To find the third letter, I'll count the letters starting from the first letter: M (1st), I (2nd), L (3rd).\n\nSo, the third letter of the top-level domain \"military\" is L. So the answer is 3.",
+                "total_compute_tokens": 162,
+                "generated_tokens": 111,
+                "answer": "3",
+                "correct": false
+            },
+            {
+                "model_generation": "To find the third letter of the top-level domain of the military, I'll break it down step by step:\n\n1. The top-level domain of the military is \"military\".\n2. The word \"military\" has 8 letters: M-I-L-I-T-A-R-Y.\n3. To find the third letter, I'll count the letters starting from the first letter: M (1st), I (2nd), L (3rd).\n\nSo, the third letter of the top-level domain of the military is \"L\". So the answer is 3.",
+                "total_compute_tokens": 162,
+                "generated_tokens": 111,
+                "answer": "3",
+                "correct": false
+            },
+            {
+                "model_generation": "To find the third letter of the top-level domain of the military, I'll break it down step by step:\n\n1. The top-level domain of the military is \"military\".\n2. The word \"military\" has 9 letters: M-I-L-I-T-A-R-Y.\n3. To find the third letter, I'll count the letters starting from the first letter: M (1st), I (2nd), L (3rd).\n\nSo, the third letter of the top-level domain \"military\" is L. So the answer is 3.",
+                "total_compute_tokens": 162,
+                "generated_tokens": 111,
+                "answer": "3",
+                "correct": false
+            },
+            {
+                "model_generation": "To find the third letter of the top-level domain of the military, I'll break it down step by step:\n\n1. The top-level domain of the military is \"military\".\n2. The word \"military\" has 8 letters: M-I-L-I-T-A-R-Y.\n3. To find the third letter, I'll count the letters starting from the first letter: M (1st), I (2nd), L (3rd).\n\nSo, the third letter of the top-level domain of the military is L. So the answer is 3.",
+                "total_compute_tokens": 161,
+                "generated_tokens": 110,
+                "answer": "3",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -0.7442206740379333
+                ],
+                [
+                    2,
+                    -0.7153204083442688
+                ],
+                [
+                    3,
+                    -0.6859011054039001
+                ],
+                [
+                    1,
+                    -0.6178984045982361
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the government department where the internet originated at founded?",
+            "Answer": "1947"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what year was the government department where the internet originated at founded?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The government department where the internet originated is the United States Department of Defense's Advanced Research Projects Agency (ARPA), which was established in 1958. However, the precursor to the modern internet, ARPANET, was developed in the 1960s by the United States Department of Defense's Advanced Research Projects Agency (ARPA) under the leadership of Vint Cerf and Bob Kahn. So the answer is 1960s.",
+                "total_compute_tokens": 132,
+                "generated_tokens": 81,
+                "answer": "1960s",
+                "correct": false
+            },
+            {
+                "model_generation": "The government department where the internet originated is the United States Department of Defense's Advanced Research Projects Agency (ARPA), which was established in 1958. However, the precursor to the modern internet, ARPANET, was developed in the 1960s by the United States Department of Defense's Advanced Research Projects Agency (ARPA) under the leadership of Vint Cerf and Bob Kahn.\n\nARPANET was the first operational packet switching network, and it was launched on October 29, 1969. So the answer is 1969.",
+                "total_compute_tokens": 156,
+                "generated_tokens": 105,
+                "answer": "1969",
+                "correct": false
+            },
+            {
+                "model_generation": "The government department where the internet originated is the United States Department of Defense's Advanced Research Projects Agency (ARPA), which was established in 1958. However, the precursor to the modern internet, ARPANET, was developed in the 1960s by the United States Department of Defense's Advanced Research Projects Agency (ARPA). So the answer is 1960s.",
+                "total_compute_tokens": 120,
+                "generated_tokens": 69,
+                "answer": "1960s",
+                "correct": false
+            },
+            {
+                "model_generation": "The government department where the internet originated is the United States Department of Defense's Advanced Research Projects Agency (ARPA), which was established in 1958. However, the precursor to the modern internet, ARPANET, was developed in the 1960s by the United States Department of Defense's Advanced Research Projects Agency (ARPA) under the leadership of Vint Cerf and Bob Kahn.\n\nARPANET was the first operational packet switching network, and it was launched in 1969. So the answer is 1969.",
+                "total_compute_tokens": 152,
+                "generated_tokens": 101,
+                "answer": "1969",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    2,
+                    -0.274802029132843
+                ],
+                [
+                    0,
+                    -0.22923366725444794
+                ],
+                [
+                    1,
+                    -0.02392376773059368
+                ],
+                [
+                    3,
+                    -0.022191636264324188
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "The main actor of Indiana Jones is a licensed what?",
+            "Answer": "pilot"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nThe main actor of Indiana Jones is a licensed what?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The main actor of the Indiana Jones film series is Harrison Ford. So the answer is 1. Harrison Ford.",
+                "total_compute_tokens": 62,
+                "generated_tokens": 14,
+                "answer": "1 harrison ford",
+                "correct": false
+            },
+            {
+                "model_generation": "The main actor of the Indiana Jones franchise is Harrison Ford. So the answer is 1. Harrison Ford.",
+                "total_compute_tokens": 61,
+                "generated_tokens": 13,
+                "answer": "1 harrison ford",
+                "correct": false
+            },
+            {
+                "model_generation": "The main actor of Indiana Jones is Harrison Ford. So the answer is 1. Harrison Ford.",
+                "total_compute_tokens": 59,
+                "generated_tokens": 11,
+                "answer": "1 harrison ford",
+                "correct": false
+            },
+            {
+                "model_generation": "The main actor of Indiana Jones is a licensed archaeologist. So the answer is  archaeologist.",
+                "total_compute_tokens": 61,
+                "generated_tokens": 13,
+                "answer": " archaeologist",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    2,
+                    -0.6563714146614075
+                ],
+                [
+                    3,
+                    -0.5129154324531555
+                ],
+                [
+                    1,
+                    -0.5094713568687439
+                ],
+                [
+                    0,
+                    -0.4978702962398529
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the person after which the Hubble Space Telescope is named after born?",
+            "Answer": "November 20, 1889"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the person after which the Hubble Space Telescope is named after born?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The Hubble Space Telescope was named after Edwin Hubble, an American astronomer. He was born on April 28, 1889. So the answer is 1889.",
+                "total_compute_tokens": 83,
+                "generated_tokens": 30,
+                "answer": "1889",
+                "correct": false
+            },
+            {
+                "model_generation": "The Hubble Space Telescope was named after Edwin Hubble, an American astronomer. So the answer is 1929.",
+                "total_compute_tokens": 71,
+                "generated_tokens": 18,
+                "answer": "1929",
+                "correct": false
+            },
+            {
+                "model_generation": "The Hubble Space Telescope was named after Edwin Hubble, an American astronomer who made significant contributions to our understanding of the universe. So the answer is 1923.",
+                "total_compute_tokens": 81,
+                "generated_tokens": 28,
+                "answer": "1923",
+                "correct": false
+            },
+            {
+                "model_generation": "The Hubble Space Telescope was named after Edwin Powell Hubble, an American astronomer. So the answer is 1927.",
+                "total_compute_tokens": 72,
+                "generated_tokens": 19,
+                "answer": "1927",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    3,
+                    -1.3250458240509033
+                ],
+                [
+                    2,
+                    -1.2089169025421143
+                ],
+                [
+                    1,
+                    -0.9663647413253784
+                ],
+                [
+                    0,
+                    -0.022582324221730232
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When did the person who gave the Checkers speech die?",
+            "Answer": "April 22, 1994"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen did the person who gave the Checkers speech die?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "I don't have any information about a specific person giving a \"Checkers speech.\" Could you please provide more context or clarify who you are referring to? I'll do my best to help. So the answer is  I don't know.",
+                "total_compute_tokens": 89,
+                "generated_tokens": 40,
+                "answer": " i dont know",
+                "correct": false
+            },
+            {
+                "model_generation": "I don't have any information about a specific person giving a \"Checkers speech.\" Could you please provide more context or clarify who you are referring to? I'd be happy to try and help if I can. So the answer is  I don't know.",
+                "total_compute_tokens": 93,
+                "generated_tokens": 44,
+                "answer": " i dont know",
+                "correct": false
+            },
+            {
+                "model_generation": "I don't have any information about a person giving a \"Checkers speech.\" Could you please provide more context or clarify what you are referring to? I'll do my best to help. So the answer is  I don't know.",
+                "total_compute_tokens": 88,
+                "generated_tokens": 39,
+                "answer": " i dont know",
+                "correct": false
+            },
+            {
+                "model_generation": "I don't have any information about a specific person giving a \"Checkers speech.\" Could you please provide more context or clarify who you are referring to? So the answer is  I don't know.",
+                "total_compute_tokens": 81,
+                "generated_tokens": 32,
+                "answer": " i dont know",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    3,
+                    -0.6959846615791321
+                ],
+                [
+                    2,
+                    -0.5309478044509888
+                ],
+                [
+                    0,
+                    -0.5242862105369568
+                ],
+                [
+                    1,
+                    -0.49435487389564514
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the philosopher that formulated the hard problem of consciousness born?",
+            "Answer": "April 20, 1966"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the philosopher that formulated the hard problem of consciousness born?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The philosopher who formulated the hard problem of consciousness is David Chalmers. So the answer is 2007.",
+                "total_compute_tokens": 66,
+                "generated_tokens": 16,
+                "answer": "2007",
+                "correct": false
+            },
+            {
+                "model_generation": "The philosopher who formulated the hard problem of consciousness is David Chalmers.\n\nThe hard problem of consciousness refers to the question of why we have subjective experiences at all, and why we experience the world in the way that we do, rather than just processing information in a more mechanical or computational manner.\n\nDavid Chalmers, a philosopher at the University of New South Wales, proposed this problem in his 1995 book \"The Conscious Mind: In Search of a Fundamental Theory\". So the answer is 1995.",
+                "total_compute_tokens": 146,
+                "generated_tokens": 96,
+                "answer": "1995",
+                "correct": false
+            },
+            {
+                "model_generation": "The philosopher who formulated the hard problem of consciousness is David Chalmers.\n\nThe hard problem of consciousness refers to the question of why we have subjective experiences at all, and why we experience the world in the way that we do, rather than just processing information in a more mechanical or computational manner.\n\nDavid Chalmers, a philosopher at the University of New South Wales in Australia, first introduced the concept of the hard problem of consciousness in his 1995 book \"The Conscious Mind: In Search of a Fundamental Theory\". So the answer is 1995.",
+                "total_compute_tokens": 155,
+                "generated_tokens": 105,
+                "answer": "1995",
+                "correct": false
+            },
+            {
+                "model_generation": "The philosopher who formulated the hard problem of consciousness is David Chalmers.\n\nThe hard problem of consciousness refers to the question of why we have subjective experiences at all, and why we experience the world in the way that we do, rather than just processing information in a more mechanical or computational manner.\n\nDavid Chalmers, a philosopher at the University of New South Wales, proposed this problem in his 1995 book \"The Conscious Mind: In Search of a Fundamental Theory of Consciousness\". So the answer is 1995.",
+                "total_compute_tokens": 149,
+                "generated_tokens": 99,
+                "answer": "1995",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -0.9352057576179504
+                ],
+                [
+                    3,
+                    -0.0032219733111560345
+                ],
+                [
+                    1,
+                    -0.002994571579620242
+                ],
+                [
+                    2,
+                    -0.002716955030336976
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What is the capital of the second largest state in the US by area?",
+            "Answer": "Austin"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the capital of the second largest state in the US by area?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "To determine the capital of the second largest state in the US by area, I'll need to know which state you're referring to. There are 50 states in the US, so I'll need to know the specific state you're interested in.\n\nIf you provide the name of the state, I'll do my best to provide the correct answer. So the answer is 50. The second largest state in the US by area is Alaska. The capital of Alaska is Juneau.",
+                "total_compute_tokens": 123,
+                "generated_tokens": 71,
+                "answer": "50 the second largest state in the us by area is alaska the capital of alaska is juneau",
+                "correct": false
+            },
+            {
+                "model_generation": "To determine the capital of the second largest state in the US by area, I'll need to know which state you're referring to. There are 50 states in the US, so I'll need to know the specific state you're interested in.\n\nIf you provide the name of the state, I'll do my best to answer your question. So the answer is 50 states, and I'll need to know the specific state you're interested in. Please provide the name of the state.",
+                "total_compute_tokens": 122,
+                "generated_tokens": 70,
+                "answer": "50 states and ill need to know the specific state youre interested in please provide the name of the state",
+                "correct": false
+            },
+            {
+                "model_generation": "To determine the capital of the second largest state in the US by area, I'll need to know which state you're referring to. There are 50 states in the US, so I'll need to know the specific state you're interested in.\n\nIf you provide the name of the state, I'll do my best to provide the correct capital. So the answer is 50 states, and I'll need to know the specific state you're interested in. Please provide the name of the state.",
+                "total_compute_tokens": 123,
+                "generated_tokens": 71,
+                "answer": "50 states and ill need to know the specific state youre interested in please provide the name of the state",
+                "correct": false
+            },
+            {
+                "model_generation": "To determine the capital of the second largest state in the US by area, I'll need to know which state you're referring to. There are 50 states in the US, so I'll need to know the specific state you're interested in.\n\nIf you provide the name of the state, I'll do my best to provide the correct answer.\n\nAlternatively, if you'd like, I can give you a list of the 50 US states in order from largest to smallest by area. So the answer is 1. Alaska, 2. Texas, 3. California, 4. Montana, 5. New Mexico, 6. Arizona, 7. Colorado, 8. Nevada, 9. Wyoming, 10. Oregon, 11. Utah, 12. Idaho, 13. Kansas, 14. Oklahoma, 15. Nebraska, 16. South Dakota, 17. North Dakota, 18. Minnesota, 19. Iowa, 20. Wisconsin, 21. Illinois, 22. Michigan, 23. Ohio, 24. Pennsylvania, 25. New York, 26. Connecticut, 27. Rhode Island, 28. Delaware, 29. Maryland, 30. Virginia, 31. West Virginia, 32. New Jersey, 33. New Hampshire, 34. Maine, 35. Massachusetts, 36. Hawaii, 37. Alaska (again, since it's the largest), 38. Texas (again, since it's the second largest), 39. California (again, since it's the third largest), 40. Montana (again, since it's the fourth largest), 41. New Mexico (again, since it's the fifth largest), 42. Arizona (again, since it's the sixth largest), 43. Colorado (again, since it's the seventh largest), 44. Nevada (again, since it's the eighth largest), 45. Wyoming (again, since it's the ninth largest), 46. Oregon (again, since it's the tenth largest), 47. Utah (again, since it's the eleventh largest), 48. Idaho (again, since it's the twelfth largest), 49. Kansas (again, since it's the thirteenth largest), 50. Oklahoma (again, since it's the fourteenth largest).\n\n",
+                "total_compute_tokens": 151,
+                "generated_tokens": 99,
+                "answer": "1 alaska 2 texas 3 california 4 montana 5 new mexico 6 arizona 7 colorado 8 nevada 9 wyoming 10 oregon 11 utah 12 idaho 13 kansas 14 oklahoma 15 nebraska 16 south dakota 17 north dakota 18 minnesota 19 iowa 20 wisconsin 21 illinois 22 michigan 23 ohio 24 pennsylvania 25 new york 26 connecticut 27 rhode island 28 delaware 29 maryland 30 virginia 31 west virginia 32 new jersey 33 new hampshire 34 maine 35 massachusetts 36 hawaii 37 alaska again since its the largest 38 texas again since its the second largest 39 california again since its the third largest 40 montana again since its the fourth largest 41 new mexico again since its the fifth largest 42 arizona again since its the sixth largest 43 colorado again since its the seventh largest 44 nevada again since its the eighth largest 45 wyoming again since its the ninth largest 46 oregon again since its the tenth largest 47 utah again since its the eleventh largest 48 idaho again since its the twelfth largest 49 kansas again since its the thirteenth largest 50 oklahoma again since its the fourteenth largest",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -0.6731867790222168
+                ],
+                [
+                    2,
+                    -0.6629844903945923
+                ],
+                [
+                    0,
+                    -0.48505106568336487
+                ],
+                [
+                    3,
+                    -0.12059449404478073
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What is the maximum airspeed (in km/h) of the third fastest bird?",
+            "Answer": "320 km/h"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the maximum airspeed (in km/h) of the third fastest bird?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "To find the maximum airspeed of the third fastest bird, we need to know the top 3 fastest birds in the world.\n\nAccording to various sources, the top 3 fastest birds in the world are:\n\n1. Peregrine Falcon (Falco peregrinus) - up to 389 km/h (242 mph)\n2. Golden Eagle (Aquila chrysaetos) - up to 322 km/h (200 mph)\n3. Gyrfalcon (Falco rusticolus) - up to 322 km/h (200 mph)\n\nSo, the maximum airspeed of the third fastest bird, the Gyrfalcon, is approximately 322 km/h (200 mph). So the answer is 322.",
+                "total_compute_tokens": 196,
+                "generated_tokens": 142,
+                "answer": "322",
+                "correct": false
+            },
+            {
+                "model_generation": "To find the maximum airspeed of the third fastest bird, we need to know the top 3 fastest birds in the world.\n\nAccording to various sources, the top 3 fastest birds in the world are:\n\n1. Peregrine Falcon (Falco peregrinus) - up to 389 km/h (242 mph)\n2. Golden Eagle (Aquila chrysaetos) - up to 322 km/h (200 mph)\n3. Gyrfalcon (Falco rusticolus) - up to 322 km/h (200 mph)\n\nSo, the maximum airspeed of the third fastest bird is approximately 322 km/h (200 mph). So the answer is 322.",
+                "total_compute_tokens": 190,
+                "generated_tokens": 136,
+                "answer": "322",
+                "correct": false
+            },
+            {
+                "model_generation": "To find the maximum airspeed of the third fastest bird, we need to know the top 3 fastest birds in the world.\n\nAccording to various sources, the top 3 fastest birds in the world are:\n\n1. Peregrine Falcon (Falco peregrinus) - up to 389 km/h (242 mph)\n2. Golden Eagle (Aquila chrysaetos) - up to 322 km/h (200 mph)\n3. Gyrfalcon (Falco rusticolus) - up to 322 km/h (200 mph)\n\nSo, the maximum airspeed of the third fastest bird, the Gyrfalcon, is 322 km/h. So the answer is 322.",
+                "total_compute_tokens": 192,
+                "generated_tokens": 138,
+                "answer": "322",
+                "correct": false
+            },
+            {
+                "model_generation": "To find the maximum airspeed of the third fastest bird, we need to know the top 3 fastest birds in the world.\n\nAccording to various sources, the top 3 fastest birds in the world are:\n\n1. Peregrine Falcon (Falco peregrinus) - up to 389 km/h (242 mph)\n2. Golden Eagle (Aquila chrysaetos) - up to 322 km/h (200 mph)\n3. Gyrfalcon (Falco rusticolus) - up to 322 km/h (200 mph)\n\nSo, the maximum airspeed of the third fastest bird is 322 km/h. So the answer is 322.",
+                "total_compute_tokens": 186,
+                "generated_tokens": 132,
+                "answer": "322",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -0.02804645150899887
+                ],
+                [
+                    0,
+                    -0.023882219567894936
+                ],
+                [
+                    2,
+                    -0.005661168601363897
+                ],
+                [
+                    3,
+                    -0.005594904534518719
+                ]
+            ]
+        }
+    }
+]

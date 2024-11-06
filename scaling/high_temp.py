@@ -138,11 +138,11 @@ def rank_generations(
 
 
 def get_token_indices(
-    output_ids, answer_string, string_index_start, string_index_end, tokenizer, init_tok_offset=0
+    output_ids, answer_string, string_index_start, string_index_end, tokenizer, init_tok_offset=0, init_char_offset=0
 ):
     output_tokens = tokenizer.convert_ids_to_tokens(output_ids)
     start_tok_idx = init_tok_offset
-    curr_offset = 0
+    curr_offset = init_char_offset
     while start_tok_idx < len(output_tokens):
         output_tok = output_tokens[start_tok_idx]
         if output_tok in tokenizer.all_special_tokens:
@@ -155,7 +155,8 @@ def get_token_indices(
     end_tok_idx = start_tok_idx + 1
     while answer_string not in tokenizer.decode(output_ids[start_tok_idx:end_tok_idx]):
         end_tok_idx += 1
-    print(f"extracted: {answer_string} -> {tokenizer.decode(output_ids[start_tok_idx:end_tok_idx])}")
+        if end_tok_idx > len(output_ids): breakpoint()
+    # print(f"extracted: {answer_string} -> {tokenizer.decode(output_ids[start_tok_idx:end_tok_idx])}")
     return (start_tok_idx, end_tok_idx)
 
 
@@ -190,7 +191,8 @@ def answer_generations(
                 string_index_start,
                 string_index_end,
                 tokenizer,
-                init_tok_offset=input_ids.input_ids.shape[-1]
+                init_tok_offset=input_ids.input_ids.shape[-1],
+                init_char_offset=len(tokenizer.decode(input_ids.input_ids[gen_idx], skip_special_tokens=True))
             )
             extracted_answers_and_indices[gen_idx] = (
                 answer,
@@ -252,7 +254,8 @@ def answer_generations(
             string_index_start,
             string_index_end,
             tokenizer,
-            init_tok_offset=new_input_ids.input_ids.shape[-1]
+            init_tok_offset=new_input_ids.input_ids.shape[-1],
+            init_char_offset=len(tokenizer.decode(new_input_ids.input_ids[new_gen_idx], skip_special_tokens=True))
         )
         full_generation = (
             model_generations[orig_gen_idx]

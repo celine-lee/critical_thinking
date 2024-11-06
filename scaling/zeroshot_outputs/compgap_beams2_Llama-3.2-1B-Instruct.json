@@ -1,0 +1,3502 @@
+[
+    {
+        "input_example": {
+            "Question": "Who was president of the United States in the year that Citibank was founded?",
+            "Answer": "james madison"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was president of the United States in the year that Citibank was founded?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "Citibank was founded in 1812, but I couldn't find any information on a president of the United States in that year. However, I can tell you that the first president of the United States was George Washington, who served from 1789 to 1797. So the answer is 1789.",
+                "total_compute_tokens": 112,
+                "generated_tokens": 58,
+                "answer": "1789",
+                "correct": false
+            },
+            {
+                "model_generation": "Citibank was founded in 1812, but I couldn't find any information on a president of the United States in 1812. However, I can tell you that the first president of the United States was George Washington, who served from 1789 to 1797. So the answer is 1789.",
+                "total_compute_tokens": 113,
+                "generated_tokens": 59,
+                "answer": "1789",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.4301133155822754
+                ],
+                [
+                    1,
+                    -2.3405885696411133
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What rocket was the first spacecraft that ever approached Uranus launched on?",
+            "Answer": "Titan IIIE"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat rocket was the first spacecraft that ever approached Uranus launched on?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The first spacecraft to approach Uranus was Voyager 2. So the answer is 2.",
+                "total_compute_tokens": 64,
+                "generated_tokens": 13,
+                "answer": "2",
+                "correct": false
+            },
+            {
+                "model_generation": "The first spacecraft to approach Uranus was Voyager 2, launched on August 20, 1977. So the answer is 1977.",
+                "total_compute_tokens": 74,
+                "generated_tokens": 23,
+                "answer": "1977",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -10.613110542297363
+                ],
+                [
+                    1,
+                    -2.455202102661133
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the company that was founded as Sound of Music added to the S&P 500?",
+            "Answer": "1999"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what year was the company that was founded as Sound of Music added to the S&P 500?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The company that was added to the S&P 500 in 1958 was Sound of Music. So the answer is 1958.",
+                "total_compute_tokens": 79,
+                "generated_tokens": 21,
+                "answer": "1958",
+                "correct": false
+            },
+            {
+                "model_generation": "The company that was added to the S&P 500 in 1958 was Sound of Music, which was founded in 1958. So the answer is 1958.",
+                "total_compute_tokens": 87,
+                "generated_tokens": 29,
+                "answer": "1958",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.4887547492980957
+                ],
+                [
+                    0,
+                    -2.3299741744995117
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who was the first African American mayor of the most populous city in the United States?",
+            "Answer": "David Dinkins"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was the first African American mayor of the most populous city in the United States?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The first African American mayor of the most populous city in the United States was William A. Jones, who served as the mayor of New York City from 1914 to 1915. So the answer is  William A. Jones.",
+                "total_compute_tokens": 93,
+                "generated_tokens": 39,
+                "answer": " william a jones",
+                "correct": false
+            },
+            {
+                "model_generation": "The first African American mayor of the most populous city in the United States was William A. Jones, who served as the mayor of New York City from 1901 to 1903. So the answer is  William A. Jones.",
+                "total_compute_tokens": 93,
+                "generated_tokens": 39,
+                "answer": " william a jones",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.2287380695343018
+                ],
+                [
+                    0,
+                    -1.2117373943328857
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When did the last king from Britain's House of Hanover die?",
+            "Answer": "20 June 1837"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen did the last king from Britain's House of Hanover die?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The last king from the House of Hanover, which ruled the United Kingdom from 1714 to 1901, was King George V. He died on January 20, 1936. So the answer is 1936.",
+                "total_compute_tokens": 92,
+                "generated_tokens": 41,
+                "answer": "1936",
+                "correct": false
+            },
+            {
+                "model_generation": "The last king from the House of Hanover, which ruled the United Kingdom from 1714 to 1901, was King George V. He died on January 20, 1936, at the age of 76. So the answer is 1936.",
+                "total_compute_tokens": 99,
+                "generated_tokens": 48,
+                "answer": "1936",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.66703200340271
+                ],
+                [
+                    0,
+                    -2.5412437915802
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When did the president who set the precedent of a two term limit enter office?",
+            "Answer": "April 30, 1789"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen did the president who set the precedent of a two term limit enter office?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The president who set the precedent of a two-term limit is Franklin D. Roosevelt, who served from 1933 to 1945. So the answer is 1933.",
+                "total_compute_tokens": 82,
+                "generated_tokens": 29,
+                "answer": "1933",
+                "correct": false
+            },
+            {
+                "model_generation": "The president who set the precedent of a two-term limit is Franklin D. Roosevelt. So the answer is 1933.",
+                "total_compute_tokens": 71,
+                "generated_tokens": 18,
+                "answer": "1933",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.1019644737243652
+                ],
+                [
+                    1,
+                    -2.0364184379577637
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When did the president who set the precedent of a two term limit leave office?",
+            "Answer": "March 4, 1797"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen did the president who set the precedent of a two term limit leave office?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The president who set the precedent of a two-term limit was Franklin D. Roosevelt. He was the 32nd President of the United States, serving from 1933 to 1945. So the answer is 1933-1945.",
+                "total_compute_tokens": 93,
+                "generated_tokens": 40,
+                "answer": "19331945",
+                "correct": false
+            },
+            {
+                "model_generation": "The president who set the precedent of a two-term limit was Franklin D. Roosevelt, who served from 1933 to 1945. So the answer is 1933-1945.",
+                "total_compute_tokens": 82,
+                "generated_tokens": 29,
+                "answer": "19331945",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -1.238673448562622
+                ],
+                [
+                    1,
+                    -1.1686197519302368
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "How many people died in the second most powerful earthquake ever recorded?",
+            "Answer": "131"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nHow many people died in the second most powerful earthquake ever recorded?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The second most powerful earthquake ever recorded is the Great Chilean Earthquake of 1960, also known as the Valdivia earthquake. It occurred on May 22, 1960, and is estimated to have had a magnitude of 9.5 on the Richter scale.\n\nAccording to various sources, including the United States Geological Survey (USGS), the estimated death toll from this earthquake was around 2,000 to 6,000 people. So the answer is 2,000 to 6,000 people.",
+                "total_compute_tokens": 144,
+                "generated_tokens": 94,
+                "answer": "2000 to 6000 people",
+                "correct": false
+            },
+            {
+                "model_generation": "The second most powerful earthquake ever recorded is the Great Chilean Earthquake of 1960, also known as the Valdivia earthquake. It occurred on May 22, 1960, and is estimated to have had a magnitude of 9.5 on the Richter scale. So the answer is 0.",
+                "total_compute_tokens": 109,
+                "generated_tokens": 59,
+                "answer": "0",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -16.331933975219727
+                ],
+                [
+                    0,
+                    -0.9118236899375916
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Can people who have celiac eat camel meat?",
+            "Answer": "Yes"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nCan people who have celiac eat camel meat?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "Celiac disease is an autoimmune disorder that causes the immune system to react to gluten, a protein found in certain grains, such as wheat, barley, and rye. Camel meat, on the other hand, is a type of meat that comes from camels, which are domesticated animals that are not typically considered a food source for humans.\n\nIn general, people with celiac disease cannot eat camel meat because of the presence of gluten in the camel's diet. Camel meat is typically fed a diet of hay, grains, and other plant-based foods, which do not contain gluten.\n\nHowever, it's worth noting that some camel meat products may be processed in facilities that also handle gluten-containing grains, which could potentially lead to cross-contamination. Additionally, some camel meat products may be labeled as \"gluten-free\" or \"celiac-friendly,\" but this does not necessarily mean that the product is safe for individuals with celiac disease.\n\nIf you have celiac disease, it's always best to consult with a healthcare professional or registered dietitian for personalized advice on what foods are safe for you to eat. So the answer is 0, because people with celiac disease cannot eat camel meat.",
+                "total_compute_tokens": 270,
+                "generated_tokens": 223,
+                "answer": "0 because people with celiac disease cannot eat camel meat",
+                "correct": false
+            },
+            {
+                "model_generation": "Celiac disease is an autoimmune disorder that causes the immune system to react to gluten, a protein found in certain grains, such as wheat, barley, and rye. Camel meat, on the other hand, is a type of meat that comes from camels, which are domesticated animals that are not typically considered a food source for humans.\n\nIn general, people with celiac disease cannot eat camel meat because of the presence of gluten in the camel's diet. Camel meat is typically fed a diet of hay, grains, and other plant-based foods, which do not contain gluten.\n\nHowever, it's worth noting that some camel meat products may be processed in facilities that also handle gluten-containing grains, which could potentially lead to cross-contamination. Additionally, some camel meat products may be labeled as \"gluten-free\" or \"celiac-friendly,\" but this does not necessarily mean that the product is safe for individuals with celiac disease.\n\nIf you have celiac disease, it's always best to consult with a healthcare professional or registered dietitian for personalized advice on what foods are safe to eat. So the answer is 0, people with celiac disease cannot eat camel meat.",
+                "total_compute_tokens": 268,
+                "generated_tokens": 221,
+                "answer": "0 people with celiac disease cannot eat camel meat",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.281179189682007
+                ],
+                [
+                    0,
+                    -1.0564321279525757
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What was the final book written by the author of On the Origin of Species?",
+            "Answer": "The Formation of Vegetable Mould Through the Action of Worms"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat was the final book written by the author of On the Origin of Species?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "Charles Darwin's \"On the Origin of Species\" was published in 1859. So the answer is 1859.",
+                "total_compute_tokens": 71,
+                "generated_tokens": 18,
+                "answer": "1859",
+                "correct": false
+            },
+            {
+                "model_generation": "Charles Darwin's final book was \"The Descent of Man, and Selection in Relation to Sex\". So the answer is  \"The Descent of Man, and Selection in Relation to Sex\".",
+                "total_compute_tokens": 74,
+                "generated_tokens": 21,
+                "answer": " the descent of man and selection in relation to sex",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -8.686870574951172
+                ],
+                [
+                    1,
+                    -0.4091735780239105
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the company that built the first steam locomotive to carry passengers on a public rail line founded?",
+            "Answer": "1823"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the company that built the first steam locomotive to carry passengers on a public rail line founded?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The company that built the first steam locomotive to carry passengers on a public rail line was the Liverpool and Manchester Railway. So the answer is 1825.",
+                "total_compute_tokens": 83,
+                "generated_tokens": 25,
+                "answer": "1825",
+                "correct": false
+            },
+            {
+                "model_generation": "The company that built the first steam locomotive to carry passengers on a public rail line was Richard Trevithick's company, which was founded in 1804. So the answer is 1804.",
+                "total_compute_tokens": 92,
+                "generated_tokens": 34,
+                "answer": "1804",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.024488925933838
+                ],
+                [
+                    1,
+                    -1.9050049781799316
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Which Theranos whistleblower is not related to a senior American government official?",
+            "Answer": "Erika Cheung"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhich Theranos whistleblower is not related to a senior American government official?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "One of the most notable whistleblowers associated with the Theranos scandal is Elizabeth Holmes, the founder and former CEO of the company. So the answer is  Elizabeth Holmes.",
+                "total_compute_tokens": 78,
+                "generated_tokens": 27,
+                "answer": " elizabeth holmes",
+                "correct": false
+            },
+            {
+                "model_generation": "One of the most notable whistleblowers associated with the Theranos scandal is Elizabeth Holmes, the founder and former CEO of the company. However, I couldn't find any information that suggests she is not related to a senior American government official.\n\nThat being said, I found another notable whistleblower who is not a government official: Reed Hastings, the CEO of Netflix. So the answer is  Elizabeth Holmes.",
+                "total_compute_tokens": 123,
+                "generated_tokens": 72,
+                "answer": " elizabeth holmes",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.6449294090270996
+                ],
+                [
+                    0,
+                    -1.4725594520568848
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What is the fastest air-breathing manned aircraft mostly made out of?",
+            "Answer": "Titanium"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the fastest air-breathing manned aircraft mostly made out of?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The fastest air-breathing manned aircraft is the Lockheed SR-71 Blackbird. So the answer is  metal.",
+                "total_compute_tokens": 68,
+                "generated_tokens": 17,
+                "answer": " metal",
+                "correct": false
+            },
+            {
+                "model_generation": "The fastest air-breathing manned aircraft is the Lockheed SR-71 Blackbird, which is a supersonic reconnaissance plane. So the answer is  metal.\n\n",
+                "total_compute_tokens": 76,
+                "generated_tokens": 25,
+                "answer": " metal",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -4.737219333648682
+                ],
+                [
+                    0,
+                    -3.5260534286499023
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who built the fastest air-breathing manned aircraft?",
+            "Answer": "Lockheed Corporation"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho built the fastest air-breathing manned aircraft?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The Wright brothers, Orville and Wilbur Wright, built the first powered, heavier-than-air aircraft. So the answer is  Wright brothers.",
+                "total_compute_tokens": 69,
+                "generated_tokens": 22,
+                "answer": " wright brothers",
+                "correct": false
+            },
+            {
+                "model_generation": "The Wright brothers, Orville and Wilbur Wright, built the first successful powered, heavier-than-air aircraft. So the answer is  Wright brothers.",
+                "total_compute_tokens": 70,
+                "generated_tokens": 23,
+                "answer": " wright brothers",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -1.8048396110534668
+                ],
+                [
+                    1,
+                    -1.7723997831344604
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the author of The Population Bomb born?",
+            "Answer": "May 29, 1932"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the author of The Population Bomb born?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The author of the book \"The Population Bomb\" is Paul Ehrlich. So the answer is 1933.",
+                "total_compute_tokens": 64,
+                "generated_tokens": 17,
+                "answer": "1933",
+                "correct": false
+            },
+            {
+                "model_generation": "Paul Ehrlich, the author of the book \"The Population Bomb\", was born in 1933. So the answer is 1933.",
+                "total_compute_tokens": 70,
+                "generated_tokens": 23,
+                "answer": "1933",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.62209415435791
+                ],
+                [
+                    1,
+                    -2.3637092113494873
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When did the author of Annabel Lee enlist in the army?",
+            "Answer": "1827"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen did the author of Annabel Lee enlist in the army?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "Unfortunately, I don't have any information about an author named Annabel Lee. The poem \"Annabel Lee\" is actually a famous poem by Edgar Allan Poe, written in 1849. So the answer is 1849.",
+                "total_compute_tokens": 90,
+                "generated_tokens": 40,
+                "answer": "1849",
+                "correct": false
+            },
+            {
+                "model_generation": "Unfortunately, I don't have any information about an author named Annabel Lee. The poem \"Annabel Lee\" is actually a famous poem by Edgar Allan Poe, and it's one of his most well-known works. So the answer is 1849, when Poe enlisted in the army.",
+                "total_compute_tokens": 95,
+                "generated_tokens": 45,
+                "answer": "1849 when poe enlisted in the army",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -9.514235496520996
+                ],
+                [
+                    1,
+                    -1.1588214635849
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What was the religion of the inventor of the Polio vaccine?",
+            "Answer": "Jewish"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat was the religion of the inventor of the Polio vaccine?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The inventor of the inactivated poliovirus vaccine (IPV) was Jonas Salk, an American medical researcher. So the answer is  Jonas Salk.",
+                "total_compute_tokens": 75,
+                "generated_tokens": 25,
+                "answer": " jonas salk",
+                "correct": false
+            },
+            {
+                "model_generation": "The inventor of the inactivated poliovirus vaccine (IPV) was Jonas Salk. So the answer is  Jonas Salk.",
+                "total_compute_tokens": 70,
+                "generated_tokens": 20,
+                "answer": " jonas salk",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -1.6368613243103027
+                ],
+                [
+                    1,
+                    -1.581255316734314
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who was the second wife of the founder of CNN?",
+            "Answer": "Jane Shirley Smith"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was the second wife of the founder of CNN?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The founder of CNN was Ted Turner, and his first wife was Patricia Neal. So the answer is  Patricia Neal.",
+                "total_compute_tokens": 65,
+                "generated_tokens": 17,
+                "answer": " patricia neal",
+                "correct": false
+            },
+            {
+                "model_generation": "The founder of CNN was Ted Turner, and his first wife was Patricia Neal Turner. So the answer is  Patricia Neal Turner.",
+                "total_compute_tokens": 66,
+                "generated_tokens": 18,
+                "answer": " patricia neal turner",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -8.383054733276367
+                ],
+                [
+                    1,
+                    -1.2639812231063843
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When did the first prime minister of the Russian Empire come into office?",
+            "Answer": "November 6, 1905"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen did the first prime minister of the Russian Empire come into office?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The first prime minister of the Russian Empire was Alexander I, who came into office in 1801. So the answer is 1801.",
+                "total_compute_tokens": 73,
+                "generated_tokens": 22,
+                "answer": "1801",
+                "correct": false
+            },
+            {
+                "model_generation": "The first prime minister of the Russian Empire was Alexander I, who came into office in 1801, following the death of Tsar Paul I. So the answer is 1801.",
+                "total_compute_tokens": 82,
+                "generated_tokens": 31,
+                "answer": "1801",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.4053025245666504
+                ],
+                [
+                    1,
+                    -2.2855024337768555
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What is the primary male hormone derived from?",
+            "Answer": "cholesterol"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the primary male hormone derived from?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The primary male hormone derived from is testosterone. So the answer is  testosterone.",
+                "total_compute_tokens": 56,
+                "generated_tokens": 10,
+                "answer": " testosterone",
+                "correct": false
+            },
+            {
+                "model_generation": "The primary male hormone is testosterone. So the answer is  testosterone.",
+                "total_compute_tokens": 54,
+                "generated_tokens": 8,
+                "answer": " testosterone",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -3.1148009300231934
+                ],
+                [
+                    1,
+                    -2.900825023651123
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "The Filipino statesman who established the government-in-exile during the outbreak of World War II was also the mayor of what city?",
+            "Answer": "Quezon City"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nThe Filipino statesman who established the government-in-exile during the outbreak of World War II was also the mayor of what city?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The Filipino statesman who established the government-in-exile during the outbreak of World War II was also the mayor of Manila. So the answer is  Manila.",
+                "total_compute_tokens": 89,
+                "generated_tokens": 26,
+                "answer": " manila",
+                "correct": false
+            },
+            {
+                "model_generation": "The Filipino statesman who established the government-in-exile during the outbreak of World War II was Manuel L. Quezon. He was the mayor of Manila. So the answer is  Manila.",
+                "total_compute_tokens": 96,
+                "generated_tokens": 33,
+                "answer": " manila",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.9816582202911377
+                ],
+                [
+                    0,
+                    -2.4754819869995117
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Where was the person who shared the Nobel Prize in Physics in 1954 with Max Born born?",
+            "Answer": "Oranienburg, Germany"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhere was the person who shared the Nobel Prize in Physics in 1954 with Max Born born?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The person who shared the Nobel Prize in Physics in 1954 with Max Born was Werner Heisenberg. He was born in W\u00fcrzburg, Germany. So the answer is  W\u00fcrzburg, Germany.",
+                "total_compute_tokens": 90,
+                "generated_tokens": 33,
+                "answer": " w\u00fcrzburg germany",
+                "correct": false
+            },
+            {
+                "model_generation": "The person who shared the Nobel Prize in Physics in 1954 with Max Born was Werner Heisenberg. So the answer is  Germany.",
+                "total_compute_tokens": 80,
+                "generated_tokens": 23,
+                "answer": " germany",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -14.838668823242188
+                ],
+                [
+                    0,
+                    -2.376309394836426
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the person who shared the Nobel Prize in Physics in 1954 with Max Born born?",
+            "Answer": "January 8, 1891"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the person who shared the Nobel Prize in Physics in 1954 with Max Born born?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The Nobel Prize in Physics in 1954 was awarded to Max Planck, not Max Born. Max Planck was born in 1858. So the answer is 1858.",
+                "total_compute_tokens": 88,
+                "generated_tokens": 31,
+                "answer": "1858",
+                "correct": false
+            },
+            {
+                "model_generation": "The Nobel Prize in Physics in 1954 was awarded to Max Planck, not Max Born. Max Planck was born in 1858. Max Born was a German physicist who was awarded the Nobel Prize in Physics in 1954 for his work on quantum mechanics. So the answer is 1858.",
+                "total_compute_tokens": 113,
+                "generated_tokens": 56,
+                "answer": "1858",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.4361634254455566
+                ],
+                [
+                    0,
+                    -2.074995517730713
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What was the founding date of the university in which Plotonium was discovered?",
+            "Answer": "March 23, 1868"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat was the founding date of the university in which Plotonium was discovered?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "I couldn't find any information on a scientific term called \"Plotonium.\" It's possible that it's a misspelling or a made-up term. Can you please provide more context or clarify what you mean by \"Plotonium\"? So the answer is  I couldn't find any information on a scientific term called \"Plotonium.\"",
+                "total_compute_tokens": 103,
+                "generated_tokens": 50,
+                "answer": " i couldnt find any information on a scientific term called plotonium",
+                "correct": false
+            },
+            {
+                "model_generation": "I couldn't find any information on a scientific term called \"Plotonium.\" It's possible that it's a misspelling or a made-up term. Can you please provide more context or clarify what Plotonium refers to? So the answer is  I couldn't find any information on a scientific term called \"Plotonium.\"",
+                "total_compute_tokens": 101,
+                "generated_tokens": 48,
+                "answer": " i couldnt find any information on a scientific term called plotonium",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -0.7294876575469971
+                ],
+                [
+                    0,
+                    -0.7208940982818604
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "The material out of which the Great Sphinx of Giza is made of is mainly composed of what mineral?",
+            "Answer": "calcite"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nThe material out of which the Great Sphinx of Giza is made of is mainly composed of what mineral?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The Great Sphinx of Giza is made of limestone. So the answer is  limestone.",
+                "total_compute_tokens": 70,
+                "generated_tokens": 12,
+                "answer": " limestone",
+                "correct": false
+            },
+            {
+                "model_generation": "The material out of which the Great Sphinx of Giza is made of is mainly composed of limestone. So the answer is  limestone.",
+                "total_compute_tokens": 79,
+                "generated_tokens": 21,
+                "answer": " limestone",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -3.3235998153686523
+                ],
+                [
+                    1,
+                    -3.2852137088775635
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "The husband of Lady Godiva was Earl of which Anglic kingdom?",
+            "Answer": "Mercia"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nThe husband of Lady Godiva was Earl of which Anglic kingdom?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The answer is Wessex. So the answer is  Wessex.",
+                "total_compute_tokens": 57,
+                "generated_tokens": 7,
+                "answer": " wessex",
+                "correct": false
+            },
+            {
+                "model_generation": "The answer is: Wessex. So the answer is  Wessex.",
+                "total_compute_tokens": 58,
+                "generated_tokens": 8,
+                "answer": " wessex",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.5698368549346924
+                ],
+                [
+                    0,
+                    -1.4184049367904663
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "The machine used to extract honey from honeycombs uses which physical force?",
+            "Answer": "Centrifugal Force"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nThe machine used to extract honey from honeycombs uses which physical force?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The machine used to extract honey from honeycombs uses centrifugal force. So the answer is  Centrifugal force.",
+                "total_compute_tokens": 68,
+                "generated_tokens": 16,
+                "answer": " centrifugal force",
+                "correct": false
+            },
+            {
+                "model_generation": "The machine used to extract honey from honeycombs typically uses a combination of physical force and mechanical action to extract the honey from the honeycomb cells. So the answer is  mechanical action.",
+                "total_compute_tokens": 83,
+                "generated_tokens": 31,
+                "answer": " mechanical action",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -6.787652492523193
+                ],
+                [
+                    0,
+                    -1.2021703720092773
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What is the third letter of the top level domain of the military?",
+            "Answer": "l"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the third letter of the top level domain of the military?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The top-level domain of the military is.mil. The third letter of the top-level domain.mil is L. So the answer is  L.",
+                "total_compute_tokens": 76,
+                "generated_tokens": 25,
+                "answer": " l",
+                "correct": false
+            },
+            {
+                "model_generation": "The top-level domain of the military is.mil. The third letter of the top-level domain.mil is \"L\". So the answer is  L.",
+                "total_compute_tokens": 77,
+                "generated_tokens": 26,
+                "answer": " l",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -4.084146499633789
+                ],
+                [
+                    0,
+                    -3.82548451423645
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the government department where the internet originated at founded?",
+            "Answer": "1947"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what year was the government department where the internet originated at founded?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The United States Department of the Interior was founded in 1849. So the answer is 1849.",
+                "total_compute_tokens": 66,
+                "generated_tokens": 15,
+                "answer": "1849",
+                "correct": false
+            },
+            {
+                "model_generation": "The United States Department of the Interior was founded in 1849. However, the modern concept of the internet as we know it today is often attributed to the development of the Internet Protocol (IP) and the Domain Name System (DNS) in the late 1960s and early 1970s. So the answer is 1969.",
+                "total_compute_tokens": 114,
+                "generated_tokens": 63,
+                "answer": "1969",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.365264654159546
+                ],
+                [
+                    0,
+                    -2.033785104751587
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "The main actor of Indiana Jones is a licensed what?",
+            "Answer": "pilot"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nThe main actor of Indiana Jones is a licensed what?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The main actor of Indiana Jones is Harrison Ford. So the answer is 1. Harrison Ford.",
+                "total_compute_tokens": 59,
+                "generated_tokens": 11,
+                "answer": "1 harrison ford",
+                "correct": false
+            },
+            {
+                "model_generation": "The main actor of Indiana Jones is a licensed archaeologist. So the answer is  archaeologist.",
+                "total_compute_tokens": 61,
+                "generated_tokens": 13,
+                "answer": " archaeologist",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -6.948985576629639
+                ],
+                [
+                    0,
+                    -1.915303111076355
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the person after which the Hubble Space Telescope is named after born?",
+            "Answer": "November 20, 1889"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the person after which the Hubble Space Telescope is named after born?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The Hubble Space Telescope was named after Edwin Hubble, an American astronomer. So the answer is 1929.",
+                "total_compute_tokens": 71,
+                "generated_tokens": 18,
+                "answer": "1929",
+                "correct": false
+            },
+            {
+                "model_generation": "The Hubble Space Telescope was named after Edwin Hubble, an American astronomer who made significant contributions to our understanding of the universe. So the answer is 1923.",
+                "total_compute_tokens": 81,
+                "generated_tokens": 28,
+                "answer": "1923",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.2952957153320312
+                ],
+                [
+                    0,
+                    -2.1998820304870605
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When did the person who gave the Checkers speech die?",
+            "Answer": "April 22, 1994"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen did the person who gave the Checkers speech die?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "I don't have any information about a specific person giving a \"Checkers speech.\" Could you please provide more context or clarify who you are referring to? I'll do my best to help. So the answer is  I don't know.",
+                "total_compute_tokens": 89,
+                "generated_tokens": 40,
+                "answer": " i dont know",
+                "correct": false
+            },
+            {
+                "model_generation": "I don't have any information about a specific person giving a \"Checkers speech.\" Could you please provide more context or clarify who you are referring to? So the answer is  I don't know.",
+                "total_compute_tokens": 81,
+                "generated_tokens": 32,
+                "answer": " i dont know",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.5778318643569946
+                ],
+                [
+                    0,
+                    -1.3456335067749023
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the philosopher that formulated the hard problem of consciousness born?",
+            "Answer": "April 20, 1966"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the philosopher that formulated the hard problem of consciousness born?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The philosopher who formulated the hard problem of consciousness is David Chalmers. So the answer is 2007.",
+                "total_compute_tokens": 66,
+                "generated_tokens": 16,
+                "answer": "2007",
+                "correct": false
+            },
+            {
+                "model_generation": "The philosopher who formulated the hard problem of consciousness is David Chalmers, an Australian philosopher. So the answer is 2007.",
+                "total_compute_tokens": 70,
+                "generated_tokens": 20,
+                "answer": "2007",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.4763309955596924
+                ],
+                [
+                    1,
+                    -2.4728007316589355
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What is the capital of the second largest state in the US by area?",
+            "Answer": "Austin"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the capital of the second largest state in the US by area?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "To answer this question, I'll break it down into steps:\n\n1. Identify the second largest state in the US by area.\n2. Find the capital of that state.\n\nHere are the steps:\n\n1. The second largest state in the US by area is Alaska.\n2. The capital of Alaska is Juneau.\n\nSo, the answer is Juneau. So the answer is  Juneau.",
+                "total_compute_tokens": 125,
+                "generated_tokens": 73,
+                "answer": " juneau",
+                "correct": false
+            },
+            {
+                "model_generation": "To answer this question, I'll break it down into steps:\n\n1. Identify the second largest state in the US by area.\n2. Find the capital of that state.\n\nHere are the steps:\n\n1. The second largest state in the US by area is Alaska.\n2. The capital of Alaska is Juneau.\n\nSo, the answer is: Juneau. So the answer is  Juneau.",
+                "total_compute_tokens": 126,
+                "generated_tokens": 74,
+                "answer": " juneau",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -1.8335819244384766
+                ],
+                [
+                    1,
+                    -1.742952585220337
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What is the maximum airspeed (in km/h) of the third fastest bird?",
+            "Answer": "320 km/h"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the maximum airspeed (in km/h) of the third fastest bird?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "To find the maximum airspeed of the third fastest bird, we need to know the top 3 fastest birds in the world. According to various sources, the top 3 fastest birds are:\n\n1. Peregrine Falcon (up to 389 km/h)\n2. Golden Eagle (up to 322 km/h)\n3. Swift (up to 322 km/h)\n\nSo, the maximum airspeed of the third fastest bird is 322 km/h. So the answer is 322.",
+                "total_compute_tokens": 148,
+                "generated_tokens": 94,
+                "answer": "322",
+                "correct": false
+            },
+            {
+                "model_generation": "To find the maximum airspeed of the third fastest bird, we need to know the top 3 fastest birds in the world.\n\nAccording to various sources, the top 3 fastest birds are:\n\n1. Peregrine Falcon (up to 389 km/h)\n2. Golden Eagle (up to 322 km/h)\n3. Swift (up to 322 km/h)\n\nSo, the maximum airspeed of the third fastest bird is 322 km/h. So the answer is 322.",
+                "total_compute_tokens": 148,
+                "generated_tokens": 94,
+                "answer": "322",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -4.217773914337158
+                ],
+                [
+                    1,
+                    -4.151713848114014
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who founded the city where the founder of geometry lived?",
+            "Answer": "Alexander the Great"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho founded the city where the founder of geometry lived?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The city where the founder of geometry is believed to have lived is Babylon, which is located in present-day Iraq. So the answer is  Babylon.",
+                "total_compute_tokens": 72,
+                "generated_tokens": 24,
+                "answer": " babylon",
+                "correct": false
+            },
+            {
+                "model_generation": "The city where the founder of geometry is believed to have lived is Babylon. So the answer is  Babylon.",
+                "total_compute_tokens": 64,
+                "generated_tokens": 16,
+                "answer": " babylon",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.0190091133117676
+                ],
+                [
+                    1,
+                    -2.0130391120910645
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What is the capital of the country where yoga originated?",
+            "Answer": "New Delhi"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the capital of the country where yoga originated?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "Yoga originated in ancient India, specifically in the Indus Valley Civilization, which is now modern-day Pakistan and northwestern India. However, the modern version of yoga as we know it today is believed to have originated in the state of India, particularly in the city of Rishikesh, which is located in the foothills of the Himalayas.\n\nRishikesh is often referred to as the \"Yoga Capital of India\" and is considered the birthplace of yoga as we know it today. The city has a rich history of yoga practice and has been a hub for yoga training and research for centuries.\n\nSo, to answer your question, the capital of the country where yoga originated is India. So the answer is  India.",
+                "total_compute_tokens": 191,
+                "generated_tokens": 143,
+                "answer": " india",
+                "correct": false
+            },
+            {
+                "model_generation": "Yoga originated in ancient India, specifically in the Indus Valley Civilization, which is now modern-day Pakistan and northwestern India. However, the modern version of yoga as we know it today is believed to have originated in the state of India, particularly in the city of Rishikesh, which is located in the foothills of the Himalayas.\n\nRishikesh is often referred to as the \"Yoga Capital of India\" and is considered the birthplace of yoga as we know it today. The city has a rich history of yoga practice and has been a hub for yoga instruction and research for centuries.\n\nSo, to answer your question, the capital of the country where yoga originated is India. So the answer is  India.",
+                "total_compute_tokens": 191,
+                "generated_tokens": 143,
+                "answer": " india",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.524354934692383
+                ],
+                [
+                    0,
+                    -2.5224971771240234
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "The fourth largest city in Germany was originally called what?",
+            "Answer": "Colonia Claudia Ara Agrippinensium"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nThe fourth largest city in Germany was originally called what?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The fourth largest city in Germany was Hamburg. So the answer is  Hamburg.",
+                "total_compute_tokens": 58,
+                "generated_tokens": 10,
+                "answer": " hamburg",
+                "correct": false
+            },
+            {
+                "model_generation": "The fourth largest city in Germany was originally called Dresden. So the answer is  Dresden.",
+                "total_compute_tokens": 60,
+                "generated_tokens": 12,
+                "answer": " dresden",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.6167221069335938
+                ],
+                [
+                    0,
+                    -2.4722304344177246
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When did Nirvana's second most selling studio album come out?",
+            "Answer": "September 13, 1993"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen did Nirvana's second most selling studio album come out?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "Nirvana's second most selling studio album is \"Nevermind\". It was released on September 24, 1991. So the answer is 1991.",
+                "total_compute_tokens": 77,
+                "generated_tokens": 27,
+                "answer": "1991",
+                "correct": false
+            },
+            {
+                "model_generation": "Nirvana's second most selling studio album is actually \"Nevermind\", which was released in 1991. So the answer is 1991.",
+                "total_compute_tokens": 74,
+                "generated_tokens": 24,
+                "answer": "1991",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.8879427909851074
+                ],
+                [
+                    0,
+                    -2.4816761016845703
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What was the job of the father of the founder of psychoanalysis?",
+            "Answer": "wool merchant"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat was the job of the father of the founder of psychoanalysis?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The father of psychoanalysis was Sigmund Freud. So the answer is  Sigmund Freud.",
+                "total_compute_tokens": 63,
+                "generated_tokens": 12,
+                "answer": " sigmund freud",
+                "correct": false
+            },
+            {
+                "model_generation": "Sigmund Freud was the father of psychoanalysis. So the answer is  Sigmund Freud.",
+                "total_compute_tokens": 63,
+                "generated_tokens": 12,
+                "answer": " sigmund freud",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.3740874528884888
+                ],
+                [
+                    0,
+                    -1.2258762121200562
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "How much protein in four boiled egg yolks?",
+            "Answer": "10.8"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nHow much protein in four boiled egg yolks?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "To calculate the protein content of four boiled egg yolks, we need to know the protein content of a single egg yolk. According to the United States Department of Agriculture (USDA), the protein content of a large egg yolk is approximately 6.6 grams.\n\nSince there are 4 egg yolks in a large egg, we can multiply the protein content of a single egg yolk by 4 to get the total protein content of four boiled egg yolks:\n\n6.6 grams (protein per egg yolk) x 4 = 26.4 grams\n\nSo, there are approximately 26.4 grams of protein in four boiled egg yolks. So the answer is 26.4 grams.",
+                "total_compute_tokens": 184,
+                "generated_tokens": 137,
+                "answer": "264 grams",
+                "correct": false
+            },
+            {
+                "model_generation": "To calculate the protein content of four boiled egg yolks, we need to know the protein content of a single egg yolk. According to the United States Department of Agriculture (USDA), the protein content of a large egg yolk is approximately 6.6 grams.\n\nSince there are four egg yolks in a large egg, we can multiply the protein content of a single egg yolk by 4 to get the total protein content of four egg yolks:\n\n6.6 grams (protein per egg yolk) x 4 = 26.4 grams\n\nSo, there are approximately 26.4 grams of protein in four boiled egg yolks. So the answer is 26.4 grams.",
+                "total_compute_tokens": 182,
+                "generated_tokens": 135,
+                "answer": "264 grams",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.8657945394515991
+                ],
+                [
+                    0,
+                    -1.8510639667510986
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What is the political party of the American president who entered into the Paris agreement?",
+            "Answer": "Democratic Party"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the political party of the American president who entered into the Paris agreement?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The answer is: None of the above. The Paris Agreement was an international agreement signed by almost all countries, including the United States, but it was not signed by the President of the United States.\n\nHowever, the President of the United States who entered into the Paris Agreement was Barack Obama. He was the 44th President of the United States, serving from 2009 to 2017. So the answer is 44.",
+                "total_compute_tokens": 134,
+                "generated_tokens": 81,
+                "answer": "44",
+                "correct": false
+            },
+            {
+                "model_generation": "The answer is: None of the above. The Paris Agreement was an international agreement signed by almost all countries, including the United States, but it was not signed by the President of the United States.\n\nHowever, the President of the United States who entered into the Paris Agreement was Barack Obama. He was the 44th President of the United States, serving from 2009 to 2017.\n\nSo, the correct answer is Barack Obama. So the answer is  Barack Obama.",
+                "total_compute_tokens": 143,
+                "generated_tokens": 90,
+                "answer": " barack obama",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -9.921381950378418
+                ],
+                [
+                    1,
+                    -1.9351695775985718
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "The most populous city in Punjab is how large (area wise)?",
+            "Answer": "310 square kilometers"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nThe most populous city in Punjab is how large (area wise)?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The most populous city in Punjab, India is Chandigarh. So the answer is 1,44,000 square kilometers.",
+                "total_compute_tokens": 64,
+                "generated_tokens": 14,
+                "answer": "144000 square kilometers",
+                "correct": false
+            },
+            {
+                "model_generation": "The most populous city in Punjab, India is Chandigarh, with a population of approximately 1.4 million people. So the answer is 1.4 million.",
+                "total_compute_tokens": 76,
+                "generated_tokens": 26,
+                "answer": "14 million",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -4.276716709136963
+                ],
+                [
+                    0,
+                    -1.6946207284927368
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What was the death toll of the second largest volcanic eruption in the 20th century?",
+            "Answer": "847"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat was the death toll of the second largest volcanic eruption in the 20th century?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The second largest volcanic eruption in the 20th century was the 1980 eruption of Mount St. Helens in the United States. So the answer is 87 deaths.",
+                "total_compute_tokens": 84,
+                "generated_tokens": 29,
+                "answer": "87 deaths",
+                "correct": false
+            },
+            {
+                "model_generation": "The second largest volcanic eruption in the 20th century was the 1980 eruption of Mount St. Helens in the United States. It occurred on May 18, 1980. So the answer is 1980.",
+                "total_compute_tokens": 95,
+                "generated_tokens": 40,
+                "answer": "1980",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -3.0526130199432373
+                ],
+                [
+                    0,
+                    -2.997927665710449
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What was the death toll of the most intense Atlantic hurricane?",
+            "Answer": "52"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat was the death toll of the most intense Atlantic hurricane?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The most intense Atlantic hurricane is generally considered to be the Labor Day Hurricane of 1935, also known as the Great Labor Day Hurricane. It made landfall in the Bahamas on September 2, 1935, and is estimated to have caused approximately 600 deaths.\n\nHowever, if you're looking for a more recent example, the most intense Atlantic hurricane on record is Hurricane Patricia, which made landfall in Mexico on October 22, 2015. It is estimated to have caused around 250 deaths.\n\nIt's worth noting that the death toll from hurricanes can be difficult to determine with certainty, especially in the early stages of a storm, and different sources may report different numbers. So the answer is 600 deaths for the Labor Day Hurricane of 1935, and 250 deaths for Hurricane Patricia of 2015.",
+                "total_compute_tokens": 189,
+                "generated_tokens": 140,
+                "answer": "600 deaths for the labor day hurricane of 1935 and 250 deaths for hurricane patricia of 2015",
+                "correct": false
+            },
+            {
+                "model_generation": "The most intense Atlantic hurricane is generally considered to be the Labor Day Hurricane of 1935, also known as the Great Labor Day Hurricane. It made landfall in the Bahamas on September 2, 1935, and is estimated to have caused approximately 600 deaths.\n\nHowever, if you're looking for a more recent example, the most intense Atlantic hurricane on record is Hurricane Patricia, which made landfall in Mexico on October 22, 2015. It is estimated to have caused around 250 deaths.\n\nIt's worth noting that the death toll from hurricanes can be difficult to determine with certainty, especially in the early stages of a storm, and different sources may report different numbers of fatalities. So the answer is 600 deaths, but the exact number may vary depending on the source.",
+                "total_compute_tokens": 191,
+                "generated_tokens": 142,
+                "answer": "600 deaths but the exact number may vary depending on the source",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.6589860916137695
+                ],
+                [
+                    0,
+                    -0.5880172848701477
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who was the head of NASA during Apollo 11?",
+            "Answer": "Thomas O. Paine"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was the head of NASA during Apollo 11?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The head of NASA during the Apollo 11 mission was Gene Kranz. So the answer is  Gene Kranz.",
+                "total_compute_tokens": 65,
+                "generated_tokens": 17,
+                "answer": " gene kranz",
+                "correct": false
+            },
+            {
+                "model_generation": "The head of NASA during the Apollo 11 mission was Neil Armstrong. So the answer is  Neil Armstrong.",
+                "total_compute_tokens": 63,
+                "generated_tokens": 15,
+                "answer": " neil armstrong",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -6.714752197265625
+                ],
+                [
+                    0,
+                    -0.9793392419815063
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of George Washington?",
+            "Answer": "Lawrence Washington"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho is the father of the father of George Washington?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The father of George Washington was John \"Jacky\" Parke Custis. So the answer is 1.",
+                "total_compute_tokens": 65,
+                "generated_tokens": 17,
+                "answer": "1",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of George Washington was John \"Jacky\" Washington. So the answer is  John \"Jacky\" Washington.",
+                "total_compute_tokens": 62,
+                "generated_tokens": 14,
+                "answer": " john jacky washington",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -14.786077499389648
+                ],
+                [
+                    1,
+                    -0.8666963577270508
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who is the mother of the father of George Washington?",
+            "Answer": "Mildred Warner"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho is the mother of the father of George Washington?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The father of George Washington was John Washington. So the answer is  John Washington.",
+                "total_compute_tokens": 58,
+                "generated_tokens": 10,
+                "answer": " john washington",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of George Washington was John \"Jack\" Washington. So the answer is  John \"Jack\" Washington.",
+                "total_compute_tokens": 61,
+                "generated_tokens": 13,
+                "answer": " john jack washington",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -8.257434844970703
+                ],
+                [
+                    1,
+                    -0.9471701979637146
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of Barack Obama?",
+            "Answer": "Hussein Onyango Obama"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho is the father of the father of Barack Obama?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "Barack Obama's father, Barack Obama Sr., was not a biological father. He was married to Michelle Obama, and they had two daughters, Malia and Sasha. So the answer is  Michelle Obama.",
+                "total_compute_tokens": 83,
+                "generated_tokens": 35,
+                "answer": " michelle obama",
+                "correct": false
+            },
+            {
+                "model_generation": "Barack Obama's father, Barack Obama Sr., was not a biological father. He was married to Michelle Obama, and they had two daughters, Malia and Sasha. Barack Obama Sr. was not a biological father of Barack Obama. So the answer is  Barack Obama's father is not known.",
+                "total_compute_tokens": 96,
+                "generated_tokens": 48,
+                "answer": " barack obamas father is not known",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -11.896395683288574
+                ],
+                [
+                    1,
+                    -1.1861993074417114
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who is the mother of the father of Barack Obama?",
+            "Answer": "Habiba Akumu Nyanjango"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho is the mother of the father of Barack Obama?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "Barack Obama, the 44th President of the United States, was born to Ann Dunham and Barack Obama Sr. So the answer is  Ann Dunham.",
+                "total_compute_tokens": 74,
+                "generated_tokens": 26,
+                "answer": " ann dunham",
+                "correct": false
+            },
+            {
+                "model_generation": "Barack Obama, the 44th President of the United States, was born to Ann Dunham and Barack Obama Sr. His mother's name is Ann Dunham. So the answer is  Ann Dunham.",
+                "total_compute_tokens": 83,
+                "generated_tokens": 35,
+                "answer": " ann dunham",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.644315242767334
+                ],
+                [
+                    0,
+                    -1.5544019937515259
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who was mayor of New York City when Fiorello H. La Guardia was born?",
+            "Answer": "William Russell Grace"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was mayor of New York City when Fiorello H. La Guardia was born?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "Fiorello H. La Guardia was born in 1882, and New York City was still under the mayoralty of Fiorello La Guardia when he was born. So the answer is  Fiorello La Guardia.",
+                "total_compute_tokens": 98,
+                "generated_tokens": 41,
+                "answer": " fiorello la guardia",
+                "correct": false
+            },
+            {
+                "model_generation": "Fiorello H. La Guardia was born in 1882, and New York City was still under the mayoralty of Fiorello H. La Guardia when he was born. So the answer is  Fiorello H. La Guardia.",
+                "total_compute_tokens": 100,
+                "generated_tokens": 43,
+                "answer": " fiorello h la guardia",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.7757418155670166
+                ],
+                [
+                    1,
+                    -0.7433237433433533
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who was president of the U.S. when superconductivity was discovered?",
+            "Answer": "William Howard Taft"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was president of the U.S. when superconductivity was discovered?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The discovery of superconductivity was a gradual process that involved several scientists over a period of time. However, I can provide you with some key milestones in the history of superconductivity.\n\nThe discovery of superconductivity is often attributed to the work of several scientists, including:\n\n1. **Heike Kamerlingh Onnes**: A Dutch physicist who discovered superconductivity in 1911. He was awarded the Nobel Prize in Physics in 1913 for his discovery.\n2. **Heinrich Hertz**: A German physicist who demonstrated the existence of electromagnetic waves in 1887, which laid the foundation for the study of superconductivity.\n3. **Louis de Broglie**: A French physicist who proposed the concept of wave-particle duality in 1924, which is closely related to superconductivity.\n4. **Paul Dirac**: A British physicist who developed the theory of quantum mechanics in the 1920s and 1930s, which laid the foundation for the study of superconductivity.\n\nHowever, the discovery of superconductivity as we know it today is often attributed to:\n\n1. **Charles Townes**: An American physicist who discovered the phenomenon of superconductivity in 1953. He was awarded the Nobel Prize in Physics in 1976 for his discovery.\n2. **Robert C. Richardson**: An American physicist who discovered the phenomenon of superconductivity in 1957. He was awarded the Nobel Prize in Physics in 1971 for his discovery.\n\nSo, to answer your question, the president of the United States when superconductivity was discovered was **Heinrich Hertz** in 1887. So the answer is 1887.",
+                "total_compute_tokens": 392,
+                "generated_tokens": 340,
+                "answer": "1887",
+                "correct": false
+            },
+            {
+                "model_generation": "The discovery of superconductivity was a gradual process that involved several scientists over a period of time. However, I can provide you with some key milestones in the history of superconductivity.\n\nThe discovery of superconductivity is often attributed to the work of several scientists, including:\n\n1. **Heike Kamerlingh Onnes**: A Dutch physicist who discovered superconductivity in 1911. He was awarded the Nobel Prize in Physics in 1913 for his discovery.\n2. **Heinrich Hertz**: A German physicist who demonstrated the existence of electromagnetic waves in 1887, which laid the foundation for the study of superconductivity.\n3. **Louis de Broglie**: A French physicist who proposed the concept of wave-particle duality in 1924, which is closely related to superconductivity.\n4. **Paul Dirac**: A British physicist who developed the theory of quantum mechanics in the 1920s and 1930s, which laid the foundation for the study of superconductivity.\n\nHowever, the discovery of superconductivity as we know it today is often attributed to:\n\n1. **Charles Townes**: An American physicist who discovered the phenomenon of superconductivity in 1953. He was awarded the Nobel Prize in Physics in 1976 for his discovery.\n2. **Robert C. Richardson**: An American physicist who discovered the phenomenon of superconductivity in 1957. He was awarded the Nobel Prize in Physics in 1971 for his discovery.\n\nSo, to answer your question, the president of the United States when superconductivity was discovered was **Heinrich Hertz**. So the answer is 1911.",
+                "total_compute_tokens": 388,
+                "generated_tokens": 336,
+                "answer": "1911",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.616856336593628
+                ],
+                [
+                    1,
+                    -2.5705838203430176
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the person Russ Hanneman is based on born?",
+            "Answer": "July 31, 1958"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the person Russ Hanneman is based on born?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "I couldn't find any information on a person named Russ Hanneman. Could you please provide more context or details about who Russ Hanneman is or what he is known for? This will help me provide a more accurate answer. So the answer is  I don't have any information on a person named Russ Hanneman.",
+                "total_compute_tokens": 95,
+                "generated_tokens": 46,
+                "answer": " i dont have any information on a person named russ hanneman",
+                "correct": false
+            },
+            {
+                "model_generation": "I couldn't find any information on a person named Russ Hanneman. Could you please provide more context or details about who Russ Hanneman is or what he is known for? This will help me provide a more accurate response. So the answer is  I don't have any information on a person named Russ Hanneman.",
+                "total_compute_tokens": 95,
+                "generated_tokens": 46,
+                "answer": " i dont have any information on a person named russ hanneman",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -0.7429997324943542
+                ],
+                [
+                    1,
+                    -0.7425369620323181
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the first location of the world's largest coffeehouse chain opened?",
+            "Answer": "March 30, 1971"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the first location of the world's largest coffeehouse chain opened?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The first location of the world's largest coffeehouse chain, Starbucks, was opened on March 30, 1971, in Seattle, Washington, USA. So the answer is 1971.",
+                "total_compute_tokens": 85,
+                "generated_tokens": 33,
+                "answer": "1971",
+                "correct": false
+            },
+            {
+                "model_generation": "The first location of the world's largest coffeehouse chain, Starbucks, was opened in 1971 in Seattle, Washington, USA. So the answer is 1971.",
+                "total_compute_tokens": 80,
+                "generated_tokens": 28,
+                "answer": "1971",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.265444040298462
+                ],
+                [
+                    0,
+                    -2.219186305999756
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who directed the highest grossing film?",
+            "Answer": "James Cameroon"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho directed the highest grossing film?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "To find the highest-grossing film of all time, I'll need to consider various sources, including box office reports and industry trackers.\n\nAccording to Box Office Mojo, a reliable source for box office data, the highest-grossing film of all time is:\n\n**Avengers: Endgame (2019)**\n\nWith a worldwide gross of over **$2.79 billion**, Avengers: Endgame has surpassed Avatar (2009) to become the highest-grossing film of all time.\n\nHere's a breakdown of the top 5 highest-grossing films of all time:\n\n1. Avengers: Endgame (2019) - $2.79 billion\n2. Avatar (2009) - $2.78 billion\n3. Titanic (1997) - $2.18 billion\n4. Star Wars: The Force Awakens (2015) - $2.06 billion\n5. Avengers: Infinity War (2018) - $2.05 billion\n\nPlease let me know if you have any further questions or if there's anything else I can help you with! So the answer is  Avengers: Endgame.",
+                "total_compute_tokens": 268,
+                "generated_tokens": 223,
+                "answer": " avengers endgame",
+                "correct": false
+            },
+            {
+                "model_generation": "To find the highest-grossing film of all time, I'll need to consider various sources, including box office reports and industry trackers.\n\nAccording to Box Office Mojo, a reliable source for box office data, the highest-grossing film of all time is:\n\n**Avengers: Endgame (2019)**\n\nWith a worldwide gross of over **$2.79 billion**, Avengers: Endgame has surpassed Avatar (2009) to become the highest-grossing film of all time.\n\nHere's a breakdown of the top 5 highest-grossing films of all time:\n\n1. Avengers: Endgame (2019) - $2.79 billion\n2. Avatar (2009) - $2.78 billion\n3. Titanic (1997) - $2.18 billion\n4. Star Wars: The Force Awakens (2015) - $2.06 billion\n5. Avengers: Infinity War (2018) - $2.05 billion\n\nPlease let me know if you have any further questions! So the answer is  Avengers: Endgame.",
+                "total_compute_tokens": 257,
+                "generated_tokens": 212,
+                "answer": " avengers endgame",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.0570368766784668
+                ],
+                [
+                    0,
+                    -1.0560550689697266
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the longest bridge in the world opened?",
+            "Answer": "30 June 2011"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the longest bridge in the world opened?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The longest bridge in the world is the Danyang-Kunshan Grand Bridge in China, which spans a total length of 164.8 kilometers (102.4 miles). So the answer is 164.8 kilometers.",
+                "total_compute_tokens": 84,
+                "generated_tokens": 37,
+                "answer": "1648 kilometers",
+                "correct": false
+            },
+            {
+                "model_generation": "The longest bridge in the world is the Danyang-Kunshan Grand Bridge in China, which spans a total length of 164.8 kilometers (102 miles). So the answer is 164.8 kilometers.",
+                "total_compute_tokens": 82,
+                "generated_tokens": 35,
+                "answer": "1648 kilometers",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -1.3722748756408691
+                ],
+                [
+                    1,
+                    -1.3660472631454468
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Which company was responsible for the largest pharmaceutical settlement?",
+            "Answer": "GlaxoSmithKline"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhich company was responsible for the largest pharmaceutical settlement?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The company responsible for the largest pharmaceutical settlement was Purdue Pharma, the manufacturer of OxyContin, a highly addictive opioid pain medication. In 2020, Purdue Pharma agreed to pay $8 billion to settle a lawsuit with the U.S. government over the company's role in the opioid crisis, which resulted in thousands of deaths and widespread addiction. So the answer is  Purdue Pharma.",
+                "total_compute_tokens": 117,
+                "generated_tokens": 70,
+                "answer": " purdue pharma",
+                "correct": false
+            },
+            {
+                "model_generation": "The company responsible for the largest pharmaceutical settlement was Purdue Pharma, the manufacturer of OxyContin, a highly addictive opioid pain medication. In 2020, Purdue Pharma agreed to pay $8 billion to settle a lawsuit with the U.S. government over the company's role in the opioid crisis, which resulted in thousands of overdose deaths and widespread addiction. So the answer is  Purdue Pharma.",
+                "total_compute_tokens": 118,
+                "generated_tokens": 71,
+                "answer": " purdue pharma",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.84945809841156
+                ],
+                [
+                    0,
+                    -1.8458664417266846
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the tallest self-supporting tower completed?",
+            "Answer": "2012"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what year was the tallest self-supporting tower completed?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The tallest self-supporting tower in the world is the Burj Khalifa, located in Dubai, United Arab Emirates. It was completed in 2010. So the answer is 2010.",
+                "total_compute_tokens": 82,
+                "generated_tokens": 33,
+                "answer": "2010",
+                "correct": false
+            },
+            {
+                "model_generation": "The tallest self-supporting tower in the world is the Burj Khalifa, which was completed in 2010. So the answer is 2010.",
+                "total_compute_tokens": 74,
+                "generated_tokens": 25,
+                "answer": "2010",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.0880556106567383
+                ],
+                [
+                    0,
+                    -2.0495433807373047
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the tallest fixed steel structure completed?",
+            "Answer": "1988"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what year was the tallest fixed steel structure completed?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The tallest fixed steel structure in the world is the Burj Khalifa, located in Dubai, United Arab Emirates. It was completed in 2010. So the answer is 2010.",
+                "total_compute_tokens": 80,
+                "generated_tokens": 32,
+                "answer": "2010",
+                "correct": false
+            },
+            {
+                "model_generation": "The tallest fixed steel structure in the world is the Burj Khalifa, which was completed in 2010. So the answer is 2010.",
+                "total_compute_tokens": 72,
+                "generated_tokens": 24,
+                "answer": "2010",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.1231136322021484
+                ],
+                [
+                    0,
+                    -2.0731253623962402
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the tallest lattice tower completed?",
+            "Answer": "2012"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what year was the tallest lattice tower completed?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The tallest lattice tower in the world is the Burj Khalifa, located in Dubai, United Arab Emirates. It was completed in 2010. So the answer is 2010.",
+                "total_compute_tokens": 78,
+                "generated_tokens": 31,
+                "answer": "2010",
+                "correct": false
+            },
+            {
+                "model_generation": "The tallest lattice tower in the world is the Burj Khalifa, which was completed in 2010. So the answer is 2010.",
+                "total_compute_tokens": 70,
+                "generated_tokens": 23,
+                "answer": "2010",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.198232650756836
+                ],
+                [
+                    0,
+                    -2.124021530151367
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the current tallest wooden lattice tower completed?",
+            "Answer": "1935"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what year was the current tallest wooden lattice tower completed?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The current tallest wooden lattice tower in the world is the Taipei 101 in Taipei, Taiwan, which was completed in 2004. So the answer is 2004.",
+                "total_compute_tokens": 77,
+                "generated_tokens": 28,
+                "answer": "2004",
+                "correct": false
+            },
+            {
+                "model_generation": "The current tallest wooden lattice tower in the world is the Taipei 101 in Taipei, Taiwan. It was completed in 2004. So the answer is 2004.",
+                "total_compute_tokens": 77,
+                "generated_tokens": 28,
+                "answer": "2004",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.1894264221191406
+                ],
+                [
+                    1,
+                    -2.182504653930664
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what country is the second tallest statue in the world?",
+            "Answer": "China"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what country is the second tallest statue in the world?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The Burj Khalifa, located in Dubai, United Arab Emirates, is the second tallest building in the world, standing at a height of 828 meters (2,722 feet). So the answer is  United Arab Emirates.",
+                "total_compute_tokens": 87,
+                "generated_tokens": 38,
+                "answer": " united arab emirates",
+                "correct": false
+            },
+            {
+                "model_generation": "The second tallest statue in the world is the Statue of Unity, located in India. It stands at a height of 182 meters (597 feet). So the answer is  India.",
+                "total_compute_tokens": 80,
+                "generated_tokens": 31,
+                "answer": " india",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -10.987641334533691
+                ],
+                [
+                    0,
+                    -1.4840729236602783
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the tallest ferris wheel in the world completed?",
+            "Answer": "2021"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the tallest ferris wheel in the world completed?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The tallest Ferris wheel in the world is the London Eye, located in London, England. It was completed in 2000. So the answer is 2000.",
+                "total_compute_tokens": 77,
+                "generated_tokens": 28,
+                "answer": "2000",
+                "correct": false
+            },
+            {
+                "model_generation": "The tallest Ferris wheel in the world is the London Eye, located in London, England. It was completed in 1992. So the answer is 1992.",
+                "total_compute_tokens": 77,
+                "generated_tokens": 28,
+                "answer": "1992",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.1489105224609375
+                ],
+                [
+                    1,
+                    -2.1104633808135986
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the tallest lighthouse completed?",
+            "Answer": "1902"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what year was the tallest lighthouse completed?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The tallest lighthouse in the world was the Eddystone Lighthouse, which was completed in 1698. So the answer is 1698.",
+                "total_compute_tokens": 71,
+                "generated_tokens": 24,
+                "answer": "1698",
+                "correct": false
+            },
+            {
+                "model_generation": "The tallest lighthouse in the world was the Eddystone Lighthouse, which was completed in 1707. So the answer is 1707.",
+                "total_compute_tokens": 71,
+                "generated_tokens": 24,
+                "answer": "1707",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.0633482933044434
+                ],
+                [
+                    0,
+                    -2.053591012954712
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what country is the world largest desalination plant?",
+            "Answer": "Saudi Arabia"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what country is the world largest desalination plant?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The world's largest desalination plant is located in Israel. So the answer is  Israel.",
+                "total_compute_tokens": 63,
+                "generated_tokens": 14,
+                "answer": " israel",
+                "correct": false
+            },
+            {
+                "model_generation": "The world's largest desalination plant is located in Israel, specifically in the city of Ashkelon. So the answer is  Israel.",
+                "total_compute_tokens": 72,
+                "generated_tokens": 23,
+                "answer": " israel",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.594233989715576
+                ],
+                [
+                    0,
+                    -2.3182153701782227
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "The most populous national capital city was established in what year?",
+            "Answer": "1045 BC"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nThe most populous national capital city was established in what year?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The most populous national capital city is Canberra, which was established in 1908. So the answer is 1908.",
+                "total_compute_tokens": 67,
+                "generated_tokens": 18,
+                "answer": "1908",
+                "correct": false
+            },
+            {
+                "model_generation": "The most populous national capital city is Canberra, which was established in 1913. So the answer is 1913.",
+                "total_compute_tokens": 67,
+                "generated_tokens": 18,
+                "answer": "1913",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.3067095279693604
+                ],
+                [
+                    1,
+                    -2.2543931007385254
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "The third largest river (by discharge) in the world is in what countries?",
+            "Answer": "India and Bangladesh"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nThe third largest river (by discharge) in the world is in what countries?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The third largest river in the world by discharge is the Amazon River. So the answer is 3 countries: Brazil, Peru, and Colombia.",
+                "total_compute_tokens": 68,
+                "generated_tokens": 15,
+                "answer": "3 countries brazil peru and colombia",
+                "correct": false
+            },
+            {
+                "model_generation": "The third largest river in the world by discharge is the Congo River. So the answer is 3 countries: Democratic Republic of the Congo, Republic of the Congo, and Angola.",
+                "total_compute_tokens": 68,
+                "generated_tokens": 15,
+                "answer": "3 countries democratic republic of the congo republic of the congo and angola",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.761570930480957
+                ],
+                [
+                    1,
+                    -0.719760000705719
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What is the highest elevation (in meters) of the second largest island in the world?",
+            "Answer": "4,884 m"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the highest elevation (in meters) of the second largest island in the world?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "To find the highest elevation of the second largest island in the world, I'll need to know the names of the two largest islands. The two largest islands in the world are Greenland and Borneo. So the answer is 1,500 meters.",
+                "total_compute_tokens": 97,
+                "generated_tokens": 42,
+                "answer": "1500 meters",
+                "correct": false
+            },
+            {
+                "model_generation": "The second largest island in the world is Greenland. So the answer is 1,000 meters.",
+                "total_compute_tokens": 66,
+                "generated_tokens": 11,
+                "answer": "1000 meters",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.598466157913208
+                ],
+                [
+                    1,
+                    -2.2574455738067627
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What is the length of the second deepest river in the world?",
+            "Answer": "6,300 km"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the length of the second deepest river in the world?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "To find the length of the second deepest river in the world, I'll need to consider the top 5 deepest rivers in the world. According to various sources, the top 5 deepest rivers in the world are:\n\n1. Kola Superdeep Borehole (Russia) - approximately 40,230 feet (12,262 meters)\n2. Congo River (Africa) - approximately 25,700 feet (7,979 meters)\n3. Ob River (Russia) - approximately 24,000 feet (7,315 meters)\n4. Amazon River (South America) - approximately 22,000 feet (6,700 meters)\n5. Congo River (Africa) - approximately 20,000 feet (6,100 meters)\n\nThe second deepest river in the world is the Congo River, with a length of approximately 25,700 feet (7,979 meters). So the answer is 25,700 feet.",
+                "total_compute_tokens": 229,
+                "generated_tokens": 179,
+                "answer": "25700 feet",
+                "correct": false
+            },
+            {
+                "model_generation": "To find the length of the second deepest river in the world, I'll need to consider the top 5 deepest rivers in the world. According to various sources, the top 5 deepest rivers in the world are:\n\n1. Kola Superdeep Borehole (Russia) - approximately 40,230 feet (12,262 meters)\n2. Congo River (Africa) - approximately 25,700 feet (7,979 meters)\n3. Ob River (Russia) - approximately 24,000 feet (7,315 meters)\n4. Amazon River (South America) - approximately 22,000 feet (6,700 meters)\n5. Congo River (Africa) - approximately 20,000 feet (6,100 meters)\n\nThe second deepest river in the world is the Congo River, with a depth of approximately 25,700 feet (7,979 meters). So the answer is 25,700 feet.",
+                "total_compute_tokens": 229,
+                "generated_tokens": 179,
+                "answer": "25700 feet",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -1.9729846715927124
+                ],
+                [
+                    1,
+                    -1.934295892715454
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what country is the third largest stadium in the world?",
+            "Answer": "United States"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what country is the third largest stadium in the world?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The third largest stadium in the world is the Rungrado 1st of May Stadium in Pyongyang, North Korea. So the answer is  North Korea.",
+                "total_compute_tokens": 74,
+                "generated_tokens": 25,
+                "answer": " north korea",
+                "correct": false
+            },
+            {
+                "model_generation": "The third largest stadium in the world is the Rungrado 1st of May Stadium, located in Pyongyang, North Korea. So the answer is  North Korea.",
+                "total_compute_tokens": 76,
+                "generated_tokens": 27,
+                "answer": " north korea",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -1.651271104812622
+                ],
+                [
+                    1,
+                    -1.630812644958496
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who is the largest aircraft carrier in the world is named after?",
+            "Answer": "Gerald R. Ford"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho is the largest aircraft carrier in the world is named after?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The largest aircraft carrier in the world is the USS Gerald R. Ford (CVN-78). So the answer is  USS Gerald R. Ford.",
+                "total_compute_tokens": 71,
+                "generated_tokens": 21,
+                "answer": " uss gerald r ford",
+                "correct": false
+            },
+            {
+                "model_generation": "The largest aircraft carrier in the world is the USS Gerald R. Ford (CVN-78). It was named after the 18th President of the United States, Gerald Rudolph Ford. So the answer is 18th President of the United States.",
+                "total_compute_tokens": 90,
+                "generated_tokens": 40,
+                "answer": "18th president of the united states",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -4.011940002441406
+                ],
+                [
+                    1,
+                    -0.9351742267608643
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what year did the oldest cat ever recorded with the Cat of the Year award?",
+            "Answer": "1999"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what year did the oldest cat ever recorded with the Cat of the Year award?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The oldest cat ever recorded with the Cat of the Year award was a cat named Creme Puff, who was awarded the title in 1990. So the answer is 1990.",
+                "total_compute_tokens": 86,
+                "generated_tokens": 32,
+                "answer": "1990",
+                "correct": false
+            },
+            {
+                "model_generation": "The oldest cat ever recorded with the Cat of the Year award was a cat named Creme Puff, who was awarded the title in 1994. So the answer is 1994.",
+                "total_compute_tokens": 86,
+                "generated_tokens": 32,
+                "answer": "1994",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.1005327701568604
+                ],
+                [
+                    1,
+                    -2.016005754470825
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the country that is the third largest exporter of coffee founded?",
+            "Answer": "1810"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what year was the country that is the third largest exporter of coffee founded?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The country that is the third largest exporter of coffee is Brazil. So the answer is 1889.",
+                "total_compute_tokens": 67,
+                "generated_tokens": 14,
+                "answer": "1889",
+                "correct": false
+            },
+            {
+                "model_generation": "The country that is the third largest exporter of coffee is Ethiopia. So the answer is 1980.",
+                "total_compute_tokens": 67,
+                "generated_tokens": 14,
+                "answer": "1980",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.950444221496582
+                ],
+                [
+                    1,
+                    -2.6231048107147217
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who was the commander for the space mission that had the first spacewalk?",
+            "Answer": "Pavel Belyayev"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was the commander for the space mission that had the first spacewalk?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The first spacewalk, also known as an EVA (extravehicular activity), was performed by Alexei Leonov, a Soviet cosmonaut, on March 18, 1965, during the Voskhod 2 mission. So the answer is  Alexei Leonov.",
+                "total_compute_tokens": 104,
+                "generated_tokens": 52,
+                "answer": " alexei leonov",
+                "correct": false
+            },
+            {
+                "model_generation": "The first spacewalk, also known as an EVA (extravehicular activity), was performed by Alexei Leonov, a Soviet cosmonaut, on March 18, 1965, during the Voskhod 2 spaceflight. So the answer is  Alexei Leonov.",
+                "total_compute_tokens": 105,
+                "generated_tokens": 53,
+                "answer": " alexei leonov",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -1.2864832878112793
+                ],
+                [
+                    1,
+                    -1.2681511640548706
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who is the predecessor of the longest-reigning British monarch?",
+            "Answer": "George VI\n"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho is the predecessor of the longest-reigning British monarch?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The predecessor of the longest-reigning British monarch is Queen Victoria. She reigned for 63 years and 7 months, from June 20, 1837, until her death on January 22, 1901. So the answer is  Queen Victoria.",
+                "total_compute_tokens": 98,
+                "generated_tokens": 48,
+                "answer": " queen victoria",
+                "correct": false
+            },
+            {
+                "model_generation": "The predecessor of the longest-reigning British monarch is Queen Victoria. She reigned for 63 years and 7 months, from June 20, 1837 to January 22, 1901. So the answer is  Queen Victoria.",
+                "total_compute_tokens": 94,
+                "generated_tokens": 44,
+                "answer": " queen victoria",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.3524832725524902
+                ],
+                [
+                    0,
+                    -2.314894199371338
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In 2016, who was the host of the longest running talk show?",
+            "Answer": "Jimmy Fallon"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn 2016, who was the host of the longest running talk show?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The host of the longest-running talk show in 2016 was Oprah Winfrey. So the answer is  Oprah Winfrey.",
+                "total_compute_tokens": 71,
+                "generated_tokens": 18,
+                "answer": " oprah winfrey",
+                "correct": false
+            },
+            {
+                "model_generation": "The host of the longest running talk show in 2016 was Oprah Winfrey. So the answer is  Oprah Winfrey.",
+                "total_compute_tokens": 71,
+                "generated_tokens": 18,
+                "answer": " oprah winfrey",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.3029632568359375
+                ],
+                [
+                    0,
+                    -1.2982890605926514
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In 2016, who was the host of the longest running American game show?",
+            "Answer": "Drew Carey"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn 2016, who was the host of the longest running American game show?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The host of the longest-running American game show is Bob Barker. He hosted \"The Price is Right\" from 1972 to 2007. So the answer is  Bob Barker.",
+                "total_compute_tokens": 85,
+                "generated_tokens": 31,
+                "answer": " bob barker",
+                "correct": false
+            },
+            {
+                "model_generation": "The host of the longest running American game show is Bob Barker. He hosted \"The Price is Right\" from 1972 to 2007. So the answer is  Bob Barker.",
+                "total_compute_tokens": 85,
+                "generated_tokens": 31,
+                "answer": " bob barker",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.154815673828125
+                ],
+                [
+                    0,
+                    -2.149401903152466
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who wrote the novel on which the longest running show in Broadway history is based on?",
+            "Answer": "Gaston Leroux"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho wrote the novel on which the longest running show in Broadway history is based on?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The novel on which the longest running show in Broadway history is based is \"The Phantom of the Opera\". So the answer is  Andrew Lloyd Webber.",
+                "total_compute_tokens": 76,
+                "generated_tokens": 22,
+                "answer": " andrew lloyd webber",
+                "correct": false
+            },
+            {
+                "model_generation": "The novel on which the longest-running show in Broadway history is based is \"The Phantom of the Opera\". So the answer is  Andrew Lloyd Webber.",
+                "total_compute_tokens": 76,
+                "generated_tokens": 22,
+                "answer": " andrew lloyd webber",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -1.6248420476913452
+                ],
+                [
+                    1,
+                    -1.6214752197265625
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what country was the only cruise line that flies the American flag incorporated in?",
+            "Answer": "Bermuda"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what country was the only cruise line that flies the American flag incorporated in?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "After some research, I think I have found the answer:\n\nThe only cruise line that flies the American flag is Carnival Cruise Line.\n\nIs that correct? So the answer is  United States.",
+                "total_compute_tokens": 84,
+                "generated_tokens": 31,
+                "answer": " united states",
+                "correct": false
+            },
+            {
+                "model_generation": "After some research, I think I have found the answer:\n\nThe only cruise line that flies the American flag incorporated is Carnival Cruise Line.\n\nIs that correct? So the answer is  United States.",
+                "total_compute_tokens": 85,
+                "generated_tokens": 32,
+                "answer": " united states",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -1.7201125621795654
+                ],
+                [
+                    1,
+                    -1.7180776596069336
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "In what year did work begin on the second longest road tunnel in the world?",
+            "Answer": "1992"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nIn what year did work begin on the second longest road tunnel in the world?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The second longest road tunnel in the world is the Gotthard Base Tunnel in Switzerland, which was completed in 2016. So the answer is 2016.",
+                "total_compute_tokens": 80,
+                "generated_tokens": 27,
+                "answer": "2016",
+                "correct": false
+            },
+            {
+                "model_generation": "The second longest road tunnel in the world is the Gotthard Base Tunnel in Switzerland. So the answer is 2016.",
+                "total_compute_tokens": 72,
+                "generated_tokens": 19,
+                "answer": "2016",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.3322458267211914
+                ],
+                [
+                    1,
+                    -1.9045274257659912
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What is the official color of the third oldest surviving university?",
+            "Answer": "Cambridge Blue"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat is the official color of the third oldest surviving university?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The University of Al-Karaouine, also known as Al-Qarawiyyin University, is considered the oldest continuously operating university in the world. It was founded in 859 AD in Fes, Morocco.\n\nThe official colors of the University of Al-Karaouine are blue and white. So the answer is  blue and white.",
+                "total_compute_tokens": 111,
+                "generated_tokens": 62,
+                "answer": " blue and white",
+                "correct": false
+            },
+            {
+                "model_generation": "The University of Al-Karaouine, also known as Al-Qarawiyyin University, is considered the oldest continuously operating university in the world. It was founded in 859 AD in Fes, Morocco. So the answer is  the official color of the University of Al-Karaouine is blue.",
+                "total_compute_tokens": 94,
+                "generated_tokens": 45,
+                "answer": " the official color of the university of alkaraouine is blue",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -8.01481819152832
+                ],
+                [
+                    1,
+                    -0.7862967848777771
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who succeeded the longest reigning Roman emperor?",
+            "Answer": "Tiberius"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho succeeded the longest reigning Roman emperor?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The longest-reigning Roman emperor was Caligula, who ruled from 37 AD to 41 AD. So the answer is  Caligula.",
+                "total_compute_tokens": 69,
+                "generated_tokens": 24,
+                "answer": " caligula",
+                "correct": false
+            },
+            {
+                "model_generation": "The longest-reigning Roman emperor was Caligula, who ruled from 37 AD to 41 AD, a total of 4 years. So the answer is  Caligula.",
+                "total_compute_tokens": 76,
+                "generated_tokens": 31,
+                "answer": " caligula",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.5000356435775757
+                ],
+                [
+                    0,
+                    -1.478133201599121
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who preceded the Roman emperor that declared war on the sea?",
+            "Answer": "Tiberius"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho preceded the Roman emperor that declared war on the sea?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The Roman Emperor who declared war on the sea was Caligula. So the answer is  Caligula.",
+                "total_compute_tokens": 64,
+                "generated_tokens": 15,
+                "answer": " caligula",
+                "correct": false
+            },
+            {
+                "model_generation": "The Roman Emperor who declared war on the sea was Julius Caesar. So the answer is  Julius Caesar.",
+                "total_compute_tokens": 63,
+                "generated_tokens": 14,
+                "answer": " julius caesar",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -6.4671149253845215
+                ],
+                [
+                    0,
+                    -1.445838451385498
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who produced the longest running video game franchise?",
+            "Answer": "MECC"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho produced the longest running video game franchise?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The longest running video game franchise is Minecraft, which was created by Markus \"Notch\" Persson and later developed by Mojang Studios. The first game, Minecraft, was released in 2009 and has since become a global phenomenon, with numerous sequels, spin-offs, and merchandise.\n\nHowever, if you're asking about the franchise as a whole, including all games, music, and other media, then the answer is The Legend of Zelda. The Legend of Zelda is a series created by Shigeru Miyamoto and developed by Nintendo, and it has been in continuous production since the release of the first game in 1986.\n\nBut if you're asking about the franchise as a whole, including all games, music, and other media, then the answer is The Legend of Zelda. So the answer is  The Legend of Zelda.",
+                "total_compute_tokens": 207,
+                "generated_tokens": 161,
+                "answer": " the legend of zelda",
+                "correct": false
+            },
+            {
+                "model_generation": "The longest running video game franchise is Minecraft, which was created by Markus \"Notch\" Persson and later developed by Mojang Studios. The first game, Minecraft, was released in 2009 and has since become a global phenomenon, with numerous sequels, spin-offs, and merchandise.\n\nHowever, if you're asking about the franchise as a whole, including all games, music, and other media, then the answer is The Legend of Zelda. The Legend of Zelda is a series created by Shigeru Miyamoto and developed by Nintendo, and it has been in continuous production since the release of the first game in 1986.\n\nBut if you're asking about the franchise as a whole, including all games, music, and other media, then the answer is The Legend of Zelda franchise. So the answer is  The Legend of Zelda franchise.\n\n",
+                "total_compute_tokens": 208,
+                "generated_tokens": 162,
+                "answer": " the legend of zelda franchise",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.703587532043457
+                ],
+                [
+                    0,
+                    -1.4068317413330078
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the father of psychoanalysis?",
+            "Answer": "Jacob Freud"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was the father of the father of psychoanalysis?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The father of psychoanalysis was Sigmund Freud. So the answer is  Sigmund Freud.",
+                "total_compute_tokens": 60,
+                "generated_tokens": 12,
+                "answer": " sigmund freud",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of psychoanalysis is Sigmund Freud. So the answer is  Sigmund Freud.",
+                "total_compute_tokens": 60,
+                "generated_tokens": 12,
+                "answer": " sigmund freud",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -1.1885008811950684
+                ],
+                [
+                    1,
+                    -1.177798867225647
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the father of empiricism?",
+            "Answer": "Sir Nicholas Bacon"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was the father of the father of empiricism?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The father of empiricism is often considered to be John Locke (1632-1704), an English philosopher. So the answer is  John Locke.",
+                "total_compute_tokens": 72,
+                "generated_tokens": 24,
+                "answer": " john locke",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of empiricism is often considered to be John Locke (1632-1704). So the answer is  John Locke.",
+                "total_compute_tokens": 68,
+                "generated_tokens": 20,
+                "answer": " john locke",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.0284929275512695
+                ],
+                [
+                    0,
+                    -2.0198800563812256
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of observational astronomy?",
+            "Answer": "Vincenzo Galilei"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho is the father of the father of observational astronomy?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The father of the father of observational astronomy is Tycho Brahe (1546-1601). So the answer is  Tycho Brahe.",
+                "total_compute_tokens": 69,
+                "generated_tokens": 21,
+                "answer": " tycho brahe",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of the father of observational astronomy is Tycho Brahe. So the answer is  Tycho Brahe.",
+                "total_compute_tokens": 63,
+                "generated_tokens": 15,
+                "answer": " tycho brahe",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -1.0326446294784546
+                ],
+                [
+                    1,
+                    -1.0219835042953491
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of modern Hebrew?",
+            "Answer": "Yehuda Leib"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho is the father of the father of modern Hebrew?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The father of the father of modern Hebrew is Avraham ben Yitzchak (also known as Abraham). So the answer is  Avraham ben Yitzchak.",
+                "total_compute_tokens": 71,
+                "generated_tokens": 23,
+                "answer": " avraham ben yitzchak",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of the father of modern Hebrew is Avraham ben Yitzchak (also known as Abraham, the patriarch of the Jewish faith). So the answer is  Avraham ben Yitzchak.",
+                "total_compute_tokens": 78,
+                "generated_tokens": 30,
+                "answer": " avraham ben yitzchak",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -0.7594045400619507
+                ],
+                [
+                    1,
+                    -0.7303241491317749
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of modern experimental psychology?",
+            "Answer": "Maximilian Wundt"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho is the father of the father of modern experimental psychology?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The father of modern experimental psychology is Wilhelm Wundt (1832-1920). So the answer is  Wilhelm Wundt.",
+                "total_compute_tokens": 68,
+                "generated_tokens": 19,
+                "answer": " wilhelm wundt",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of modern experimental psychology is Wilhelm Wundt (1832-1920), a German philosopher and physiologist. So the answer is  Wilhelm Wundt.",
+                "total_compute_tokens": 76,
+                "generated_tokens": 27,
+                "answer": " wilhelm wundt",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.226293921470642
+                ],
+                [
+                    0,
+                    -1.202701210975647
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the originator of cybernetics?",
+            "Answer": "Leo Wiener"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho is the father of the originator of cybernetics?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The father of cybernetics is Norbert Wiener. So the answer is  Norbert Wiener.",
+                "total_compute_tokens": 63,
+                "generated_tokens": 13,
+                "answer": " norbert wiener",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of cybernetics is Norbert Wiener, an Austrian-American mathematician and philosopher. So the answer is  Norbert Wiener.",
+                "total_compute_tokens": 71,
+                "generated_tokens": 21,
+                "answer": " norbert wiener",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.250860333442688
+                ],
+                [
+                    0,
+                    -1.1364622116088867
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of the hydrogen bomb?",
+            "Answer": "Max Teller"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho is the father of the father of the hydrogen bomb?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The father of the hydrogen bomb is J. Robert Oppenheimer. So the answer is  J. Robert Oppenheimer.",
+                "total_compute_tokens": 64,
+                "generated_tokens": 15,
+                "answer": " j robert oppenheimer",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of the hydrogen bomb is Enrico Fermi. So the answer is  Enrico Fermi.",
+                "total_compute_tokens": 62,
+                "generated_tokens": 13,
+                "answer": " enrico fermi",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -3.995084762573242
+                ],
+                [
+                    0,
+                    -0.935004711151123
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the father of computer science?",
+            "Answer": "Julius Mathison Turing"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was the father of the father of computer science?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The father of computer science is widely considered to be Charles Babbage, an English mathematician and inventor who is often referred to as the \"father of computer science.\" He is credited with designing the first mechanical general-purpose computer, the Difference Engine, in the early 19th century.\n\nHowever, some argue that Ada Lovelace, an English mathematician and writer, is also a strong candidate for this title. She is often referred to as the first computer programmer, as she is credited with writing the first algorithm intended to be processed by a machine (the Analytical Engine), which was a precursor to the modern computer.\n\nBut, if I had to choose one, I would say that Charles Babbage is often considered the father of computer science, as his work on the Difference Engine and the Analytical Engine laid the foundation for the development of modern computers and the field of computer science as we know it today. So the answer is  Charles Babbage.",
+                "total_compute_tokens": 232,
+                "generated_tokens": 184,
+                "answer": " charles babbage",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of computer science is widely considered to be Charles Babbage, an English mathematician and inventor who is often referred to as the \"father of computer science.\" He is credited with designing the first mechanical general-purpose computer, the Difference Engine, in the early 19th century.\n\nHowever, some argue that Ada Lovelace, an English mathematician and writer, is also a strong candidate for this title. She is often referred to as the first computer programmer, as she is credited with writing the first algorithm intended to be processed by a machine (the Analytical Engine), which was a precursor to the modern computer.\n\nBut, if I had to choose one, I would say that Charles Babbage is often considered the father of computer science. So the answer is  Charles Babbage.",
+                "total_compute_tokens": 199,
+                "generated_tokens": 151,
+                "answer": " charles babbage",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.3067457675933838
+                ],
+                [
+                    0,
+                    -1.2405369281768799
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the father of behaviorism?",
+            "Answer": "Pickens Butler Watson"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was the father of the father of behaviorism?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The father of behaviorism was John B. Watson. So the answer is  John B. Watson.",
+                "total_compute_tokens": 60,
+                "generated_tokens": 12,
+                "answer": " john b watson",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of behaviorism is John B. Watson. So the answer is  John B. Watson.",
+                "total_compute_tokens": 60,
+                "generated_tokens": 12,
+                "answer": " john b watson",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -1.2141296863555908
+                ],
+                [
+                    1,
+                    -1.1782734394073486
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the founder of modern human anatomy?",
+            "Answer": "Anders van Wesel"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was the father of the founder of modern human anatomy?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "Antonie van Leeuwenhoek So the answer is  Antonie van Leeuwenhoek. He was a Dutch tradesman and amateur scientist who is often referred to as the \"Father of Microbiology\". He was the first person to observe and describe microorganisms, such as bacteria and protozoa, using a microscope. He discovered microorganisms in various environments, including water, soil, and the human body. His work laid the foundation for the development of modern human anatomy.",
+                "total_compute_tokens": 59,
+                "generated_tokens": 10,
+                "answer": " antonie van leeuwenhoek he was a dutch tradesman and amateur scientist who is often referred to as the father of microbiology he was the first person to observe and describe microorganisms such as bacteria and protozoa using a microscope he discovered microorganisms in various environments including water soil and the human body his work laid the foundation for the development of modern human anatomy",
+                "correct": false
+            },
+            {
+                "model_generation": "Antonie van Leeuwenhoek, a Dutch tradesman and amateur scientist, is often referred to as the \"Father of Microbiology\" and is credited with being the first to observe and describe microorganisms using a microscope. So the answer is  Antonie van Leeuwenhoek.",
+                "total_compute_tokens": 97,
+                "generated_tokens": 48,
+                "answer": " antonie van leeuwenhoek",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.1468617916107178
+                ],
+                [
+                    0,
+                    -0.4270987808704376
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "What was the father of the last surviving Canadian father of Confederation?",
+            "Answer": "Charles Tupper Sr."
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhat was the father of the last surviving Canadian father of Confederation?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The father of the last surviving Canadian father of Confederation was John A. Macdonald. So the answer is  John A. Macdonald.",
+                "total_compute_tokens": 71,
+                "generated_tokens": 20,
+                "answer": " john a macdonald",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of the last surviving Canadian father of Confederation was William Lyon Mackenzie King. So the answer is  William Lyon Mackenzie King.",
+                "total_compute_tokens": 70,
+                "generated_tokens": 19,
+                "answer": " william lyon mackenzie king",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -3.383234739303589
+                ],
+                [
+                    0,
+                    -0.7602658867835999
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the person who said \u201cNow, I am become Death, the destroyer of worlds.\u201d born?",
+            "Answer": "April 22, 1904"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the person who said \u201cNow, I am become Death, the destroyer of worlds.\u201d born?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The quote \"Now, I am become Death, the destroyer of worlds\" is from the Bible, specifically from the book of Revelation, chapter 11, verse 15. So the answer is 1st century AD.",
+                "total_compute_tokens": 94,
+                "generated_tokens": 36,
+                "answer": "1st century ad",
+                "correct": false
+            },
+            {
+                "model_generation": "The quote \"Now, I am become Death, the destroyer of worlds\" is from the Bible, specifically from the book of Revelation, chapter 11, verse 15. It is attributed to Jesus Christ. So the answer is 1st century AD.",
+                "total_compute_tokens": 101,
+                "generated_tokens": 43,
+                "answer": "1st century ad",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -4.416429042816162
+                ],
+                [
+                    0,
+                    -4.32230281829834
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the father of information theory?",
+            "Answer": "Claude Sr."
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWho was the father of the father of information theory?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The father of information theory is Claude Shannon. So the answer is  Claude Shannon.",
+                "total_compute_tokens": 58,
+                "generated_tokens": 10,
+                "answer": " claude shannon",
+                "correct": false
+            },
+            {
+                "model_generation": "The father of information theory was Claude Shannon. So the answer is  Claude Shannon.",
+                "total_compute_tokens": 58,
+                "generated_tokens": 10,
+                "answer": " claude shannon",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -1.7480554580688477
+                ],
+                [
+                    0,
+                    -1.7062151432037354
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When was the person who delivered the \"Quit India\" speech born?",
+            "Answer": "October 2, 1869"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen was the person who delivered the \"Quit India\" speech born?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The person who delivered the \"Quit India\" speech was Mahatma Gandhi. He was born on October 2, 1869. So the answer is 1869.",
+                "total_compute_tokens": 80,
+                "generated_tokens": 29,
+                "answer": "1869",
+                "correct": false
+            },
+            {
+                "model_generation": "The person who delivered the \"Quit India\" speech was Mahatma Gandhi. So the answer is 1869.",
+                "total_compute_tokens": 68,
+                "generated_tokens": 17,
+                "answer": "1869",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -2.4654946327209473
+                ],
+                [
+                    1,
+                    -2.1416521072387695
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When did the president who warned about the military industrial complex die?",
+            "Answer": "March 28, 1969"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen did the president who warned about the military industrial complex die?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The president who warned about the military-industrial complex was Dwight D. Eisenhower, the 34th President of the United States. So the answer is 1957.",
+                "total_compute_tokens": 77,
+                "generated_tokens": 27,
+                "answer": "1957",
+                "correct": false
+            },
+            {
+                "model_generation": "The president who warned about the military-industrial complex was Dwight D. Eisenhower, the 34th President of the United States.\n\nDwight D. Eisenhower served as president from 1953 to 1961. So the answer is 1953-1961.",
+                "total_compute_tokens": 95,
+                "generated_tokens": 45,
+                "answer": "19531961",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    0,
+                    -9.427703857421875
+                ],
+                [
+                    1,
+                    -1.355459213256836
+                ]
+            ]
+        }
+    },
+    {
+        "input_example": {
+            "Question": "When did the president who said Tear Down This Wall die?",
+            "Answer": "June 5, 2004"
+        },
+        "query": "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful AI assistant.\nAnswer the given question.\n\nIf it is helpful, first think step-by-step.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nWhen did the president who said Tear Down This Wall die?<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n",
+        "generations": [
+            {
+                "model_generation": "The president who said \"Tear down this wall\" was actually Ronald Reagan, not a president who died. Ronald Reagan was the 40th President of the United States, serving from 1981 to 1989. He was assassinated on March 6, 2004, by John Hinckley Jr. So the answer is 2004.",
+                "total_compute_tokens": 115,
+                "generated_tokens": 66,
+                "answer": "2004",
+                "correct": false
+            },
+            {
+                "model_generation": "The president who said \"Tear down this wall\" was actually Ronald Reagan, not a president who died. Ronald Reagan was the 40th President of the United States, serving from 1981 to 1989. He was assassinated on March 6, 2001, by John Hinckley Jr. So the answer is 2001.",
+                "total_compute_tokens": 115,
+                "generated_tokens": 66,
+                "answer": "2001",
+                "correct": false
+            }
+        ],
+        "ranking": {
+            "len_norm_logprobs": [
+                [
+                    1,
+                    -2.7075326442718506
+                ],
+                [
+                    0,
+                    -2.617198944091797
+                ]
+            ]
+        }
+    }
+]

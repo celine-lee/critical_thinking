@@ -1,0 +1,1627 @@
+[
+    {
+        "input_example": {
+            "Question": "Who is the predecessor of the longest-reigning British monarch?",
+            "Answer": "George VI\n"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who is the predecessor of the longest-reigning British monarch?\nAnswer:",
+        "model_prediction": " Queen Elizabeth II \n\nQuestion:",
+        "total_compute_tokens": 114,
+        "generated_tokens": 20,
+        "answer": "Queen Elizabeth II",
+        "true_answer": "George VI\n",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Which team won in women's volleyball in the most recent Summer Olympics that was held in London?",
+            "Answer": "Brazil"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Which team won in women's volleyball in the most recent Summer Olympics that was held in London?\nAnswer:",
+        "model_prediction": " Brazil\n\nQuestion:",
+        "total_compute_tokens": 120,
+        "generated_tokens": 20,
+        "answer": "Brazil",
+        "true_answer": "Brazil",
+        "correct": true
+    },
+    {
+        "input_example": {
+            "Question": "What's the capital of the state that the Space Needle is at?",
+            "Answer": "Olympia"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What's the capital of the state that the Space Needle is at?\nAnswer:",
+        "model_prediction": " Seattle\n\nQuestion:",
+        "total_compute_tokens": 115,
+        "generated_tokens": 20,
+        "answer": "Seattle",
+        "true_answer": "Olympia",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "In what year did work begin on the second longest road tunnel in the world?",
+            "Answer": "1992"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In what year did work begin on the second longest road tunnel in the world?\nAnswer:",
+        "model_prediction": " 1994\n\nQuestion:",
+        "total_compute_tokens": 117,
+        "generated_tokens": 20,
+        "answer": "1994",
+        "true_answer": "1992",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "The most populous city in Punjab is how large (area wise)?",
+            "Answer": "310 square kilometers"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: The most populous city in Punjab is how large (area wise)?\nAnswer:",
+        "model_prediction": " Chandigarh \n\nQuestion:",
+        "total_compute_tokens": 114,
+        "generated_tokens": 20,
+        "answer": "Chandigarh",
+        "true_answer": "310 square kilometers",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What is the fastest air-breathing manned aircraft mostly made out of?",
+            "Answer": "Titanium"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What is the fastest air-breathing manned aircraft mostly made out of?\nAnswer:",
+        "model_prediction": " SR-71 Blackbird \n\nQuestion:",
+        "total_compute_tokens": 115,
+        "generated_tokens": 20,
+        "answer": "SR-71 Blackbird",
+        "true_answer": "Titanium",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who was the head of NASA during Apollo 11?",
+            "Answer": "Thomas O. Paine"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was the head of NASA during Apollo 11?\nAnswer:",
+        "model_prediction": " Thomas O. Paine \n\nQuestion:",
+        "total_compute_tokens": 112,
+        "generated_tokens": 20,
+        "answer": "Thomas O. Paine",
+        "true_answer": "Thomas O. Paine",
+        "correct": true
+    },
+    {
+        "input_example": {
+            "Question": "When was the person who delivered the \"Quit India\" speech born?",
+            "Answer": "October 2, 1869"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When was the person who delivered the \"Quit India\" speech born?\nAnswer:",
+        "model_prediction": " September 28, 1888 \n\nQuestion:",
+        "total_compute_tokens": 115,
+        "generated_tokens": 20,
+        "answer": "September 28, 1888",
+        "true_answer": "October 2, 1869",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What's the motto of the oldest California State university?",
+            "Answer": "Powering Silicon Valley"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What's the motto of the oldest California State university?\nAnswer:",
+        "model_prediction": " Fiat lux (Let there be light) \n\nQuestion:",
+        "total_compute_tokens": 112,
+        "generated_tokens": 20,
+        "answer": "Fiat lux (Let there be light)",
+        "true_answer": "Powering Silicon Valley",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the tallest lighthouse completed?",
+            "Answer": "1902"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In what year was the tallest lighthouse completed?\nAnswer:",
+        "model_prediction": " 1870 \n\nQuestion:",
+        "total_compute_tokens": 111,
+        "generated_tokens": 20,
+        "answer": "1870",
+        "true_answer": "1902",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who founded the city where the founder of geometry lived?",
+            "Answer": "Alexander the Great"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who founded the city where the founder of geometry lived?\nAnswer:",
+        "model_prediction": " The founder of geometry lived in Egypt, so the city must be one in Egypt. \n\nQuestion:",
+        "total_compute_tokens": 112,
+        "generated_tokens": 20,
+        "answer": "The founder of geometry lived in Egypt, so the city must be one in Egypt.",
+        "true_answer": "Alexander the Great",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "In 2016, who was the host of the longest running talk show?",
+            "Answer": "Jimmy Fallon"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In 2016, who was the host of the longest running talk show?\nAnswer:",
+        "model_prediction": " The Tonight Show Starring Jimmy Fallon\n\nQuestion:",
+        "total_compute_tokens": 117,
+        "generated_tokens": 20,
+        "answer": "The Tonight Show Starring Jimmy Fallon",
+        "true_answer": "Jimmy Fallon",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the originator of cybernetics?",
+            "Answer": "Leo Wiener"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who is the father of the originator of cybernetics?\nAnswer:",
+        "model_prediction": " Norbert Wiener \n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 7,
+        "answer": "Norbert Wiener",
+        "true_answer": "Leo Wiener",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "For which club did the winner of the 2007 Ballon d'Or play for in 2012?",
+            "Answer": "Real Madrid"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: For which club did the winner of the 2007 Ballon d'Or play for in 2012?\nAnswer:",
+        "model_prediction": " Barcelona\n\nQuestion:",
+        "total_compute_tokens": 111,
+        "generated_tokens": 7,
+        "answer": "Barcelona",
+        "true_answer": "Real Madrid",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Which element has an atomic number that is double that of hydrogen?",
+            "Answer": "Helium"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Which element has an atomic number that is double that of hydrogen?\nAnswer:",
+        "model_prediction": " Helium \n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 7,
+        "answer": "Helium",
+        "true_answer": "Helium",
+        "correct": true
+    },
+    {
+        "input_example": {
+            "Question": "In what country is the third largest stadium in the world?",
+            "Answer": "United States"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In what country is the third largest stadium in the world?\nAnswer:",
+        "model_prediction": " Spain\n\nQuestion:",
+        "total_compute_tokens": 100,
+        "generated_tokens": 7,
+        "answer": "Spain",
+        "true_answer": "United States",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When was the philosopher that formulated the hard problem of consciousness born?",
+            "Answer": "April 20, 1966"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When was the philosopher that formulated the hard problem of consciousness born?\nAnswer:",
+        "model_prediction": " 1946\n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 7,
+        "answer": "1946",
+        "true_answer": "April 20, 1966",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What is the political party of the American president who entered into the Paris agreement?",
+            "Answer": "Democratic Party"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What is the political party of the American president who entered into the Paris agreement?\nAnswer:",
+        "model_prediction": " Democratic\n\nQuestion:",
+        "total_compute_tokens": 104,
+        "generated_tokens": 7,
+        "answer": "Democratic",
+        "true_answer": "Democratic Party",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who is the mother of the father of George Washington?",
+            "Answer": "Mildred Warner"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who is the mother of the father of George Washington?\nAnswer:",
+        "model_prediction": " Mary Ball \n\nQuestion:",
+        "total_compute_tokens": 99,
+        "generated_tokens": 7,
+        "answer": "Mary Ball",
+        "true_answer": "Mildred Warner",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When was the first location of the world's largest coffeehouse chain opened?",
+            "Answer": "March 30, 1971"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When was the first location of the world's largest coffeehouse chain opened?\nAnswer:",
+        "model_prediction": " 1971\n\nQuestion:",
+        "total_compute_tokens": 103,
+        "generated_tokens": 7,
+        "answer": "1971",
+        "true_answer": "March 30, 1971",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the tallest self-supporting tower completed?",
+            "Answer": "2012"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In what year was the tallest self-supporting tower completed?\nAnswer:",
+        "model_prediction": " 1997\n\nQuestion:",
+        "total_compute_tokens": 100,
+        "generated_tokens": 7,
+        "answer": "1997",
+        "true_answer": "2012",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who was governor of Florida during Hurricane Irma?",
+            "Answer": "Rick Scott"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was governor of Florida during Hurricane Irma?\nAnswer:",
+        "model_prediction": " Rick Scott\n\nQuestion:",
+        "total_compute_tokens": 97,
+        "generated_tokens": 7,
+        "answer": "Rick Scott",
+        "true_answer": "Rick Scott",
+        "correct": true
+    },
+    {
+        "input_example": {
+            "Question": "What is the maximum airspeed (in km/h) of the third fastest bird?",
+            "Answer": "320 km/h"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What is the maximum airspeed (in km/h) of the third fastest bird?\nAnswer:",
+        "model_prediction": " 240\n\nQuestion:",
+        "total_compute_tokens": 105,
+        "generated_tokens": 7,
+        "answer": "240",
+        "true_answer": "320 km/h",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the father of computer science?",
+            "Answer": "Julius Mathison Turing"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was the father of the father of computer science?\nAnswer:",
+        "model_prediction": " Alan Turing\n\nQuestion:",
+        "total_compute_tokens": 99,
+        "generated_tokens": 7,
+        "answer": "Alan Turing",
+        "true_answer": "Julius Mathison Turing",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Where was the person who shared the Nobel Prize in Physics in 1954 with Max Born born?",
+            "Answer": "Oranienburg, Germany"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Where was the person who shared the Nobel Prize in Physics in 1954 with Max Born born?\nAnswer:",
+        "model_prediction": " Goteborg, Sweden \n\nQuestion:",
+        "total_compute_tokens": 110,
+        "generated_tokens": 9,
+        "answer": "Goteborg, Sweden",
+        "true_answer": "Oranienburg, Germany",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the government department where the internet originated at founded?",
+            "Answer": "1947"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In what year was the government department where the internet originated at founded?\nAnswer:",
+        "model_prediction": " 1958\n\nQuestion:",
+        "total_compute_tokens": 104,
+        "generated_tokens": 9,
+        "answer": "1958",
+        "true_answer": "1947",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who was the commander for the space mission that had the first spacewalk?",
+            "Answer": "Pavel Belyayev"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was the commander for the space mission that had the first spacewalk?\nAnswer:",
+        "model_prediction": " Alexei Leonov \n\nQuestion:",
+        "total_compute_tokens": 105,
+        "generated_tokens": 9,
+        "answer": "Alexei Leonov",
+        "true_answer": "Pavel Belyayev",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What rocket was used for the mission that landed the first humans on the moon?",
+            "Answer": "Saturn V"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What rocket was used for the mission that landed the first humans on the moon?\nAnswer:",
+        "model_prediction": " Saturn V\n\nQuestion:",
+        "total_compute_tokens": 106,
+        "generated_tokens": 9,
+        "answer": "Saturn V",
+        "true_answer": "Saturn V",
+        "correct": true
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the father of behaviorism?",
+            "Answer": "Pickens Butler Watson"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was the father of the father of behaviorism?\nAnswer:",
+        "model_prediction": " John Watson\n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 9,
+        "answer": "John Watson",
+        "true_answer": "Pickens Butler Watson",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When was the person who shared the Nobel Prize in Physics in 1954 with Max Born born?",
+            "Answer": "January 8, 1891"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When was the person who shared the Nobel Prize in Physics in 1954 with Max Born born?\nAnswer:",
+        "model_prediction": " 1905\n\nQuestion:",
+        "total_compute_tokens": 110,
+        "generated_tokens": 9,
+        "answer": "1905",
+        "true_answer": "January 8, 1891",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who was the first king of the longest Chinese dynasty?",
+            "Answer": "King Wu of Zhou"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was the first king of the longest Chinese dynasty?\nAnswer:",
+        "model_prediction": " Qin Shi Huang \n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 9,
+        "answer": "Qin Shi Huang",
+        "true_answer": "King Wu of Zhou",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What is the lowest elevation of the longest railway tunnel?",
+            "Answer": "312 m"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What is the lowest elevation of the longest railway tunnel?\nAnswer:",
+        "model_prediction": " The Gotthard Base Tunnel\n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 9,
+        "answer": "The Gotthard Base Tunnel",
+        "true_answer": "312 m",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of George Washington?",
+            "Answer": "Lawrence Washington"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who is the father of the father of George Washington?\nAnswer:",
+        "model_prediction": " Augustine Washington \n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 9,
+        "answer": "Augustine Washington",
+        "true_answer": "Lawrence Washington",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What was the religion of the inventor of the Polio vaccine?",
+            "Answer": "Jewish"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What was the religion of the inventor of the Polio vaccine?\nAnswer:",
+        "model_prediction": " Christianity \n\nQuestion:",
+        "total_compute_tokens": 103,
+        "generated_tokens": 9,
+        "answer": "Christianity",
+        "true_answer": "Jewish",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What was the father of the last surviving Canadian father of Confederation?",
+            "Answer": "Charles Tupper Sr."
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What was the father of the last surviving Canadian father of Confederation?\nAnswer:",
+        "model_prediction": " George Coles \n\nQuestion:",
+        "total_compute_tokens": 104,
+        "generated_tokens": 9,
+        "answer": "George Coles",
+        "true_answer": "Charles Tupper Sr.",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Can people who have celiac eat camel meat?",
+            "Answer": "Yes"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Can people who have celiac eat camel meat?\nAnswer:",
+        "model_prediction": " Yes\n\nQuestion:",
+        "total_compute_tokens": 100,
+        "generated_tokens": 9,
+        "answer": "Yes",
+        "true_answer": "Yes",
+        "correct": true
+    },
+    {
+        "input_example": {
+            "Question": "What rocket was the first spacecraft that ever approached Uranus launched on?",
+            "Answer": "Titan IIIE"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What rocket was the first spacecraft that ever approached Uranus launched on?\nAnswer:",
+        "model_prediction": " Pioneer 10\n\nQuestion:",
+        "total_compute_tokens": 105,
+        "generated_tokens": 10,
+        "answer": "Pioneer 10",
+        "true_answer": "Titan IIIE",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who directed the highest grossing film?",
+            "Answer": "James Cameroon"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who directed the highest grossing film?\nAnswer:",
+        "model_prediction": " James Cameron\n\nQuestion:",
+        "total_compute_tokens": 99,
+        "generated_tokens": 10,
+        "answer": "James Cameron",
+        "true_answer": "James Cameroon",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When was the person who said \u201cNow, I am become Death, the destroyer of worlds.\u201d born?",
+            "Answer": "April 22, 1904"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When was the person who said \u201cNow, I am become Death, the destroyer of worlds.\u201d born?\nAnswer:",
+        "model_prediction": " August 11, 1912\n\nQuestion:",
+        "total_compute_tokens": 112,
+        "generated_tokens": 10,
+        "answer": "August 11, 1912",
+        "true_answer": "April 22, 1904",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who preceded the Roman emperor that declared war on the sea?",
+            "Answer": "Tiberius"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who preceded the Roman emperor that declared war on the sea?\nAnswer:",
+        "model_prediction": " None \n\nQuestion:",
+        "total_compute_tokens": 103,
+        "generated_tokens": 10,
+        "answer": "None",
+        "true_answer": "Tiberius",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What is the capital of the country where yoga originated?",
+            "Answer": "New Delhi"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What is the capital of the country where yoga originated?\nAnswer:",
+        "model_prediction": " Varanasi \n\nQuestion:",
+        "total_compute_tokens": 102,
+        "generated_tokens": 10,
+        "answer": "Varanasi",
+        "true_answer": "New Delhi",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Which company was responsible for the largest pharmaceutical settlement?",
+            "Answer": "GlaxoSmithKline"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Which company was responsible for the largest pharmaceutical settlement?\nAnswer:",
+        "model_prediction": " Pfizer \n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 10,
+        "answer": "Pfizer",
+        "true_answer": "GlaxoSmithKline",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of observational astronomy?",
+            "Answer": "Vincenzo Galilei"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who is the father of the father of observational astronomy?\nAnswer:",
+        "model_prediction": " Tycho Brahe \n\nQuestion:",
+        "total_compute_tokens": 102,
+        "generated_tokens": 10,
+        "answer": "Tycho Brahe",
+        "true_answer": "Vincenzo Galilei",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the country that is the third largest exporter of coffee founded?",
+            "Answer": "1810"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In what year was the country that is the third largest exporter of coffee founded?\nAnswer:",
+        "model_prediction": " 1821\n\nQuestion:",
+        "total_compute_tokens": 107,
+        "generated_tokens": 10,
+        "answer": "1821",
+        "true_answer": "1810",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When was the longest bridge in the world opened?",
+            "Answer": "30 June 2011"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When was the longest bridge in the world opened?\nAnswer:",
+        "model_prediction": " 1931\n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 10,
+        "answer": "1931",
+        "true_answer": "30 June 2011",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "In what year did the oldest cat ever recorded with the Cat of the Year award?",
+            "Answer": "1999"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In what year did the oldest cat ever recorded with the Cat of the Year award?\nAnswer:",
+        "model_prediction": " 2007 \n\nQuestion:",
+        "total_compute_tokens": 108,
+        "generated_tokens": 10,
+        "answer": "2007",
+        "true_answer": "1999",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What is the highest elevation (in meters) of the second largest island in the world?",
+            "Answer": "4,884 m"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What is the highest elevation (in meters) of the second largest island in the world?\nAnswer:",
+        "model_prediction": " 5,489 \n\nQuestion:",
+        "total_compute_tokens": 109,
+        "generated_tokens": 10,
+        "answer": "5,489",
+        "true_answer": "4,884 m",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What is the official color of the third oldest surviving university?",
+            "Answer": "Cambridge Blue"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What is the official color of the third oldest surviving university?\nAnswer:",
+        "model_prediction": " Blue\n\nQuestion:",
+        "total_compute_tokens": 103,
+        "generated_tokens": 10,
+        "answer": "Blue",
+        "true_answer": "Cambridge Blue",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What's the capital of the state that Washington University in St. Louis is in?",
+            "Answer": "Jefferson City"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What's the capital of the state that Washington University in St. Louis is in?\nAnswer:",
+        "model_prediction": " Missouri\n\nQuestion:",
+        "total_compute_tokens": 111,
+        "generated_tokens": 13,
+        "answer": "Missouri",
+        "true_answer": "Jefferson City",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What was the job of the father of the founder of psychoanalysis?",
+            "Answer": "wool merchant"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What was the job of the father of the founder of psychoanalysis?\nAnswer:",
+        "model_prediction": " A surgeon\n\nQuestion:",
+        "total_compute_tokens": 108,
+        "generated_tokens": 13,
+        "answer": "A surgeon",
+        "true_answer": "wool merchant",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "How many people died in the second most powerful earthquake ever recorded?",
+            "Answer": "131"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: How many people died in the second most powerful earthquake ever recorded?\nAnswer:",
+        "model_prediction": " 100,000\n\nQuestion:",
+        "total_compute_tokens": 107,
+        "generated_tokens": 13,
+        "answer": "100,000",
+        "true_answer": "131",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of modern experimental psychology?",
+            "Answer": "Maximilian Wundt"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who is the father of the father of modern experimental psychology?\nAnswer:",
+        "model_prediction": " Wilhelm Wundt \n\nQuestion:",
+        "total_compute_tokens": 106,
+        "generated_tokens": 13,
+        "answer": "Wilhelm Wundt",
+        "true_answer": "Maximilian Wundt",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When did the person who delivered the Gettysburg Address die?",
+            "Answer": "April 15, 1865"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When did the person who delivered the Gettysburg Address die?\nAnswer:",
+        "model_prediction": " 1893 \n\nQuestion:",
+        "total_compute_tokens": 108,
+        "generated_tokens": 13,
+        "answer": "1893",
+        "true_answer": "April 15, 1865",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What was the final book written by the author of On the Origin of Species?",
+            "Answer": "The Formation of Vegetable Mould Through the Action of Worms"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What was the final book written by the author of On the Origin of Species?\nAnswer:",
+        "model_prediction": " The Variation of Animals and Plants Under Domestication\n\nQuestion:",
+        "total_compute_tokens": 110,
+        "generated_tokens": 13,
+        "answer": "The Variation of Animals and Plants Under Domestication",
+        "true_answer": "The Formation of Vegetable Mould Through the Action of Worms",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of modern Hebrew?",
+            "Answer": "Yehuda Leib"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who is the father of the father of modern Hebrew?\nAnswer:",
+        "model_prediction": " Abraham\n\nQuestion:",
+        "total_compute_tokens": 105,
+        "generated_tokens": 13,
+        "answer": "Abraham",
+        "true_answer": "Yehuda Leib",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When was the company that built the first steam locomotive to carry passengers on a public rail line founded?",
+            "Answer": "1823"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When was the company that built the first steam locomotive to carry passengers on a public rail line founded?\nAnswer:",
+        "model_prediction": " 1825\n\nQuestion:",
+        "total_compute_tokens": 115,
+        "generated_tokens": 13,
+        "answer": "1825",
+        "true_answer": "1823",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "The main actor of Indiana Jones is a licensed what?",
+            "Answer": "pilot"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: The main actor of Indiana Jones is a licensed what?\nAnswer:",
+        "model_prediction": " Pilot\n\nQuestion:",
+        "total_compute_tokens": 105,
+        "generated_tokens": 13,
+        "answer": "Pilot",
+        "true_answer": "pilot",
+        "correct": true
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the father of information theory?",
+            "Answer": "Claude Sr."
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was the father of the father of information theory?\nAnswer:",
+        "model_prediction": " Claude Shannon's father, Claude Shannon \n\nQuestion:",
+        "total_compute_tokens": 105,
+        "generated_tokens": 13,
+        "answer": "Claude Shannon's father, Claude Shannon",
+        "true_answer": "Claude Sr.",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What was the death toll of the most intense Atlantic hurricane?",
+            "Answer": "52"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What was the death toll of the most intense Atlantic hurricane?\nAnswer:",
+        "model_prediction": " The Great Galveston Hurricane of 1900 \n\nQuestion:",
+        "total_compute_tokens": 106,
+        "generated_tokens": 13,
+        "answer": "The Great Galveston Hurricane of 1900",
+        "true_answer": "52",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who succeeded the longest reigning Roman emperor?",
+            "Answer": "Tiberius"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who succeeded the longest reigning Roman emperor?\nAnswer:",
+        "model_prediction": " Augustus \n\nQuestion:",
+        "total_compute_tokens": 102,
+        "generated_tokens": 13,
+        "answer": "Augustus",
+        "true_answer": "Tiberius",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the father of psychoanalysis?",
+            "Answer": "Jacob Freud"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was the father of the father of psychoanalysis?\nAnswer:",
+        "model_prediction": " Jakob Freud\n\nQuestion:",
+        "total_compute_tokens": 99,
+        "generated_tokens": 7,
+        "answer": "Jakob Freud",
+        "true_answer": "Jacob Freud",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What is the nickname of the easternmost U.S. state?",
+            "Answer": "Pine Tree State"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What is the nickname of the easternmost U.S. state?\nAnswer:",
+        "model_prediction": " Maine\n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 7,
+        "answer": "Maine",
+        "true_answer": "Pine Tree State",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the father of empiricism?",
+            "Answer": "Sir Nicholas Bacon"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was the father of the father of empiricism?\nAnswer:",
+        "model_prediction": " Isaac Newton\n\nQuestion:",
+        "total_compute_tokens": 99,
+        "generated_tokens": 7,
+        "answer": "Isaac Newton",
+        "true_answer": "Sir Nicholas Bacon",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the company that was founded as Sound of Music added to the S&P 500?",
+            "Answer": "1999"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In what year was the company that was founded as Sound of Music added to the S&P 500?\nAnswer:",
+        "model_prediction": " 2018\n\nQuestion:",
+        "total_compute_tokens": 109,
+        "generated_tokens": 7,
+        "answer": "2018",
+        "true_answer": "1999",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When was the person after which the Hubble Space Telescope is named after born?",
+            "Answer": "November 20, 1889"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When was the person after which the Hubble Space Telescope is named after born?\nAnswer:",
+        "model_prediction": " 1916 \n\nQuestion:",
+        "total_compute_tokens": 104,
+        "generated_tokens": 7,
+        "answer": "1916",
+        "true_answer": "November 20, 1889",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who is the largest aircraft carrier in the world is named after?",
+            "Answer": "Gerald R. Ford"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who is the largest aircraft carrier in the world is named after?\nAnswer:",
+        "model_prediction": " George Washington \n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 7,
+        "answer": "George Washington",
+        "true_answer": "Gerald R. Ford",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the tallest lattice tower completed?",
+            "Answer": "2012"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In what year was the tallest lattice tower completed?\nAnswer:",
+        "model_prediction": " 1987\n\nQuestion:",
+        "total_compute_tokens": 98,
+        "generated_tokens": 7,
+        "answer": "1987",
+        "true_answer": "2012",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What is the primary male hormone derived from?",
+            "Answer": "cholesterol"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What is the primary male hormone derived from?\nAnswer:",
+        "model_prediction": " The testes\n\nQuestion:",
+        "total_compute_tokens": 97,
+        "generated_tokens": 7,
+        "answer": "The testes",
+        "true_answer": "cholesterol",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What was the founding date of the university in which Plotonium was discovered?",
+            "Answer": "March 23, 1868"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What was the founding date of the university in which Plotonium was discovered?\nAnswer:",
+        "model_prediction": " 1749\n\nQuestion:",
+        "total_compute_tokens": 104,
+        "generated_tokens": 7,
+        "answer": "1749",
+        "true_answer": "March 23, 1868",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What is the third letter of the top level domain of the military?",
+            "Answer": "l"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What is the third letter of the top level domain of the military?\nAnswer:",
+        "model_prediction": " M \n\nQuestion:",
+        "total_compute_tokens": 102,
+        "generated_tokens": 7,
+        "answer": "M",
+        "true_answer": "l",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "The machine used to extract honey from honeycombs uses which physical force?",
+            "Answer": "Centrifugal Force"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: The machine used to extract honey from honeycombs uses which physical force?\nAnswer:",
+        "model_prediction": " Centrifugal force\n\nQuestion:",
+        "total_compute_tokens": 103,
+        "generated_tokens": 7,
+        "answer": "Centrifugal force",
+        "true_answer": "Centrifugal Force",
+        "correct": true
+    },
+    {
+        "input_example": {
+            "Question": "When was the tallest ferris wheel in the world completed?",
+            "Answer": "2021"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When was the tallest ferris wheel in the world completed?\nAnswer:",
+        "model_prediction": " 2008\n\nQuestion:",
+        "total_compute_tokens": 100,
+        "generated_tokens": 7,
+        "answer": "2008",
+        "true_answer": "2021",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who was the father of the founder of modern human anatomy?",
+            "Answer": "Anders van Wesel"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was the father of the founder of modern human anatomy?\nAnswer:",
+        "model_prediction": " Andreas Vesalius\n\nQuestion:",
+        "total_compute_tokens": 103,
+        "generated_tokens": 10,
+        "answer": "Andreas Vesalius",
+        "true_answer": "Anders van Wesel",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "The most populous national capital city was established in what year?",
+            "Answer": "1045 BC"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: The most populous national capital city was established in what year?\nAnswer:",
+        "model_prediction": " 1926\n\nQuestion:",
+        "total_compute_tokens": 103,
+        "generated_tokens": 10,
+        "answer": "1926",
+        "true_answer": "1045 BC",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When did the author of Annabel Lee enlist in the army?",
+            "Answer": "1827"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When did the author of Annabel Lee enlist in the army?\nAnswer:",
+        "model_prediction": " Not available \n\nQuestion:",
+        "total_compute_tokens": 104,
+        "generated_tokens": 10,
+        "answer": "Not available",
+        "true_answer": "1827",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When did Nirvana's second most selling studio album come out?",
+            "Answer": "September 13, 1993"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When did Nirvana's second most selling studio album come out?\nAnswer:",
+        "model_prediction": " Nevermind\n\nQuestion:",
+        "total_compute_tokens": 104,
+        "generated_tokens": 10,
+        "answer": "Nevermind",
+        "true_answer": "September 13, 1993",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When did the president who said Tear Down This Wall die?",
+            "Answer": "June 5, 2004"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When did the president who said Tear Down This Wall die?\nAnswer:",
+        "model_prediction": " December 26, 1990\n\nQuestion:",
+        "total_compute_tokens": 103,
+        "generated_tokens": 10,
+        "answer": "December 26, 1990",
+        "true_answer": "June 5, 2004",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What's the capital of the state that the College of William & Mary is in?",
+            "Answer": "Richmond"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What's the capital of the state that the College of William & Mary is in?\nAnswer:",
+        "model_prediction": " Williamsburg\n\nQuestion:",
+        "total_compute_tokens": 108,
+        "generated_tokens": 10,
+        "answer": "Williamsburg",
+        "true_answer": "Richmond",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "The husband of Lady Godiva was Earl of which Anglic kingdom?",
+            "Answer": "Mercia"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: The husband of Lady Godiva was Earl of which Anglic kingdom?\nAnswer:",
+        "model_prediction": " Mercia\n\nQuestion:",
+        "total_compute_tokens": 104,
+        "generated_tokens": 10,
+        "answer": "Mercia",
+        "true_answer": "Mercia",
+        "correct": true
+    },
+    {
+        "input_example": {
+            "Question": "What was the motto of the Olympics that had Fuwa as the mascots?",
+            "Answer": "One World, One Dream"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What was the motto of the Olympics that had Fuwa as the mascots?\nAnswer:",
+        "model_prediction": " One Ring \n\nQuestion:",
+        "total_compute_tokens": 107,
+        "generated_tokens": 10,
+        "answer": "One Ring",
+        "true_answer": "One World, One Dream",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who was president of the United States in the year that Citibank was founded?",
+            "Answer": "james madison"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was president of the United States in the year that Citibank was founded?\nAnswer:",
+        "model_prediction": " Woodrow Wilson\n\nQuestion:",
+        "total_compute_tokens": 108,
+        "generated_tokens": 10,
+        "answer": "Woodrow Wilson",
+        "true_answer": "james madison",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When did the person who said \"Cogito, ergo sum.\" die?",
+            "Answer": "February 11, 1650"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When did the person who said \"Cogito, ergo sum.\" die?\nAnswer:",
+        "model_prediction": " 1651\n\nQuestion:",
+        "total_compute_tokens": 107,
+        "generated_tokens": 10,
+        "answer": "1651",
+        "true_answer": "February 11, 1650",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When did the first prime minister of the Russian Empire come into office?",
+            "Answer": "November 6, 1905"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When did the first prime minister of the Russian Empire come into office?\nAnswer:",
+        "model_prediction": " 1825\n\nQuestion:",
+        "total_compute_tokens": 105,
+        "generated_tokens": 10,
+        "answer": "1825",
+        "true_answer": "November 6, 1905",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What is the capital of the second largest state in the US by area?",
+            "Answer": "Austin"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What is the capital of the second largest state in the US by area?\nAnswer:",
+        "model_prediction": " Juneau\n\nQuestion:",
+        "total_compute_tokens": 106,
+        "generated_tokens": 10,
+        "answer": "Juneau",
+        "true_answer": "Austin",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What is the nickname for the state that is the home to the \u201cAvocado Capital of the World\"?",
+            "Answer": "Golden State"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What is the nickname for the state that is the home to the \u201cAvocado Capital of the World\"?\nAnswer:",
+        "model_prediction": " California\n\nQuestion:",
+        "total_compute_tokens": 112,
+        "generated_tokens": 9,
+        "answer": "California",
+        "true_answer": "Golden State",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "The third largest river (by discharge) in the world is in what countries?",
+            "Answer": "India and Bangladesh"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: The third largest river (by discharge) in the world is in what countries?\nAnswer:",
+        "model_prediction": " Brazil, Peru, and Colombia \n\nQuestion:",
+        "total_compute_tokens": 106,
+        "generated_tokens": 9,
+        "answer": "Brazil, Peru, and Colombia",
+        "true_answer": "India and Bangladesh",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who was the mother of the emperor of Japan during World War I?",
+            "Answer": "Yanagiwara Naruko"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was the mother of the emperor of Japan during World War I?\nAnswer:",
+        "model_prediction": " Shoken\n\nQuestion:",
+        "total_compute_tokens": 104,
+        "generated_tokens": 9,
+        "answer": "Shoken",
+        "true_answer": "Yanagiwara Naruko",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When did the president who set the precedent of a two term limit enter office?",
+            "Answer": "April 30, 1789"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When did the president who set the precedent of a two term limit enter office?\nAnswer:",
+        "model_prediction": " 1800\n\nQuestion:",
+        "total_compute_tokens": 106,
+        "generated_tokens": 9,
+        "answer": "1800",
+        "true_answer": "April 30, 1789",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who was the first African American mayor of the most populous city in the United States?",
+            "Answer": "David Dinkins"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was the first African American mayor of the most populous city in the United States?\nAnswer:",
+        "model_prediction": " Tom Bradley \n\nQuestion:",
+        "total_compute_tokens": 107,
+        "generated_tokens": 9,
+        "answer": "Tom Bradley",
+        "true_answer": "David Dinkins",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What's the capital city of the country that was the champion of the 2010 World Cup?",
+            "Answer": "Madrid"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What's the capital city of the country that was the champion of the 2010 World Cup?\nAnswer:",
+        "model_prediction": " Buenos Aires\n\nQuestion:",
+        "total_compute_tokens": 110,
+        "generated_tokens": 9,
+        "answer": "Buenos Aires",
+        "true_answer": "Madrid",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "The fourth largest city in Germany was originally called what?",
+            "Answer": "Colonia Claudia Ara Agrippinensium"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: The fourth largest city in Germany was originally called what?\nAnswer:",
+        "model_prediction": " Leipzig \n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 9,
+        "answer": "Leipzig",
+        "true_answer": "Colonia Claudia Ara Agrippinensium",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When was the anime studio that made Sword Art Online founded?",
+            "Answer": "May 9, 2005"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When was the anime studio that made Sword Art Online founded?\nAnswer:",
+        "model_prediction": " 1989\n\nQuestion:",
+        "total_compute_tokens": 102,
+        "generated_tokens": 9,
+        "answer": "1989",
+        "true_answer": "May 9, 2005",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "In what country is the second tallest statue in the world?",
+            "Answer": "China"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In what country is the second tallest statue in the world?\nAnswer:",
+        "model_prediction": " India\n\nQuestion:",
+        "total_compute_tokens": 102,
+        "generated_tokens": 9,
+        "answer": "India",
+        "true_answer": "China",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who is the mother of the father of Barack Obama?",
+            "Answer": "Habiba Akumu Nyanjango"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who is the mother of the father of Barack Obama?\nAnswer:",
+        "model_prediction": " Ann Dunham \n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 9,
+        "answer": "Ann Dunham",
+        "true_answer": "Habiba Akumu Nyanjango",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who was the last emperor of the dynasty that succeeded the Song dynasty?",
+            "Answer": "Toghon Tem\u00fcr"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was the last emperor of the dynasty that succeeded the Song dynasty?\nAnswer:",
+        "model_prediction": " The Ming \n\nQuestion:",
+        "total_compute_tokens": 104,
+        "generated_tokens": 9,
+        "answer": "The Ming",
+        "true_answer": "Toghon Tem\u00fcr",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of Barack Obama?",
+            "Answer": "Hussein Onyango Obama"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who is the father of the father of Barack Obama?\nAnswer:",
+        "model_prediction": " Barack Obama\n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 9,
+        "answer": "Barack Obama",
+        "true_answer": "Hussein Onyango Obama",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the scientist at MIT that won the Queen Elizabeth Prize for Engineering in 2013?",
+            "Answer": "Conway Berners-Lee"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who is the father of the scientist at MIT that won the Queen Elizabeth Prize for Engineering in 2013?\nAnswer:",
+        "model_prediction": " Not enough information\n\nQuestion:",
+        "total_compute_tokens": 113,
+        "generated_tokens": 10,
+        "answer": "Not enough information",
+        "true_answer": "Conway Berners-Lee",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who was president of the U.S. when superconductivity was discovered?",
+            "Answer": "William Howard Taft"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was president of the U.S. when superconductivity was discovered?\nAnswer:",
+        "model_prediction": " Ronald Reagan \n\nQuestion:",
+        "total_compute_tokens": 106,
+        "generated_tokens": 10,
+        "answer": "Ronald Reagan",
+        "true_answer": "William Howard Taft",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who was mayor of New York City when Fiorello H. La Guardia was born?",
+            "Answer": "William Russell Grace"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was mayor of New York City when Fiorello H. La Guardia was born?\nAnswer:",
+        "model_prediction": " William J. Gaynor\n\nQuestion:",
+        "total_compute_tokens": 111,
+        "generated_tokens": 10,
+        "answer": "William J. Gaynor",
+        "true_answer": "William Russell Grace",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When was the author of The Population Bomb born?",
+            "Answer": "May 29, 1932"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When was the author of The Population Bomb born?\nAnswer:",
+        "model_prediction": " 1922\n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 10,
+        "answer": "1922",
+        "true_answer": "May 29, 1932",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who was the second wife of the founder of CNN?",
+            "Answer": "Jane Shirley Smith"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who was the second wife of the founder of CNN?\nAnswer:",
+        "model_prediction": " Lois Duke\n\nQuestion:",
+        "total_compute_tokens": 102,
+        "generated_tokens": 10,
+        "answer": "Lois Duke",
+        "true_answer": "Jane Shirley Smith",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When was the composer of Carol of the Bells born?",
+            "Answer": "December 13, 1877"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When was the composer of Carol of the Bells born?\nAnswer:",
+        "model_prediction": " January 2, 1885\n\nQuestion:",
+        "total_compute_tokens": 103,
+        "generated_tokens": 10,
+        "answer": "January 2, 1885",
+        "true_answer": "December 13, 1877",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When did the president who set the precedent of a two term limit leave office?",
+            "Answer": "March 4, 1797"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When did the president who set the precedent of a two term limit leave office?\nAnswer:",
+        "model_prediction": " March 4, 1869\n\nQuestion:",
+        "total_compute_tokens": 107,
+        "generated_tokens": 10,
+        "answer": "March 4, 1869",
+        "true_answer": "March 4, 1797",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "The material out of which the Great Sphinx of Giza is made of is mainly composed of what mineral?",
+            "Answer": "calcite"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: The material out of which the Great Sphinx of Giza is made of is mainly composed of what mineral?\nAnswer:",
+        "model_prediction": " Limestone\n\nQuestion:",
+        "total_compute_tokens": 112,
+        "generated_tokens": 10,
+        "answer": "Limestone",
+        "true_answer": "calcite",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When was the person Russ Hanneman is based on born?",
+            "Answer": "July 31, 1958"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When was the person Russ Hanneman is based on born?\nAnswer:",
+        "model_prediction": " 1943\n\nQuestion:",
+        "total_compute_tokens": 103,
+        "generated_tokens": 10,
+        "answer": "1943",
+        "true_answer": "July 31, 1958",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What's the capital of the state that Harvard University is in?",
+            "Answer": "Boston"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What's the capital of the state that Harvard University is in?\nAnswer:",
+        "model_prediction": " Boston \n\nQuestion:",
+        "total_compute_tokens": 104,
+        "generated_tokens": 10,
+        "answer": "Boston",
+        "true_answer": "Boston",
+        "correct": true
+    },
+    {
+        "input_example": {
+            "Question": "The Filipino statesman who established the government-in-exile during the outbreak of World War II was also the mayor of what city?",
+            "Answer": "Quezon City"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: The Filipino statesman who established the government-in-exile during the outbreak of World War II was also the mayor of what city?\nAnswer:",
+        "model_prediction": " Manila \n\nQuestion:",
+        "total_compute_tokens": 117,
+        "generated_tokens": 10,
+        "answer": "Manila",
+        "true_answer": "Quezon City",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When did the war that Neil Armstrong served in end?",
+            "Answer": "July 27, 1953"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When did the war that Neil Armstrong served in end?\nAnswer:",
+        "model_prediction": " 1971 \n\nQuestion:",
+        "total_compute_tokens": 102,
+        "generated_tokens": 10,
+        "answer": "1971",
+        "true_answer": "July 27, 1953",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "In what country was the only cruise line that flies the American flag incorporated in?",
+            "Answer": "Bermuda"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In what country was the only cruise line that flies the American flag incorporated in?\nAnswer:",
+        "model_prediction": " Panama\n\nQuestion:",
+        "total_compute_tokens": 105,
+        "generated_tokens": 8,
+        "answer": "Panama",
+        "true_answer": "Bermuda",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who wrote the novel on which the longest running show in Broadway history is based on?",
+            "Answer": "Gaston Leroux"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who wrote the novel on which the longest running show in Broadway history is based on?\nAnswer:",
+        "model_prediction": " Andrew Lloyd Webber \n\nQuestion:",
+        "total_compute_tokens": 106,
+        "generated_tokens": 8,
+        "answer": "Andrew Lloyd Webber",
+        "true_answer": "Gaston Leroux",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What was the death toll of the second largest volcanic eruption in the 20th century?",
+            "Answer": "847"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What was the death toll of the second largest volcanic eruption in the 20th century?\nAnswer:",
+        "model_prediction": " 43,000 \n\nQuestion:",
+        "total_compute_tokens": 107,
+        "generated_tokens": 8,
+        "answer": "43,000",
+        "true_answer": "847",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When did the person who gave the Checkers speech die?",
+            "Answer": "April 22, 1994"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When did the person who gave the Checkers speech die?\nAnswer:",
+        "model_prediction": " 1955\n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 8,
+        "answer": "1955",
+        "true_answer": "April 22, 1994",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What is the nickname for the state that Mount Rainier is located in?",
+            "Answer": "Evergreen State"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What is the nickname for the state that Mount Rainier is located in?\nAnswer:",
+        "model_prediction": " The Evergreen State\n\nQuestion:",
+        "total_compute_tokens": 104,
+        "generated_tokens": 8,
+        "answer": "The Evergreen State",
+        "true_answer": "Evergreen State",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who built the fastest air-breathing manned aircraft?",
+            "Answer": "Lockheed Corporation"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who built the fastest air-breathing manned aircraft?\nAnswer:",
+        "model_prediction": " Chuck Yeager\n\nQuestion:",
+        "total_compute_tokens": 99,
+        "generated_tokens": 8,
+        "answer": "Chuck Yeager",
+        "true_answer": "Lockheed Corporation",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Which Theranos whistleblower is not related to a senior American government official?",
+            "Answer": "Erika Cheung"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Which Theranos whistleblower is not related to a senior American government official?\nAnswer:",
+        "model_prediction": " Tyler Shultz\n\nQuestion:",
+        "total_compute_tokens": 103,
+        "generated_tokens": 8,
+        "answer": "Tyler Shultz",
+        "true_answer": "Erika Cheung",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When did the president who warned about the military industrial complex die?",
+            "Answer": "March 28, 1969"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When did the president who warned about the military industrial complex die?\nAnswer:",
+        "model_prediction": " 1973\n\nQuestion:",
+        "total_compute_tokens": 102,
+        "generated_tokens": 8,
+        "answer": "1973",
+        "true_answer": "March 28, 1969",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "In what country is the world largest desalination plant?",
+            "Answer": "Saudi Arabia"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In what country is the world largest desalination plant?\nAnswer:",
+        "model_prediction": " Australia\n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 8,
+        "answer": "Australia",
+        "true_answer": "Saudi Arabia",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the current tallest wooden lattice tower completed?",
+            "Answer": "1935"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In what year was the current tallest wooden lattice tower completed?\nAnswer:",
+        "model_prediction": " 1907 \n\nQuestion:",
+        "total_compute_tokens": 101,
+        "generated_tokens": 8,
+        "answer": "1907",
+        "true_answer": "1935",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "In what year was the tallest fixed steel structure completed?",
+            "Answer": "1988"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In what year was the tallest fixed steel structure completed?\nAnswer:",
+        "model_prediction": " 1967\n\nQuestion:",
+        "total_compute_tokens": 100,
+        "generated_tokens": 8,
+        "answer": "1967",
+        "true_answer": "1988",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "What is the length of the second deepest river in the world?",
+            "Answer": "6,300 km"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: What is the length of the second deepest river in the world?\nAnswer:",
+        "model_prediction": " 4,400 km \n\nQuestion:",
+        "total_compute_tokens": 102,
+        "generated_tokens": 8,
+        "answer": "4,400 km",
+        "true_answer": "6,300 km",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "In 2016, who was the host of the longest running American game show?",
+            "Answer": "Drew Carey"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: In 2016, who was the host of the longest running American game show?\nAnswer:",
+        "model_prediction": " Drew Carey\n\nQuestion:",
+        "total_compute_tokens": 105,
+        "generated_tokens": 7,
+        "answer": "Drew Carey",
+        "true_answer": "Drew Carey",
+        "correct": true
+    },
+    {
+        "input_example": {
+            "Question": "Who is the father of the father of the hydrogen bomb?",
+            "Answer": "Max Teller"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who is the father of the father of the hydrogen bomb?\nAnswer:",
+        "model_prediction": " Enrico Fermi \n\nQuestion:",
+        "total_compute_tokens": 100,
+        "generated_tokens": 7,
+        "answer": "Enrico Fermi",
+        "true_answer": "Max Teller",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "Who produced the longest running video game franchise?",
+            "Answer": "MECC"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: Who produced the longest running video game franchise?\nAnswer:",
+        "model_prediction": " Nintendo\n\nQuestion:",
+        "total_compute_tokens": 97,
+        "generated_tokens": 7,
+        "answer": "Nintendo",
+        "true_answer": "MECC",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "When did the last king from Britain's House of Hanover die?",
+            "Answer": "20 June 1837"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: When did the last king from Britain's House of Hanover die?\nAnswer:",
+        "model_prediction": " 1837\n\nQuestion:",
+        "total_compute_tokens": 102,
+        "generated_tokens": 7,
+        "answer": "1837",
+        "true_answer": "20 June 1837",
+        "correct": false
+    },
+    {
+        "input_example": {
+            "Question": "How much protein in four boiled egg yolks?",
+            "Answer": "10.8"
+        },
+        "query": "Question: Who lived longer, Muhammad Ali or Alan Turing?\nAnswer: Muhammad Ali \n\nQuestion: When was the founder of craigslist born?\nAnswer: December 6, 1952\n\nQuestion: Who was the maternal grandfather of George Washington?\nAnswer: Joseph Ball \n\nQuestion: Are both the directors of Jaws and Casino Royale from the same country? \nAnswer: No\n\nQuestion: How much protein in four boiled egg yolks?\nAnswer:",
+        "model_prediction": " 6 grams \n\nQuestion:",
+        "total_compute_tokens": 98,
+        "generated_tokens": 7,
+        "answer": "6 grams",
+        "true_answer": "10.8",
+        "correct": false
+    }
+]
