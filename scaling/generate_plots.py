@@ -21,7 +21,7 @@ sys.excepthook = debughook
 
 
 # everything at once: each table is a domain
-def plot_all(methodmodels, avg_gen_toks, pass_at_k, logprobs_correctness, domain, title_prefix=""):
+def plot_all(methodmodels, avg_gen_toks, pass_at_k, logprobs_correctness, domain, title_prefix="", together=False):
     if len(methodmodels) == 0: return
     data = {
         "Method": methodmodels,
@@ -56,29 +56,61 @@ def plot_all(methodmodels, avg_gen_toks, pass_at_k, logprobs_correctness, domain
     plt.plot(model_8B_direct['Avg no gen toks'], model_8B_direct["pass_at_k"], color="purple", marker="^")
     for correctness_measure in ["pass_at_k", "logprobs_correctness"]:
         # Plot for each model size and method. color represents model size and line style represents method
-        color = "red" # if correctness_measure == "pass_at_k" else "lightcoral"
+        color = "red" if correctness_measure == "pass_at_k" else "lightcoral"
         plt.plot(model_1B_sampling['Avg no gen toks'], model_1B_sampling[correctness_measure], color=color, marker=".", label='3.2 1B')
-        plt.plot(model_1B_beam['Avg no gen toks'], model_1B_beam[correctness_measure], color=color, marker="X", label="beam")
-        plt.plot(model_1B_cotdecoding['Avg no gen toks'], model_1B_cotdecoding[correctness_measure], color=color, marker='d', label="cotdecoding")
+        plt.plot(model_1B_beam['Avg no gen toks'], model_1B_beam[correctness_measure], color=color, marker="X", label="beam", linestyle='--')
+        plt.plot(model_1B_cotdecoding['Avg no gen toks'], model_1B_cotdecoding[correctness_measure], color=color, marker='d', label="cotdecoding", linestyle=':')
 
-        color = "blue" # if correctness_measure == "pass_at_k" else "cornflowerblue"
+        color = "blue" if correctness_measure == "pass_at_k" else "cornflowerblue"
         plt.plot(model_3B_sampling['Avg no gen toks'], model_3B_sampling[correctness_measure], color=color, marker=".", label="BON")
-        plt.plot(model_3B_beam['Avg no gen toks'], model_3B_beam[correctness_measure], color=color, marker="X", label='3.2 3B')
-        plt.plot(model_3B_cotdecoding['Avg no gen toks'], model_3B_cotdecoding[correctness_measure], color=color, marker='d', label="cotdecoding")
+        plt.plot(model_3B_beam['Avg no gen toks'], model_3B_beam[correctness_measure], color=color, marker="X", label='3.2 3B', linestyle='--')
+        plt.plot(model_3B_cotdecoding['Avg no gen toks'], model_3B_cotdecoding[correctness_measure], color=color, marker='d', linestyle=':')
 
-        color = "purple" # if correctness_measure == "pass_at_k" else "violet"
+        color = "purple" if correctness_measure == "pass_at_k" else "violet"
         plt.plot(model_8B_sampling['Avg no gen toks'], model_8B_sampling[correctness_measure], color=color, marker=".", label='3.1 8B')
-        plt.plot(model_8B_beam['Avg no gen toks'], model_8B_beam[correctness_measure], color=color, marker="X")
-        plt.plot(model_8B_cotdecoding['Avg no gen toks'], model_8B_cotdecoding[correctness_measure], color=color, marker='d', label="cotdecoding")
+        plt.plot(model_8B_beam['Avg no gen toks'], model_8B_beam[correctness_measure], color=color, marker="X", linestyle='--')
+        plt.plot(model_8B_cotdecoding['Avg no gen toks'], model_8B_cotdecoding[correctness_measure], color=color, marker='d', linestyle=':')
 
         # Adding labels and title
         plt.xlabel('Average No. of Generated Tokens')
         plt.ylabel(correctness_measure)
-        plt.ylim(0, 1.2)
+        plt.ylim(0, 1)
         plt.xlim(xmin=0)
         # plt.xlim(0, 3500)
         plt.title(f'{correctness_measure} vs. Avg No. of Generated Tokens ({domain}) {title_prefix}')
 
+        if not together:
+            # Create custom legends
+            # legend_element = []
+            # if correctness_measure == "pass_at_k":
+            #     legend_element.extend([
+            #         Line2D([0], [0], color='red', lw=2, label='3.2 1B pass@k'),
+            #         Line2D([0], [0], color='blue', lw=2, label='3.2 3B pass@k'),
+            #         Line2D([0], [0], color='purple', lw=2, label='3.1 8B pass@k'),
+            #         Line2D([0], [0], color='white', lw=0, label=''),
+            #     ])
+            # else:
+            #     legend_element.extend([
+            #         Line2D([0], [0], color='lightcoral', lw=2, label='3.2 1B logprob-ranked'),
+            #         Line2D([0], [0], color='cornflowerblue', lw=2, label='3.2 3B logprob-ranked'),
+            #         Line2D([0], [0], color='violet', lw=2, label='3.1 8B logprob-ranked'),
+            #         Line2D([0], [0], color='white', lw=0, label=''),
+            #     ])
+            # legend_element.extend([
+
+            #     Line2D([0], [0], marker='.', color='w', markerfacecolor='black', markersize=8, label='sampling'),
+            #     Line2D([0], [0], marker="X", color='w', markerfacecolor='black', markersize=8, label='beam'),
+            #     Line2D([0], [0], marker='^', color='w', markerfacecolor='black', markersize=8, label='direct'),
+            #     Line2D([0], [0], marker='d', color='w', markerfacecolor='black', markersize=8, label='cotdecoding')
+            # ])
+
+            # # Add legends for model and method
+            # plt.legend(handles=legend_element, loc='upper center', ncol=3, bbox_to_anchor=(0.25, 1.1), fancybox=True, shadow=True)
+            # plt.legend(title='Scaling Test-time compute')
+            plt.savefig(os.path.join(foldername, f"{domain}_{correctness_measure}{f'_{title_prefix}' if title_prefix else ''}.png"))
+            plt.clf()
+    
+    if together:
         # Create custom legends
         legend_element = [
             Line2D([0], [0], color='red', lw=2, label='3.2 1B pass@k'),
@@ -97,9 +129,10 @@ def plot_all(methodmodels, avg_gen_toks, pass_at_k, logprobs_correctness, domain
 
         # Add legends for model and method
         if not title_prefix:
+            plt.ylim(0, 1.2)
             plt.legend(handles=legend_element, loc='upper center', ncol=3, bbox_to_anchor=(0.25, 1.1), fancybox=True, shadow=True)
         # plt.legend(title='Scaling Test-time compute')
-        plt.savefig(os.path.join(foldername, f"{domain}_{correctness_measure}{f'_{title_prefix}' if title_prefix else ''}.png"))
+        plt.savefig(os.path.join(foldername, f"{domain}{f'_{title_prefix}' if title_prefix else ''}.png"))
         plt.clf()
 
 domains = sys.argv[1:]
@@ -157,13 +190,13 @@ for domain in domains:
                 array = re.search(r'array = (.+)\n', code_lines[0]).group(1)
                 this_N = len(eval(array))
                 for N in N_buckets:
-                    if this_N < N[-1]: break
+                    if this_N > N[0]: break
             if domain in {"arrayworld", "idx_management"}:
                 code_lines = ex['input_example']['code'].splitlines(keepends=True)
                 this_L = len(code_lines)
                 if domain == "arrayworld": this_L -= 2  # -2 for init and end, doesnt make a huge difference
                 for L in L_buckets:
-                    if this_L < L[-1]: break
+                    if this_L > L[0]: break
 
             if domain == "arrayworld":
                 if model not in data_groups[(N, L)]: data_groups[(N, L)][model] = {}
@@ -179,6 +212,7 @@ for domain in domains:
                 data_groups[L][model][method].append(ex)
 
     plot_all(methodmodels, avg_gen_toks, pass_at_k, logprobs_correctness, domain)
+    plot_all(methodmodels, avg_gen_toks, pass_at_k, logprobs_correctness, domain, together=True)
 
     for bucket_key, bucket_info in data_groups.items():
         if domain == "arrayworld":
@@ -202,4 +236,4 @@ for domain in domains:
                     bucket_avg_gen_toks.append(num_beams * sum(gen['generated_tokens'] for op in outputs for gen in op["generations"]) / len(outputs))
                 else:
                     bucket_avg_gen_toks.append(sum(gen['generated_tokens'] for op in outputs for gen in op["generations"]) / len(outputs))
-        plot_all(bucket_methodmodels, bucket_avg_gen_toks, bucket_pass_at_k, bucket_logprobs_correctness, domain, bucket_title_prefix)
+        plot_all(bucket_methodmodels, bucket_avg_gen_toks, bucket_pass_at_k, bucket_logprobs_correctness, domain, bucket_title_prefix, together=True)

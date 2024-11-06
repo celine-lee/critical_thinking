@@ -162,7 +162,7 @@ def get_token_indices(
 
 
 def answer_generations(
-    input_ids, batch_size, model_output, model, tokenizer, method="continue_so_answer_is"
+    input_ids, batch_size, model_output, model, tokenizer, method="continue_so_answer_is", stop_strings=[eot_id, start_header_id, "user"]
 ):
     input_tok_len = input_ids.input_ids.shape[-1]
     input_char_lens = [len(tokenizer.decode(input_ids.input_ids[idx], skip_special_tokens=True)) for idx in range(input_ids.input_ids.shape[0])]
@@ -178,6 +178,9 @@ def answer_generations(
     extracted_answers_and_indices = [None for _ in model_predictions]
     for gen_idx, model_prediction in enumerate(model_predictions):
         input_idx = gen_idx // batch_size
+        for ss in stop_strings:
+            if model_prediction.rstrip().endswith(ss):
+                model_prediction = model_prediction.rstrip()[:-len(ss)]
         if "So the answer is " in model_prediction:
             answer = (
                 re.search(r"So the answer is (.+)", model_prediction)
@@ -243,12 +246,16 @@ def answer_generations(
         skip_special_tokens=True,
     )
     for new_gen_idx, orig_gen_idx in enumerate(gens_need_augmenting):
+        model_prediction = new_model_predictions[new_gen_idx]
+        for ss in stop_strings:
+            if model_prediction.rstrip().endswith(ss):
+                model_prediction = model_prediction.rstrip()[:-len(ss)]
         answer = (
-            re.search(r"So the answer is (.+)", new_model_predictions[new_gen_idx])
+            re.search(r"So the answer is (.+)", model_prediction)
             .group(1)
             .rstrip(" .")
         )
-        string_index_start = new_model_predictions[new_gen_idx].index(
+        string_index_start = model_prediction.index(
             f"So the answer is {answer}"
         ) + len("So the answer is ")
         string_index_end = string_index_start + len(answer)
@@ -610,7 +617,7 @@ def run_experiment(
             is_correct = normalized_answer == exs[batch_idx]["Answer"].lower()
             return is_correct, normalized_answer
 
-    stop_strings = [eot_id, start_header_id]
+    stop_strings = [eot_id, start_header_id, "user"]
     total_ex = len(examples)
 
     experiments = []
@@ -676,6 +683,7 @@ def run_experiment(
         )
 
     for output_filename, batch_size, generate_config in experiments:
+        print(output_filename)
         outputs = generate(
             model,
             tokenizer,
@@ -690,42 +698,44 @@ def run_experiment(
         with open(output_filename, "w") as wf:
             json.dump(outputs, wf, indent=4)
 
-    # COT decoding
-    output_filename = f"{foldername}/{domain}_cotdecoding{n_samples}_temp{int(temperature*100)}_{modelname}.json"
-    first_tok_generate_config = {
-        "max_new_tokens": 1,
-        "tokenizer": tokenizer,
-        "do_sample": True,
-        "num_return_sequences": n_samples,
-        "temperature": temperature,
-        "pad_token_id": tokenizer.eos_token_id,
-    }
-    remainder_greedy_generate_config = {
-        "return_dict_in_generate": True,
-        "temperature": None,
-        "top_p": None,
-        "output_scores": True,
-        "max_new_tokens": 1200,
-        "tokenizer": tokenizer,
-        "stop_strings": stop_strings,
-        "do_sample": False,
-        "pad_token_id": tokenizer.eos_token_id,
-    }
+    for n_samples in num_samples:
+        # COT decoding
+        output_filename = f"{foldername}/{domain}_cotdecoding{n_samples}_temp{int(temperature*100)}_{modelname}.json"
+        first_tok_generate_config = {
+            "max_new_tokens": 1,
+            "tokenizer": tokenizer,
+            "do_sample": True,
+            "num_return_sequences": n_samples,
+            "temperature": temperature,
+            "pad_token_id": tokenizer.eos_token_id,
+        }
+        remainder_greedy_generate_config = {
+            "return_dict_in_generate": True,
+            "temperature": None,
+            "top_p": None,
+            "output_scores": True,
+            "max_new_tokens": 1200,
+            "tokenizer": tokenizer,
+            "stop_strings": stop_strings,
+            "do_sample": False,
+            "pad_token_id": tokenizer.eos_token_id,
+        }
 
-    outputs = cot_decode(
-        model,
-        tokenizer,
-        get_batch,
-        make_queries,
-        examples,
-        get_prediction_and_correctness,
-        max_batch_size,
-        first_tok_generate_config,
-        remainder_greedy_generate_config,
-        output_filename,
-    )
-    with open(output_filename, "w") as wf:
-        json.dump(outputs, wf, indent=4)
+        print(output_filename)
+        outputs = cot_decode(
+            model,
+            tokenizer,
+            get_batch,
+            make_queries,
+            examples,
+            get_prediction_and_correctness,
+            max_batch_size,
+            first_tok_generate_config,
+            remainder_greedy_generate_config,
+            output_filename,
+        )
+        with open(output_filename, "w") as wf:
+            json.dump(outputs, wf, indent=4)
 
 
 def main():
@@ -742,9 +752,9 @@ def main():
     domains = [
         "indexing",
         "idx_management",
+        "arrayworld",
         "trivia_qa",
         "compgap",
-        "arrayworld",
     ]
 
     for (model, batch_size) in models:
