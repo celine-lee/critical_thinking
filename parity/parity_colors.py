@@ -40,25 +40,24 @@ all_colors = [
 
 foldername = "parity_colors_outputs_describelength"
 
-def random_parity_color(k, N):
+def random_parity_color(k, N, max_steps):
     path = random.choices(all_colors, k=k)
-    turns = random.choices(list(range(k)), k=N)
+    turns = random.choices(list(range(max_steps)), k=N)
     final_block = path[sum(turns) % k]
     return path, [str(turn) for turn in turns], final_block
 
 system_instruction = """You are a smart and helpful AI assistant. Please help me with the following task."""
 
 generation_instructions = {
-    "request_L": "Provide your thought process using at least {L} words, then provide the answer following this template: [ANSWER]\nThe final square is YOUR ANSWER\n[/ANSWER]",
-    "request_descriptor": "{descriptor} provide the answer following this template: [ANSWER]\nThe final square is YOUR ANSWER\n[/ANSWER]",
+    "request_descriptor": "{descriptor} provide your final answer following this template: [ANSWER]\nThe final square is YOUR ANSWER\n[/ANSWER]",
 }
 
 
-query_template = """I am playing a game on a circular path of colored squares. The squares are colored as follows, with the first square comimg after the last square in a loop:
+query_template = """I am playing a game on a circular path of colored squares. Remember that the path is a loop, so after the last square, the next square is the first square. The squares are colored as follows:
 {colored_path}
 I start on the first square ({first_square}) then play a total of {num_turns} turns. Each number in the following sequence is how many steps I take in a given turn:
 {turns}
-What is the color of the square I end on at the end of the final turn?
+What is the color of the square I am on after I take the final turn?
 """
 
 stop_strings = ["[/ANSWER]"]
@@ -76,6 +75,10 @@ def make_prompt(length_control_metadata, path, turns):
                     length_control_kwargs["descriptor"] = "Provide your thought process in detail, then"
                 elif length_control_kwargs["descriptor"] == "none":
                     length_control_kwargs["descriptor"] = "Do not generate any other text, only"
+                elif length_control_kwargs["descriptor"] == "states_short":
+                    length_control_kwargs["descriptor"] = "Do not generate any other text, only identify the color square after each intermediate turn, then"
+                elif length_control_kwargs["descriptor"] == "states_long":
+                    length_control_kwargs["descriptor"] = "Identify the color square after each intermediate turn, then"
             prompt += generation_instructions[length_control_mode].format(**length_control_kwargs) + "\n\n"
         elif length_control_mode == "eos_decay":
             pass # done during generation not prompting
@@ -119,7 +122,7 @@ class ParityExperiment:
         extracted_answers_and_indices = [None for _ in model_predictions]
         for gen_idx, model_prediction in enumerate(model_predictions):
             parsed_answer = None
-            for parsed_answer in re.finditer(r'\[ANSWER\]\s*The final square is\s*(.+)(\s*\[/ANSWER\])?', model_prediction):
+            for parsed_answer in re.finditer(r'The final square is\s*([^\.\[]+)', model_prediction):
                 pass # only get the last
             if parsed_answer is None or (parsed_answer.start() < query_len):
                 gens_need_augmenting.append(gen_idx)
@@ -171,7 +174,7 @@ class ParityExperiment:
             model_prediction = self.tokenizer.decode(model_output.sequences[new_idx], skip_special_tokens=True)
             new_query_len = len(new_queries[new_idx])
             parsed_answer = None
-            for parsed_answer in re.finditer(r'\[ANSWER\]\s*The final square is\s*(.+)(\s*\[/ANSWER\])?', model_prediction):
+            for parsed_answer in re.finditer(r'The final square is\s*([^\.\[]+)', model_prediction):
                 pass # only get the last
             if parsed_answer is None or (parsed_answer.start() < query_len):
                 answer = None
@@ -253,28 +256,28 @@ class ParityExperiment:
             if end_tok_idx > len(output_ids): breakpoint()
         return (start_tok_idx, end_tok_idx)
 
-    def run_experiment(self, k, N):
-        subfolder = os.path.join(foldername, f"k{k}_N{N}")
+    def run_experiment(self, k, N, max_steps):
+        subfolder = os.path.join(foldername, f"k{k}_N{N}_t{max_steps}")
         os.makedirs(subfolder, exist_ok=True)
         filename = f"{subfolder}/{self.filename}.json"
         print(filename)
-        if os.path.exists(filename): return json.load(open(filename))
-
-        path, turns, true_parity_color = random_parity_color(k, N)
-
-        prompt = make_prompt((self.length_control_mode, self.length_control_kwargs), path, turns)
-        input_ids = self.tokenizer(
-            [prompt],
-            padding=True,
-            truncation=True,
-            max_length=2048,
-            return_tensors="pt",
-            return_offsets_mapping=True,
-        ).to(device)
-        
         results = []
-        n_gens_remaining = self.n_samples
+        if os.path.exists(filename): results = json.load(open(filename))
+
+        n_gens_remaining = self.n_samples - len(results)
         while n_gens_remaining > 0:
+            path, turns, true_parity_color = random_parity_color(k, N, max_steps)
+
+            prompt = make_prompt((self.length_control_mode, self.length_control_kwargs), path, turns)
+            input_ids = self.tokenizer(
+                [prompt],
+                padding=True,
+                truncation=True,
+                max_length=2048,
+                return_tensors="pt",
+                return_offsets_mapping=True,
+            ).to(device)
+            
             generation_config = self.get_generation_config()
             model_output = self.model.generate(
                 input_ids=input_ids.input_ids,
@@ -305,20 +308,25 @@ class ParityExperiment:
 
 def run():
     models = [
-        ("meta-llama/Llama-3.1-8B-Instruct", 16),
+        # ("meta-llama/Llama-3.1-8B-Instruct", 16),
+        # ("meta-llama/Llama-3.2-3B-Instruct", 20),
         ("meta-llama/Llama-3.2-1B-Instruct", 28),
-        ("meta-llama/Llama-3.2-3B-Instruct", 20),
     ]
     length_control_mode = "request_descriptor"
     query_mode = "parity"
     n_samples = 100
+    temperature = sys.argv[1]
 
     for (model_name, batch_size) in models:
-        for descriptor in {"detail", "brief", "none"}:
-            experiment = ParityExperiment(model_name, batch_size, (length_control_mode, {"descriptor": descriptor}), n_samples=n_samples)
+        # for descriptor in {"brief", "none", "states_long", "states_short"}:
+        for descriptor in {"none", "states_long", "states_short"}:
+            experiment = ParityExperiment(model_name, batch_size, (length_control_mode, {"descriptor": descriptor}), n_samples=n_samples, temperature=float(temperature))
             for k in range(2, 8, 2):
-                for N in range(2, 12, 4):
-                    results = experiment.run_experiment(k, N)
+                for t in range(2, min(k, 4)+1):
+                    N = 1
+                    results = experiment.run_experiment(k, N, t)
+                    for N in range(2, 12, 4):
+                        results = experiment.run_experiment(k, N, t)
 
 if __name__ == "__main__":
-    if "run" in sys.argv: run()
+    run()
