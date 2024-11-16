@@ -123,7 +123,7 @@ def plot_requested_vs_generated():
         grouped = model_df.groupby('Method')['No gen toks'].apply(list)
         if len(grouped) == 0: continue
         positions = [unique_lengths.index(req_len) + (i - 2) * 0.2 for req_len in grouped.index]
-        # tick_positions = positions if i == 1 else tick_positions
+        tick_positions = positions if i == 1 else tick_positions
         plt.boxplot(
             grouped, positions=positions, widths=0.15, patch_artist=True,
             boxprops=dict(facecolor=model_colors[model], color=model_colors[model]),
@@ -133,7 +133,7 @@ def plot_requested_vs_generated():
     if not plotted_something: return
 
     # Set x-axis labels
-    plt.xticks(ticks=positions, labels=unique_lengths, rotation=45)
+    plt.xticks(ticks=tick_positions, labels=unique_lengths, rotation=45)
     plt.xlabel('Method')
     plt.ylabel("Actual length (no. tokens)")
     plt.title(f'Box Plot of Generated Tokens by Method and Model')
@@ -146,7 +146,6 @@ def plot_requested_vs_generated():
     
     plt.savefig(os.path.join(foldername, f"lengthvsrequested_boxplot_T{temperature}.png"))
     plt.clf()
-
 
 # to check that the test toks necessary for correct inference increases with N / (k&t)
 def plot_N_vs_tts(modelname, k, t):
@@ -163,19 +162,34 @@ def plot_N_vs_tts(modelname, k, t):
         print(f"No correct examples found for Model: {modelname}, k={k}, t={t}.")
         return
     
-    # Create the scatterplot
+    # Group data by N
+    grouped = filtered_data.groupby('N')['No gen toks']
+    N_values = sorted(grouped.groups.keys(), key=int)
+    token_distributions = [grouped.get_group(n) for n in N_values]
+    counts = [len(grouped.get_group(n)) for n in N_values]  # Number of examples per group
+
+    # Create the box-and-whiskers plot
     plt.figure(figsize=(12, 6))
-    plt.scatter(filtered_data['No gen toks'], filtered_data['N'], alpha=0.7, color='blue')
+    plt.boxplot(
+        token_distributions, 
+        labels=N_values, 
+        showmeans=True, 
+        meanline=True,
+        meanprops={"color": "red", "linestyle": "--", "linewidth": 2}
+    )
     
     # Customize the plot
-    plt.xlabel('No. of Generated Tokens')
-    plt.ylabel('N')
-    plt.title(f'Scatter Plot for Model: {modelname}, k={k}, t={t} (Correct Examples)')
-    plt.grid(True, linestyle='--', alpha=0.6)
-    
-    plt.savefig(os.path.join(foldername, f"N_vs_tts_{modelname}_k{k}_t{t}_T{temperature}.png"))
-    plt.clf()
+    xtick_labels = [f"{n}\n(n={count})" for n, count in zip(N_values, counts)]
+    plt.xticks(range(1, len(N_values) + 1), xtick_labels)
 
+    plt.xlabel('N')        
+    plt.ylabel('No. of Generated Tokens')
+    plt.title(f'Box Plot for Model: {modelname}, k={k}, t={t} (Correct Examples)')
+    plt.grid(axis='y', linestyle='--', alpha=0.6)
+    
+    # Save the plot
+    plt.savefig(os.path.join(foldername, f"N_vs_tts_boxplot_{modelname}_k{k}_t{t}_T{temperature}.png"))
+    plt.clf()
 
 def plot(k, N, t, num_buckets):
     # Calculate average correctness in specified number of buckets
@@ -580,15 +594,15 @@ def plot_by_model(modelname, t, num_buckets=10):
 
     for groupby_key in {"k", "N"}:
         buckets = {}
-        sorted_groupby_key = sorted(list(set(data[groupby_key])))
+        sorted_groupby_key = sorted(list(set(data[groupby_key])), key=int)
         plotted_something = False
         for idx, key_option in enumerate(sorted_groupby_key):
             # Get bucketed averages for each kN
-            buckets[key_option] = calculate_buckets_samesize(main_df[main_df[groupby_key].str.contains(key_option)].sort_values(by="No gen toks"), groupby_key)
+            buckets[key_option] = calculate_buckets_samesize(main_df[main_df[groupby_key].isin([key_option])].sort_values(by="No gen toks"), groupby_key)
 
             # Plot the average correctness for each kN
             if buckets[key_option] is not None: 
-                plt.plot(buckets[key_option]['Bucket Center'], buckets[key_option]['Correct?'], color=(1.*idx/len(set(data[groupby_key])), 0, 0), label=key_option)
+                plt.plot(buckets[key_option]['Bucket Center'], buckets[key_option]['Correct?'], color=((1 + 1.*idx)/len(set(data[groupby_key])), 0, 0), label=f"{groupby_key}={key_option}")
                 plotted_something = True
         for method in method_to_performance:
             avg_correctness = sum(ex[0] for ex in method_to_performance[method]) / len(method_to_performance[method])
@@ -602,11 +616,11 @@ def plot_by_model(modelname, t, num_buckets=10):
         plt.ylim(0, 1)
         plt.ylabel('Average Correctness')
         plt.xlabel("No. of Generated Tokens (Binned)")
-        plt.title(f'Average Correctness vs. No. of Generated Tokens ({modelname}, grouped by {groupby_key} Buckets={num_buckets})')
+        plt.title(f'Average Correctness vs. No. of Generated Tokens ({modelname}, t={t} Buckets={num_buckets})')
         plt.legend(loc='upper right', fancybox=True, shadow=True)
 
         # Save and clear the figure
-        plt.savefig(os.path.join(foldername, f"{modelname}_{num_buckets}buckets_groupedby{groupby_key}_T{temperature}.png"))
+        plt.savefig(os.path.join(foldername, f"{modelname}_{num_buckets}buckets_groupedby{groupby_key}_t{t}_T{temperature}.png"))
         plt.clf()
 
 
@@ -628,6 +642,8 @@ if __name__ == "__main__":
     for k in all_ks:
         for t in all_ts:
             if t > k: continue
+            for modelname in model_colors:
+                plot_N_vs_tts(modelname, k, t)
             plot_by_k(k, t)
             for N in all_Ns:
                 plot(k, N, t, num_buckets=5)
@@ -635,7 +651,7 @@ if __name__ == "__main__":
         for t in all_ts:
             plot_by_N(N, t)
     
-    for modelname in ["Llama-3.1-8B-Instruct", "Llama-3.2-3B-Instruct", "Llama-3.2-1B-Instruct"]:
+    for modelname in model_colors:
         for t in all_ts:
             plot_by_model(modelname, t, num_buckets=5)
 
