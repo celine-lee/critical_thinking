@@ -24,20 +24,18 @@ temperature = sys.argv[2]
 
 model_colors = {
     "3.1-8B": "purple",
-    # "3.2-3B": "blue",
-    # "3.2-1B": "red",
 }
 method_markers = {
-    # "brief": "d",
+    "brief": "d",
     "none": "*",
-    # "detail": "^",
+    "detail": "^",
     "states_long": "o",
     "states_short": ".",
 }
 method_linestyle = {
-    # "brief": ":",
+    "brief": ":",
     "none": "--", 
-    # "detail": "-.",
+    "detail": "-.",
     "states_long": "-",
     "states_short": "--",
 }
@@ -59,7 +57,6 @@ for subfolder in glob.glob(os.path.join(foldername, f"k*")):
     k = parsed_experimentname.group(1)
     N = parsed_experimentname.group(2)
     t = parsed_experimentname.group(3)
-    if int(t) > 2: continue
     for experiment_file in glob.glob(os.path.join(subfolder, "*")):
         if f"T{temperature}" not in experiment_file:
             continue
@@ -96,12 +93,6 @@ df = pd.DataFrame(data)
 # Create a column for grouping
 df["Group"] = list(zip(df["Method"], df["Model"], df["k"], df["N"], df["t"]))
 
-
-# Calculate the average and confidence interval
-# def calc_ci(x):
-#     mean = np.mean(x)
-#     ci = stats.t.interval(0.95, len(x)-1, loc=mean, scale=stats.sem(x))
-#     return pd.Series({'mean': mean, 'lower': ci[0], 'upper': ci[1]})
 
 # Find the minimum size across all groups
 group_sizes = df["Group"].value_counts()
@@ -188,56 +179,6 @@ def plot_requested_vs_generated():
     plt.clf()
 
 
-# to check that the test toks necessary for correct inference increases with N / (k&t)
-def plot_N_vs_tts(modelname, k, t):
-    # Filter the data for the specific model, k, and t
-    filtered_data = df[
-        (df["Model"].str.contains(modelname))
-        & (df["k"] == k)
-        & (df["t"] == t)
-        & (df["Correct?"] == True)
-    ]
-
-    # Ensure there is data to plot
-    if filtered_data.empty:
-        print(f"No correct examples found for Model: {modelname}, k={k}, t={t}.")
-        return
-
-    # Group data by N
-    grouped = filtered_data.groupby("N")["No gen toks"]
-    N_values = sorted(grouped.groups.keys(), key=int)
-    token_distributions = [grouped.get_group(n) for n in N_values]
-    counts = [
-        len(grouped.get_group(n)) for n in N_values
-    ]  # Number of examples per group
-
-    # Create the box-and-whiskers plot
-    plt.figure(figsize=(12, 6))
-    plt.boxplot(
-        token_distributions,
-        labels=N_values,
-        showmeans=True,
-        meanline=True,
-        meanprops={"color": "red", "linestyle": "--", "linewidth": 2},
-    )
-
-    # Customize the plot
-    xtick_labels = [f"{n}\n(n={count})" for n, count in zip(N_values, counts)]
-    plt.xticks(range(1, len(N_values) + 1), xtick_labels)
-
-    plt.xlabel("N")
-    plt.ylabel("No. of Generated Tokens")
-    plt.title(f"Box Plot for Model: {modelname}, k={k}, t={t} (Correct Examples)")
-    plt.grid(axis="y", linestyle="--", alpha=0.6)
-
-    # Save the plot
-    plt.savefig(
-        os.path.join(
-            foldername, f"N_vs_tts_boxplot_{modelname}_k{k}_t{t}_T{temperature}.png"
-        )
-    )
-    plt.clf()
-
 def calculate_buckets_samerange(sub_df, num_buckets=5, bins=None, groupby_key="Model"):
     if len(sub_df) == 0:
         return None, None
@@ -275,62 +216,6 @@ def calculate_buckets_samesize(sub_df, num_buckets=5, groupby_key="Model"):
     sub_df = sub_df.merge(bucket_avg, on=groupby_key, suffixes=('', '_mean'))
 
     return bucket_avg, sub_df
-
-def plot_by_methodname(k, N, t, methodname, num_buckets):
-    # Calculate average correctness in specified number of buckets
-    plt.figure(figsize=(10, 6))
-
-    # Function to create buckets based on number of buckets
-    min_len, max_len = (
-        balanced_df["No gen toks"].min(),
-        balanced_df["No gen toks"].max(),
-    )
-
-
-    plotted_something = False
-    # Get bucketed averages for each model
-    model_buckets = {}
-    for model_substring in model_colors:
-        model_df = balanced_model_data[model_substring]
-        model_df = model_df[
-            (model_df["k"] == k) 
-            & (model_df["N"] == N) 
-            & (model_df["t"] == t)
-            & (model_df["Method"].str.contains(methodname))
-        ]
-        model_buckets[model_substring], model_df = calculate_buckets_samesize(model_df)
-        if model_buckets[model_substring] is None:
-            continue
-        # Plot the average correctness for each model size and method
-        plt.plot(
-            model_buckets[model_substring]["Bucket Center"],
-            model_buckets[model_substring]["Correct?_mean"],
-            color=model_colors[model_substring],
-            label=model_substring,
-        )
-        plotted_something = True
-
-    if not plotted_something:
-        return
-    plt.axhline(y=1.0 / int(k), linestyle=":")
-    # Customize plot labels and legend
-    plt.xlim(xmin=0)
-    plt.ylim(0, 1)
-    plt.ylabel("Average Correctness")
-    plt.xlabel("No. of Generated Tokens (Binned)")
-    plt.title(
-        f"Average Correctness vs. No. of Generated Tokens (k={k}, N={N}, t={t}, {methodname} Buckets={num_buckets})"
-    )
-    plt.legend(loc="upper left", fancybox=True, shadow=True)
-
-    # Save and clear the figure
-    plt.savefig(
-        os.path.join(
-            foldername,
-            f"k{k}_N{N}_t{t}_{methodname}_{num_buckets}buckets_T{temperature}.png",
-        )
-    )
-    plt.clf()
 
 def plot_correctness_by_ttoks_per_t_N_model(t, N, modelname, num_buckets=5):
     # Filter the data for the specific model, N, and t
@@ -538,7 +423,6 @@ def plot_correctness_by_N_per_compute_budget(modelname, k, t, num_buckets=5):
         os.path.join(foldername, f"{modelname}_k{k}_t{t}_correctness_by_N_buckets{num_buckets}.png")
     )
     plt.clf()
-
 
 def scatter_ttoks_by_complexity(modelname, N, t=2, num_buckets=20):
     # Filter the data for the specific model, N, and t
