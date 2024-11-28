@@ -179,7 +179,7 @@ def plot_requested_vs_generated():
     plt.clf()
 
 
-def calculate_buckets_samerange(sub_df, num_buckets=5, bins=None, groupby_key="Model"):
+def calculate_buckets_samerange(sub_df, num_buckets=10, bins=None, groupby_key="Model"):
     if len(sub_df) == 0:
         return None, None
     if bins is None:
@@ -198,7 +198,7 @@ def calculate_buckets_samerange(sub_df, num_buckets=5, bins=None, groupby_key="M
     bucket_avg["Bucket Center"] = bucket_avg["Length Bucket"].apply(lambda x: x.mid)
     return bucket_avg, sub_df
 
-def calculate_buckets_samesize(sub_df, num_buckets=5, groupby_key="Model"):
+def calculate_buckets_samesize(sub_df, num_buckets=10, groupby_key="Model"):
     if len(sub_df) == 0: return None, None
     # Use qcut to create equal-sized buckets by count
     sub_df["Length Bucket"] = pd.qcut(
@@ -217,7 +217,7 @@ def calculate_buckets_samesize(sub_df, num_buckets=5, groupby_key="Model"):
 
     return bucket_avg, sub_df
 
-def plot_correctness_by_ttoks_per_t_N_model(t, N, modelname, num_buckets=5):
+def plot_correctness_by_ttoks_per_t_N_model(t, N, modelname, k_criteria=lambda k: True, num_buckets=10):
     # Filter the data for the specific model, N, and t
     filtered_data = df[
         (df["Model"].str.contains(modelname))
@@ -235,7 +235,11 @@ def plot_correctness_by_ttoks_per_t_N_model(t, N, modelname, num_buckets=5):
     max_k = int(k_values[-1])
 
     # Iterate over unique k values
+    used_k_values = []
+    last_max = None
     for k in k_values:
+        if not k_criteria(k): continue
+        used_k_values.append(k)
         filtered_data_k = filtered_data[filtered_data['k'] == k]
         bucket_avg, filtered_data_k = calculate_buckets_samesize(filtered_data_k, num_buckets=num_buckets)
         if bucket_avg is None:
@@ -245,13 +249,18 @@ def plot_correctness_by_ttoks_per_t_N_model(t, N, modelname, num_buckets=5):
         base_color = model_colors.get(modelname, "blue")
         rgba_color = mcolors.to_rgba(base_color, alpha=color_intensity)
         
+        # Find the index of the maximum value
+        max_index = np.argmax(bucket_avg["Correct?"])
+        this_max = bucket_avg["Bucket Center"][max_index]
+
         # Plot the average correctness for each model size and method
         plt.plot(
             bucket_avg["Bucket Center"],
             bucket_avg["Correct?"],
             color=rgba_color,
-            label=f"k={k}",
+            label=f"k={k} ({int(this_max - last_max)})" if last_max is not None else f"k={k}",
         )
+        last_max = this_max
         sem_values = filtered_data_k.groupby("Bucket Center")["Correct?"].apply(sem)
         # Calculate confidence intervals
         ci = sem_values * 1.96  # For 95% confidence
@@ -262,6 +271,11 @@ def plot_correctness_by_ttoks_per_t_N_model(t, N, modelname, num_buckets=5):
             alpha=color_intensity,
             color=rgba_color,
         )
+        # Find the index of the maximum value
+        max_index = np.argmax(bucket_avg["Correct?"])
+
+        # Place a dot at the maximum value
+        plt.scatter(this_max, bucket_avg["Correct?"][max_index], color='red', alpha=color_intensity)
 
         plt.axhline(
             y=1.0 / int(k), 
@@ -278,17 +292,18 @@ def plot_correctness_by_ttoks_per_t_N_model(t, N, modelname, num_buckets=5):
         f"Average Correctness vs. No. of Generated Tokens (N={N}, t={t}, {modelname} Buckets={num_buckets})"
     )
     plt.legend(loc="upper left", fancybox=True, shadow=True)
+    plt.grid(True, linestyle="--", alpha=0.6)
 
     # Save and clear the figure
     plt.savefig(
         os.path.join(
             foldername,
-            f"N{N}_t{t}_{modelname}_{num_buckets}buckets_T{temperature}.png",
+            f"obsk{''.join(used_k_values)}_N{N}_t{t}_{modelname}_{num_buckets}buckets_T{temperature}.png",
         )
     )
     plt.clf()
 
-def plot_correctness_by_ttoks_per_k_t_model(k, t, modelname, num_buckets=5):
+def plot_correctness_by_ttoks_per_k_t_model(k, t, modelname, N_criteria=lambda N: True, num_buckets=10):
     # Filter the data for the specific model, k, and t
     filtered_data = df[
         (df["Model"].str.contains(modelname))
@@ -306,7 +321,11 @@ def plot_correctness_by_ttoks_per_k_t_model(k, t, modelname, num_buckets=5):
     max_N = int(N_values[-1])
 
     # Iterate over unique N values
+    used_N_values = []
+    last_max = None
     for N in N_values:
+        if not N_criteria(N): continue
+        used_N_values.append(N)
         filtered_data_N = filtered_data[filtered_data['N'] == N]
         bucket_avg, filtered_data_N = calculate_buckets_samesize(filtered_data_N, num_buckets=num_buckets)
         if filtered_data_N is None:
@@ -316,13 +335,18 @@ def plot_correctness_by_ttoks_per_k_t_model(k, t, modelname, num_buckets=5):
         base_color = model_colors.get(modelname, "blue")
         rgba_color = mcolors.to_rgba(base_color, alpha=color_intensity)
         
+        # Find the index of the maximum value
+        max_index = np.argmax(bucket_avg["Correct?"])
+        this_max = bucket_avg["Bucket Center"][max_index]
+
         # Plot the average correctness for each model size and method
         plt.plot(
             bucket_avg["Bucket Center"],
             bucket_avg["Correct?"],
             color=rgba_color,
-            label=f"N={N}",
+            label=f"N={N} ({int(this_max - last_max)})" if last_max is not None else f"N={N}",
         )
+        last_max = this_max
         sem_values = filtered_data_N.groupby("Bucket Center")["Correct?"].apply(sem)
         # Calculate confidence intervals
         ci = sem_values * 1.96  # For 95% confidence
@@ -334,6 +358,9 @@ def plot_correctness_by_ttoks_per_k_t_model(k, t, modelname, num_buckets=5):
             color=rgba_color,
         )
 
+        # Place a dot at the maximum value
+        plt.scatter(this_max, bucket_avg["Correct?"][max_index], color='red', alpha=color_intensity)
+
     plt.axhline(y=1.0 / int(k), linestyle=":")
     # Customize plot labels and legend
     plt.xlim(xmin=0)
@@ -344,17 +371,105 @@ def plot_correctness_by_ttoks_per_k_t_model(k, t, modelname, num_buckets=5):
         f"Average Correctness vs. No. of Generated Tokens (k={k}, t={t}, {modelname} Buckets={num_buckets})"
     )
     plt.legend(loc="upper left", fancybox=True, shadow=True)
+    plt.grid(True, linestyle="--", alpha=0.6)
 
     # Save and clear the figure
     plt.savefig(
         os.path.join(
             foldername,
-            f"k{k}_t{t}_{modelname}_{num_buckets}buckets_T{temperature}.png",
+            f"obsN{''.join(used_N_values)}_k{k}_t{t}_{modelname}_{num_buckets}buckets_T{temperature}.png",
         )
     )
     plt.clf()
 
-def plot_correctness_by_N_per_compute_budget(modelname, k, t, num_buckets=5):
+def plot_correctness_by_ttoks_per_k_N_model(k, N, modelname, t_criteria=lambda t: True, num_buckets=10):
+    # Filter the data for the specific model, k, and N
+    filtered_data = df[
+        (df["Model"].str.contains(modelname))
+        & (df["k"] == k)
+        & (df["N"] == N)
+    ]
+
+    # Ensure there is data to plot
+    if filtered_data.empty:
+        print(f"No correct examples found for Model: {modelname}, k={k}, N={N}.")
+        return
+
+    plt.figure(figsize=(12, 6))
+    t_values = sorted(filtered_data['t'].unique(), key=int)
+    max_t = int(t_values[-1])
+
+    used_t_values = []
+    last_max = None
+    # Iterate over unique t values
+    for t in t_values:
+        if not t_criteria(t): continue
+        used_t_values.append(t)
+        filtered_data_t = filtered_data[filtered_data['t'] == t]
+        bucket_avg, filtered_data_t = calculate_buckets_samesize(filtered_data_t, num_buckets=num_buckets)
+        if filtered_data_t is None:
+            return
+        # Normalize the intensity of the color based on t
+        color_intensity = int(t) / max_t 
+        base_color = model_colors.get(modelname, "blue")
+        rgba_color = mcolors.to_rgba(base_color, alpha=color_intensity)
+        
+        # Find the index of the maximum value
+        max_index = np.argmax(bucket_avg["Correct?"])
+        this_max = bucket_avg["Bucket Center"][max_index]
+
+        # Plot the average correctness for each model size and method
+        plt.plot(
+            bucket_avg["Bucket Center"],
+            bucket_avg["Correct?"],
+            color=rgba_color,
+            label=f"t={t} ({int(this_max - last_max)})" if last_max is not None else f"t={t}",
+        )
+        last_max = this_max
+        sem_values = filtered_data_t.groupby("Bucket Center")["Correct?"].apply(sem)
+        # Calculate confidence intervals
+        ci = sem_values * 1.96  # For 95% confidence
+        plt.fill_between(
+            bucket_avg["Bucket Center"],
+            bucket_avg["Correct?"] - ci.values,
+            bucket_avg["Correct?"] + ci.values,
+            alpha=color_intensity,
+            color=rgba_color,
+        )
+        # Find the index of the maximum value
+        max_index = np.argmax(bucket_avg["Correct?"])
+
+        # Place a dot at the maximum value
+        plt.scatter(this_max, bucket_avg["Correct?"][max_index], color='red', alpha=color_intensity)
+
+        plt.axhline(
+            y=1.0 / int(k), 
+            color=rgba_color,
+            linestyle=":",
+        )
+
+    plt.axhline(y=1.0 / int(k), linestyle=":")
+    # Customize plot labels and legend
+    plt.xlim(xmin=0)
+    plt.ylim(0, 1)
+    plt.ylabel("Average Correctness")
+    plt.xlabel("No. of Generated Tokens (Binned)")
+    plt.title(
+        f"Average Correctness vs. No. of Generated Tokens (k={k}, N={N}, {modelname} Buckets={num_buckets})"
+    )
+    plt.legend(loc="upper left", fancybox=True, shadow=True)
+    plt.grid(True, linestyle="--", alpha=0.6)
+
+    # Save and clear the figure
+    plt.savefig(
+        os.path.join(
+            foldername,
+            f"obst{''.join(used_t_values)}_k{k}_N{N}_{modelname}_{num_buckets}buckets_T{temperature}.png",
+        )
+    )
+    plt.clf()
+
+def plot_correctness_by_N_per_compute_budget(modelname, k, t, num_buckets=10):
     
     filtered_data = df[
         (df["Model"].str.contains(modelname))
@@ -450,24 +565,21 @@ def scatter_ttoks_by_complexity(modelname, N, t=2, num_buckets=20):
         data[(no_gen_val // bucket_size) * bucket_size:((no_gen_val // bucket_size) + 1) * bucket_size, k_val] += int(correct)
         totals[(no_gen_val // bucket_size) * bucket_size:((no_gen_val // bucket_size) + 1) * bucket_size, k_val] += 1
     data = np.where(totals == 0, np.nan, data / totals)
-    # for i in range(data.shape[1]):
-    #     col = data[:, i]
-    #     mask = np.isnan(col)
-    #     col[mask] = np.interp(np.flatnonzero(mask), np.flatnonzero(~mask), col[~mask])
+
+    # Identify columns to keep (those with at least one non-NaN value)
+    columns_with_data = ~np.isnan(data).all(axis=0)
+
+    # Filter the data and totals arrays
+    data = data[:, columns_with_data]
+    filtered_k_values = np.arange(filtered_data["k"].max() + 1)[columns_with_data]
 
     plt.imshow(data, interpolation="nearest", aspect="auto", origin="lower", cmap="viridis")
-    # plt.scatter(
-    #     filtered_data["k"],
-    #     filtered_data["No gen toks"],
-    #     c=filtered_data["Correct?"],
-    #     cmap="viridis"
-    # )
     plt.colorbar()
 
     # Customize plot labels and legend
     plt.ylabel("No gen toks")
     plt.xlabel("k")
-    plt.xlim(xmin=filtered_data["k"].min())
+    plt.xticks(ticks=np.arange(len(filtered_k_values)), labels=filtered_k_values)
 
     plt.title(
         f"No. of Generated Tokens vs. DFA complexity (N={N}, t={t}, {modelname})"
@@ -536,7 +648,7 @@ def scatter_ttoks_by_inst_complexity(modelname, k, t=2, num_buckets=20):
 
 
 if __name__ == "__main__":
-    plot_requested_vs_generated()
+    # plot_requested_vs_generated()
     all_ks = set(ks)
     all_Ns = set(Ns)
     all_ts = set(ts)
@@ -545,8 +657,10 @@ if __name__ == "__main__":
             for k in all_ks:
                 if int(t) > int(k):
                     continue
-                scatter_ttoks_by_inst_complexity(modelname, k, t)
+                # scatter_ttoks_by_inst_complexity(modelname, k, t)
                 plot_correctness_by_ttoks_per_k_t_model(k, t, modelname)
+                for N in all_Ns:
+                    plot_correctness_by_ttoks_per_k_N_model(k, N, modelname)
             for N in all_Ns:
                 plot_correctness_by_ttoks_per_t_N_model(t, N, modelname)
-                scatter_ttoks_by_complexity(modelname, N, t)
+                # scatter_ttoks_by_complexity(modelname, N, t)
