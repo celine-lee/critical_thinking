@@ -283,7 +283,7 @@ class Experiment:
                 break
             start_tok_idx += 1
         end_tok_idx = start_tok_idx + 1
-        while answer_string not in self.tokenizer.decode(output_ids[start_tok_idx:end_tok_idx]):
+        while answer_string not in self.tokenizer.decode(output_ids[start_tok_idx:end_tok_idx], skip_special_tokens=True):
             end_tok_idx += 1
             if end_tok_idx > len(output_ids): breakpoint()
         return (start_tok_idx, end_tok_idx)
@@ -348,14 +348,14 @@ def run():
     ]
     length_control_mode = "request_descriptor"
     query_mode = "parity"
-    n_samples = 100
+    n_samples = 200
     temperature = sys.argv[1]
 
     for (model_name, batch_size) in models:
         model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-        for descriptor in {"none", "detail", "brief", "states_long", "states_short"}:
+        for descriptor in ["none", "detail", "brief", "states_long", "states_short"]:
             experiment = Experiment(model, model_name, batch_size, (length_control_mode, {"descriptor": descriptor}), n_samples=n_samples, temperature=float(temperature))
-            for k in range(1, 10, 2):
+            for k in range(1, 10):
                 for t in range(2, min(k, 4)+1):
                     N = 1
                     results = experiment.run_experiment(k, N, t)
