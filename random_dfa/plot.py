@@ -26,7 +26,11 @@ from scipy.stats import pearsonr
 foldername = sys.argv[1]
 os.makedirs(os.path.join(f"{foldername}_graphs"), exist_ok=True)
 temperature = sys.argv[2]
-only_collect_data = sys.argv[3]
+only_collect_data = False
+try: 
+    only_collect_data = ast.literal_eval(sys.argv[3])
+except:
+    pass
 
 model_colors = {
     "3.1-8B": "purple",
@@ -253,7 +257,8 @@ def plot_correctness_by_ttoks_isolate_factor(k, t, N, modelname, stats_dict, onl
     factor_values = sorted(filtered_data[isolated_factor].unique(), key=int)
     max_factor = int(factor_values[-1])
 
-    stats_dict[(k, t, N)] = {}
+    ktn_intrep = (int(k) if k is not None else None, int(t) if t is not None else None, int(N) if N is not None else None)
+    stats_dict[ktn_intrep] = {}
 
     used_factor_values = []
     last_max = None
@@ -265,15 +270,17 @@ def plot_correctness_by_ttoks_isolate_factor(k, t, N, modelname, stats_dict, onl
         bucket_avg, filtered_data_factor = calculate_buckets_samesize(filtered_data_factor, num_buckets=num_buckets)
         if filtered_data_factor is None:
             return
+
+        factor_value = int(factor_value)
         # Normalize the intensity of the color based on t
-        color_intensity = int(factor_value) / max_factor 
+        color_intensity = factor_value / max_factor 
         base_color = model_colors.get(modelname, "blue")
         rgba_color = mcolors.to_rgba(base_color, alpha=color_intensity)
         
         # Find the index of the maximum value
         max_index = np.argmax(bucket_avg["Correct?"])
         this_max = bucket_avg["Bucket Center"][max_index]
-        stats_dict[(k, t, N)][factor_value] = {"peak": this_max}
+        stats_dict[ktn_intrep][factor_value] = {"peak": this_max}
 
         # Data up to the first peak
         peak_range = bucket_avg["Bucket Center"][:max_index + 1]
@@ -295,7 +302,7 @@ def plot_correctness_by_ttoks_isolate_factor(k, t, N, modelname, stats_dict, onl
             pearson_corr, _ = pearsonr(filtered_peak_range, filtered_correctness_range)
 
             # Store stats
-            stats_dict[(k, t, N)][factor_value]["regression"] = {
+            stats_dict[ktn_intrep][factor_value]["regression"] = {
                 "weights": reg.coef_[0],  # Slope
                 "intercept": reg.intercept_,
                 "mse": mse,
@@ -544,57 +551,61 @@ def meta_plot(stats_dict):
     for tuple_idx, var_changing in idx_to_var:
         for hold_idx, hold_var in idx_to_var:
             if hold_idx == tuple_idx: continue
+            other_var_idx = len(idx_to_var) - hold_idx - tuple_idx
 
             for hold_var_val in all_var_vals[hold_idx]:
-                dfas_to_include = [dfa_detail for dfa_detail in stats_dict.keys() if (dfa_detail[hold_idx] == hold_var_val) and (dfa_detail[tuple_idx] is None)]
+                dfas_to_include = [dfa_detail for dfa_detail in stats_dict.keys() if (dfa_detail[hold_idx] == int(hold_var_val)) and (dfa_detail[tuple_idx] is None)]
+                dfas_to_include = sorted(dfas_to_include, key=lambda ent: ent[other_var_idx])
                 color_map = {dfa_detail: colormap(i) for i, dfa_detail in enumerate(dfas_to_include)}
                 
-                # GRAPH 1: DFA Complexity vs. slope (w/ Pearson Correlation) of ttoks & performance regression line
+                # GRAPH 1: DFA Complexity vs. Pearson Correlation of ttoks & performance regression line
                 plt.figure(figsize=(10, 6))
-                for dfa_detail, experiment_results in stats_dict.items():
-                    if dfa_detail not in dfas_to_include: continue
+                for dfa_detail in dfas_to_include:
+                    experiment_results = stats_dict[dfa_detail]
                     data = {
                         var_changing: [],
-                        "regression_slope": [],
+                        "pearson_corr": [],
                     }
 
                     for var_value, var_experiment_results in experiment_results.items():
                         data[var_changing].append(var_value)
-                        data["regression_slope"].append(var_experiment_results["regression"]["weights"])
+                        data["pearson_corr"].append(var_experiment_results["regression"]["pearson_corr"])
 
                         plt.scatter(
                             var_value,
-                            var_experiment_results["regression"]["weights"],
+                            var_experiment_results["regression"]["pearson_corr"],
                             color=color_map[dfa_detail],
-                            alpha=var_experiment_results["regression"]["pearson_corr"]
+                            alpha=0.8
                         )
                     
                     # Convert lists into a Pandas DataFrame for easier handling
                     df_data = pd.DataFrame(data)
 
                     # Plot scatter with unique color for `dfa_detail`
+                    label_str = f"{idx_to_var[other_var_idx][1]}={dfa_detail[other_var_idx]}"
                     plt.plot(
                         df_data[var_changing],
-                        df_data["regression_slope"],
+                        df_data["pearson_corr"],
                         color=color_map[dfa_detail],
-                        label=f"{dfa_detail}",
+                        label=label_str,
                         alpha=0.8
                     )
 
                 # Finalize and save the plot
+                plt.ylim((0,1))
                 plt.xlabel(f"DFA Complexity ({var_changing})")
-                plt.ylabel("Regression line slope (Performance vs ttoks)")
-                plt.title(f"Regression line slope (Performance vs ttoks) vs. {var_changing} (hold: {hold_var}={hold_var_val})")
+                plt.ylabel("Pearson correlation (Performance vs ttoks)")
+                plt.title(f"Pearson correlation (Performance vs ttoks) vs. {var_changing} (hold: {hold_var}={hold_var_val})")
                 plt.legend(loc="best", fancybox=True, shadow=True, title="DFA (k, t, N)")
                 plt.grid(True, linestyle="--", alpha=0.6)
                 os.makedirs(os.path.join(f"{foldername}_graphs", "meta_plots"), exist_ok=True)
-                plt.savefig(os.path.join(f"{foldername}_graphs", "meta_plots", f"regr_{var_changing}_hold{hold_var}{hold_var_val}.png"))
+                plt.savefig(os.path.join(f"{foldername}_graphs", "meta_plots", f"corr_{var_changing}_hold{hold_var}{hold_var_val}.png"))
                 plt.clf()
 
                 # GRAPH 2: DFA Complexity vs. No. of Tokens Start Getting Diminishing Returns
                 plt.figure(figsize=(10, 6))
-                for dfa_detail, experiment_results in stats_dict.items():
-                    if dfa_detail not in dfas_to_include: continue
+                for dfa_detail in dfas_to_include:
+                    experiment_results = stats_dict[dfa_detail]
                     data = {
                         var_changing: [],
                         "peak_ttoks": [],
@@ -615,15 +626,17 @@ def meta_plot(stats_dict):
                     df_data = pd.DataFrame(data)
 
                     # Plot scatter with unique color for `dfa_detail`
+                    label_str = f"{idx_to_var[other_var_idx][1]}={dfa_detail[other_var_idx]}"
                     plt.plot(
                         df_data[var_changing],
                         df_data["peak_ttoks"],
                         color=color_map[dfa_detail],
-                        label=f"{dfa_detail}",
+                        label=label_str,
                         alpha=0.8
                     )
 
                 # Finalize and save the plot
+                plt.ylim(bottom=0)
                 plt.xlabel(f"DFA Complexity ({var_changing})")
                 plt.ylabel("Tokens Where Returns Diminish (Peak Tokens)")
                 plt.title(f"Diminishing Returns vs. {var_changing} (hold: {hold_var}={hold_var_val})")
