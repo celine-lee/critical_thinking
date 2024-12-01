@@ -1,7 +1,7 @@
 import torch
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM, BitsAndBytesConfig
 from datasets import load_dataset
 import json
 import re
@@ -88,10 +88,9 @@ def make_prompt(length_control_metadata, path, turns):
 
 class ParityExperiment:
 
-    def __init__(self, model_name, max_batch_size, length_control_metadata, n_samples = 100, temperature=0.9):
-        model_config = AutoConfig.from_pretrained(model_name)
-        self.model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-        self.modelname = re.search(r"/(.+)", model_name).group(1)
+    def __init__(self, model, model_name, max_batch_size, length_control_metadata, n_samples = 100, temperature=0.9):
+        self.model = model
+        modelname = re.search(r"/(.+)", model_name).group(1)
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name, padding_side="left", truncation_side="left"
         )
@@ -106,7 +105,7 @@ class ParityExperiment:
             self.max_batch_size = int(self.max_batch_size * 0.5)
         self.length_control_mode = length_control_mode
         self.length_control_kwargs = length_control_kwargs
-        self.filename = f"{self.modelname}_T{self.temperature}_{self.length_control_mode}_{''.join(self.length_control_kwargs.values())}"
+        self.filename = f"{modelname}_T{self.temperature}_{self.length_control_mode}_{''.join(self.length_control_kwargs.values())}"
 
 
     def extract_answers(
@@ -251,7 +250,7 @@ class ParityExperiment:
                 break
             start_tok_idx += 1
         end_tok_idx = start_tok_idx + 1
-        while answer_string not in self.tokenizer.decode(output_ids[start_tok_idx:end_tok_idx]):
+        while answer_string not in self.tokenizer.decode(output_ids[start_tok_idx:end_tok_idx], skip_special_tokens=True):
             end_tok_idx += 1
             if end_tok_idx > len(output_ids): breakpoint()
         return (start_tok_idx, end_tok_idx)
@@ -306,28 +305,62 @@ class ParityExperiment:
 
         return results
 
+def load_model(model_name, quantize=True):
+    config = AutoConfig.from_pretrained(model_name)
+
+    bnb_config = None
+    if quantize and torch.cuda.is_available():
+        bnb_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_use_double_quant=True,
+                bnb_4bit_compute_dtype=torch.bfloat16,
+        )
+
+    model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            config=config,
+            torch_dtype=torch.bfloat16,
+            trust_remote_code=True,
+            quantization_config=bnb_config,
+            device_map="auto",
+    )
+    model.eval()
+
+    for param in model.parameters():
+        param._requires_grad = False
+
+    return model
+
+
 def run():
     models = [
-        ("meta-llama/Llama-3.1-8B-Instruct", 16),
+        ("meta-llama/Llama-3.1-8B-Instruct", 4),
+        # why are all these models so bad?
+        # ("deepseek-ai/deepseek-coder-7b-instruct-v1.5", 6),
+        # ("deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct", 8),
+        # ("Qwen/Qwen2.5-7B", 6),
+        # ("google/gemma-2-9b", 2),
         # ("meta-llama/Llama-3.2-3B-Instruct", 20),
+        # ("Qwen/Qwen2.5-1.5B", 12),
         # ("meta-llama/Llama-3.2-1B-Instruct", 28),
     ]
     length_control_mode = "request_descriptor"
     query_mode = "parity"
-    n_samples = 200
+    n_samples = 100
     temperature = sys.argv[1]
 
     for (model_name, batch_size) in models:
         # for descriptor in {"brief", "none", "states_long", "states_short"}:
+        model = load_model(model_name)
         for descriptor in {"none", "states_long", "states_short"}:
-            experiment = ParityExperiment(model_name, batch_size, (length_control_mode, {"descriptor": descriptor}), n_samples=n_samples, temperature=float(temperature))
+            experiment = ParityExperiment(model, model_name, batch_size, (length_control_mode, {"descriptor": descriptor}), n_samples=n_samples, temperature=float(temperature))
             for k in range(2, 10):
-                t = 2
-                # for t in range(2, min(k, 4)+1):
-                N = 1
-                results = experiment.run_experiment(k, N, t)
-                for N in range(2, 18, 4):
+                for t in range(2, min(k, 4)+1):
+                    N = 1
                     results = experiment.run_experiment(k, N, t)
+                    for N in range(2, 18, 4):
+                        results = experiment.run_experiment(k, N, t)
 
 if __name__ == "__main__":
     run()

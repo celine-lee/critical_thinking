@@ -568,6 +568,7 @@ def meta_plot(stats_dict):
                     }
 
                     for var_value, var_experiment_results in experiment_results.items():
+                        if "regression" not in var_experiment_results: continue # not enough points for regression
                         data[var_changing].append(var_value)
                         data["pearson_corr"].append(var_experiment_results["regression"]["pearson_corr"])
 
