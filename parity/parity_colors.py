@@ -41,7 +41,7 @@ all_colors = [
 foldername = "parity_colors_outputs_describelength"
 
 def random_parity_color(k, N, max_steps):
-    path = random.choices(all_colors, k=k)
+    path = random.sample(all_colors, k=k)
     turns = random.choices(list(range(max_steps)), k=N)
     final_block = path[sum(turns) % k]
     return path, [str(turn) for turn in turns], final_block
@@ -111,6 +111,7 @@ class ParityExperiment:
     def extract_answers(
         self, input_ids, model_output
     ):
+        reprompt_string = "[ANSWER]\nThe final square is "
         input_idx = 0
         query_len = len(self.tokenizer.decode(input_ids.input_ids[input_idx], skip_special_tokens=True))
         model_predictions = self.tokenizer.batch_decode(
@@ -125,7 +126,7 @@ class ParityExperiment:
                 pass # only get the last
             if parsed_answer is None or (parsed_answer.start() < query_len):
                 gens_need_augmenting.append(gen_idx)
-                new_queries.append(model_prediction + "[ANSWER]\nThe final square is ")
+                new_queries.append(model_prediction + reprompt_string)
             else:
                 answer = parsed_answer.group(1).rstrip(" .")
                 string_index_start = parsed_answer.start() + parsed_answer.group(0).index(answer)
@@ -335,7 +336,7 @@ def load_model(model_name, quantize=True):
 
 def run():
     models = [
-        ("meta-llama/Llama-3.1-8B-Instruct", 4),
+        ("meta-llama/Llama-3.1-8B-Instruct", 5),
         # why are all these models so bad?
         # ("deepseek-ai/deepseek-coder-7b-instruct-v1.5", 6),
         # ("deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct", 8),
@@ -353,7 +354,7 @@ def run():
     for (model_name, batch_size) in models:
         # for descriptor in {"brief", "none", "states_long", "states_short"}:
         model = load_model(model_name)
-        for descriptor in {"none", "states_long", "states_short"}:
+        for descriptor in ["none", "states_long", "states_short"]:
             experiment = ParityExperiment(model, model_name, batch_size, (length_control_mode, {"descriptor": descriptor}), n_samples=n_samples, temperature=float(temperature))
             for k in range(2, 10):
                 for t in range(2, min(k, 4)+1):

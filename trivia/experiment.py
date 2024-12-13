@@ -25,7 +25,7 @@ def debughook(etype, value, tb):
 
 sys.excepthook = debughook
 
-foldername = "outputs"
+foldername = "outputs/k1_N1_t1"
 
 
 system_instruction = """You are a smart and helpful AI assistant. Please help me answer the following question."""
@@ -57,7 +57,7 @@ def make_prompt(length_control_metadata, question):
     return prompt
 
 class Experiment:
-    def __init__(self, model, model_name, max_batch_size, length_control_metadata, num_qs=50, n_samples_per_q=2, temperature=0.9):
+    def __init__(self, model, model_name, max_batch_size, length_control_metadata, num_qs, n_samples_per_q, temperature):
         self.model = model
         self.modelname = re.search(r"/(.+)", model_name).group(1)
         self.tokenizer = AutoTokenizer.from_pretrained(
@@ -93,7 +93,7 @@ class Experiment:
         for gen_idx, model_prediction in enumerate(model_predictions):
             query_len = len(self.tokenizer.decode(input_ids.input_ids[gen_idx], skip_special_tokens=True))
             parsed_answer = None
-            for parsed_answer in re.finditer(r'The answer is:?([\s\S]+?)\[\/ANSWER\]', model_prediction):
+            for parsed_answer in re.finditer(r'The answer is:?(.+)[\.\[\n]?', model_prediction):
                 pass # only get the last
             if parsed_answer is None or (parsed_answer.start() < query_len):
                 gens_need_augmenting.append(gen_idx)
@@ -105,7 +105,10 @@ class Experiment:
                 answer = None
                 answer_indices = None
             else:
-                answer = parsed_answer.group(1).rstrip(" .\n")
+                answer = parsed_answer.group(1)
+                for ss in stop_strings:
+                    if answer.endswith(ss): answer = answer[:-len(ss)]
+                answer = answer.rstrip(" \n.")
                 string_index_start = parsed_answer.start() + parsed_answer.group(0).index(answer)
                 string_index_end = string_index_start + len(answer)
                 answer_indices = self.get_token_indices(
@@ -151,14 +154,16 @@ class Experiment:
             model_prediction = self.tokenizer.decode(model_output.sequences[new_idx], skip_special_tokens=True)
             new_query_len = len(new_queries[new_idx])
             parsed_answer = None
-            for parsed_answer in re.finditer(r'The answer is ([\s\S]+?)\[\/ANSWER\]', model_prediction):
+            for parsed_answer in re.finditer(r'The answer is (.+)', model_prediction):
                 pass # only get the last
             if parsed_answer is None or (parsed_answer.start() < new_query_len - len(reprompt_string)):
-                breakpoint()
                 answer = None
                 answer_indices = None
             else:
-                answer = parsed_answer.group(1).rstrip(" \n.")
+                answer = parsed_answer.group(1)
+                for ss in stop_strings:
+                    if answer.endswith(ss): answer = answer[:-len(ss)]
+                answer = answer.rstrip(" \n.")
                 string_index_start = parsed_answer.start() + parsed_answer.group(0).index(answer)
                 string_index_end = string_index_start + len(answer)
                 answer_indices = self.get_token_indices(
@@ -234,12 +239,28 @@ class Experiment:
             if end_tok_idx > len(output_ids): breakpoint()
         return (start_tok_idx, end_tok_idx)
 
+    def load_existing_results(self):
+        target_num_qs = len(self.examples)
+        max_num_qs_before = 0
+        results = []
+        for filename in glob.glob(os.path.join(foldername, f"{self.modelname}_T{self.temperature}_*_{self.length_control_mode}_{''.join(self.length_control_kwargs.values())}.json")):
+            num_qs = re.search(r'_(\d+)qs_', filename)
+            if num_qs is None: continue
+            num_qs = num_qs.group(1)
+            if int(num_qs) > target_num_qs: 
+                more_results = json.load(open(filename))
+                results = [ex for ex in more_results if ex["question_idx"] < target_num_qs]
+                return results
+            if int(num_qs) > max_num_qs_before:
+                results = json.load(open(filename))
+                max_num_qs_before = int(num_qs)
+        return results
+
     def run_experiment(self):
         os.makedirs(foldername, exist_ok=True)
         filename = f"{foldername}/{self.filename}.json"
         print(filename)
-        results = []
-        if os.path.exists(filename): results = json.load(open(filename))
+        results = self.load_existing_results()
 
         gens_per_q = {idx: len([elt for elt in results if elt["question_idx"] == idx]) for idx in range(len(self.examples))}
 
@@ -261,6 +282,7 @@ class Experiment:
                     q_idx += 1
                     if q_idx == len(self.examples): break
                 inputs.extend([prompt] * n_gens)
+            if len(inputs) == 0: continue
 
             input_ids = self.tokenizer(
                 inputs,
@@ -283,7 +305,6 @@ class Experiment:
                 q_idx = gen_idx_to_q_idx_mapping[gen_idx]
                 q_example = self.examples[q_idx]
                 if pred_answer is None:
-                    breakpoint()
                     is_correct = False
                 else:
                     is_correct = re.sub(r'[^\w\s]', '', pred_answer.lower().strip()) in q_example['answer']['normalized_aliases']
@@ -301,7 +322,7 @@ class Experiment:
                 )
                 gens_per_q[q_idx] += 1
 
-            if q_idx % 10 == 0:
+            if q_idx % 10 < 2:
                 with open(filename, "w") as wf:
                     json.dump(results, wf, indent=4)
 
@@ -310,16 +331,18 @@ class Experiment:
 def run():
     models = [
         ("meta-llama/Llama-3.1-8B-Instruct", 6),
-        ("meta-llama/Llama-3.2-3B-Instruct", 8),
-        ("meta-llama/Llama-3.2-1B-Instruct", 12),
+        ("meta-llama/Llama-3.2-3B-Instruct", 6),
+        ("meta-llama/Llama-3.2-1B-Instruct", 8),
     ]
     length_control_mode = "request_descriptor"
-    temperature = sys.argv[1]
+    num_qs = int(sys.argv[1])
+    n_samples_per_q = int(sys.argv[2])
+    temperature = sys.argv[3]
 
     for (model_name, batch_size) in models:
         model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
         for descriptor in ["none", "detail", "brief"]:
-            experiment = Experiment(model, model_name, batch_size, (length_control_mode, {"descriptor": descriptor}), temperature=float(temperature))
+            experiment = Experiment(model, model_name, batch_size, (length_control_mode, {"descriptor": descriptor}), num_qs=num_qs, n_samples_per_q=n_samples_per_q, temperature=float(temperature))
             results = experiment.run_experiment()
 
 if __name__ == "__main__":

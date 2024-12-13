@@ -27,76 +27,82 @@ sys.excepthook = debughook
 
 foldername = "outputs"
 
-all_locations = [
-    "kitchen",
-    "driveway",
-    "bedroom",
-    "car",
-    "office",
-    "garage",
-    "porch",
-    "street",
-    "mailbox",
-]
-all_clues = [
-    "ONE",
-    "TWO", 
-    "THREE",
-    "FOUR",
-    "FIVE",
-    "SIX",
-    "SEVEN",
-    "EIGHT"
-]
+def normalize_state(idx, k):
+    while idx < 0: idx += k
+    while idx >= k: idx -= k
+    return idx
+
 def random_dfa(k, t):
-    states = random.sample(all_locations, k=k)
-    edges = {}
-    for state in states:
-        edges[state] = []
-        clues = random.sample(all_clues, k=t)
-        used_states = set()
-        for clue in clues:
-            next_state = random.choice(list(set(states) - used_states))
-            edges[state].append((state, clue, next_state))
-            used_states.add(next_state)
+    # assume half split t+, t-
+    states = list(range(k))
+    edges = {state: list(range(state-(t//2), state-(t//2)+t)) for state in states}
     return states, edges
 
-def random_walk(start_state, edges, N):
-    curr_state = start_state
+def random_walk(edges, N):
+    curr_state = 0
     turns = []
     while len(turns) < N:
         edge = random.choice(edges[curr_state])
-        turns.append(edge)
-        curr_state = edge[-1]
-    return turns
+        if edge < 0:
+            turns.append(f"pointer = pointer - {-edge}")
+        else:
+            turns.append(f"pointer = pointer + {edge}")
+        curr_state = normalize_state(curr_state + edge, len(edges))
+    return turns, curr_state
 
 
 system_instruction = """You are a smart and helpful AI assistant. Please help me with the following task."""
 
 
-query_template = """I am on a scavenger hunt and I need to find the final location after all the given clues. There are {num_states} total possible locations:
-{states}
+query_template = """You are given a length-{k} array and must track the index of a 0-indexed pointer to the array. The pointer undergoes several modifications. The pointer wraps around the length of the array on both ends, so when it reaches {k} it becomes 0, when it reaches {k_plus_one} it becomes 1, when it reaches -1 it becomes {k_minus_1}, etc. What is the index of the pointer after all the modifications are complete? Provide the answer in the range [0, {k}).
 
-Clues are keywords that transition me from one location to another. Every possible transition, formatted as <START_STATE> <CLUE_KEYWORD> <NEXT_STATE>, is as follows:
-{edges}
-
-I start at the first location: {first_state}. I receive a sequence of clues, and each clue transitions me from one state to the next, as dictated above. The clues, in order, are as follows:
-{turns}
-
-Where am I after the last clue?
+pointer = 0
+{sequence}
 """
 
 generation_instructions = {
-    "request_descriptor": "{descriptor} provide your final answer following this template: [ANSWER]\nThe final location is YOUR ANSWER\n[/ANSWER]",
-    "none": "Provide your final answer following this template: [ANSWER]\nThe final location is YOUR ANSWER\n[/ANSWER]",
+    "request_descriptor": "{descriptor} provide your final answer following this template: [ANSWER]\npointer == YOUR ANSWER\n[/ANSWER]",
+    "none": "Provide your final answer following this template: [ANSWER]\npointer == YOUR ANSWER\n[/ANSWER]",
 }
 
 stop_strings = ["[/ANSWER]"]
 
-def make_prompt(length_control_metadata, states, edges, turns):
+def prompt_with_chat_template(tokenizer, length_control_metadata, states, edges, turns):
+    messages = [
+        {
+            "role": "system",
+            "content": system_instruction
+        }
+    ]
+    (length_control_mode, length_control_kwargs) = length_control_metadata
+    prompt = query_template.format(k=len(states), k_plus_one=len(states)+1, k_minus_1=len(states)-1, sequence="\n".join(turns)) + "\n"
+    if length_control_mode in generation_instructions:
+        if length_control_mode == "request_descriptor":
+            if length_control_kwargs["descriptor"] == "brief":
+                length_control_kwargs["descriptor"] = "Provide your thought process succinctly, then"
+            elif length_control_kwargs["descriptor"] == "detail":
+                length_control_kwargs["descriptor"] = "Provide your thought process in detail, then"
+            elif length_control_kwargs["descriptor"] == "none":
+                length_control_kwargs["descriptor"] = "Do not generate any other text, only"
+            elif length_control_kwargs["descriptor"] == "states_short":
+                length_control_kwargs["descriptor"] = "Do not generate any other text, only identify the location after each clue, then"
+            elif length_control_kwargs["descriptor"] == "states_long":
+                length_control_kwargs["descriptor"] = "Identify the location after each clue, then"
+        elif length_control_mode == "none":
+            length_control_kwargs = {}
+        prompt += generation_instructions[length_control_mode].format(**length_control_kwargs) + "\n\n"
+    messages.append({
+        "role": "user",
+        "content": prompt
+    })
+    return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+    
+def make_prompt(tokenizer, length_control_metadata, states, edges, turns):
+    breakpoint()
+    if "apply_chat_template" in dir(tokenizer): return prompt_with_chat_template(tokenizer, length_control_metadata, states, edges, turns)
     (length_control_mode, length_control_kwargs) = length_control_metadata
     prompt = system_instruction + "\n\n"
-    prompt += query_template.format(num_states=len(states), states=", ".join(states), edges="\n".join(f"{edge[0]} {edge[1]} {edge[2]}" for state_transitions in edges.values() for edge in state_transitions), first_state=states[0], turns=", ".join(keyword for (_, keyword, _) in turns)) + "\n"
+    prompt += query_template.format(k=len(states), k_plus_one=len(states)+1, k_minus_1=len(states)-1, sequence="\n".join(turns)) + "\n"
     if length_control_mode in generation_instructions:
         if length_control_mode == "request_descriptor":
             if length_control_kwargs["descriptor"] == "brief":
@@ -117,7 +123,7 @@ def make_prompt(length_control_metadata, states, edges, turns):
     return prompt
 
 class Experiment:
-    def __init__(self, model, model_name, max_batch_size, length_control_metadata, n_samples, temperature=0.9):
+    def __init__(self, model, model_name, max_batch_size, length_control_metadata, n_samples, temperature):
         self.model = model
         self.modelname = re.search(r"/(.+)", model_name).group(1)
         self.tokenizer = AutoTokenizer.from_pretrained(
@@ -140,7 +146,7 @@ class Experiment:
     def extract_answers(
         self, input_ids, model_output
     ):
-        reprompt_string = "[ANSWER]\nThe final location is "
+        reprompt_string = "[ANSWER]\npointer == "
         input_idx = 0
         query_len = len(self.tokenizer.decode(input_ids.input_ids[input_idx], skip_special_tokens=True))
         model_predictions = self.tokenizer.batch_decode(
@@ -151,7 +157,7 @@ class Experiment:
         extracted_answers_and_indices = [None for _ in model_predictions]
         for gen_idx, model_prediction in enumerate(model_predictions):
             parsed_answer = None
-            for parsed_answer in re.finditer(r'The final location is[:\s]*([^\.\[]+)', model_prediction):
+            for parsed_answer in re.finditer(r'pointer ==\s*(\d+)', model_prediction):
                 pass # only get the last
             if parsed_answer is None or (parsed_answer.start() < query_len):
                 gens_need_augmenting.append(gen_idx)
@@ -209,7 +215,7 @@ class Experiment:
             model_prediction = self.tokenizer.decode(model_output.sequences[new_idx], skip_special_tokens=True)
             new_query_len = len(new_queries[new_idx])
             parsed_answer = None
-            for parsed_answer in re.finditer(r'The final location is[:\s]*([^\.\[]+)', model_prediction):
+            for parsed_answer in re.finditer(r'pointer == (\d+)', model_prediction):
                 pass # only get the last
             if parsed_answer is None or (parsed_answer.start() < query_len):
                 answer = None
@@ -303,10 +309,9 @@ class Experiment:
         n_gens_remaining = self.n_samples - len(results)
         while n_gens_remaining > 0:
             states, edges = random_dfa(k, t)
-            turns = random_walk(states[0], edges, N)
-            true_final_location = turns[-1][-1]
+            turns, true_final_location = random_walk(edges, N)
 
-            prompt = make_prompt((self.length_control_mode, self.length_control_kwargs), states, edges, turns)
+            prompt = make_prompt(self.tokenizer, (self.length_control_mode, self.length_control_kwargs), states, edges, turns)
             input_ids = self.tokenizer(
                 [prompt],
                 padding=True,
@@ -325,7 +330,7 @@ class Experiment:
             extracted_answers_and_indices = self.extract_answers(input_ids, model_output)
 
             for gen_idx, (pred_answer, _, num_generated_tokens, total_compute_tokens, model_generation) in enumerate(extracted_answers_and_indices):
-                is_correct = pred_answer is not None and (pred_answer.lower().strip() == true_final_location.lower())
+                is_correct = pred_answer is not None and eval(pred_answer) == true_final_location
                 results.append(
                     {
                         "query": prompt,
@@ -338,41 +343,45 @@ class Experiment:
                     }
                 )
             n_gens_remaining -= generation_config["num_return_sequences"]
-
-        with open(filename, "w") as wf:
-            json.dump(results, wf, indent=4)
+                
+            if n_gens_remaining % 10 < 2:
+                with open(filename, "w") as wf:
+                    json.dump(results, wf, indent=4)
 
         return results
 
 def run():
     models = [
         ("meta-llama/Llama-3.1-8B-Instruct", 6),
+        ("deepseek-ai/deepseek-coder-6.7b-instruct", 6),
+        ("Qwen/CodeQwen1.5-7B-Chat", 6),
+        ("mistralai/Mistral-7B-Instruct-v0.3", 6),
+        ("mistralai/Ministral-8B-Instruct-2410", 6),
+        ("meta-llama/Llama-2-13b-hf", 1)
         # ("meta-llama/Llama-3.2-3B-Instruct", 20),
         # ("meta-llama/Llama-3.2-1B-Instruct", 28),
     ]
-    length_control_mode = "request_descriptor"
-    query_mode = "parity"
-    n_samples = 200
+    n_samples = 6
+    k_vals = [5, 10, 15]
+    t_vals = [2, 3, 4]
+    N_vals = [1, 6, 10, 16, 24, 32]
     temperature = sys.argv[1]
 
     for (model_name, batch_size) in models:
         model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
-        # for descriptor in ["none", "detail", "brief", "states_long", "states_short"]:
-        #     experiment = Experiment(model, model_name, batch_size, (length_control_mode, {"descriptor": descriptor}), n_samples=n_samples, temperature=float(temperature))
-        #     for k in range(1, 10):
-        #         for t in range(2, min(k, 4)+1):
-        #             N = 1
-        #             results = experiment.run_experiment(k, N, t)
-        #             for N in range(2, 18, 4):
-        #                 results = experiment.run_experiment(k, N, t)
-
         experiment = Experiment(model, model_name, batch_size, ("none", {}), n_samples=n_samples, temperature=float(temperature))
-        for k in range(1, 10):
-            for t in range(2, min(k, 4)+1):
-                N = 1
-                results = experiment.run_experiment(k, N, t)
-                for N in range(2, 18, 4):
+        for k in k_vals:
+            for t in t_vals:
+                for N in N_vals:
                     results = experiment.run_experiment(k, N, t)
+        # for descriptor in ["none", "detail", "brief"]:
+        #     experiment = Experiment(model, model_name, batch_size, ("request_descriptor", {"descriptor": descriptor}), n_samples=n_samples, temperature=float(temperature))
+        #     for k in k_vals:
+        #         for t in t_vals:
+        #             # N = 1
+        #             # results = experiment.run_experiment(k, N, t)
+        #             for N in N_vals:
+        #                 results = experiment.run_experiment(k, N, t)
 
 if __name__ == "__main__":
     run()
