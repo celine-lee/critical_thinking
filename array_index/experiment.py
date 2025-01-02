@@ -1,7 +1,7 @@
 import torch
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM, BitsAndBytesConfig
 from datasets import load_dataset
 import json
 import re
@@ -35,7 +35,7 @@ def normalize_state(idx, k):
 def random_dfa(k, t):
     # assume half split t+, t-
     states = list(range(k))
-    edges = {state: list(range(state-(t//2), state-(t//2)+t)) for state in states}
+    edges = {state: list(range(state-(t//2), state+(t//2))) for state in states}
     return states, edges
 
 def random_walk(edges, N):
@@ -68,12 +68,13 @@ generation_instructions = {
 stop_strings = ["[/ANSWER]"]
 
 def prompt_with_chat_template(tokenizer, length_control_metadata, states, edges, turns):
-    messages = [
-        {
+    messages = []
+    if "gemma" not in tokenizer.name_or_path:
+        messages.append({
             "role": "system",
             "content": system_instruction
         }
-    ]
+        )
     (length_control_mode, length_control_kwargs) = length_control_metadata
     prompt = query_template.format(k=len(states), k_plus_one=len(states)+1, k_minus_1=len(states)-1, sequence="\n".join(turns)) + "\n"
     if length_control_mode in generation_instructions:
@@ -90,16 +91,15 @@ def prompt_with_chat_template(tokenizer, length_control_metadata, states, edges,
                 length_control_kwargs["descriptor"] = "Identify the location after each clue, then"
         elif length_control_mode == "none":
             length_control_kwargs = {}
-        prompt += generation_instructions[length_control_mode].format(**length_control_kwargs) + "\n\n"
+        prompt += generation_instructions[length_control_mode].format(**length_control_kwargs)
     messages.append({
         "role": "user",
-        "content": prompt
+        "content": prompt if "gemma" not in tokenizer.name_or_path else system_instruction + "\n\n" + prompt
     })
     return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     
 def make_prompt(tokenizer, length_control_metadata, states, edges, turns):
-    breakpoint()
-    if "apply_chat_template" in dir(tokenizer): return prompt_with_chat_template(tokenizer, length_control_metadata, states, edges, turns)
+    if tokenizer.chat_template: return prompt_with_chat_template(tokenizer, length_control_metadata, states, edges, turns)
     (length_control_mode, length_control_kwargs) = length_control_metadata
     prompt = system_instruction + "\n\n"
     prompt += query_template.format(k=len(states), k_plus_one=len(states)+1, k_minus_1=len(states)-1, sequence="\n".join(turns)) + "\n"
@@ -123,7 +123,7 @@ def make_prompt(tokenizer, length_control_metadata, states, edges, turns):
     return prompt
 
 class Experiment:
-    def __init__(self, model, model_name, max_batch_size, length_control_metadata, n_samples, temperature):
+    def __init__(self, model, model_name, max_batch_size, length_control_metadata, n_samples, temperature, max_new_tokens=2400):
         self.model = model
         self.modelname = re.search(r"/(.+)", model_name).group(1)
         self.tokenizer = AutoTokenizer.from_pretrained(
@@ -141,7 +141,7 @@ class Experiment:
         self.length_control_mode = length_control_mode
         self.length_control_kwargs = length_control_kwargs
         self.filename = f"{self.modelname}_T{self.temperature}_{self.length_control_mode}_{''.join(self.length_control_kwargs.values())}"
-
+        self.max_new_tokens = max_new_tokens
 
     def extract_answers(
         self, input_ids, model_output
@@ -254,7 +254,7 @@ class Experiment:
         return {
             "return_dict_in_generate": True,
             "output_scores": True,
-            "max_new_tokens": 1200 if self.length_control_mode in {"brief", "states_short"} else (2048 if self.length_control_mode in {"states_long", "detail"} else 648),
+            "max_new_tokens": self.max_new_tokens,
             "tokenizer": self.tokenizer,
             "stop_strings": stop_strings,
             "num_return_sequences": num_gens,
@@ -348,40 +348,77 @@ class Experiment:
                 with open(filename, "w") as wf:
                     json.dump(results, wf, indent=4)
 
+        with open(filename, "w") as wf:
+            json.dump(results, wf, indent=4)
         return results
+
+
+def load_model(model_name, quantize=True):
+    config = AutoConfig.from_pretrained(model_name)
+
+    bnb_config = None
+    if quantize and torch.cuda.is_available():
+        bnb_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_use_double_quant=True,
+                bnb_4bit_compute_dtype=torch.bfloat16,
+        )
+
+    model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            config=config,
+            torch_dtype=torch.bfloat16,
+            trust_remote_code=True,
+            quantization_config=bnb_config,
+            device_map="auto",
+    )
+    model.eval()
+
+    for param in model.parameters():
+        param._requires_grad = False
+
+    return model
+
 
 def run():
     models = [
-        ("meta-llama/Llama-3.1-8B-Instruct", 6),
-        ("deepseek-ai/deepseek-coder-6.7b-instruct", 6),
-        ("Qwen/CodeQwen1.5-7B-Chat", 6),
-        ("mistralai/Mistral-7B-Instruct-v0.3", 6),
-        ("mistralai/Ministral-8B-Instruct-2410", 6),
-        ("meta-llama/Llama-2-13b-hf", 1)
+        # ("Qwen/Qwen2.5-7B-Instruct", 6),
+        # ("Qwen/Qwen2.5-14B-Instruct", 6),
+        ("Qwen/Qwen2.5-32B-Instruct", 6),
+
+        # ("allenai/OLMo-2-1124-13B-Instruct", 6),
+        # ("meta-llama/Llama-3.1-8B-Instruct", 6),
+        # ("mistralai/Ministral-8B-Instruct-2410", 6),
+        # ("google/gemma-2-9b-it", 6),
+        # ("allenai/OLMo-2-1124-7B-Instruct", 6 ),
+        # ("mistralai/Mistral-7B-Instruct-v0.3", 6),
+        # ("Qwen/CodeQwen1.5-7B-Chat", 6),
+        # ("deepseek-ai/deepseek-coder-6.7b-instruct", 6),
+        # ("meta-llama/CodeLlama-13b-Instruct-hf", 6),
+        # ("google/codegemma-7b-it", 6),
+        # the below models r so bad
+        # ("meta-llama/Llama-2-13b-chat-hf", 6),
         # ("meta-llama/Llama-3.2-3B-Instruct", 20),
         # ("meta-llama/Llama-3.2-1B-Instruct", 28),
     ]
-    n_samples = 6
-    k_vals = [5, 10, 15]
-    t_vals = [2, 3, 4]
-    N_vals = [1, 6, 10, 16, 24, 32]
+    n_samples = 200
+    k_vals = [5, 10, 30]
+    # k_vals = [5, 10, 15]
+    t_vals = [2, 4, 6]
+    # t_vals = [2, 3, 4]
+    N_vals = [1, 10, 16, 24]
+    # N_vals = [1, 6, 10, 16, 24, 32]
     temperature = sys.argv[1]
 
     for (model_name, batch_size) in models:
-        model = AutoModelForCausalLM.from_pretrained(model_name).to(device)
+        model = load_model(model_name)
         experiment = Experiment(model, model_name, batch_size, ("none", {}), n_samples=n_samples, temperature=float(temperature))
         for k in k_vals:
             for t in t_vals:
                 for N in N_vals:
                     results = experiment.run_experiment(k, N, t)
-        # for descriptor in ["none", "detail", "brief"]:
-        #     experiment = Experiment(model, model_name, batch_size, ("request_descriptor", {"descriptor": descriptor}), n_samples=n_samples, temperature=float(temperature))
-        #     for k in k_vals:
-        #         for t in t_vals:
-        #             # N = 1
-        #             # results = experiment.run_experiment(k, N, t)
-        #             for N in N_vals:
-        #                 results = experiment.run_experiment(k, N, t)
+        del model
 
 if __name__ == "__main__":
     run()
