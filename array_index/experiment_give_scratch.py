@@ -52,7 +52,7 @@ def prompt_with_chat_template(tokenizer, length_control_metadata, states, edges,
         "role": "user",
         "content": prompt if "gemma" not in tokenizer.name_or_path else system_instruction + "\n\n" + prompt
     })
-    return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True) + response_starter
+    return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True) + length_control_metadata["pad_sequence"] * length_control_metadata["num_repeats"] + response_starter
     
 def make_prompt(tokenizer, length_control_metadata, states, edges, turns):
     if tokenizer.chat_template: return prompt_with_chat_template(tokenizer, length_control_metadata, states, edges, turns)
@@ -128,6 +128,7 @@ class Experiment:
             "do_sample": False,
             "temperature": None,
             "top_p": None,
+            "top_k": None,
             "pad_token_id": self.tokenizer.eos_token_id,
         }
 
@@ -163,12 +164,15 @@ class Experiment:
         n_gens_remaining = self.n_samples - len(results)
         while n_gens_remaining > 0:
             input_batch = []
+            true_final_locations = []
             while len(input_batch) < self.max_batch_size:
                 states, edges = random_dfa(k, t)
                 turns, true_final_location = random_walk(edges, N)
+                true_final_locations.append(true_final_location)
 
                 prompt = make_prompt(self.tokenizer, self.length_control_metadata, states, edges, turns)
                 input_batch.append(prompt)
+
             input_ids = self.tokenizer(
                 input_batch,
                 padding=True,
@@ -189,15 +193,15 @@ class Experiment:
             for gen_idx, prediction in enumerate(extracted_answers_and_indices):
                 if prediction is None: continue
                 (pred_answer, _, num_generated_tokens, total_compute_tokens, model_generation) = prediction
-                is_correct = pred_answer is not None and eval(pred_answer) == true_final_location
+                is_correct = pred_answer is not None and eval(pred_answer) == true_final_locations[gen_idx]
                 results.append(
                     {
-                        "query": prompt,
+                        "query": input_batch[gen_idx],
                         "model_generation": model_generation,
                         "total_compute_tokens": total_compute_tokens,
                         "generated_tokens": num_generated_tokens,
                         "pred_answer": pred_answer,
-                        "true_answer": true_final_location,
+                        "true_answer": true_final_locations[gen_idx],
                         "correct": is_correct,
                     }
                 )
@@ -245,11 +249,11 @@ def run():
         ("Qwen/Qwen2.5-7B-Instruct", 6),
         ("Qwen/Qwen2.5-14B-Instruct", 6),
         ("Qwen/Qwen2.5-32B-Instruct", 6),
-        ("allenai/OLMo-2-1124-13B-Instruct", 6),
         ("meta-llama/Llama-3.1-8B-Instruct", 6),
         ("mistralai/Ministral-8B-Instruct-2410", 6),
         ("google/gemma-2-9b-it", 6),
         ("allenai/OLMo-2-1124-7B-Instruct", 6 ),
+        ("allenai/OLMo-2-1124-13B-Instruct", 6),
 
         # ("mistralai/Mistral-7B-Instruct-v0.3", 6),
         # ("Qwen/CodeQwen1.5-7B-Chat", 6),
@@ -268,7 +272,7 @@ def run():
     # t_vals = [2, 3, 4]
     N_vals = [1, 10, 16, 24]
     # N_vals = [1, 6, 10, 16, 24, 32]
-    pad_sequences = {" ": [0, 500, 1000], "thinking...": [0, 100, 500]}
+    pad_sequences = {" ": [0, 1000, 10000], "thinking...": [0, 100, 500]}
 
     for pad_sequence, num_repeats in pad_sequences.items():
         for (model_name, batch_size) in models:

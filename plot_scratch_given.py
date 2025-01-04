@@ -56,7 +56,7 @@ model_colors = {
     "Qwen2.5-7B": "yellow",
     # "2-13b-chat-hf": "blue",
     # "Mistral-7B": "red",
-    # "OLMo-2-1124-13B": "brown",
+    # "OLMo-2-1124-13B": "green",
     "OLMo-2-1124-7B": "black",
     # "CodeQwen1.5-7B": "green",
     "Ministral-8B": "orange",
@@ -100,6 +100,9 @@ def load_data(data_folder, k_vals, t_vals, N_vals):
         if t not in t_vals: continue
         if N not in N_vals: continue
         for experiment_file in glob.glob(os.path.join(subfolder, "*")):
+            if "_ x" in experiment_file:
+                if not any(suff_count in experiment_file for suff_count in ["x0.json", "x1000.json", "x10000.json"]): continue
+
             parsed_file = re.search(r"([^\/]+)_([^_]+)x\d+\.json", experiment_file)
             modelname = parsed_file.group(1)
             padder = parsed_file.group(2)
@@ -374,7 +377,7 @@ def plot_correctness_by_ttoks_isolate_factor(df, k, t, N, modelname, padder, sta
         filename += f"k{k}_t{t}_{modelname}"
     elif modelname is None:
         filename = f"byModel_k{k}_t{t}_N{N}"
-    filename += f"{padder}.png"
+    filename += f"_{padder}.png"
     os.makedirs(os.path.join(foldername, "isolate_factor"), exist_ok=True)
     plt.savefig(
         os.path.join(foldername, "isolate_factor", filename)

@@ -250,6 +250,20 @@ class Experiment:
         return extracted_answers_and_indices
 
     def get_generation_config(self):
+        if self.temperature == 0.:
+            return {
+                "return_dict_in_generate": True,
+                "output_scores": True,
+                "max_new_tokens": self.max_new_tokens,
+                "tokenizer": self.tokenizer,
+                "stop_strings": stop_strings,
+                "num_return_sequences": 1,
+                "do_sample": False,
+                "temperature": None,
+                "top_p": None,
+                "top_k": None,
+                "pad_token_id": self.tokenizer.eos_token_id,
+            }
         num_gens = min(self.max_batch_size, self.n_samples)
         return {
             "return_dict_in_generate": True,
@@ -258,7 +272,7 @@ class Experiment:
             "tokenizer": self.tokenizer,
             "stop_strings": stop_strings,
             "num_return_sequences": num_gens,
-            "do_sample": True,
+            "do_sample": self.temperature > 0,
             "temperature": self.temperature,
             "pad_token_id": self.tokenizer.eos_token_id,
         }
@@ -273,6 +287,7 @@ class Experiment:
             "num_return_sequences": 1,
             "do_sample": False,
             "temperature": None,
+            "top_k": None,
             "top_p": None,
             "pad_token_id": self.tokenizer.eos_token_id,
         }
@@ -288,10 +303,20 @@ class Experiment:
             if output_tok in self.tokenizer.all_special_tokens:
                 start_tok_idx += 1
                 continue
-            curr_offset += len(output_tok)
-            if curr_offset >= string_index_start:
+            # Reconstruct the decoded text to align tokenization and character-level offsets
+            decoded_token = self.tokenizer.convert_tokens_to_string([output_tok])
+            token_start_offset = curr_offset
+            token_end_offset = curr_offset + len(decoded_token)
+
+            # Check if this token contributes to or overlaps the target start index
+            if token_start_offset <= string_index_start < token_end_offset:
                 break
-            start_tok_idx += 1
+            # Update current character offset
+            curr_offset = token_end_offset
+            # curr_offset += len(output_tok)
+            # if curr_offset >= string_index_start:
+            #     break
+            # start_tok_idx += 1
         end_tok_idx = start_tok_idx + 1
         while answer_string not in self.tokenizer.decode(output_ids[start_tok_idx:end_tok_idx], skip_special_tokens=True):
             end_tok_idx += 1
@@ -299,6 +324,7 @@ class Experiment:
         return (start_tok_idx, end_tok_idx)
 
     def run_experiment(self, k, N, t):
+        if self.temperature == 0.: return self.run_experiment_greedy(k, N, t)
         subfolder = os.path.join(foldername, f"k{k}_N{N}_t{t}")
         os.makedirs(subfolder, exist_ok=True)
         filename = f"{subfolder}/{self.filename}.json"
@@ -353,6 +379,67 @@ class Experiment:
         return results
 
 
+    def run_experiment_greedy(self, k, N, t):
+        subfolder = os.path.join(foldername, f"k{k}_N{N}_t{t}")
+        os.makedirs(subfolder, exist_ok=True)
+        filename = f"{subfolder}/{self.filename}.json"
+        print("greedy:", filename)
+        results = []
+        if os.path.exists(filename): results = json.load(open(filename))
+
+        n_gens_remaining = self.n_samples - len(results)
+        while n_gens_remaining > 0:
+            prompts = []
+            true_final_locations = []
+            while len(prompts) < self.max_batch_size:
+                states, edges = random_dfa(k, t)
+                turns, true_final_location = random_walk(edges, N)
+                true_final_locations.append(true_final_location)
+
+                prompt = make_prompt(self.tokenizer, (self.length_control_mode, self.length_control_kwargs), states, edges, turns)
+                prompts.append(prompt)
+
+            input_ids = self.tokenizer(
+                prompts,
+                padding=True,
+                truncation=True,
+                max_length=2048,
+                return_tensors="pt",
+                return_offsets_mapping=True,
+            ).to(device)
+            
+            generation_config = self.get_generation_config()
+            model_output = self.model.generate(
+                input_ids=input_ids.input_ids,
+                attention_mask=input_ids.attention_mask,
+                **generation_config,
+            )
+            extracted_answers_and_indices = self.extract_answers(input_ids, model_output)
+
+            for gen_idx, prediction in enumerate(extracted_answers_and_indices):
+                (pred_answer, _, num_generated_tokens, total_compute_tokens, model_generation) = prediction
+                is_correct = pred_answer is not None and eval(pred_answer) == true_final_locations[gen_idx]
+                results.append(
+                    {
+                        "query": prompts[gen_idx],
+                        "model_generation": model_generation,
+                        "total_compute_tokens": total_compute_tokens,
+                        "generated_tokens": num_generated_tokens,
+                        "pred_answer": pred_answer,
+                        "true_answer": true_final_locations[gen_idx],
+                        "correct": is_correct,
+                    }
+                )
+                n_gens_remaining -= 1
+                
+            if n_gens_remaining % 10 < 2:
+                with open(filename, "w") as wf:
+                    json.dump(results, wf, indent=4)
+
+        with open(filename, "w") as wf:
+            json.dump(results, wf, indent=4)
+        return results
+
 def load_model(model_name, quantize=True):
     config = AutoConfig.from_pretrained(model_name)
 
@@ -385,13 +472,14 @@ def run():
     models = [
         # ("Qwen/Qwen2.5-7B-Instruct", 6),
         # ("Qwen/Qwen2.5-14B-Instruct", 6),
-        ("Qwen/Qwen2.5-32B-Instruct", 6),
+        # ("Qwen/Qwen2.5-32B-Instruct", 6),
 
         # ("allenai/OLMo-2-1124-13B-Instruct", 6),
-        # ("meta-llama/Llama-3.1-8B-Instruct", 6),
-        # ("mistralai/Ministral-8B-Instruct-2410", 6),
-        # ("google/gemma-2-9b-it", 6),
+        ("meta-llama/Llama-3.1-8B-Instruct", 6),
+        ("mistralai/Ministral-8B-Instruct-2410", 6),
+        ("google/gemma-2-9b-it", 6),
         # ("allenai/OLMo-2-1124-7B-Instruct", 6 ),
+
         # ("mistralai/Mistral-7B-Instruct-v0.3", 6),
         # ("Qwen/CodeQwen1.5-7B-Chat", 6),
         # ("deepseek-ai/deepseek-coder-6.7b-instruct", 6),
@@ -402,7 +490,7 @@ def run():
         # ("meta-llama/Llama-3.2-3B-Instruct", 20),
         # ("meta-llama/Llama-3.2-1B-Instruct", 28),
     ]
-    n_samples = 200
+    n_samples = 100
     k_vals = [5, 10, 30]
     # k_vals = [5, 10, 15]
     t_vals = [2, 4, 6]
