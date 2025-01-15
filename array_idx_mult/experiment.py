@@ -1,20 +1,14 @@
-import torch
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM, BitsAndBytesConfig
 import json
 import re
 import sys
-import ipdb
-import traceback
 import os
-import ast
 from tqdm import tqdm
 import numpy as np
-import random
-import glob
-import pandas as pd
 
+import sys
+import ipdb
+import traceback
 
 def debughook(etype, value, tb):
     traceback.print_exception(etype, value, tb)
@@ -24,72 +18,18 @@ def debughook(etype, value, tb):
 
 sys.excepthook = debughook
 
+from generate_dfas import *
+from llm_string_consts import *
+
+import torch
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM, BitsAndBytesConfig
+
 foldername = "outputs"
 
-def normalize_state(idx, k):
-    while idx < 0: idx += k
-    while idx >= k: idx -= k
-    return idx
-
-def random_dfa(k, t):
-    # assume half split t+, t-
-    states = list(range(k))
-    edges = {state: list(range(state-(t//2), state+(t//2))) for state in states}
-    return states, edges
-
-def random_walk(edges, N):
-    curr_state = 0
-    turns = []
-    while len(turns) < N:
-        edge = random.choice(edges[curr_state])
-        if edge < 0:
-            turns.append(f"pointer = pointer - {-edge}")
-        else:
-            turns.append(f"pointer = pointer + {edge}")
-        curr_state = normalize_state(curr_state + edge, len(edges))
-    return turns, curr_state
-
-
-system_instruction = """You are a smart and helpful AI assistant. Please help me with the following task."""
-
-
-query_template = """You are given a length-{k} array and must track the index of a 0-indexed pointer to the array. The pointer undergoes several modifications. The pointer wraps around the length of the array on both ends, so when it reaches {k} it becomes 0, when it reaches {k_plus_one} it becomes 1, when it reaches -1 it becomes {k_minus_1}, etc. What is the index of the pointer after all the modifications are complete? Provide the answer in the range [0, {k}).
-
-pointer = 0
-{sequence}
-"""
-
-generation_instruction = "Provide your final answer following this template: [ANSWER]\npointer == YOUR ANSWER\n[/ANSWER]"
-
-stop_strings = ["[/ANSWER]"]
-
-def prompt_with_chat_template(tokenizer, states, edges, turns):
-    messages = []
-    if "gemma" not in tokenizer.name_or_path:
-        messages.append({
-            "role": "system",
-            "content": system_instruction
-        }
-        )
-    prompt = query_template.format(k=len(states), k_plus_one=len(states)+1, k_minus_1=len(states)-1, sequence="\n".join(turns)) + "\n"
-    prompt += generation_instruction
-    messages.append({
-        "role": "user",
-        "content": prompt if "gemma" not in tokenizer.name_or_path else system_instruction + "\n\n" + prompt
-    })
-    return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-    
-def make_prompt(tokenizer, states, edges, turns):
-    if tokenizer.chat_template: return prompt_with_chat_template(tokenizer, states, edges, turns)
-    prompt = system_instruction + "\n\n"
-    prompt += query_template.format(k=len(states), k_plus_one=len(states)+1, k_minus_1=len(states)-1, sequence="\n".join(turns)) + "\n"
-    prompt += generation_instruction + "\n\n"
-    return prompt
-
 class Experiment:
-    def __init__(self, model, model_name, num_gens_per, n_samples, temperature, num_beams=3, max_new_tokens=2400):
+    def __init__(self, model, model_name, num_gens_per, n_samples, temperature, num_beams=1, max_new_tokens=2400, max_batch_size=2):
         self.model = model
-        self.modelname = re.search(r"/(.+)", model_name).group(1)
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name, padding_side="left", truncation_side="left"
         )
@@ -97,26 +37,28 @@ class Experiment:
         self.num_gens_per = num_gens_per
         self.temperature = temperature
         self.n_samples = n_samples
+        modelname = re.search(r"/(.+)", model_name).group(1)
         if temperature > 0:
-            self.filename = f"{self.modelname}_T{self.temperature}_B{num_beams}_S{num_gens_per}"
+            self.filename = f"{modelname}_T{self.temperature}_B{num_beams}_S{num_gens_per}"
         else:
-            self.filename = f"{self.modelname}_T{self.temperature}"
+            self.filename = f"{modelname}_T{self.temperature}"
         self.max_new_tokens = max_new_tokens
         self.num_beams = num_beams
+        self.max_batch_size = max(1, max_batch_size // num_gens_per)
 
     def extract_answers(
         self, input_ids, model_output
     ):
         reprompt_string = "[ANSWER]\npointer == "
-        input_idx = 0
-        query_len = len(self.tokenizer.decode(input_ids.input_ids[input_idx], skip_special_tokens=True))
         model_predictions = self.tokenizer.batch_decode(
             model_output.sequences, skip_special_tokens=True,
         )
         new_queries = []
         gens_need_augmenting = []
-        extracted_answers_and_indices = [None for _ in model_predictions]
+        extracted_answers = [None for _ in model_predictions]
         for gen_idx, model_prediction in enumerate(model_predictions):
+            input_idx = gen_idx // self.num_gens_per
+            query_len = len(self.tokenizer.decode(input_ids.input_ids[input_idx], skip_special_tokens=True))
             parsed_answer = None
             for parsed_answer in re.finditer(r'pointer ==\s*(\d+)', model_prediction):
                 pass # only get the last
@@ -139,14 +81,14 @@ class Experiment:
             total_compute_tokens = torch.sum(
                 model_output.sequences[gen_idx] != self.tokenizer.pad_token_id
             ).item()
-            extracted_answers_and_indices[gen_idx] = (
+            extracted_answers[gen_idx] = (
                 answer,
                 num_generated_tokens,
                 total_compute_tokens,
                 model_prediction[query_len:],
             )
 
-        if len(new_queries) == 0: return extracted_answers_and_indices
+        if len(new_queries) == 0: return extracted_answers
         new_input_ids = self.tokenizer(
             new_queries,
             padding=True,
@@ -174,7 +116,7 @@ class Experiment:
                 answer = parsed_answer.group(1).rstrip(" .")
                 string_index_start = parsed_answer.start() + parsed_answer.group(0).index(answer)
                 string_index_end = string_index_start + len(answer)
-            (_, prev_num_generated_tokens, _, prev_generated) = extracted_answers_and_indices[orig_idx]
+            (_, prev_num_generated_tokens, _, prev_generated) = extracted_answers[orig_idx]
             num_generated_tokens = torch.sum(
                 model_output.sequences[new_idx, new_input_ids.input_ids.shape[-1] :]
                 != self.tokenizer.pad_token_id
@@ -182,13 +124,13 @@ class Experiment:
             total_compute_tokens = torch.sum(
                 model_output.sequences[new_idx] != self.tokenizer.pad_token_id
             ).item()
-            extracted_answers_and_indices[orig_idx] = (
+            extracted_answers[orig_idx] = (
                 answer,
-                prev_num_generated_tokens + num_generated_tokens, # TODO include the reprompt string...
+                prev_num_generated_tokens + num_generated_tokens,
                 total_compute_tokens,
                 prev_generated + reprompt_string + model_prediction[new_query_len:],
             )
-        return extracted_answers_and_indices
+        return extracted_answers
 
     def get_generation_config(self):
         if self.temperature == 0.:
@@ -259,14 +201,15 @@ class Experiment:
             curr_offset = token_end_offset
 
         end_tok_idx = start_tok_idx + 1
-        while answer_string not in self.tokenizer.decode(output_ids[start_tok_idx:end_tok_idx], skip_special_tokens=True):
+        while answer_string not in self.tokenizer.decode(
+            output_ids[start_tok_idx:end_tok_idx], 
+            skip_special_tokens=True):
             end_tok_idx += 1
             if end_tok_idx > len(output_ids): breakpoint()
         return (start_tok_idx, end_tok_idx)
 
-    def run_experiment(self, k, N, t):
-        if self.temperature == 0.: return self.run_experiment_greedy(k, N, t)
-        subfolder = os.path.join(foldername, f"k{k}_N{N}_t{t}")
+    def run_experiment(self, k, m, N):
+        subfolder = os.path.join(foldername, f"k{k}_m{m}_N{N}")
         os.makedirs(subfolder, exist_ok=True)
         filename = f"{subfolder}/{self.filename}.json"
         print(filename)
@@ -275,70 +218,15 @@ class Experiment:
 
         n_gens_remaining = self.n_samples - len(results)
         while n_gens_remaining > 0:
-            states, edges = random_dfa(k, t)
-            turns, true_final_location = random_walk(edges, N)
-
-            prompt = make_prompt(self.tokenizer, states, edges, turns)
-            input_ids = self.tokenizer(
-                [prompt],
-                padding=True,
-                truncation=True,
-                max_length=2048,
-                return_tensors="pt",
-                return_offsets_mapping=True,
-            ).to(device)
-            
-            generation_config = self.get_generation_config()
-            model_output = self.model.generate(
-                input_ids=input_ids.input_ids,
-                attention_mask=input_ids.attention_mask,
-                **generation_config,
-            )
-            extracted_answers_and_indices = self.extract_answers(input_ids, model_output)
-
-            for gen_idx, (pred_answer, _, num_generated_tokens, total_compute_tokens, model_generation) in enumerate(extracted_answers_and_indices):
-                is_correct = pred_answer is not None and eval(pred_answer) == true_final_location
-                results.append(
-                    {
-                        "query": prompt,
-                        "model_generation": model_generation,
-                        "total_compute_tokens": total_compute_tokens,
-                        "generated_tokens": num_generated_tokens,
-                        "pred_answer": pred_answer,
-                        "true_answer": true_final_location,
-                        "correct": is_correct,
-                    }
-                )
-            n_gens_remaining -= generation_config["num_return_sequences"]
-                
-            if n_gens_remaining % 10 < 2:
-                with open(filename, "w") as wf:
-                    json.dump(results, wf, indent=4)
-
-        with open(filename, "w") as wf:
-            json.dump(results, wf, indent=4)
-        return results
-
-
-    def run_experiment_greedy(self, k, N, t):
-        subfolder = os.path.join(foldername, f"k{k}_N{N}_t{t}")
-        os.makedirs(subfolder, exist_ok=True)
-        filename = f"{subfolder}/{self.filename}.json"
-        print("greedy:", filename)
-        results = []
-        if os.path.exists(filename): results = json.load(open(filename))
-
-        n_gens_remaining = self.n_samples - len(results)
-        while n_gens_remaining > 0:
             prompts = []
-            true_final_locations = []
-            while len(prompts) < self.num_gens_per:
-                states, edges = random_dfa(k, t)
-                turns, true_final_location = random_walk(edges, N)
-                true_final_locations.append(true_final_location)
-
-                prompt = make_prompt(self.tokenizer, states, edges, turns)
+            true_answers = []
+            num_wraps = []
+            while len(prompts) < self.max_batch_size:
+                turns, true_final_location, wrap_count = random_walk(k, m, N)
+                prompt = make_prompt(self.tokenizer, k, m, turns)
                 prompts.append(prompt)
+                true_answers.append(true_final_location)
+                num_wraps.append(wrap_count)
 
             input_ids = self.tokenizer(
                 prompts,
@@ -355,20 +243,22 @@ class Experiment:
                 attention_mask=input_ids.attention_mask,
                 **generation_config,
             )
-            extracted_answers_and_indices = self.extract_answers(input_ids, model_output)
+            extracted_answers = self.extract_answers(input_ids, model_output)
 
-            for gen_idx, prediction in enumerate(extracted_answers_and_indices):
-                (pred_answer, num_generated_tokens, total_compute_tokens, model_generation) = prediction
-                is_correct = pred_answer is not None and eval(pred_answer) == true_final_locations[gen_idx]
+            for gen_idx, (pred_answer, num_generated_tokens, total_compute_tokens, model_generation) in enumerate(extracted_answers):
+                input_idx = gen_idx // generation_config["num_return_sequences"]
+                true_final_location = true_answers[input_idx]
+                is_correct = pred_answer is not None and eval(pred_answer) == true_final_location
                 results.append(
                     {
-                        "query": prompts[gen_idx],
+                        "query": prompts[input_idx],
                         "model_generation": model_generation,
                         "total_compute_tokens": total_compute_tokens,
                         "generated_tokens": num_generated_tokens,
                         "pred_answer": pred_answer,
-                        "true_answer": true_final_locations[gen_idx],
+                        "true_answer": true_final_location,
                         "correct": is_correct,
+                        "num_wraps": num_wraps[input_idx]
                     }
                 )
                 n_gens_remaining -= 1
@@ -380,6 +270,7 @@ class Experiment:
         with open(filename, "w") as wf:
             json.dump(results, wf, indent=4)
         return results
+
 
 def load_model(model_name, quantize=True):
     config = AutoConfig.from_pretrained(model_name)
@@ -408,48 +299,32 @@ def load_model(model_name, quantize=True):
 
     return model
 
+import argparse
+
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--temperature", type=float, default=0.0)
+    parser.add_argument("--num_beams", type=int, default=1)
+    parser.add_argument("--num_gens_per", type=int, default=1)
+    parser.add_argument("--k_vals", nargs='+', default=[5, 9, 17])
+    parser.add_argument("--m_vals", nargs='+', default=[1, 5, 9, 17])
+    parser.add_argument("--N_vals", nargs='+', default=[1, 10, 16, 24])
+    parser.add_argument("--models", nargs='+', default=["google/gemma-2-9b-it"])
+    args = parser.parse_args()
+    return args
+
 
 def run():
-    temperature = sys.argv[1]
-    num_beams = sys.argv[2]
-    num_gens_per = sys.argv[3]
-    models = [
-        ("Qwen/Qwen2.5-7B-Instruct", num_gens_per),
-        ("Qwen/Qwen2.5-14B-Instruct", num_gens_per),
-        ("Qwen/Qwen2.5-32B-Instruct", num_gens_per),
-
-        # ("mistralai/Ministral-8B-Instruct-2410", num_gens_per),
-        # ("meta-llama/Llama-3.1-8B-Instruct", num_gens_per),
-        # ("google/gemma-2-9b-it", num_gens_per),
-
-        # ("allenai/OLMo-2-1124-13B-Instruct", num_gens_per),
-        # ("allenai/OLMo-2-1124-7B-Instruct", 6 ),
-
-        # ("mistralai/Mistral-7B-Instruct-v0.3", num_gens_per),
-        # ("Qwen/CodeQwen1.5-7B-Chat", num_gens_per),
-        # ("deepseek-ai/deepseek-coder-6.7b-instruct", num_gens_per),
-        # ("meta-llama/CodeLlama-13b-Instruct-hf", num_gens_per),
-        # ("google/codegemma-7b-it", num_gens_per),
-        # the below models r so bad
-        # ("meta-llama/Llama-2-13b-chat-hf", num_gens_per),
-        # ("meta-llama/Llama-3.2-3B-Instruct", num_gens_per),
-        # ("meta-llama/Llama-3.2-1B-Instruct", num_gens_per),
-    ]
+    args = get_args()
     n_samples = 100
-    k_vals = [5, 10, 30]
-    # k_vals = [5, 10, 15]
-    t_vals = [2, 4, 6]
-    # t_vals = [2, 3, 4]
-    N_vals = [1, 10, 16, 24]
-    # N_vals = [1, 6, 10, 16, 24, 32]
 
-    for (model_name, num_gens_per) in models:
+    for model_name in args.models:
         model = load_model(model_name)
-        experiment = Experiment(model, model_name, int(num_gens_per), n_samples=n_samples, temperature=float(temperature), num_beams=int(num_beams))
-        for k in k_vals:
-            for t in t_vals:
-                for N in N_vals:
-                    results = experiment.run_experiment(k, N, t)
+        experiment = Experiment(model, model_name, args.num_gens_per, n_samples=n_samples, temperature=args.temperature, num_beams=args.num_beams)
+        for k in args.k_vals:
+            for m in args.m_vals:
+                for N in args.N_vals:
+                    results = experiment.run_experiment(k, m, N)
         del model
 
 if __name__ == "__main__":
