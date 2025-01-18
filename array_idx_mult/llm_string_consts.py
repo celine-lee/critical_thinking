@@ -9,6 +9,8 @@ pointer = 0
 
 generation_instruction = "Provide your final answer following this template: [ANSWER]\npointer == YOUR ANSWER\n[/ANSWER]"
 
+reprompt_string = "[ANSWER]\npointer == "
+
 stop_strings = ["[/ANSWER]"]
 
 def prompt_with_chat_template(tokenizer, k, m, turns):
@@ -27,9 +29,13 @@ def prompt_with_chat_template(tokenizer, k, m, turns):
     })
     return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     
-def make_prompt(tokenizer, k, m, turns):
-    if tokenizer.chat_template: return prompt_with_chat_template(tokenizer, k, m, turns)
-    prompt = system_instruction + "\n\n"
-    prompt += query_template.format(full_size=k*m, full_size_plus_1=(k*m)+1, full_size_minus_1=(k*m)-1, sequence="\n".join(turns)) + "\n"
-    prompt += generation_instruction + "\n\n"
+def make_prompt(tokenizer, k, m, turns, include_starter=False):
+    if tokenizer.chat_template: 
+        prompt = prompt_with_chat_template(tokenizer, k, m, turns)
+    else:
+        prompt = system_instruction + "\n\n"
+        prompt += query_template.format(full_size=k*m, full_size_plus_1=(k*m)+1, full_size_minus_1=(k*m)-1, sequence="\n".join(turns)) + "\n"
+        prompt += generation_instruction + "\n\n"
+    if include_starter:
+        prompt += reprompt_string
     return prompt

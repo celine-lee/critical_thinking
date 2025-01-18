@@ -27,7 +27,7 @@ from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM, BitsAn
 
 foldername = "outputs"
 
-class Experiment:
+class ExperimentNoCOT:
     def __init__(self, model, model_name, num_gens_per, n_samples, temperature, num_beams=1, max_new_tokens=2400, max_batch_size=2):
         self.model = model
         self.tokenizer = AutoTokenizer.from_pretrained(
@@ -49,31 +49,19 @@ class Experiment:
     def extract_answers(
         self, input_ids, model_output
     ):
-        reprompt_string = "[ANSWER]\npointer_is_even == "
         model_predictions = self.tokenizer.batch_decode(
             model_output.sequences, skip_special_tokens=True,
         )
-        new_queries = []
-        gens_need_augmenting = []
         extracted_answers_and_indices = [None for _ in model_predictions]
         for gen_idx, model_prediction in enumerate(model_predictions):
             input_idx = gen_idx // self.num_gens_per
             query_len = len(self.tokenizer.decode(input_ids.input_ids[input_idx], skip_special_tokens=True))
             parsed_answer = None
+            answer = None
             for parsed_answer in re.finditer(r'pointer_is_even ==\s*(True|False)', model_prediction):
                 pass # only get the last
-            if parsed_answer is None or (parsed_answer.start() < query_len):
-                gens_need_augmenting.append(gen_idx)
-                new_queries.append(model_prediction + reprompt_string)
-                num_generated_tokens = torch.sum(
-                    model_output.sequences[gen_idx, input_ids.input_ids.shape[-1] :]
-                    != self.tokenizer.pad_token_id
-                ).item()
-                answer = None
-            else:
+            if parsed_answer is not None:
                 answer = parsed_answer.group(1).rstrip(" .")
-                string_index_start = parsed_answer.start() + parsed_answer.group(0).index(answer)
-                string_index_end = string_index_start + len(answer)
             num_generated_tokens = torch.sum(
                 model_output.sequences[gen_idx, input_ids.input_ids.shape[-1] :]
                 != self.tokenizer.pad_token_id
@@ -86,49 +74,6 @@ class Experiment:
                 num_generated_tokens,
                 total_compute_tokens,
                 model_prediction[query_len:],
-            )
-
-        if len(new_queries) == 0: return extracted_answers_and_indices
-        new_input_ids = self.tokenizer(
-            new_queries,
-            padding=True,
-            truncation=True,
-            max_length=2048,
-            return_tensors="pt",
-            return_offsets_mapping=True,
-        ).to(device)
-
-        generation_config = self.get_generation_config_final_answer()
-        model_output = self.model.generate(
-            input_ids=new_input_ids.input_ids,
-            attention_mask=new_input_ids.attention_mask,
-            **generation_config,
-        )
-        for new_idx, orig_idx in enumerate(gens_need_augmenting):
-            model_prediction = self.tokenizer.decode(model_output.sequences[new_idx], skip_special_tokens=True)
-            new_query_len = len(new_queries[new_idx])
-            parsed_answer = None
-            for parsed_answer in re.finditer(r'pointer_is_even ==\s*(True|False)', model_prediction):
-                pass # only get the last
-            if parsed_answer is None or (parsed_answer.start() < query_len):
-                answer = None
-            else:
-                answer = parsed_answer.group(1).rstrip(" .")
-                string_index_start = parsed_answer.start() + parsed_answer.group(0).index(answer)
-                string_index_end = string_index_start + len(answer)
-            (_, prev_num_generated_tokens, _, prev_generated) = extracted_answers_and_indices[orig_idx]
-            num_generated_tokens = torch.sum(
-                model_output.sequences[new_idx, new_input_ids.input_ids.shape[-1] :]
-                != self.tokenizer.pad_token_id
-            ).item()
-            total_compute_tokens = torch.sum(
-                model_output.sequences[new_idx] != self.tokenizer.pad_token_id
-            ).item()
-            extracted_answers_and_indices[orig_idx] = (
-                answer,
-                prev_num_generated_tokens + num_generated_tokens,
-                total_compute_tokens,
-                prev_generated + reprompt_string + model_prediction[new_query_len:],
             )
         return extracted_answers_and_indices
 
@@ -163,51 +108,6 @@ class Experiment:
             "num_beams": self.num_beams,
         }
 
-    def get_generation_config_final_answer(self):
-        return {
-            "return_dict_in_generate": True,
-            "output_scores": True,
-            "max_new_tokens": 50,
-            "tokenizer": self.tokenizer,
-            "stop_strings": stop_strings,
-            "num_return_sequences": 1,
-            "do_sample": False,
-            "temperature": None,
-            "top_k": None,
-            "top_p": None,
-            "pad_token_id": self.tokenizer.eos_token_id,
-        }
-
-    def get_token_indices(
-        self, output_ids, answer_string, string_index_start, string_index_end, init_tok_offset=0, init_char_offset=0
-    ):
-        output_tokens = self.tokenizer.convert_ids_to_tokens(output_ids)
-        start_tok_idx = init_tok_offset
-        curr_offset = init_char_offset
-        while start_tok_idx < len(output_tokens):
-            output_tok = output_tokens[start_tok_idx]
-            if output_tok in self.tokenizer.all_special_tokens:
-                start_tok_idx += 1
-                continue
-            # Reconstruct the decoded text to align tokenization and character-level offsets
-            decoded_token = self.tokenizer.convert_tokens_to_string([output_tok])
-            token_start_offset = curr_offset
-            token_end_offset = curr_offset + len(decoded_token)
-
-            # Check if this token contributes to or overlaps the target start index
-            if token_start_offset <= string_index_start < token_end_offset:
-                break
-            # Update current character offset
-            curr_offset = token_end_offset
-
-        end_tok_idx = start_tok_idx + 1
-        while answer_string not in self.tokenizer.decode(
-            output_ids[start_tok_idx:end_tok_idx], 
-            skip_special_tokens=True):
-            end_tok_idx += 1
-            if end_tok_idx > len(output_ids): breakpoint()
-        return (start_tok_idx, end_tok_idx)
-
     def run_experiment(self, k, m, N):
         subfolder = os.path.join(foldername, f"k{k}_m{m}_N{N}")
         os.makedirs(subfolder, exist_ok=True)
@@ -223,7 +123,7 @@ class Experiment:
             num_wraps = []
             while len(prompts) < self.max_batch_size:
                 turns, true_final_location, wrap_count = random_walk(k, m, N)
-                prompt = make_prompt(self.tokenizer, k, m, turns)
+                prompt = make_prompt(self.tokenizer, k, m, turns, include_starter=True)
                 prompts.append(prompt)
                 true_answers.append(true_final_location)
                 num_wraps.append(wrap_count)
@@ -321,7 +221,7 @@ def run():
 
     for model_name in args.models:
         model = load_model(model_name)
-        experiment = Experiment(model, model_name, args.num_gens_per, n_samples=n_samples, temperature=args.temperature, num_beams=args.num_beams)
+        experiment = ExperimentNoCOT(model, model_name, args.num_gens_per, n_samples=n_samples, temperature=args.temperature, num_beams=args.num_beams)
         for k in args.k_vals:
             for m in args.m_vals:
                 for N in args.N_vals:

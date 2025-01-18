@@ -27,18 +27,26 @@ from scipy.optimize import curve_fit
 
 import argparse
 
+global compute_random
 global temperature
+global num_beams
+global num_gens
 global foldername
 global n_buckets
 
 def get_args():
+    global compute_random
     global temperature
+    global num_beams
+    global num_gens
     global foldername
     global n_buckets
     parser = argparse.ArgumentParser()
     parser.add_argument("--output_folder", type=str)
     parser.add_argument("--temperature", type=float, default=0.9)
     parser.add_argument("--n_buckets", type=int, default=10)
+    parser.add_argument("--num_gens", type=int, default=1)
+    parser.add_argument("--num_beams", type=int, default=1)
     parser.add_argument("--get_isolated", nargs='+', default=['k', 't', 'N'])
     parser.add_argument("--k_vals", nargs='+', default=None)
     parser.add_argument("--t_vals", nargs='+', default=None)
@@ -47,9 +55,14 @@ def get_args():
     parser.add_argument("--delete_old", action="store_true")
     parser.add_argument("--all_methods", action="store_true")
     args = parser.parse_args()
-    foldername = os.path.join(f"{args.output_folder.rstrip('/')}_graphs{'_noinsn' if not args.all_methods else ''}_{args.n_buckets}buckets_T{args.temperature}")
+    foldername = os.path.join(f"{args.output_folder.rstrip('/')}_graphs{'_noinsn' if not args.all_methods else ''}_{args.n_buckets}buckets_T{args.temperature}_B{args.num_beams}_S{args.num_gens}")
     temperature = args.temperature
+    num_beams = args.num_beams
+    num_gens = args.num_gens
     n_buckets = args.n_buckets
+
+    if "even_odd" in args.output_folder: compute_random = lambda k: 0.5
+    elif "array_index" in args.output_folder: compute_random = lambda k: 1/int(k)
     return args
 
 
@@ -60,9 +73,9 @@ model_colors = {
     "Qwen2.5-7B": "yellow",
     # "2-13b-chat-hf": "blue",
     "Mistral-7B": "red",
-    # "OLMo-2-1124-13B": "brown",
+    # "OLMo-2-1124-13B": "green",
     "OLMo-2-1124-7B": "black",
-    "CodeQwen1.5-7B": "green",
+    # "CodeQwen1.5-7B": "green",
     "Ministral-8B": "orange",
     # "deepseek-coder-6.7b": "yellow",
     # "deepseek-coder-7b-instruct-v1.5": "brown",
@@ -116,6 +129,12 @@ def load_data(data_folder, k_vals, t_vals, N_vals, target_methodname=None):
         for experiment_file in glob.glob(os.path.join(subfolder, "*")):
             if f"T{temperature}" not in experiment_file:
                 continue
+            if re.search(r'_B\d+_S\d+', experiment_file):
+                if f"_B{num_beams}_S{num_gens}.json" not in experiment_file: 
+                    continue
+            elif temperature > 0.0: 
+                if num_beams != 1 or num_gens != 6: 
+                    continue
             modelname = re.search(r"([^\/]+)_T", experiment_file).group(1)
             if not any(model_str in modelname for model_str in model_colors):
                 continue
@@ -124,9 +143,9 @@ def load_data(data_folder, k_vals, t_vals, N_vals, target_methodname=None):
             for methodname in method_markers:
                 if methodname in experiment_file:
                     break
-            if target_methodname is not None and methodname != target_methodname: 
-                continue
             if methodname not in experiment_file:
+                methodname = "_none_"
+            if target_methodname is not None and methodname != target_methodname: 
                 continue
 
             ks.extend([k for _ in results])
@@ -152,21 +171,6 @@ def load_data(data_folder, k_vals, t_vals, N_vals, target_methodname=None):
     df = pd.DataFrame(data)
     # Create a column for grouping
     df["Group"] = list(zip(df["Method"], df["Model"], df["k"], df["N"], df["t"]))
-
-
-    # # Find the minimum size across all groups
-    # group_sizes = df["Group"].value_counts()
-    # min_size = group_sizes.min()
-
-    # # Subsample each group explicitly
-    # balanced_data = []
-    # for group, size in group_sizes.items():
-    #     group_df = df[df["Group"] == group]
-    #     balanced_data.append(group_df.sample(n=min_size, random_state=42))
-
-    # # Combine all subsampled groups
-    # if len(balanced_data) == 0: continue
-    # balanced_df = pd.concat(balanced_data).reset_index(drop=True)
 
     return df, all_var_vals
 
@@ -258,9 +262,14 @@ def calculate_buckets_samerange(sub_df, bins=None, groupby_key="Model"):
 def calculate_buckets_samesize(sub_df, groupby_key="Model"):
     if len(sub_df) == 0: return None, None
     # Use qcut to create equal-sized buckets by count
-    sub_df["Length Bucket"] = pd.qcut(
-        sub_df["No gen toks"], q=n_buckets, duplicates="drop"
-    )
+    if len(sub_df["No gen toks"].unique()) < n_buckets:    
+        sub_df.loc[:, "Length Bucket"] = pd.qcut(
+            sub_df["No gen toks"], q=len(sub_df["No gen toks"].unique()), duplicates="drop"
+        )
+    else:
+        sub_df.loc[:, "Length Bucket"] = pd.qcut(
+            sub_df["No gen toks"], q=n_buckets, duplicates="drop"
+        )
 
     bucket_avg = (
         sub_df.groupby([groupby_key, "Length Bucket"], observed=True)["Correct?"].mean().reset_index()
@@ -283,6 +292,7 @@ def plot_correctness_by_ttoks_isolate_factor(df, k, t, N, modelname, stats_dict,
         & ((df["t"] == t) if t is not None else True)
         & ((df["N"] == N) if N is not None else True)
     ]
+
 
     if t is None:
         isolated_factor = "t"
@@ -855,7 +865,7 @@ def meta_plot_slopes(stats_dict, modelname, all_var_vals):
                 plt.savefig(os.path.join(foldername, "meta_plots", f"lrslope_{var_changing}{used_factor_values}_hold{hold_var}{hold_var_val}_{modelname}.png"))
                 plt.clf()
 
-def plot_correctness_by_factor(df, k, t, modelname):
+def plot_correctness_by_N_isolate_factor(df, k, t, modelname):
     assert sum((factor is None for factor in (k, t))) == 1, f"{(k, t)} one must be None"
     # Filter the data for the specific model, k, t, N, modelname
     filtered_data = df[
@@ -883,7 +893,7 @@ def plot_correctness_by_factor(df, k, t, modelname):
     max_val = filtered_data[isolated_factor].unique().astype(int).max().item() 
     used_vals = []
     for factor_value in sorted(filtered_data[isolated_factor].unique().astype(int)):
-        filtered_data_factor = filtered_data[filtered_data[isolated_factor] == factor_value]
+        filtered_data_factor = filtered_data[filtered_data[isolated_factor] == str(factor_value)]
 
         # Normalize the intensity of the color based on factor value
         color_intensity = int(factor_value) / (max_val+ 1)
@@ -944,6 +954,14 @@ def plot_correctness_by_factor(df, k, t, modelname):
         )
 
     if not len(used_vals): return
+    # Add random guessing baseline (1/k)
+    plt.axhline(
+        y = compute_random(k),
+        color='gray',
+        linestyle='--',
+        label=f'Random Guessing (1/{k})',
+    )
+        
     # Customize plot labels and legend
     plt.xlim(xmin=0)
     plt.ylim(0, 1)
@@ -956,11 +974,120 @@ def plot_correctness_by_factor(df, k, t, modelname):
     plt.grid(True, linestyle="--", alpha=0.6)
 
     # Save and clear the figure
-    filename = f"correctness_{isolated_factor}_"
+    filename = f"correctness_by_N_"
     if k is None:
         filename += f"t{t}_{modelname}.png"
     elif t is None:
         filename += f"k{k}_{modelname}.png"
+    os.makedirs(os.path.join(foldername, "isolate_factor"), exist_ok=True)
+    plt.savefig(
+        os.path.join(foldername, "isolate_factor", filename)
+    )
+    plt.clf()
+
+def plot_correctness_by_k_isolate_factor(df, t, N, modelname):
+    assert sum((factor is None for factor in (t, N))) == 1, f"{(t, N)} one must be None"
+    # Filter the data for the specific model, k, t, N, modelname
+    filtered_data = df[
+        df["Model"].str.contains(modelname)
+        & ((df["N"] == N) if N is not None else True)
+        & ((df["t"] == t) if t is not None else True)
+    ]
+    base_color = model_colors.get(modelname, "blue")
+
+    if t is None:
+        isolated_factor = "t"
+    elif N is None:
+        isolated_factor = "N"
+
+    # Ensure there is data to plot
+    if filtered_data.empty:
+        print(f"No examples found for: (t,N,M) {(t, N, modelname)}.")
+        return
+
+    plt.figure(figsize=(12, 6))
+
+    max_val = filtered_data[isolated_factor].unique().astype(int).max().item() 
+    used_vals = []
+    for factor_value in sorted(filtered_data[isolated_factor].unique().astype(int)):
+        filtered_data_factor = filtered_data[filtered_data[isolated_factor] == str(factor_value)]
+        filtered_data_factor["k"] = filtered_data_factor["k"].astype(int)
+
+        # Normalize the intensity of the color based on factor value
+        color_intensity = int(factor_value) / (max_val+ 1)
+
+        rgba_color = mcolors.to_rgba(base_color, alpha=color_intensity)
+        
+        # Calculate performance:
+        performance = (
+            filtered_data_factor.groupby("k")
+            ["Correct?"].mean()
+        )
+        if len(performance.values) == 0: continue
+        performance = performance.sort_index()
+        used_vals.append(factor_value)
+        # Plot the performance
+        plt.plot(
+            performance.index.astype(int),
+            performance.values,
+            color=rgba_color,
+            label=f"{isolated_factor}={factor_value}",
+        )
+
+        # Calculate and display confidence intervals
+        ci_lower = []
+        ci_upper = []
+        for k in performance.index.astype(int):
+            sample = filtered_data_factor[filtered_data_factor["k"] == k]["Correct?"]
+            if sample.empty:
+                ci_lower.append(np.nan)
+                ci_upper.append(np.nan)
+            else:
+                ci = np.percentile(np.random.choice(sample, size=(1000, len(sample)), replace=True).mean(axis=1), [2.5, 97.5])
+                ci_lower.append(ci[0])
+                ci_upper.append(ci[1])
+
+        # Plot confidence intervals as a shaded region
+        plt.fill_between(
+            performance.index.astype(int),
+            ci_lower,
+            ci_upper,
+            color=rgba_color,
+            alpha=color_intensity,
+        )
+
+    if not len(used_vals): return
+
+    # Add random guessing baseline (1/k)
+    if not filtered_data["k"].empty:
+        max_k = filtered_data["k"].astype(int).max()
+        k_values = np.arange(1, max_k + 1)
+        baseline = [compute_random(k) for k in k_values]
+        plt.plot(
+            k_values,
+            baseline,
+            color='gray',
+            linestyle='--',
+            label='Random Guessing (1/k)',
+        )
+        
+    # Customize plot labels and legend
+    plt.xlim(xmin=0)
+    plt.ylim(0, 1)
+    plt.ylabel("Correctness")
+    plt.xlabel("k")
+    plt.title(
+        f"Correctness vs. k ({t, N, modelname} Buckets={n_buckets})"
+    )
+    plt.legend(loc="best", fancybox=True, shadow=True)
+    plt.grid(True, linestyle="--", alpha=0.6)
+
+    # Save and clear the figure
+    filename = f"correctness_by_k_"
+    if N is None:
+        filename += f"t{t}_{modelname}.png"
+    elif t is None:
+        filename += f"N{N}_{modelname}.png"
     os.makedirs(os.path.join(foldername, "isolate_factor"), exist_ok=True)
     plt.savefig(
         os.path.join(foldername, "isolate_factor", filename)
@@ -981,7 +1108,6 @@ if __name__ == "__main__":
     k_vals = args.k_vals if args.k_vals is not None else set(df["k"])
     t_vals = args.t_vals if args.t_vals is not None else set(df["t"])
     N_vals = args.N_vals if args.N_vals is not None else set(df["N"])
-
     for modelname in args.models:
         numeric_stats = {}
         for t in t_vals:
@@ -996,7 +1122,8 @@ if __name__ == "__main__":
                     for N in N_vals:
                         plot_correctness_by_ttoks_across_method(df, k, t, N, modelname)
 
-            plot_correctness_by_factor(df, None, t, modelname)
+            # plot_correctness_by_N_isolate_factor(df, None, t, modelname)
+            # plot_correctness_by_k_isolate_factor(df, t, None, modelname)
             
             for N in N_vals:
                 if "k" in args.get_isolated:
@@ -1004,20 +1131,24 @@ if __name__ == "__main__":
                 # scatter_ttoks_by_complexity(modelname, N, t)
             
         for k in k_vals:
-            plot_correctness_by_factor(df, k, None, modelname)
+            plot_correctness_by_N_isolate_factor(df, k, None, modelname)
 
             for N in N_vals:
                 if "t" in args.get_isolated:
                     plot_correctness_by_ttoks_isolate_factor(df, k, None, N, modelname, numeric_stats, t_vals)
 
-        # meta_plot_corr(numeric_stats, modelname, all_var_vals)
         meta_plot_diminish(numeric_stats, modelname, all_var_vals)
-        meta_plot_slopes(numeric_stats, modelname, all_var_vals)
+
+        # meta_plot_corr(numeric_stats, modelname, all_var_vals)
+        # meta_plot_slopes(numeric_stats, modelname, all_var_vals)
         # numeric_stats = {str(key): value for key, value in numeric_stats.items()}
         # with open(f"numeric_stats_{modelname}_{os.path.basename(os.path.dirname(foldername.rstrip('/')))}.json", "w") as wf: json.dump(numeric_stats, wf, indent=4)
 
-    for k in k_vals:
-        for t in t_vals:
+        for N in N_vals:
+            plot_correctness_by_k_isolate_factor(df, None, N, modelname)
+
+    if "Model" in args.get_isolated:
+        for k in k_vals:
             for N in N_vals:
-                if "Model" in args.get_isolated:
+                for t in t_vals:
                     plot_correctness_by_ttoks_isolate_factor(df, k, t, N, None, {}, args.models)
