@@ -1,7 +1,9 @@
+system_instruction = """You are a smart and helpful AI assistant. Please help me with the following task."""
+
 stop_strings = ["[/ANSWER]"]
 
-reprompt_string = "[ANSWER]\nanswer = "
-
+reprompt_string = "[ANSWER]\nThe answer is:"
+answer_regex = r'\[ANSWER\]\s*The answer is:?([\S\s]+?)\[\/ANSWER\]'
 
 def prompt_with_chat_template(tokenizer, example):
     messages = []

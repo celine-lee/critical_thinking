@@ -18,14 +18,12 @@ def debughook(etype, value, tb):
 
 sys.excepthook = debughook
 
-from generate_dfas import *
 from llm_string_consts import *
 
 import torch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM, BitsAndBytesConfig
 
-foldername = "outputs"
 
 class Experiment:
     def __init__(self, model, model_name, num_gens_per, n_samples, temperature, num_beams=1, max_new_tokens=2400, max_batch_size=2):
@@ -59,7 +57,7 @@ class Experiment:
             input_idx = gen_idx // self.num_gens_per
             query_len = len(self.tokenizer.decode(input_ids.input_ids[input_idx], skip_special_tokens=True))
             parsed_answer = None
-            for parsed_answer in re.finditer(r'answer\s*=\s*(True|False|\d+|\[[^\]]*\])', model_prediction):
+            for parsed_answer in re.finditer(answer_regex, model_prediction):
                 pass # only get the last
             if parsed_answer is None or (parsed_answer.start() < query_len):
                 gens_need_augmenting.append(gen_idx)
@@ -107,7 +105,7 @@ class Experiment:
             model_prediction = self.tokenizer.decode(model_output.sequences[new_idx], skip_special_tokens=True)
             new_query_len = len(new_queries[new_idx])
             parsed_answer = None
-            for parsed_answer in re.finditer(r'answer\s*=\s*(True|False|\d+|\[[^\]]*\])', model_prediction):
+            for parsed_answer in re.finditer(answer_regex, model_prediction):
                 pass # only get the last
             if parsed_answer is None or (parsed_answer.start() < query_len):
                 answer = None
@@ -177,24 +175,18 @@ class Experiment:
             "pad_token_id": self.tokenizer.eos_token_id,
         }
 
-    def run_experiment(self, input_file):
-        subfolder = os.path.join(foldername, f"k{k}_e{e}_N{N}")
+    def run_experiment(self, input_file, experiment_name, encoding_method):
+        subfolder = os.path.join("outputs", experiment_name, encoding_method)
         os.makedirs(subfolder, exist_ok=True)
         filename = f"{subfolder}/{self.filename}.json"
         print(filename)
-        results = []
+        results = {} # id to result
         if os.path.exists(filename): results = json.load(open(filename))
 
-        examples = json.load(open(input_file))
-        n_gens_remaining = self.n_samples - len(results)
-        while n_gens_remaining > 0:
-            prompts = []
-            true_answers = []
-            batch_examples = examples[len(results):min(len(results)+self.max_batch_size,len(examples))]
-            for example in batch_examples:
-                prompt = make_prompt(self.tokenizer, example)
-                prompts.append(prompt)
-                true_answers.append(example["answer"])
+        examples = [ex for ex in json.load(open(input_file)) if str(ex["id"]) not in results][:self.n_samples - len(results)]
+        for batch_idx in range(0, len(examples), self.max_batch_size):
+            batch_examples = examples[batch_idx:min(batch_idx+self.max_batch_size,len(examples))]
+            prompts = [make_prompt(self.tokenizer, example) for example in batch_examples]
 
             input_ids = self.tokenizer(
                 prompts,
@@ -215,10 +207,25 @@ class Experiment:
 
             for gen_idx, (pred_answer, num_generated_tokens, total_compute_tokens, model_generation) in enumerate(extracted_answers_and_indices):
                 input_idx = gen_idx // generation_config["num_return_sequences"]
-                true_answer = true_answers[input_idx]
-                is_correct = pred_answer is not None and eval(pred_answer) == eval(true_answer)
-                results.append(
-                    {
+                example = batch_examples[input_idx]
+                true_answer = example["answer"]
+                # Throw away cases where LLM doesnt format answer right.
+                if pred_answer is None:
+                    continue
+                try: 
+                    if experiment_name in {"connected_nodes", "disconnected_nodes"}:
+                        if pred_answer.strip() == "None":
+                            is_correct = true_answer.strip() in {"[]", "None"}
+                        elif true_answer.strip() in {"None", "[]"}:
+                            is_correct = False
+                        else:
+                            eval_pred_answer = set(nodename.strip() for nodename in pred_answer.strip().strip("[](){}").split(","))
+                            is_correct = eval_pred_answer == set(eval(true_answer))
+                    else:
+                        is_correct = eval(pred_answer) == eval(true_answer)
+                except:
+                    continue
+                results[example["id"]] = {
                         "query": prompts[input_idx],
                         "model_generation": model_generation,
                         "total_compute_tokens": total_compute_tokens,
@@ -226,13 +233,13 @@ class Experiment:
                         "pred_answer": pred_answer,
                         "true_answer": true_answer,
                         "correct": is_correct,
+                        "nnodes": example["nnodes"],
+                        "nedges": example["nedges"],
+                        "lrun": example["lrun"],
                     }
-                )
-                n_gens_remaining -= 1
                 
-            if n_gens_remaining % 10 < 2:
-                with open(filename, "w") as wf:
-                    json.dump(results, wf, indent=4)
+            with open(filename, "w") as wf:
+                json.dump(results, wf, indent=4)
 
         with open(filename, "w") as wf:
             json.dump(results, wf, indent=4)
@@ -275,6 +282,8 @@ def get_args():
     parser.add_argument("--num_gens_per", type=int, default=1)
     parser.add_argument("--models", nargs='+', default=["google/gemma-2-9b-it"])
     parser.add_argument("--tasks", nargs='+', default=["connected_nodes", "reachability", "shortest_path", "cycle_check", "disconnected_nodes", "edge_count", "edge_existence", "node_count", "node_degree"])
+    parser.add_argument("--encodings", nargs='+', default=["adjacency", "coauthorship", "expert", "friendship", "incident", "social_network"])
+    # parser.add_argument("--encodings", nargs='+', default=["adjacency", "coauthorship", "expert", "friendship", "got", "incident", "politician", "social_network", "south_park"])
     args = parser.parse_args()
     return args
 
@@ -287,8 +296,9 @@ def run():
         model = load_model(model_name)
         experiment = Experiment(model, model_name, args.num_gens_per, n_samples=n_samples, temperature=args.temperature, num_beams=args.num_beams)
         for task in args.tasks:
-            task_file = f"tasks/{task}_zero_shot_test.json"
-            results = experiment.run_experiment(task_file)
+            for encoding in args.encodings:
+                task_file = f"tasks/{task}_{encoding}_zero_shot_test.json"
+                results = experiment.run_experiment(task_file, task, encoding)
         del model
 
 if __name__ == "__main__":

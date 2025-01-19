@@ -24,12 +24,12 @@ import numpy as np
 _NUMBER_OF_NODES_RANGE = {
     "small": np.arange(5, 10),
     "medium": np.arange(10, 15),
-    "large": np.arange(15, 20),
+    # "large": np.arange(15, 20),
 }
 _NUMBER_OF_COMMUNITIES_RANGE = {
     "small": np.arange(2, 4),
     "medium": np.arange(2, 8),
-    "large": np.arange(2, 10),
+    # "large": np.arange(2, 10),
 }
 
 

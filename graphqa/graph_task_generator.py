@@ -105,18 +105,19 @@ def zero_shot(
     split: whether we are creating a train or test split.
   """
   assert not cot, "Not doing COT in this experiment"
-  random.seed(random_seed)
-  zero_shot_examples = utils.create_zero_shot_task(
-      task, graphs, algorithms, text_encoders, cot=cot
-  )
   if not os.path.exists(_TASK_DIR.value):
     os.makedirs(_TASK_DIR.value)
-  file_name = task.name + ('_zero_cot_' if cot else '_zero_shot_')
-  file_name += split + '.json'
-  utils.write_examples(
-      zero_shot_examples,
-      os.path.join(_TASK_DIR.value, file_name),
-  )
+  random.seed(random_seed)
+  for text_encoder in text_encoders:
+    zero_shot_examples = utils.create_zero_shot_task(
+        task, graphs, algorithms, [text_encoder], cot=cot
+    )
+    file_name = task.name + f'_{text_encoder}' + ('_zero_cot_' if cot else '_zero_shot_')
+    file_name += split + '.json'
+    utils.write_examples(
+        zero_shot_examples,
+        os.path.join(_TASK_DIR.value, file_name),
+    )
 
 
 def generate_random_sbm_graph(random_state):

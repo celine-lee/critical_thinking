@@ -53,7 +53,7 @@ class CycleCheck(GraphTask):
   def __init__(self):
     super().__init__()
     self.name = 'cycle_check'
-    self._task_description = 'Q: Is there a cycle in this graph? Provide your final answer as True or False, following this template: [ANSWER]\nanswer = YOUR ANSWER\n[/ANSWER]'
+    self._task_description = 'Q: Is there a cycle in this graph? Provide your final answer as True or False, following this template: [ANSWER]\nThe answer is: YOUR ANSWER\n[/ANSWER]'
 
   def prepare_examples_dict(
       self,
@@ -79,7 +79,7 @@ class CycleCheck(GraphTask):
           'question': question,
           'answer': answer,
           'cycle': cycle,
-          'lrun': len(cycle) if cycle else 0,
+          'lrun': len(graph.nodes()) + len(graph.edges()), # BFS and DFS O(V+E)
           'nnodes': len(graph.nodes()),
           'nedges': len(graph.edges()),
           'task_description': self._task_description,
@@ -108,7 +108,7 @@ class EdgeExistence(GraphTask):
     for ind, graph in enumerate(graphs):
       source, target = random.sample(list(graph.nodes()), k=2)
       question = graph_text_encoder.encode_graph(graph, encoding_method)
-      task_description = 'Q: Is node %s connected to node %s? Provide your final answer as True or False, following this template: [ANSWER]\nanswer = YOUR ANSWER\n[/ANSWER]' % (
+      task_description = 'Q: Is node %s connected to node %s? Provide your final answer as True or False, following this template: [ANSWER]\nThe answer is: YOUR ANSWER\n[/ANSWER]' % (
           name_dict[source],
           name_dict[target],
       )
@@ -140,7 +140,7 @@ class NodeCount(GraphTask):
   def __init__(self):
     super().__init__()
     self.name = 'node_count'
-    self._task_description = 'Q: How many nodes are in this graph? Provide your final answer as an integer, following this template: [ANSWER]\nanswer = YOUR ANSWER\n[/ANSWER]'
+    self._task_description = 'Q: How many nodes are in this graph? Provide your final answer as an integer, following this template: [ANSWER]\nThe answer is: YOUR ANSWER\n[/ANSWER]'
 
   def prepare_examples_dict(
       self,
@@ -152,7 +152,7 @@ class NodeCount(GraphTask):
     for ind, graph in enumerate(graphs):
       question = graph_text_encoder.encode_graph(graph, encoding_method)
       question += self._task_description
-      answer = len(graph.nodes())
+      answer = str(len(graph.nodes()))
       examples_dict[ind] = {
           'question': question,
           'answer': answer,
@@ -193,10 +193,10 @@ class NodeDegree(GraphTask):
       question = graph_text_encoder.encode_graph(graph, encoding_method)
       source_node = random.sample(list(graph.nodes()), k=1)[0]
       task_description = (
-          'Q: What is the degree of node %s? Provide your final answer as an integer, following this template: [ANSWER]\nanswer = YOUR ANSWER\n[/ANSWER]' % name_dict[source_node]
+          'Q: What is the degree of node %s? Provide your final answer as an integer, following this template: [ANSWER]\nThe answer is: YOUR ANSWER\n[/ANSWER]' % name_dict[source_node]
       )
       question += task_description
-      answer = graph.degree[source_node]
+      answer = str(graph.degree[source_node])
       examples_dict[ind] = {
           'question': question,
           'answer': answer,
@@ -234,7 +234,7 @@ class EdgeCount(GraphTask):
   def __init__(self):
     super().__init__()
     self.name = 'edge_count'
-    self._task_description = 'Q: How many edges are in this graph? Provide your final answer as an integer, following this template: [ANSWER]\nanswer = YOUR ANSWER\n[/ANSWER]'
+    self._task_description = 'Q: How many edges are in this graph? Provide your final answer as an integer, following this template: [ANSWER]\nThe answer is: YOUR ANSWER\n[/ANSWER]'
 
   def prepare_examples_dict(
       self,
@@ -246,11 +246,11 @@ class EdgeCount(GraphTask):
     for ind, graph in enumerate(graphs):
       question = graph_text_encoder.encode_graph(graph, encoding_method)
       question += self._task_description
-      answer = len(graph.edges())
+      answer = str(len(graph.edges()))
       examples_dict[ind] = {
           'question': question,
           'answer': answer,
-          'lrun': answer,
+          'lrun': len(graph.edges()),
           'nnodes': len(graph.nodes()),
           'nedges': len(graph.edges()),
           'task_description': self._task_description,
@@ -290,18 +290,20 @@ class ConnectedNodes(GraphTask):
       question = graph_text_encoder.encode_graph(graph, encoding_method)
       source_node = random.sample(list(graph.nodes()), k=1)[0]
       task_description = (
-          'Q: List all the nodes connected to %s. Provide your final answer as a list, following this template: [ANSWER]\nanswer = YOUR ANSWER\n[/ANSWER]'
+          'Q: List the all nodes connected to %s. Provide your final answer with commas separating the node names, or just say None if there are none. Write your answer in this template: [ANSWER]\nThe answer is: YOUR ANSWER\n[/ANSWER]'
           % name_dict[source_node]
       )
       question += task_description
       outgoing_edges = list(graph.edges(source_node))
-      answer = []
+      answer = "None"
       if outgoing_edges:
         answer = self.get_connected_nodes(outgoing_edges, name_dict)
+        lrun = len(answer)
+        answer = '[' + ', '.join(f'"{entry}"' for entry in answer) + ']'
       examples_dict[ind] = {
           'question': question,
           'answer': answer,
-          'lrun': len(answer),
+          'lrun': lrun,
           'nnodes': len(graph.nodes()),
           'nedges': len(graph.edges()),
           'task_description': task_description,
@@ -341,7 +343,7 @@ class DisconnectedNodes(GraphTask):
       question = graph_text_encoder.encode_graph(graph, encoding_method)
       source_node = random.sample(list(graph.nodes()), k=1)[0]
       task_description = (
-          'Q: List all the nodes that are not connected to %s. Provide your final answer as a list, following this template: [ANSWER]\nanswer = YOUR ANSWER\n[/ANSWER]' % name_dict[source_node]
+          'Q: List all nodes that are not connected to %s. Provide your final answer with commas separating the node names, or just say None if there are none. Write your answer in this template: [ANSWER]\nThe answer is: YOUR ANSWER\n[/ANSWER]' % name_dict[source_node]
       )
       question += task_description
       outgoing_edges = list(graph.edges(source_node))
@@ -350,7 +352,7 @@ class DisconnectedNodes(GraphTask):
       )
       examples_dict[ind] = {
           'question': question,
-          'answer': answer,
+          'answer': '[' + ', '.join(f'"{entry}"' for entry in answer) + ']',
           'lrun': lrun,
           'nnodes': len(graph.nodes()),
           'nedges': len(graph.edges()),
@@ -402,7 +404,7 @@ class Reachability(GraphTask):
     for ind, graph in enumerate(graphs):
       source, target = random.sample(list(graph.nodes()), k=2)
       question = graph_text_encoder.encode_graph(graph, encoding_method)
-      task_description = 'Q: Is there a path from node %s to node %s? Provide your final answer as True or False, following this template: [ANSWER]\nanswer = YOUR ANSWER\n[/ANSWER]' % (
+      task_description = 'Q: Is there a path from node %s to node %s? Provide your final answer as True or False, following this template: [ANSWER]\nThe answer is: YOUR ANSWER # True or False\n[/ANSWER]' % (
           name_dict[source],
           name_dict[target],
       )
@@ -447,7 +449,7 @@ class ShortestPath(GraphTask):
       question = graph_text_encoder.encode_graph(graph, encoding_method)
       task_description = (
           'Q: What is the number of edges on the shortest path from node %s to node'
-          ' %s? Provide your final answer as an integer or None, following this template: [ANSWER]\nanswer = YOUR ANSWER\n[/ANSWER]'
+          ' %s? Provide your final answer as an integer or None, following this template: [ANSWER]\nThe answer is: YOUR ANSWER\n[/ANSWER]'
           % (
               name_dict[source],
               name_dict[target],
@@ -456,9 +458,9 @@ class ShortestPath(GraphTask):
       question += task_description
       try:
         path = nx.shortest_path(graph, source, target)
-        answer = len(path) - 1
+        answer = str(len(path) - 1)
       except nx.NetworkXNoPath:
-        answer = None
+        answer = "None"
       examples_dict[ind] = {
           'question': question,
           'answer': answer,
@@ -538,7 +540,7 @@ class MaximumFlow(GraphTask):
       maximum_flow_value = nx.maximum_flow(
           graph, source, target, capacity='weight'
       )[0]
-      answer = str(maximum_flow_value) + '.'
+      answer = str(maximum_flow_value)
       examples_dict[ind] = {
           'question': question,
           'answer': answer,

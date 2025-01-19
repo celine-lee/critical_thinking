@@ -36,8 +36,8 @@ TEXT_ENCODER_DICT = {
 def create_node_string(name_dict, nnodes):
   node_string = ""
   for i in range(nnodes - 1):
-    node_string += name_dict[i] + ", "
-  node_string += "and " + name_dict[nnodes - 1]
+    node_string += f'"{name_dict[i]}"' + ", "
+  node_string += "and " + f'"{name_dict[nnodes - 1]}"'
   return node_string
 
 
