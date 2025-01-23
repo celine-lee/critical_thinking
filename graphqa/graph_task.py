@@ -296,6 +296,7 @@ class ConnectedNodes(GraphTask):
       question += task_description
       outgoing_edges = list(graph.edges(source_node))
       answer = "None"
+      lrun = 0
       if outgoing_edges:
         answer = self.get_connected_nodes(outgoing_edges, name_dict)
         lrun = len(answer)
@@ -459,12 +460,14 @@ class ShortestPath(GraphTask):
       try:
         path = nx.shortest_path(graph, source, target)
         answer = str(len(path) - 1)
+        lrun = len(path)
       except nx.NetworkXNoPath:
         answer = "None"
+        lrun = 0
       examples_dict[ind] = {
           'question': question,
           'answer': answer,
-          'lrun': len(path),
+          'lrun': lrun,
           'nnodes': len(graph.nodes()),
           'nedges': len(graph.edges()),
           'task_description': task_description,

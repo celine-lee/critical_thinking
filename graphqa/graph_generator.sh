@@ -26,12 +26,12 @@ OUTPUT_PATH="graphs"
 
 echo "The output path is set to: $OUTPUT_PATH"
 
-for algorithm in "er" "ba" "sbm" "sfn" "complete" "star" "path"
+for algorithm in "er" # "ba" "sbm" "sfn" "complete" "star" "path"
 do
   echo "Generating test examples for $algorithm"
   python graph_generator.py \
                     --algorithm=$algorithm \
-                    --number_of_graphs=500 \
+                    --number_of_graphs=100 \
                     --split=test \
                     --output_path=$OUTPUT_PATH
 done

@@ -66,6 +66,9 @@ def write_graphs(graphs, output_dir):
     )
 
 
+_NUMBER_OF_NODES = [5, 9, 17]
+_SPARSITY_CHOICES = [0.2, 0.5, 0.8]
+
 def main(argv):
   if len(argv) > 1:
     raise app.UsageError("Too many command-line arguments.")
@@ -79,22 +82,27 @@ def main(argv):
   else:
     raise NotImplementedError()
 
-  generated_graphs = graph_generator_utils.generate_graphs(
-      number_of_graphs=_NUMBER_OF_GRAPHS.value,
-      algorithm=_ALGORITHM.value,
-      directed=_DIRECTED.value,
-      random_seed=random_seed,
-      er_min_sparsity=_MIN_SPARSITY.value,
-      er_max_sparsity=_MAX_SPARSITY.value,
-  )
-  write_graphs(
-      graphs=generated_graphs,
-      output_dir=os.path.join(
-          _OUTPUT_PATH.value,
-          _ALGORITHM.value,
-          _SPLIT.value,
-      ),
-  )
+  for number_of_nodes in _NUMBER_OF_NODES:
+    for sparsity in _SPARSITY_CHOICES:
+      generated_graphs = graph_generator_utils.generate_graphs(
+          number_of_graphs=_NUMBER_OF_GRAPHS.value,
+          number_of_nodes=number_of_nodes,
+          sparsity=sparsity,
+          algorithm=_ALGORITHM.value,
+          directed=_DIRECTED.value,
+          random_seed=random_seed,
+          er_min_sparsity=_MIN_SPARSITY.value,
+          er_max_sparsity=_MAX_SPARSITY.value,
+      )
+      write_graphs(
+          graphs=generated_graphs,
+          output_dir=os.path.join(
+              _OUTPUT_PATH.value,
+              _ALGORITHM.value,
+              f"{number_of_nodes}_{int(100*sparsity)}"
+              # _SPLIT.value,
+          ),
+      )
 
 
 if __name__ == "__main__":

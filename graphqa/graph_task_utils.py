@@ -75,25 +75,25 @@ import graph_task
 
 
 def load_graphs(
-    base_path,
-    algorithm,
-    split,
-    max_nnodes = 20,
+    graphs_path,
+    # algorithm,
+    # split,
+    # max_nnodes = 20,
 ):
   """Load a list of graphs from a given algorithm and split."""
-  graphs_path = os.path.join(
-      base_path,
-      algorithm,
-      split,
-  )
+  # graphs_path = os.path.join(
+  #     base_path,
+  #     algorithm,
+  #     split,
+  # )
   loaded_graphs = []
   # all_files = gfile.listdir(graphs_path)
   for path in glob.glob(os.path.join(graphs_path, "*.graphml")):
     # if file.endswith('.graphml'):
     # path = os.path.join(graphs_path, file)
     graph = nx.read_graphml(open(path, 'rb'), node_type=int)
-    if graph.number_of_nodes() <= max_nnodes:
-      loaded_graphs.append(graph)
+    # if graph.number_of_nodes() <= max_nnodes:
+    loaded_graphs.append(graph)
   return loaded_graphs
 
 
@@ -129,7 +129,6 @@ def load_graphs(
 #         )
 #     )
 #   return examples
-
 
 def create_zero_shot_task(
     task,

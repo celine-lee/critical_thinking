@@ -18,6 +18,7 @@ r"""The graph tasks to be tried with LLMs."""
 from collections.abc import Sequence
 import os
 import random
+import glob
 
 from absl import app
 from absl import flags
@@ -90,8 +91,7 @@ def zero_shot(
     algorithms,
     text_encoders,
     cot,
-    random_seed,
-    split,
+    subfolder_name,
 ):
   """Creating zero-shot or zero-cot examples for the given task.
 
@@ -101,22 +101,18 @@ def zero_shot(
     algorithms: the algorithm used to generate the graphs.
     text_encoders: the encoders to use in the tasks.
     cot: whether to apply cot or not.
-    random_seed: the random seed to use in the process.
-    split: whether we are creating a train or test split.
   """
   assert not cot, "Not doing COT in this experiment"
   if not os.path.exists(_TASK_DIR.value):
     os.makedirs(_TASK_DIR.value)
-  random.seed(random_seed)
   for text_encoder in text_encoders:
     zero_shot_examples = utils.create_zero_shot_task(
         task, graphs, algorithms, [text_encoder], cot=cot
     )
-    file_name = task.name + f'_{text_encoder}' + ('_zero_cot_' if cot else '_zero_shot_')
-    file_name += split + '.json'
+    file_name = task.name + f'_{text_encoder}' + '.json'
     utils.write_examples(
         zero_shot_examples,
-        os.path.join(_TASK_DIR.value, file_name),
+        os.path.join(_TASK_DIR.value, subfolder_name, file_name),
     )
 
 
@@ -154,41 +150,33 @@ def main(argv):
       'expert',
   ]
 
-  # Loading the graphs.
-  graphs = []
-  generator_algorithms = []
-  for algorithm in algorithms:
-    loaded_graphs = utils.load_graphs(
-        _GRAPHS_DIR.value,
-        algorithm,
-        'test',
-    )
-    graphs += loaded_graphs
-    generator_algorithms += [algorithm] * len(loaded_graphs)
-
   # Defining a task on the graphs
   task = TASK_CLASS[_TASK.value]()
 
-  if isinstance(task, graph_task.NodeClassification):
-    # The node classification task requires SBM graphs. As it's not possible to
-    # write graphs with data (e.g., blocks data as in SBM graphs), we regenerate
-    # graphs.
-
-    random_state = np.random.RandomState(_RANDOM_SEED.value)
-    print('Generating sbm graphs')
-    graphs = [
-        generate_random_sbm_graph(random_state) for _ in range(len(graphs))
-    ]
-
-  zero_shot(
-      task,
-      graphs,
-      generator_algorithms,
-      text_encoders,
-      cot=False,
-      random_seed=_RANDOM_SEED.value,
-      split='test',
-  )
+  # Loading the graphs.
+  # graphs = []
+  # generator_algorithms = []
+  for algorithm in algorithms:
+    for foldername in glob.glob(os.path.join(
+        _GRAPHS_DIR.value,
+        algorithm,
+        "*"
+    )):
+      graphs = utils.load_graphs(foldername)
+      # graphs += loaded_graphs
+      # generator_algorithms += [algorithm] * len(loaded_graphs)
+      generator_algorithms = [algorithm] * len(graphs)
+      subfolder_name=os.path.basename(foldername.rstrip('/ '))
+      if not os.path.exists(os.path.join(_TASK_DIR.value, subfolder_name)):
+        os.makedirs(os.path.join(_TASK_DIR.value, subfolder_name), exist_ok=True)
+      zero_shot(
+          task,
+          graphs,
+          generator_algorithms,
+          text_encoders,
+          cot=False,
+          subfolder_name=subfolder_name
+      )
 
 
 if __name__ == '__main__':
