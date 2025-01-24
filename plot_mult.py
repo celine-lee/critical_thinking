@@ -453,6 +453,16 @@ def plot_correctness_by_m_isolate_factor(df, k, N, modelname):
     )
     plt.clf()
 
+def parse_kmN(experiment_file):
+    parsed_experimentname = re.search(r"k(\d+)_m(\d+)_N(\d+)", experiment_file)
+    if parsed_experimentname is None:
+        return None
+    modelname = re.search(r"([^\/]+)_T", experiment_file).group(1)
+    k = parsed_experimentname.group(1)
+    m = parsed_experimentname.group(2)
+    N = parsed_experimentname.group(3)
+    return {"k": k, "m": m, "N": N, "Model": modelname}
+    
 if __name__ == "__main__":
     args = get_args()
 
@@ -462,15 +472,6 @@ if __name__ == "__main__":
 
     plot_kwargs = {"n_buckets": args.n_buckets, "temperature": args.temperature, "num_beams": args.num_beams, "num_gens": args.num_gens, "foldername": args.foldername, "only_meta": args.only_meta, 'compute_random': compute_random}
 
-    def parse_kmN(experiment_file):
-        parsed_experimentname = re.search(r"k(\d+)_m(\d+)_N(\d+)", experiment_file)
-        if parsed_experimentname is None:
-            return None
-        modelname = re.search(r"([^\/]+)_T", experiment_file).group(1)
-        k = parsed_experimentname.group(1)
-        m = parsed_experimentname.group(2)
-        N = parsed_experimentname.group(3)
-        return {"k": k, "m": m, "N": N, "Model": modelname}
         
     df = load_data(args.output_folder, {"k": args.k_vals, "m": args.m_vals, "N": args.N_vals, "Model": args.models}, parse_kmN, plot_kwargs)
     df_nocot = load_data(args.output_folder+"_nocot", {"k": args.k_vals, "m": args.m_vals, "N": args.N_vals, "Model": args.models}, parse_kmN, plot_kwargs)
