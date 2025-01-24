@@ -1,65 +1,31 @@
-import json
-import re
+
+import os
 import sys
 import ipdb
 import traceback
-import os
-import shutil
-from tqdm import tqdm
-import numpy as np
-import scipy.stats as stats
-import random
 import glob
-import pandas as pd
+import re
+import json
+import argparse
 
-import seaborn as sns
+import numpy as np
+import pandas as pd
+import scipy.stats as stats
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D    
 import matplotlib.colors as mcolors
 from matplotlib.cm import get_cmap
-from matplotlib.lines import Line2D
-from scipy.stats import sem
 from scipy.optimize import curve_fit
+from scipy.stats import sem
+import seaborn as sns
+sns.set("talk")
 
 def debughook(etype, value, tb):
     traceback.print_exception(etype, value, tb)
     print()
     ipdb.pm()  # post-mortem debugger
 
-
 sys.excepthook = debughook
-
-import argparse
-
-global temperature
-global num_beams
-global num_gens
-global foldername
-global n_buckets
-
-def get_args():
-    global temperature
-    global num_beams
-    global num_gens
-    global foldername
-    global n_buckets
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--output_folder", type=str)
-    parser.add_argument("--temperature", type=float, default=0.9)
-    parser.add_argument("--n_buckets", type=int, default=10)
-    parser.add_argument("--num_gens", type=int, default=1)
-    parser.add_argument("--num_beams", type=int, default=1)
-    parser.add_argument("--k_vals", nargs='+', default=None)
-    parser.add_argument("--N_vals", nargs='+', default=None)
-    parser.add_argument("--models", nargs='+', default=[])
-    parser.add_argument("--delete_old", action="store_true")
-    args = parser.parse_args()
-    foldername = os.path.join(f"{args.output_folder.rstrip('/')}_graphs_{args.n_buckets}buckets_T{args.temperature}_B{args.num_beams}_S{args.num_gens}")
-    temperature = args.temperature
-    num_beams = args.num_beams
-    num_gens = args.num_gens
-    n_buckets = args.n_buckets
-
-    return args
 
 
 model_colors = {
@@ -83,57 +49,47 @@ model_nicknames = {
 }
 colormap = get_cmap("tab10")  # Use a colormap with distinct colors
 
-def load_data(data_folder, models_to_plot):
-    ks = []
-    Ns = []
-    models = []
-    gen_toks = []
-    correct = []
+
+def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, kwargs):
+    loaded_data = {
+        "No gen toks": [],
+        "Correct?": []
+    }
+    for varname in varnames_and_wanted_vals:
+        loaded_data[varname] = []
 
     # Load data from experiment files
     for subfolder in glob.glob(os.path.join(data_folder, f"k*")):
-        parsed_experimentname = re.search(r"k(\d+)_N(\d+)", subfolder)
-        if parsed_experimentname is None:
-            continue
-        k = parsed_experimentname.group(1)
-        N = parsed_experimentname.group(2)
-
         for experiment_file in glob.glob(os.path.join(subfolder, "*")):
-            if f"T{temperature}" not in experiment_file:
+            if f"T{kwargs['temperature']}" not in experiment_file:
                 continue
             if re.search(r'_B\d+_S\d+', experiment_file):
-                if f"_B{num_beams}_S{num_gens}.json" not in experiment_file: 
+                if f"_B{kwargs['num_beams']}_S{kwargs['num_gens']}.json" not in experiment_file: 
                     continue
-            elif temperature > 0.0: 
-                if num_beams != 1 or num_gens != 6: 
-                    continue
+            elif kwargs['temperature'] == 0.0: 
+                assert kwargs['num_beams'] == 1 and kwargs['num_gens'] == 1
             
-            modelname = re.search(r"([^\/]+)_T", experiment_file).group(1)
-            if not any(model_str in modelname for model_str in models_to_plot):
-                continue
+            experiment_details = experiment_details_parser(experiment_file)
+            if experiment_details is None: continue
+            for detail_name, detail_value in experiment_details.items():
+                if (varnames_and_wanted_vals[detail_name] is not None) and detail_value not in varnames_and_wanted_vals[detail_name]:
+                    continue
             
             results = json.load(open(experiment_file))
+            results = [res for res in results if res["pred_answer"]]
 
-            ks.extend([k for _ in results])
-            Ns.extend([N for _ in results])
-            models.extend([modelname for _ in results])
-            gen_toks.extend([ex["generated_tokens"] for ex in results])
-            correct.extend([ex["correct"] for ex in results])
+            for varname in varnames_and_wanted_vals:
+                loaded_data[varname].extend([experiment_details[varname] for _ in results])
 
-    data = {
-        "k": ks,
-        "N": Ns,
-        "Model": models,
-        "No gen toks": gen_toks,
-        "Correct?": correct,
-    }
+            loaded_data["No gen toks"].extend([ex["generated_tokens"] for ex in results])
+            loaded_data["Correct?"].extend([ex["correct"] for ex in results])
 
     # Create a DataFrame for the new data
-    df = pd.DataFrame(data)
+    df = pd.DataFrame(loaded_data)
 
     return df
 
-def calculate_buckets_samesize(sub_df, groupby_key="Model"):
+def calculate_buckets_samesize(sub_df, n_buckets, groupby_key="Model"):
     if len(sub_df) == 0: return None, None
     # Use qcut to create equal-sized buckets by count
     if len(sub_df["No gen toks"].unique()) < n_buckets:    
@@ -153,14 +109,28 @@ def calculate_buckets_samesize(sub_df, groupby_key="Model"):
     bucket_avg["Bucket Center"] = bucket_avg["Length Bucket"].apply(
         lambda x: (x.left + x.right) / 2
     ).astype(float)
-    bucket_avg["Correct?"] = bucket_avg["Correct?"].astype(float)
+
+    bucket_avg["Correct?"] =  bucket_avg["Correct?"].astype(float)
     sub_df = sub_df.merge(bucket_avg, on=groupby_key, suffixes=('', '_mean'))
 
     return bucket_avg, sub_df
 
-sns.set("talk")
 
-def plot_requested_vs_generated(df):
+def global_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output_folder", type=str)
+    parser.add_argument("--temperature", type=float, default=0.0)
+    parser.add_argument("--n_buckets", type=int, default=5)
+    parser.add_argument("--num_gens", type=int, default=1)
+    parser.add_argument("--num_beams", type=int, default=1)
+    parser.add_argument("--get_isolated", nargs='+')
+    parser.add_argument("--models", nargs='+')
+    parser.add_argument("--delete_old", action="store_true")
+    parser.add_argument("--only_meta", action="store_true")
+    return parser
+
+def plot_length_generated(df, kwargs, by_factor=None):
+    # TODO by_factor
     # Separate data by model size
     model_data = {
         model_name: df[df["Model"].str.contains(model_name)].sort_values(by="No gen toks")
@@ -213,14 +183,12 @@ def plot_requested_vs_generated(df):
     plt.legend(handles=legend_elements, loc="best", fancybox=True, shadow=True)
 
     plt.savefig(
-        os.path.join(foldername, "genlength_boxplot.png")
+        os.path.join(kwargs['foldername'], "genlength_boxplot.png")
     )
     plt.clf()
 
-def plot_correctness_by_ttoks(filtered_data, k, N, modelname, label, rgba_color, is_subplot=False):
-    # plt.figure(figsize=(12, 6))
-
-    bucket_avg, filtered_data = calculate_buckets_samesize(filtered_data)
+def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_color, is_subplot, kwargs):
+    bucket_avg, filtered_data = calculate_buckets_samesize(filtered_data, kwargs['n_buckets'])
     if filtered_data is None: return False
     if len(bucket_avg) == 0: return False
         
@@ -229,6 +197,13 @@ def plot_correctness_by_ttoks(filtered_data, k, N, modelname, label, rgba_color,
     peak_ttoks = bucket_avg["Bucket Center"][index_peak]
     best_performance = bucket_avg["Correct?"][index_peak]
     
+    sem_values = filtered_data.groupby("Bucket Center", observed=True)["Correct?"].apply(stats.sem)
+    # Calculate confidence intervals
+    ci = sem_values * 1.96  # For 95% confidence
+    ci = sem_values.reindex(bucket_avg["Bucket Center"]).fillna(0)
+
+    if kwargs['only_meta']: 
+        return (peak_ttoks.item(), best_performance.item(), (best_performance - ci.values[index_peak]).item() > kwargs['compute_random'](set_factor_values))
     # Plot the average correctness for each model size and method
     plt.plot(
         bucket_avg["Bucket Center"],
@@ -236,11 +211,6 @@ def plot_correctness_by_ttoks(filtered_data, k, N, modelname, label, rgba_color,
         color=rgba_color,
         label=label,
     )
-
-    sem_values = filtered_data.groupby("Bucket Center", observed=True)["Correct?"].apply(stats.sem)
-    # Calculate confidence intervals
-    ci = sem_values * 1.96  # For 95% confidence
-    ci = sem_values.reindex(bucket_avg["Bucket Center"]).fillna(0)
 
     plt.fill_between(
         bucket_avg["Bucket Center"],
@@ -258,76 +228,69 @@ def plot_correctness_by_ttoks(filtered_data, k, N, modelname, label, rgba_color,
         plt.ylim(0, 1)
         plt.ylabel("Average Correctness")
         plt.xlabel("No. of Generated Tokens (Binned)")
+        plt.title(
+            f"Average Correctness vs. No. of Generated Tokens {set_factor_values}"
+        )
         plt.legend(loc="best", fancybox=True, shadow=True)
         plt.grid(True, linestyle="--", alpha=0.6)
 
         # Save and clear the figure
-        filename = f"k{k}_N{N}_{modelname}.png"
-        os.makedirs(os.path.join(foldername, "isolate_factor"), exist_ok=True)
+        filename = "_".join(f"{factor_name}{factor_value}" for factor_name, factor_value in set_factor_values.items()) + ".png"
+        os.makedirs(os.path.join(kwargs['foldername'], "isolate_factor"), exist_ok=True)
         plt.savefig(
-            os.path.join(foldername, "isolate_factor", filename)
+            os.path.join(kwargs['foldername'], "isolate_factor", filename)
         )
         plt.clf()
-    return (peak_ttoks.item(), best_performance.item(), (best_performance - ci.values[index_peak]).item() > 0.5)
+    return (peak_ttoks.item(), best_performance.item(), (best_performance - ci.values[index_peak]).item() > kwargs['compute_random'](set_factor_values))
 
-def plot_correctness_by_ttoks_isolate_factor(df, k, N, modelname, factor_vals):
-    assert sum((factor is None for factor in (k, N, modelname))) == 1, f"{(k, N, modelname)} one must be None"
-    # Filter the data for the specific model, k, N, modelname
-    filtered_data = df[
-        (df["Model"].str.contains(modelname) if modelname is not None else True)
-        & ((df["k"] == k) if k is not None else True)
-        & ((df["N"] == N) if N is not None else True)
-    ]
+def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_factor, kwargs):
+    # Filter the data for the specified factor_set_values
+    bool_filter = True
+    for factor_name, factor_val in factor_set_values.items():
+        bool_filter = bool_filter & (df[factor_name] == factor_val)
+    filtered_data = df[bool_filter]
 
-    if k is None:
-        isolated_factor = "k"
-    elif N is None:
-        isolated_factor = "N"
-    elif modelname is None: 
-        isolated_factor = "Model"
-
-    # Ensure there is data to plot
     if filtered_data.empty:
-        print(f"No examples found for: {(k, N, modelname)}.")
+        print(f"No examples found for: {factor_set_values}.")
         return
 
-    plt.figure(figsize=(12, 6))
     if isolated_factor == "Model":
         factor_values = sorted(filtered_data[isolated_factor].unique(), key=str)
     else:
         factor_values = sorted(filtered_data[isolated_factor].unique(), key=int)
+        base_color = model_colors.get(factor_set_values["Model"], "blue")
         max_factor = int(factor_values[-1])
-        base_color = model_colors.get(modelname, "blue")
 
     factor_val_to_peak_ttoks = []
-    used_factor_values = []
+    used_vals = []
+    plt.figure(figsize=(12, 6))
     # Iterate over unique t values
     for factor_value in factor_values:
-        if modelname is None:
-            factor_filtered_data = filtered_data[filtered_data[isolated_factor].str.contains(factor_value)]
-            if factor_filtered_data.empty: continue
+        factor_filtered_data = filtered_data[filtered_data[isolated_factor]==factor_value]
+        if factor_filtered_data.empty: continue
+        
+        if isolated_factor == "Model":
             base_color = model_colors.get(factor_value, "blue")
             rgba_color = mcolors.to_rgba(base_color, alpha=0.8)
-            plot_results = plot_correctness_by_ttoks(factor_filtered_data, k, N, factor_value, factor_value, rgba_color, is_subplot=True)
+            label = factor_value
         else:
-            factor_filtered_data = filtered_data[filtered_data[isolated_factor] == factor_value]
-            if factor_filtered_data.empty: continue
             factor_value = int(factor_value)
             # Normalize the intensity of the color based on t
             color_intensity = factor_value / (max_factor + 1) 
             label = f"{isolated_factor}={factor_value}"
             rgba_color = mcolors.to_rgba(base_color, alpha=color_intensity)
-            if isolated_factor == "k":
-                plot_results = plot_correctness_by_ttoks(factor_filtered_data, factor_value, N, modelname, label, rgba_color, is_subplot=True)
-            elif isolated_factor == "N":
-                plot_results = plot_correctness_by_ttoks(factor_filtered_data, k, factor_value, modelname, label, rgba_color, is_subplot=True)
+
+        plot_results = plot_correctness_by_ttoks(factor_filtered_data, factor_set_values | {isolated_factor: factor_value}, label,rgba_color, True, kwargs)
         if plot_results:
-            used_factor_values.append(str(factor_value))
+            used_vals.append(factor_value)
             (peak_ttoks, _, task_doable) = plot_results
             if task_doable:
                 factor_val_to_peak_ttoks.append((factor_value, peak_ttoks))
-        
-    if len(used_factor_values) == 0: return
+    if len(factor_val_to_peak_ttoks) == 0: return
+
+    if kwargs['only_meta']: 
+        return factor_val_to_peak_ttoks
+
     # Customize plot labels and legend
     plt.xlim(xmin=0)
     plt.ylim(0, 1)
@@ -337,21 +300,17 @@ def plot_correctness_by_ttoks_isolate_factor(df, k, N, modelname, factor_vals):
     plt.grid(True, linestyle="--", alpha=0.6)
 
     # Save and clear the figure
-    filename = f"{isolated_factor}{''.join(used_factor_values)}_"
-    if k is None:
-        filename += f"N{N}_{modelname}.png"
-    elif N is None:
-        filename += f"k{k}_{modelname}.png"
-    elif modelname is None:
-        filename = f"byModel_k{k}_N{N}.png"
-    os.makedirs(os.path.join(foldername, "isolate_factor"), exist_ok=True)
+    filename = f"{isolated_factor}{''.join(str(uv) for uv in used_vals)}_"
+    filename += "_".join(f"{factor_name}{factor_value}" for factor_name, factor_value in factor_set_values.items()) + ".png"
+    os.makedirs(os.path.join(kwargs['foldername'], "isolate_factor"), exist_ok=True)
     plt.savefig(
-        os.path.join(foldername, "isolate_factor", filename)
+        os.path.join(kwargs['foldername'], "isolate_factor", filename)
     )
     plt.clf()
+
     return factor_val_to_peak_ttoks
 
-def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_lines, metric="pearsonr"):
+def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_lines, kwargs, metric="pearsonr"):
     plt.figure(figsize=(8, 5))
     # To store normalized values per model for later linregress
     # Find the factor vals that all models have at least some successes in
@@ -431,10 +390,11 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
         normalized_avg_peak_tts = [(val - min_val) / (max_val - min_val) if max_val != min_val else 0 for val in avg_peak_tts]
         all_normalized_avg_peak_tts.extend([(fv, napt) for fv, napt in zip(factor_vals, normalized_avg_peak_tts)])
         if plot_individual_lines:
-            slope, intercept, _, _, _ = stats.linregress(factor_vals, normalized_avg_peak_tts)
-            x_vals = np.linspace(min(factor_vals), max(factor_vals), 100)
-            y_vals = slope * x_vals + intercept
-            plt.plot(x_vals, y_vals, color=rgba_color, linestyle='--')
+            # slope, intercept, _, _, _ = stats.linregress(factor_vals, normalized_avg_peak_tts)
+            # x_vals = np.linspace(min(factor_vals), max(factor_vals), 100)
+            # y_vals = slope * x_vals + intercept
+            # plt.plot(x_vals, y_vals, color=rgba_color, linestyle='--')
+            plt.plot(factor_vals, normalized_avg_peak_tts, color=rgba_color, linestyle="--")
             
             if metric == 'mse':
                 # Calculate Mean Squared Error
@@ -460,7 +420,7 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
         y_vals = slope * x_vals + intercept
         # Plot the target linear line
         plt.plot(x_vals, y_vals, color='black', linestyle='--')
-        
+
         if metric == 'mse':
             # Calculate Mean Squared Error
             predicted_vals = slope * np.array(all_factor_vals) + intercept
@@ -468,81 +428,76 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
             # Annotate the MSE on the plot
             mse_annotation = f"MSE: {mse:.4f}"
             plt.text(0.05, 0.95, mse_annotation, transform=plt.gca().transAxes,
-                    fontsize=42, color='red', verticalalignment='top')
+                    color='red', verticalalignment='top')
         elif metric == 'pearsonr':
             # Calculate pearson corr
             correlation, _ = stats.pearsonr(all_factor_vals, all_normalized_peak_tts)
             corr_annotation = f"Correlation: {correlation:.4f}"
             plt.text(0.05, 0.95, corr_annotation, transform=plt.gca().transAxes,
-                    fontsize=14, color='red', verticalalignment='top')
+                    color='red', verticalalignment='top')
 
     # Finalize and save the plot
-    plt.ylim(0, 1)
-    plt.gca().set_aspect(max(all_factor_vals) - min(all_factor_vals))
+    plt.ylim(-0.1, 1.1)
+    plt.gca().set_aspect((max(all_factor_vals) - min(all_factor_vals)) / 1.2)
     plt.xlabel(isolated_factor)
     plt.ylabel("Normalized Avg. Peak Tokens")
     plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
     plt.tight_layout()
-    os.makedirs(os.path.join(foldername, "meta_plots"), exist_ok=True)
-    plt.savefig(os.path.join(foldername, "meta_plots", f"diminish_{isolated_factor}{'_ind' if plot_individual_lines else ''}_{metric}.png"))
+    os.makedirs(os.path.join(kwargs['foldername'], "meta_plots"), exist_ok=True)
+    plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", f"diminish_{isolated_factor}{'_ind' if plot_individual_lines else ''}_{metric}.png"))
     plt.clf()
 
-def plot_correctness_by_isolate_factor(df, isolated_factor, plot_against_factor, modelname):
-    # Filter the data for the specific model, isolated_factor, modelname
-    filtered_data = df[
-        df["Model"].str.contains(modelname)
-    ]
-    base_color = model_colors.get(modelname, "blue")
 
-    # Ensure there is data to plot
-    if filtered_data.empty:
-        print(f"No examples found for {modelname}.")
-        return
+def plot_correctness_by_isolate_factor(df, plot_against_factor, set_factors, kwargs):
+    # Loop across modelnames... x axis is plot_against_factor. Each point is averaged across set_factors
 
     plt.figure(figsize=(12, 6))
 
     def exponential_decay(x, a, b): 
        return a * np.exp(-b * x)
 
-    max_val = filtered_data[isolated_factor].unique().astype(int).max().item() 
-    used_vals = []
-    for factor_value in sorted(filtered_data[isolated_factor].unique().astype(int)):
-        filtered_data_factor = filtered_data[filtered_data[isolated_factor] == str(factor_value)]
+    for modelname in df["Model"].unique():
+        filtered_data = df[
+            df["Model"].str.contains(modelname)
+        ]
+        base_color = model_colors.get(modelname, "blue")
+        rgba_color = mcolors.to_rgba(base_color, alpha=0.8)
 
-        # Normalize the intensity of the color based on factor value
-        color_intensity = int(factor_value) / (max_val+ 1)
+        # Ensure there is data to plot
+        if filtered_data.empty:
+            print(f"No examples found for {modelname}.")
+            return
 
-        rgba_color = mcolors.to_rgba(base_color, alpha=color_intensity)
-        
-        # Calculate performance:
-        performance = (
-            filtered_data_factor.groupby(plot_against_factor)
-            ["Correct?"].mean()
-        )
+        # Group by both `plot_against_factor` and `set_factors` to calculate means
+        grouped_data = filtered_data.groupby([plot_against_factor] + set_factors)["Correct?"].mean().reset_index()
+
+        # Average across `set_factors`
+        performance = grouped_data.groupby(plot_against_factor)["Correct?"].mean()
+
+        # Ensure indices are integers for plotting
+        performance.index = performance.index.astype(int)
         if len(performance.values) == 0: continue
-        used_vals.append(factor_value)
         # Plot the performance
         plt.plot(
             performance.index.astype(int),
             performance.values,
             color=rgba_color,
-            label=f"{isolated_factor}={factor_value}",
+            label=modelname,
         )
-        initial_a_guess = 1.0
-        initial_b_guess = performance.values[0]
 
         # Calculate and display confidence intervals
         ci_lower = []
         ci_upper = []
         for plot_against_factor_val in performance.index.astype(int):
-            sample = filtered_data_factor[filtered_data_factor[plot_against_factor] == str(plot_against_factor_val)]["Correct?"]
-            if sample.empty:
+            sample = filtered_data[filtered_data[plot_against_factor] == str(plot_against_factor_val)]["Correct?"].values
+            if len(sample) < 2:
                 ci_lower.append(np.nan)
                 ci_upper.append(np.nan)
             else:
-                ci = np.percentile(np.random.choice(sample, size=(1000, len(sample)), replace=True).mean(axis=1), [2.5, 97.5])
-                ci_lower.append(ci[0])
-                ci_upper.append(ci[1])
+                res = stats.bootstrap((sample,), np.mean, confidence_level=0.95, n_resamples=1000, method="basic")
+                # ci = np.percentile(np.random.choice(sample, size=(1000, len(sample)), replace=True).mean(axis=1), [2.5, 97.5])
+                ci_lower.append(res.confidence_interval.low)
+                ci_upper.append(res.confidence_interval.high)
 
         # Plot confidence intervals as a shaded region
         plt.fill_between(
@@ -550,11 +505,14 @@ def plot_correctness_by_isolate_factor(df, isolated_factor, plot_against_factor,
             ci_lower,
             ci_upper,
             color=rgba_color,
-            alpha=color_intensity,
+            alpha=0.3,
         )
 
         # curve fit
         if plot_against_factor == "N" and len(performance) > 1:
+            initial_a_guess = performance.max()
+            initial_b_guess = (performance.values[0] - performance.values[1]) / (performance.index[1] - performance.index[0]) if performance.values[1] < performance.values[0] else 0.1
+
             popt, pcov = curve_fit(exponential_decay, performance.index.astype(int).tolist(), performance.values, p0=[initial_a_guess, initial_b_guess])
 
             # overlay fitted exponential decay on plot.
@@ -563,72 +521,26 @@ def plot_correctness_by_isolate_factor(df, isolated_factor, plot_against_factor,
                 performance.index.astype(int),
                 fitted_values,
                 linestyle="--",
-                color="black",
-                label=f"Fitted Curve ({isolated_factor}={factor_value}): d={popt[1]:.2f}",
-                alpha=color_intensity
+                color=rgba_color,
+                label=f"d={popt[1]:.2f}",
+                alpha=0.5
             )
-
-    if not len(used_vals): return
-        
+            
     # Customize plot labels and legend
     plt.xlim(xmin=0)
     plt.ylim(0, 1)
     plt.ylabel("Correctness")
     plt.xlabel(plot_against_factor)
     plt.title(
-        f"Correctness vs. {plot_against_factor} ({isolated_factor}={factor_value}, {modelname})"
+        f"Correctness vs. {plot_against_factor}"
     )
     plt.legend(loc="best", fancybox=True, shadow=True)
     plt.grid(True, linestyle="--", alpha=0.6)
 
     # Save and clear the figure
-    filename = f"correctness_by_{plot_against_factor}_{modelname}.png"
-    os.makedirs(os.path.join(foldername, "isolate_factor"), exist_ok=True)
+    filename = f"correctness_by_{plot_against_factor}.png"
+    os.makedirs(os.path.join(kwargs['foldername'], "isolate_factor"), exist_ok=True)
     plt.savefig(
-        os.path.join(foldername, "isolate_factor", filename)
+        os.path.join(kwargs['foldername'], "isolate_factor", filename)
     )
     plt.clf()
-
-if __name__ == "__main__":
-    args = get_args()
-    if args.delete_old and os.path.exists(foldername):
-        shutil.rmtree(foldername)
-    os.makedirs(foldername, exist_ok=True)
-    df = load_data(args.output_folder, args.models)
-    df_nocot = load_data(args.output_folder+"_nocot", args.models)
-    df = pd.concat([df, df_nocot])
-
-    plot_requested_vs_generated(df)
-
-    k_vals = df["k"].unique()
-    N_vals = df["N"].unique()
-    models = df["Model"].unique()
-    all_var_vals = [k_vals, N_vals]
-
-    N_to_peak_ttoks = {}
-    k_to_peak_ttoks = {}
-
-    for modelname in models:
-        N_to_peak_ttoks[modelname] = {}
-        k_to_peak_ttoks[modelname] = {}
-        for k in k_vals:
-            N_to_ptts = plot_correctness_by_ttoks_isolate_factor(df, k, None, modelname, N_vals)
-            if N_to_ptts:
-                N_to_peak_ttoks[modelname][(k, None)] = N_to_ptts
-        for N in N_vals:
-            k_to_ptts = plot_correctness_by_ttoks_isolate_factor(df, None, N, modelname, k_vals)
-            if k_to_ptts:
-                k_to_peak_ttoks[modelname][(None, N)] = k_to_ptts
-
-        plot_correctness_by_isolate_factor(df, "k", "N", modelname)
-        plot_correctness_by_isolate_factor(df, "N", "k", modelname)
-            
-        plt.clf()
-        plot_ptt_by_factor(N_to_peak_ttoks, "N", False)
-        plot_ptt_by_factor(k_to_peak_ttoks, "k", False)
-        plot_ptt_by_factor(N_to_peak_ttoks, "N", True)
-        plot_ptt_by_factor(k_to_peak_ttoks, "k", True)
-
-    for k in k_vals:
-        for N in N_vals:
-            plot_correctness_by_ttoks_isolate_factor(df, k, N, None, models)
