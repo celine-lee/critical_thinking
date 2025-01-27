@@ -129,63 +129,101 @@ def global_parser():
     parser.add_argument("--only_meta", action="store_true")
     return parser
 
+
 def plot_length_generated(df, kwargs, by_factor=None):
-    # TODO by_factor
     # Separate data by model size
     model_data = {
         model_name: df[df["Model"].str.contains(model_name)].sort_values(by="No gen toks")
         for model_name in model_colors
     }
 
-    # Plot box plots for each model size and requested length category
+    # If by_factor is specified, ensure it exists in the DataFrame
+    if by_factor and by_factor not in df.columns:
+        raise ValueError(f"'{by_factor}' is not a column in the provided DataFrame.")
+
+    # Prepare the figure
     plt.figure(figsize=(12, 6))
 
-    # Get sorted unique requested lengths for x-axis labels
     tick_positions = []
-    plotted_something = False
     labels = []
+    plotted_something = False
+
+    # Iterate over models and optionally by_factor
     for i, (model, model_df) in enumerate(model_data.items(), start=1):
-        # Extract data for boxplot
-        data = model_df["No gen toks"].tolist()
-        if not data:
-            continue
+        if by_factor:
+            # Group data by the factor
+            grouped = model_df.groupby(by_factor)
+            factor_values = sorted(grouped.groups.keys(), key=int)
 
-        # Define position for the boxplot
-        position = [i]
-        tick_positions.append(i)
-        labels.append(model)
+            for j, factor_value in enumerate(factor_values):
+                # Extract data for boxplot
+                data = grouped.get_group(factor_value)["No gen toks"].tolist()
+                if not data:
+                    continue
 
-        # Plot the boxplot
-        plt.boxplot(
-            [data],
-            positions=position,
-            widths=0.5,
-            patch_artist=True,
-            boxprops=dict(facecolor=model_colors[model], color=model_colors[model]),
-            medianprops=dict(color="black"),
-            showfliers=False,
-        )
-        plotted_something = True
+                # Define position for the boxplot (spread models apart)
+                position = [i + j * 0.2]
+                tick_positions.append(i + j * 0.2)
+                labels.append(f"{model_nicknames[model]} ({by_factor}={factor_value})")
+
+                # Plot the boxplot
+                plt.boxplot(
+                    [data],
+                    positions=position,
+                    widths=0.15,
+                    patch_artist=True,
+                    boxprops=dict(facecolor=model_colors[model], color=model_colors[model]),
+                    medianprops=dict(color="black"),
+                    showfliers=False,
+                )
+                plotted_something = True
+
+        else:
+            # Extract data for the model
+            data = model_df["No gen toks"].tolist()
+            if not data:
+                continue
+
+            # Define position for the boxplot
+            position = [i]
+            tick_positions.append(i)
+            labels.append(model_nicknames[model])
+
+            # Plot the boxplot
+            plt.boxplot(
+                [data],
+                positions=position,
+                widths=0.5,
+                patch_artist=True,
+                boxprops=dict(facecolor=model_colors[model], color=model_colors[model]),
+                medianprops=dict(color="black"),
+                showfliers=False,
+            )
+            plotted_something = True
 
     if not plotted_something:
         return
 
     # Set x-axis labels
-    plt.xticks(ticks=tick_positions, labels=labels, rotation=45)
-    plt.xlabel("Method")
+    plt.xticks(ticks=tick_positions, labels=labels, rotation=45, ha="right")
+    plt.xlabel("Method" if not by_factor else f"Method (Grouped by {by_factor})")
     plt.ylabel("No. Generate Tokens")
 
     # Legend for the models
-    legend_elements = [
-        Line2D([0], [0], color=model_colors[model], lw=2, label=model)
-        for model in model_colors
-    ]
-    plt.legend(handles=legend_elements, loc="best", fancybox=True, shadow=True)
+    # legend_elements = [
+    #     Line2D([0], [0], color=model_colors[model], lw=2, label=model)
+    #     for model in model_colors
+    # ]
+    # plt.legend(handles=legend_elements, loc="best", fancybox=True, shadow=True)
 
+    # Save the plot
+    plt.tight_layout()  # Adjust layout to avoid overlap
     plt.savefig(
-        os.path.join(kwargs['foldername'], "genlength_boxplot.png")
+        os.path.join(kwargs['foldername'], f"genlength_boxplot_by{by_factor}.png"),
+        bbox_inches="tight"
     )
     plt.clf()
+
 
 def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_color, is_subplot, kwargs):
     bucket_avg, filtered_data = calculate_buckets_samesize(filtered_data, kwargs['n_buckets'])
@@ -331,6 +369,7 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
             max_min_factor_val = model_min_factor_val
         
     all_factor_vals = []
+    all_factor_vals_normalized = []
     all_normalized_peak_tts =  []
     all_normalized_avg_peak_tts = []
 
@@ -384,6 +423,10 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
         # Store the normalized values for MSE
         normalized_peak_tts = [(val - min_val) / (max_val - min_val) if max_val != min_val else 0 for val in all_peak_tts]
         all_normalized_peak_tts.extend(normalized_peak_tts)
+        min_factor_val = min(factor_vals)
+        max_factor_val = max(factor_vals)
+        normalized_factor_vals = [(val - min_val) / (max_val - min_val) if max_val != min_val else 0 for val in all_factor_vals[-len(normalized_peak_tts):]]
+        all_factor_vals_normalized.extend(normalized_factor_vals)
         legend_label = model_nicknames[modelname]
 
         # plot the normalized averageds
@@ -398,12 +441,12 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
             
             if metric == 'mse':
                 # Calculate Mean Squared Error
-                predicted_vals = slope * np.array(all_factor_vals[-len(normalized_peak_tts):]) + intercept
+                predicted_vals = slope * np.array(normalized_factor_vals[-len(normalized_peak_tts):]) + intercept
                 mse = np.mean((np.array(normalized_peak_tts) - predicted_vals) ** 2)
                 legend_label = f"{model_nicknames[modelname]} (MSE: {mse_annotation:.2f})"
             elif metric == 'pearsonr':
                 # Calculate pearson corr
-                correlation, _ = stats.pearsonr(all_factor_vals[-len(normalized_peak_tts):], normalized_peak_tts)
+                correlation, _ = stats.pearsonr(normalized_factor_vals[-len(normalized_peak_tts):], normalized_peak_tts)
                 legend_label = f"{model_nicknames[modelname]} (Corr: {correlation:.2f})"
 
         sns.scatterplot(x=factor_vals, y=normalized_avg_peak_tts, 
@@ -423,7 +466,7 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
 
         if metric == 'mse':
             # Calculate Mean Squared Error
-            predicted_vals = slope * np.array(all_factor_vals) + intercept
+            predicted_vals = slope * np.array(all_factor_vals_normalized) + intercept
             mse = np.mean((np.array(all_normalized_peak_tts) - predicted_vals) ** 2)
             # Annotate the MSE on the plot
             mse_annotation = f"MSE: {mse:.4f}"
@@ -431,7 +474,7 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
                     color='red', verticalalignment='top')
         elif metric == 'pearsonr':
             # Calculate pearson corr
-            correlation, _ = stats.pearsonr(all_factor_vals, all_normalized_peak_tts)
+            correlation, _ = stats.pearsonr(all_factor_vals_normalized, all_normalized_peak_tts)
             corr_annotation = f"Correlation: {correlation:.4f}"
             plt.text(0.05, 0.95, corr_annotation, transform=plt.gca().transAxes,
                     color='red', verticalalignment='top')

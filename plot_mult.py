@@ -477,6 +477,11 @@ if __name__ == "__main__":
     df_nocot = load_data(args.output_folder+"_nocot", {"k": args.k_vals, "m": args.m_vals, "N": args.N_vals, "Model": args.models}, parse_kmN, plot_kwargs)
     df = pd.concat([df, df_nocot])
 
+    plot_length_generated(df, plot_kwargs, "k")
+    plot_length_generated(df, plot_kwargs, "N")
+    plot_length_generated(df, plot_kwargs, "m")
+    plot_length_generated(df, plot_kwargs)
+
     k_vals = df["k"].unique()
     m_vals = df["m"].unique()
     N_vals = df["N"].unique()
