@@ -43,8 +43,8 @@ if __name__ == "__main__":
 
     plot_kwargs = {"n_buckets": args.n_buckets, "temperature": args.temperature, "num_beams": args.num_beams, "num_gens": args.num_gens, "foldername": args.foldername, "only_meta": args.only_meta, 'compute_random': lambda factor_vals: 0.5}
  
-    df = load_data(args.output_folder, {"k": args.k_vals, "d": args.d_vals, "N": args.N_vals, "Model": args.models}, parse_kmN, plot_kwargs)
-    df_nocot = load_data(args.output_folder+"_nocot", {"k": args.k_vals, "d": args.d_vals, "N": args.N_vals, "Model": args.models}, parse_kmN, plot_kwargs)
+    df = load_data(args.output_folder, {"k": args.k_vals, "d": args.d_vals, "N": args.N_vals, "Model": args.models}, parse_kdN, plot_kwargs)
+    df_nocot = load_data(args.output_folder+"_nocot", {"k": args.k_vals, "d": args.d_vals, "N": args.N_vals, "Model": args.models}, parse_kdN, plot_kwargs)
     df = pd.concat([df, df_nocot])
 
     plot_length_generated(df, plot_kwargs)
@@ -81,9 +81,9 @@ if __name__ == "__main__":
                 if d_to_ptts:
                     d_to_peak_ttoks[modelname][(k, None, N)] = d_to_ptts
 
-        plot_correctness_by_isolate_factor(df, "k", ["N, d"], plot_kwargs)
-        plot_correctness_by_isolate_factor(df, "N", ["k, d"], plot_kwargs)
-        plot_correctness_by_isolate_factor(df, "d", ["k, N"], plot_kwargs)
+        plot_correctness_by_isolate_factor(df, "k", ["N", "d"], plot_kwargs)
+        plot_correctness_by_isolate_factor(df, "N", ["k", "d"], plot_kwargs)
+        plot_correctness_by_isolate_factor(df, "d", ["k", "N"], plot_kwargs)
             
         plt.clf()
         plot_ptt_by_factor(N_to_peak_ttoks, "N", False, plot_kwargs)
