@@ -14,9 +14,11 @@ import scipy.stats as stats
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D    
 import matplotlib.colors as mcolors
+from matplotlib.colors import LinearSegmentedColormap
+
 from matplotlib.cm import get_cmap
 from scipy.optimize import curve_fit
-from scipy.stats import sem
+from scipy.stats import sem, gaussian_kde
 import seaborn as sns
 sns.set("talk")
 
@@ -115,7 +117,6 @@ def calculate_buckets_samesize(sub_df, n_buckets, groupby_key="Model"):
 
     return bucket_avg, sub_df
 
-
 def global_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--output_folder", type=str)
@@ -128,7 +129,6 @@ def global_parser():
     parser.add_argument("--delete_old", action="store_true")
     parser.add_argument("--only_meta", action="store_true")
     return parser
-
 
 def plot_length_generated(df, kwargs, by_factor=None):
     # Separate data by model size
@@ -224,8 +224,7 @@ def plot_length_generated(df, kwargs, by_factor=None):
     )
     plt.clf()
 
-
-def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_color, is_subplot, kwargs):
+def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_color, color_intensity, is_subplot, kwargs):
     bucket_avg, filtered_data = calculate_buckets_samesize(filtered_data, kwargs['n_buckets'])
     if filtered_data is None: return False
     if len(bucket_avg) == 0: return False
@@ -234,6 +233,9 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
     index_peak = np.argmax(bucket_avg["Correct?"])
     peak_ttoks = bucket_avg["Bucket Center"][index_peak]
     best_performance = bucket_avg["Correct?"][index_peak]
+    # and maximum value for probability mass of incorrect sequences
+    index_peak_incorrect = np.argmax(1 - bucket_avg["Correct?"]) #  bc of monte carlo we know probability mass is here, and we bucketed into even sizes...
+    peak_ttoks_incorrect = bucket_avg["Bucket Center"][index_peak_incorrect]
     
     sem_values = filtered_data.groupby("Bucket Center", observed=True)["Correct?"].apply(stats.sem)
     # Calculate confidence intervals
@@ -241,7 +243,7 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
     ci = sem_values.reindex(bucket_avg["Bucket Center"]).fillna(0)
 
     if kwargs['only_meta']: 
-        return (peak_ttoks.item(), best_performance.item(), (best_performance - ci.values[index_peak]).item() > kwargs['compute_random'](set_factor_values))
+        return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), (best_performance - ci.values[index_peak]).item() > kwargs['compute_random'](set_factor_values))
     # Plot the average correctness for each model size and method
     plt.plot(
         bucket_avg["Bucket Center"],
@@ -257,6 +259,20 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
         color=rgba_color,
     )
 
+    if kwargs["plot_incorrect"]:
+        plt.plot(
+            bucket_avg["Bucket Center"],
+            1 - bucket_avg["Correct?"], # is this right?
+            color="red", alpha=color_intensity,
+            label=label + " incorrect",
+        )
+
+        plt.fill_between(
+            bucket_avg["Bucket Center"],
+            1 - (bucket_avg["Correct?"] + ci.values),
+            1 - (bucket_avg["Correct?"] - ci.values), # flip bounds 
+            color="red", alpha=color_intensity,
+        )
     # Place a dot at the maximum value
     plt.scatter(peak_ttoks, best_performance, color='red')
     
@@ -267,19 +283,20 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
         plt.ylabel("Average Correctness")
         plt.xlabel("No. of Generated Tokens (Binned)")
         plt.title(
-            f"Average Correctness vs. No. of Generated Tokens {set_factor_values}"
+            f"{set_factor_values}"
+            # f"Average Correctness vs. No. of Generated Tokens {set_factor_values}"
         )
         plt.legend(loc="best", fancybox=True, shadow=True)
         plt.grid(True, linestyle="--", alpha=0.6)
 
         # Save and clear the figure
-        filename = "_".join(f"{factor_name}{factor_value}" for factor_name, factor_value in set_factor_values.items()) + ".png"
+        filename = "_".join(f"{factor_name}{factor_value}" for factor_name, factor_value in set_factor_values.items()) + f"{'_wincorrect' if kwargs['plot_incorrect'] else ''}.png"
         os.makedirs(os.path.join(kwargs['foldername'], "isolate_factor"), exist_ok=True)
         plt.savefig(
             os.path.join(kwargs['foldername'], "isolate_factor", filename)
         )
         plt.clf()
-    return (peak_ttoks.item(), best_performance.item(), (best_performance - ci.values[index_peak]).item() > kwargs['compute_random'](set_factor_values))
+    return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), (best_performance - ci.values[index_peak]).item() > kwargs['compute_random'](set_factor_values))
 
 def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_factor, kwargs):
     # Filter the data for the specified factor_set_values
@@ -299,7 +316,7 @@ def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_fac
         base_color = model_colors.get(factor_set_values["Model"], "blue")
         max_factor = int(factor_values[-1])
 
-    factor_val_to_peak_ttoks = []
+    factor_val_to_peak_ttoks, factor_val_to_peak_ttoks_incorrect, factor_val_to_peak_acc = [], [], []
     used_vals = []
     plt.figure(figsize=(12, 6))
     # Iterate over unique t values
@@ -318,16 +335,18 @@ def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_fac
             label = f"{isolated_factor}={factor_value}"
             rgba_color = mcolors.to_rgba(base_color, alpha=color_intensity)
 
-        plot_results = plot_correctness_by_ttoks(factor_filtered_data, factor_set_values | {isolated_factor: factor_value}, label,rgba_color, True, kwargs)
+        plot_results = plot_correctness_by_ttoks(factor_filtered_data, factor_set_values | {isolated_factor: factor_value}, label, rgba_color, color_intensity, True, kwargs)
         if plot_results:
             used_vals.append(factor_value)
-            (peak_ttoks, _, task_doable) = plot_results
+            (peak_ttoks, peak_ttoks_incorrect, peak_acc, task_doable) = plot_results
             if task_doable:
                 factor_val_to_peak_ttoks.append((factor_value, peak_ttoks))
-    if len(factor_val_to_peak_ttoks) == 0: return
+            factor_val_to_peak_ttoks_incorrect.append((factor_value, (peak_ttoks, peak_ttoks_incorrect)))
+            factor_val_to_peak_acc.append((factor_value, peak_acc))
+    if len(factor_val_to_peak_ttoks) == 0: return factor_val_to_peak_ttoks, factor_val_to_peak_ttoks_incorrect, factor_val_to_peak_acc
 
     if kwargs['only_meta']: 
-        return factor_val_to_peak_ttoks
+        return factor_val_to_peak_ttoks, factor_val_to_peak_ttoks_incorrect, factor_val_to_peak_acc
 
     # Customize plot labels and legend
     plt.xlim(xmin=0)
@@ -339,16 +358,16 @@ def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_fac
 
     # Save and clear the figure
     filename = f"{isolated_factor}{''.join(str(uv) for uv in used_vals)}_"
-    filename += "_".join(f"{factor_name}{factor_value}" for factor_name, factor_value in factor_set_values.items()) + ".png"
+    filename += "_".join(f"{factor_name}{factor_value}" for factor_name, factor_value in factor_set_values.items()) + f"{'_wincorrect' if kwargs['plot_incorrect'] else ''}.png"
     os.makedirs(os.path.join(kwargs['foldername'], "isolate_factor"), exist_ok=True)
     plt.savefig(
         os.path.join(kwargs['foldername'], "isolate_factor", filename)
     )
     plt.clf()
 
-    return factor_val_to_peak_ttoks
+    return factor_val_to_peak_ttoks, factor_val_to_peak_ttoks_incorrect, factor_val_to_peak_acc
 
-def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_lines, kwargs, metric="pearsonr"):
+def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_lines, kwargs, plot_error=False, metric="pearsonr"):
     plt.figure(figsize=(8, 5))
     # To store normalized values per model for later linregress
     # Find the factor vals that all models have at least some successes in
@@ -395,7 +414,7 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
         ci_upper_bounds = []
 
         # Calculate averages and confidence intervals
-        for fv, ptts in fv_to_ptts_avged.items():
+        for fv, ptts in sorted(fv_to_ptts_avged.items(), key = lambda item: item[0]):
             avg_ptt = np.mean(ptts)
             factor_vals.append(fv)
             all_factor_vals.extend(fv for _ in ptts)
@@ -433,12 +452,18 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
         normalized_avg_peak_tts = [(val - min_val) / (max_val - min_val) if max_val != min_val else 0 for val in avg_peak_tts]
         all_normalized_avg_peak_tts.extend([(fv, napt) for fv, napt in zip(factor_vals, normalized_avg_peak_tts)])
         if plot_individual_lines:
-            # slope, intercept, _, _, _ = stats.linregress(factor_vals, normalized_avg_peak_tts)
-            # x_vals = np.linspace(min(factor_vals), max(factor_vals), 100)
-            # y_vals = slope * x_vals + intercept
-            # plt.plot(x_vals, y_vals, color=rgba_color, linestyle='--')
             plt.plot(factor_vals, normalized_avg_peak_tts, color=rgba_color, linestyle="--")
             
+            if plot_error:
+                # Plot the confidence intervals as a shaded region
+                plt.fill_between(
+                    factor_vals,
+                    [(ci - min_val) / (max_val - min_val) if max_val != min_val else 0 for ci in ci_lower_bounds],
+                    [(ci - min_val) / (max_val - min_val) if max_val != min_val else 0 for ci in ci_upper_bounds],
+                    color=rgba_color,
+                    alpha=0.2
+                )
+
             if metric == 'mse':
                 # Calculate Mean Squared Error
                 predicted_vals = slope * np.array(normalized_factor_vals[-len(normalized_peak_tts):]) + intercept
@@ -451,6 +476,21 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
 
         sns.scatterplot(x=factor_vals, y=normalized_avg_peak_tts, 
                     marker='o', color=rgba_color, label=legend_label)
+        if plot_error:
+
+            # Calculate yerr in (2, n) format
+            yerr = np.array([
+                [avg_ptt - ci_lower for avg_ptt, ci_lower in zip(avg_peak_tts, ci_lower_bounds)],  # Lower error
+                [ci_upper - avg_ptt for avg_ptt, ci_upper in zip(avg_peak_tts, ci_upper_bounds)]   # Upper error
+            ])
+            plt.errorbar(
+                factor_vals,
+                normalized_avg_peak_tts,
+                yerr=yerr,
+                fmt="o",
+                color=rgba_color,
+                alpha=0.7
+            )
 
     if len(all_factor_vals) == 0: return
 
@@ -487,9 +527,8 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
     plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
     plt.tight_layout()
     os.makedirs(os.path.join(kwargs['foldername'], "meta_plots"), exist_ok=True)
-    plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", f"diminish_{isolated_factor}{'_ind' if plot_individual_lines else ''}_{metric}.png"))
+    plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", f"diminish_{isolated_factor}{'_ind' if plot_individual_lines else ''}{'_err' if plot_error else ''}_{metric}.png"))
     plt.clf()
-
 
 def plot_correctness_by_isolate_factor(df, plot_against_factor, set_factors, kwargs):
     # Loop across modelnames... x axis is plot_against_factor. Each point is averaged across set_factors
@@ -587,3 +626,139 @@ def plot_correctness_by_isolate_factor(df, plot_against_factor, set_factors, kwa
         os.path.join(kwargs['foldername'], "isolate_factor", filename)
     )
     plt.clf()
+
+def plot_cdfs(df, desired_factors, kwargs):
+    # Filter dataset for the given desired_factors
+    bool_filter = True
+    for factor_name, factor_val in desired_factors.items():
+        bool_filter = bool_filter & (df[factor_name] == factor_val)
+    filtered_df = df[bool_filter]
+
+    # Separate correct and incorrect samples
+    correct = filtered_df[filtered_df["Correct?"] == True]["No gen toks"].values
+    incorrect = filtered_df[filtered_df["Correct?"] == False]["No gen toks"].values
+
+    # Compute empirical CDFs
+    correct_sorted = np.sort(correct)
+    incorrect_sorted = np.sort(incorrect)
+
+    correct_cdf = np.arange(1, len(correct_sorted) + 1) / len(correct_sorted)
+    incorrect_cdf = np.arange(1, len(incorrect_sorted) + 1) / len(incorrect_sorted)
+
+    # Plot CDFs
+    plt.figure(figsize=(8, 6))
+    plt.plot(correct_sorted, correct_cdf, label="Correct", linestyle="-", linewidth=2)
+    plt.plot(incorrect_sorted, incorrect_cdf, label="Incorrect", linestyle="--", linewidth=2)
+
+    # # Compute and plot probability of correctness vs. token length
+    # all_tokens = np.concatenate([correct, incorrect])
+    # correctness_labels = np.concatenate([np.ones_like(correct), np.zeros_like(incorrect)])
+
+    # # Kernel Density Estimation (KDE) for smooth probability curve
+    # kde_correct = gaussian_kde(correct, bw_method=0.2)
+    # kde_all = gaussian_kde(all_tokens, bw_method=0.2)
+    
+    # x_vals = np.linspace(min(all_tokens), max(all_tokens), 300)
+    # correctness_prob = kde_correct(x_vals) / (kde_all(x_vals) + 1e-9)  # Avoid division by zero
+
+    # plt.plot(x_vals, correctness_prob, label="P(Correct | No gen toks)", color="black", linestyle="-.")
+
+    # Labels and legend
+    plt.xlabel("Number of Generated Tokens")
+    plt.ylabel("Cumulative Probability")
+    plt.title(f"CDFs of Token Length for Correct vs. Incorrect Answers ({desired_factors})")
+    plt.legend()
+    plt.grid(True)
+
+    os.makedirs(os.path.join(kwargs['foldername'], "prob_distrs"), exist_ok=True)
+    plt.savefig(os.path.join(kwargs['foldername'], "prob_distrs", ''.join(f"{k}{v}" for k, v in desired_factors.items()) + ".png"))
+    plt.clf()
+
+def plot_peak_accuracy_heatmap(experiment_to_peak_accuracy, kwargs):
+    """
+    Heatmap of peak accuracies across k and N.
+    
+    experiment_to_peak_accuracy: dict mapping modelname -> list of ((k, *, N) , accuracy at peak for that factor)
+    """
+    for modelname, results in experiment_to_peak_accuracy.items():
+        # Define the custom colormap
+        base_color = model_colors.get(modelname, "blue")
+        cmap = LinearSegmentedColormap.from_list(
+            "custom_colormap", 
+            ["red", "white", base_color]
+        )
+
+        # Prepare data for the heatmap
+        heatmap_data = []
+        for (dfa_details, peak_accuracy) in results.items():
+            k = dfa_details[0]
+            N = dfa_details[-1]
+            heatmap_data.append({"k": k, "N": N, "Peak Accuracy": peak_accuracy})
+
+        # Convert to DataFrame
+        df = pd.DataFrame(heatmap_data)
+        df["k"] = df["k"].astype(int)
+        df["N"] = df["N"].astype(int)
+
+
+        # Pivot the DataFrame for the heatmap
+        heatmap_df = df.pivot_table(index="N", columns="k", values="Peak Accuracy", aggfunc="mean")
+        heatmap_df = heatmap_df.sort_index(axis=0).sort_index(axis=1)
+
+        # Plot heatmap
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(heatmap_df, annot=True, fmt=".2f", cmap=cmap, cbar=True, center=0)
+        plt.title(f"Peak Accuracy Heatmap ({modelname})")
+        plt.xlabel("k")
+        plt.ylabel("N")
+
+        # Save the plot
+        os.makedirs(os.path.join(kwargs['foldername'], "heatmaps"), exist_ok=True)
+        plt.savefig(os.path.join(kwargs['foldername'], "heatmaps", f"{modelname}_peak_acc.png"))
+        plt.clf()
+
+def plot_peak_token_difference_heatmap(experiment_to_tok_differences, kwargs):
+    """
+    Heatmap of peak token differences between correct and incorrect across k and N.
+    
+    experiment_to_tok_differences: dict mapping modelname -> list of ((k, *, N) , (peak correct, peak incorrect))
+    """
+    for modelname, results in experiment_to_tok_differences.items():
+        # Define the custom colormap
+        base_color = model_colors.get(modelname, "blue")
+        cmap = LinearSegmentedColormap.from_list(
+            "custom_colormap", 
+            ["red", "white", base_color]
+        )
+
+        # Prepare data for the heatmap
+        heatmap_data = []
+        for (dfa_details, peak_ttoks) in results.items():
+            k = dfa_details[0]
+            N = dfa_details[-1]
+            heatmap_data.append({"k": k, "N": N, "Token Diff": peak_ttoks[0] - peak_ttoks[1]})
+
+        # Convert to DataFrame
+        df = pd.DataFrame(heatmap_data)
+
+        # Ensure k and N are integers for proper sorting
+        df["k"] = df["k"].astype(int)
+        df["N"] = df["N"].astype(int)
+
+        # Pivot the DataFrame for the heatmap
+        heatmap_df = df.pivot_table(index="N", columns="k", values="Token Diff", aggfunc="mean")
+        # Sort the pivot_table by index (N) and columns (k)
+        heatmap_df = heatmap_df.sort_index(axis=0).sort_index(axis=1)
+
+
+        # Plot heatmap
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(heatmap_df, annot=True, fmt=".2f", cmap=cmap, cbar=True, center=0)
+        plt.title(f"Token Difference Heatmap ({modelname})")
+        plt.xlabel("k")
+        plt.ylabel("N")
+
+        # Save the plot
+        os.makedirs(os.path.join(kwargs['foldername'], "heatmaps"), exist_ok=True)
+        plt.savefig(os.path.join(kwargs['foldername'], "heatmaps", f"{modelname}_peak_ttok_diffs.png"))
+        plt.clf()

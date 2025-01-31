@@ -15,26 +15,34 @@ from plot.plot_utils import *
 
 global compute_random
 
+
 def get_args():
     global compute_random
     parser = global_parser()
-    parser.add_argument("--k_vals", nargs='+', default=None)
-    parser.add_argument("--m_vals", nargs='+', default=None)
-    parser.add_argument("--N_vals", nargs='+', default=None)
+    parser.add_argument("--k_vals", nargs="+", default=None)
+    parser.add_argument("--m_vals", nargs="+", default=None)
+    parser.add_argument("--N_vals", nargs="+", default=None)
 
     args = parser.parse_args()
 
-    args.foldername = os.path.join(f"{args.output_folder.rstrip('/')}_graphs_{args.n_buckets}buckets_T{args.temperature}_B{args.num_beams}_S{args.num_gens}")
+    args.foldername = os.path.join(
+        f"{args.output_folder.rstrip('/')}_graphs_{args.n_buckets}buckets_T{args.temperature}_B{args.num_beams}_S{args.num_gens}"
+    )
 
-    if "even_odd" in args.output_folder: compute_random = lambda factor_vals: 0.5
-    elif "array_i" in args.output_folder: compute_random = lambda factor_vals: 1/int(factor_vals['k'])
+    if "even_odd" in args.output_folder:
+        compute_random = lambda factor_vals: 0.5
+    elif "array_i" in args.output_folder:
+        compute_random = lambda factor_vals: 1 / int(factor_vals["k"])
 
     return args
 
 
 def plot_gen_by_factor(df, k, m, N, gen_factor="No gen toks"):
-    if ONLY_PRODUCE_META_PLOTS: return
-    assert sum((factor is None for factor in (k, m, N))) >= 1, f"{(k, m, N)} at least one must be None"
+    if ONLY_PRODUCE_META_PLOTS:
+        return
+    assert (
+        sum((factor is None for factor in (k, m, N))) >= 1
+    ), f"{(k, m, N)} at least one must be None"
 
     if k is None:
         isolated_factor = "k"
@@ -45,19 +53,17 @@ def plot_gen_by_factor(df, k, m, N, gen_factor="No gen toks"):
     elif N is None:
         isolated_factor = "N"
         plot_multiple_of = "m"
-        
 
     for modelname in df["Model"].unique():
         base_color = model_colors.get(modelname, "blue")
 
         # Filter the data for the specific model, k, m, N
         filtered_data = df[
-            df["Model"].str.contains(modelname) 
+            df["Model"].str.contains(modelname)
             & ((df["k"] == k) if k is not None and plot_multiple_of != "k" else True)
             & ((df["m"] == m) if m is not None and plot_multiple_of != "m" else True)
             & ((df["N"] == N) if N is not None and plot_multiple_of != "N" else True)
         ]
-
 
         # Ensure there is data to plot
         if filtered_data.empty:
@@ -72,7 +78,8 @@ def plot_gen_by_factor(df, k, m, N, gen_factor="No gen toks"):
         for line_label in line_labe_values:
             line_data = filtered_data[filtered_data[plot_multiple_of] == line_label]
             factor_values = sorted(line_data[isolated_factor].unique(), key=int)
-            if len(factor_values) == 0: continue
+            if len(factor_values) == 0:
+                continue
 
             means = []
             lower_bounds = []
@@ -83,7 +90,7 @@ def plot_gen_by_factor(df, k, m, N, gen_factor="No gen toks"):
                 gen_toks = sub_df[gen_factor]
                 mean = gen_toks.mean()
                 std_err = stats.sem(gen_toks)
-                conf_int = std_err * stats.t.ppf((1 + 0.95) / 2., len(gen_toks) - 1)
+                conf_int = std_err * stats.t.ppf((1 + 0.95) / 2.0, len(gen_toks) - 1)
 
                 means.append(mean)
                 lower_bounds.append(mean - conf_int)
@@ -93,32 +100,42 @@ def plot_gen_by_factor(df, k, m, N, gen_factor="No gen toks"):
 
             color_intensity = int(line_label) / (max_line_label_value + 1)
             rgba_color = mcolors.to_rgba(base_color, alpha=color_intensity)
-            plt.plot(factor_values, means, label=f"{plot_multiple_of}={line_label}", color=rgba_color)
-            plt.fill_between(factor_values, lower_bounds, upper_bounds, color=rgba_color, alpha=color_intensity)
+            plt.plot(
+                factor_values,
+                means,
+                label=f"{plot_multiple_of}={line_label}",
+                color=rgba_color,
+            )
+            plt.fill_between(
+                factor_values,
+                lower_bounds,
+                upper_bounds,
+                color=rgba_color,
+                alpha=color_intensity,
+            )
 
         # Customize plot labels and legend
         plt.ylabel(f"Average {gen_factor}")
         plt.xlabel(isolated_factor)
-        plt.title(
-            f"Average {gen_factor} vs. {isolated_factor} ({k, m, N, modelname})"
-        )
+        plt.title(f"Average {gen_factor} vs. {isolated_factor} ({k, m, N, modelname})")
         plt.legend(loc="best", fancybox=True, shadow=True)
         plt.grid(True, linestyle="--", alpha=0.6)
 
         # Save and clear the figure
-        filename = f"{gen_factor}_{isolated_factor}{''.join(sorted(list(lines_plotted)))}_"
-        filename += f"k{k}_" if k is not None and plot_multiple_of != 'k' else ""
-        filename += f"m{m}_" if m is not None and plot_multiple_of != 'm' else ""
-        filename += f"N{N}_" if N is not None and plot_multiple_of != 'N' else ""
-        filename += f"{modelname}.png"
-        plt.savefig(
-            os.path.join(foldername, filename)
+        filename = (
+            f"{gen_factor}_{isolated_factor}{''.join(sorted(list(lines_plotted)))}_"
         )
+        filename += f"k{k}_" if k is not None and plot_multiple_of != "k" else ""
+        filename += f"m{m}_" if m is not None and plot_multiple_of != "m" else ""
+        filename += f"N{N}_" if N is not None and plot_multiple_of != "N" else ""
+        filename += f"{modelname}.png"
+        plt.savefig(os.path.join(foldername, filename))
         plt.clf()
 
 
 def plot_correctness_by_N_isolate_factor(df, k, m, modelname):
-    if ONLY_PRODUCE_META_PLOTS: return
+    if ONLY_PRODUCE_META_PLOTS:
+        return
     assert sum((factor is None for factor in (k, m))) == 1, f"{(k, m)} one must be None"
     # Filter the data for the specific model, k, m, N, modelname
     filtered_data = df[
@@ -140,25 +157,27 @@ def plot_correctness_by_N_isolate_factor(df, k, m, modelname):
 
     plt.figure(figsize=(12, 6))
 
-    def exponential_decay(x, a, b): 
-       return a * np.exp(-b * x)
+    def exponential_decay(x, a, b):
+        return a * np.exp(-b * x)
 
-    max_val = filtered_data[isolated_factor].unique().astype(int).max().item() 
+    max_val = filtered_data[isolated_factor].unique().astype(int).max().item()
     used_vals = []
-    for cmap_idx, factor_value in enumerate(sorted(filtered_data[isolated_factor].unique().astype(int))):
-        filtered_data_factor = filtered_data[filtered_data[isolated_factor] == str(factor_value)]
+    for cmap_idx, factor_value in enumerate(
+        sorted(filtered_data[isolated_factor].unique().astype(int))
+    ):
+        filtered_data_factor = filtered_data[
+            filtered_data[isolated_factor] == str(factor_value)
+        ]
 
         # Normalize the intensity of the color based on factor value
-        color_intensity = int(factor_value) / (max_val+ 1)
+        color_intensity = int(factor_value) / (max_val + 1)
 
         rgba_color = mcolors.to_rgba(base_color, alpha=color_intensity)
-        
+
         # Calculate performance:
-        performance = (
-            filtered_data_factor.groupby("N")
-            ["Correct?"].mean()
-        )
-        if len(performance.values) <= 1: continue
+        performance = filtered_data_factor.groupby("N")["Correct?"].mean()
+        if len(performance.values) <= 1:
+            continue
         used_vals.append(factor_value)
         # Plot the performance
         plt.plot(
@@ -166,18 +185,25 @@ def plot_correctness_by_N_isolate_factor(df, k, m, modelname):
             performance.values,
             color=rgba_color,
             label=f"{isolated_factor}={factor_value}",
-            marker="."
+            marker=".",
         )
         # Calculate and display confidence intervals
         ci_lower = []
         ci_upper = []
         for N in performance.index.astype(int):
-            sample = filtered_data_factor[filtered_data_factor["N"] == str(N)]["Correct?"]
+            sample = filtered_data_factor[filtered_data_factor["N"] == str(N)][
+                "Correct?"
+            ]
             if sample.empty:
                 ci_lower.append(np.nan)
                 ci_upper.append(np.nan)
             else:
-                ci = np.percentile(np.random.choice(sample, size=(1000, len(sample)), replace=True).mean(axis=1), [2.5, 97.5])
+                ci = np.percentile(
+                    np.random.choice(
+                        sample, size=(1000, len(sample)), replace=True
+                    ).mean(axis=1),
+                    [2.5, 97.5],
+                )
                 ci_lower.append(ci[0])
                 ci_upper.append(ci[1])
 
@@ -193,7 +219,12 @@ def plot_correctness_by_N_isolate_factor(df, k, m, modelname):
         # curve fit
         initial_a_guess = 1.0
         initial_b_guess = performance.values[0]
-        popt, pcov = curve_fit(exponential_decay, performance.index.astype(int).tolist(), performance.values, p0=[initial_a_guess, initial_b_guess])
+        popt, pcov = curve_fit(
+            exponential_decay,
+            performance.index.astype(int).tolist(),
+            performance.values,
+            p0=[initial_a_guess, initial_b_guess],
+        )
 
         # overlay fitted exponential decay on plot.
         fitted_values = exponential_decay(performance.index.astype(int), *popt)
@@ -204,20 +235,19 @@ def plot_correctness_by_N_isolate_factor(df, k, m, modelname):
             color="black",
             label=f"Fitted Curve ({isolated_factor}={factor_value}): d={popt[1]:.2f}",
             alpha=color_intensity,
-            marker="."
+            marker=".",
         )
 
-    if not len(used_vals): return
+    if not len(used_vals):
+        return
     # Add random guessing baseline (1/k) TODO
-        
+
     # Customize plot labels and legend
     plt.xlim(xmin=0)
     plt.ylim(0, 1)
     plt.ylabel("Correctness")
     plt.xlabel("N")
-    plt.title(
-        f"Correctness vs. N ({k, m, modelname})"
-    )
+    plt.title(f"Correctness vs. N ({k, m, modelname})")
     plt.legend(loc="best", fancybox=True, shadow=True)
     plt.grid(True, linestyle="--", alpha=0.6)
 
@@ -228,13 +258,13 @@ def plot_correctness_by_N_isolate_factor(df, k, m, modelname):
     elif m is None:
         filename += f"k{k}_{modelname}.png"
     os.makedirs(os.path.join(foldername, "isolate_factor"), exist_ok=True)
-    plt.savefig(
-        os.path.join(foldername, "isolate_factor", filename)
-    )
+    plt.savefig(os.path.join(foldername, "isolate_factor", filename))
     plt.clf()
 
+
 def plot_correctness_by_k_isolate_factor(df, m, N, modelname):
-    if ONLY_PRODUCE_META_PLOTS: return
+    if ONLY_PRODUCE_META_PLOTS:
+        return
     assert sum((factor is None for factor in (m, N))) == 1, f"{(m, N)} one must be None"
     # Filter the data for the specific model, k, m, N, modelname
     filtered_data = df[
@@ -256,23 +286,25 @@ def plot_correctness_by_k_isolate_factor(df, m, N, modelname):
 
     plt.figure(figsize=(12, 6))
 
-    max_val = filtered_data[isolated_factor].unique().astype(int).max().item() 
+    max_val = filtered_data[isolated_factor].unique().astype(int).max().item()
     used_vals = []
-    for cmap_idx, factor_value in enumerate(sorted(filtered_data[isolated_factor].unique().astype(int))):
-        filtered_data_factor = filtered_data[filtered_data[isolated_factor] == str(factor_value)]
+    for cmap_idx, factor_value in enumerate(
+        sorted(filtered_data[isolated_factor].unique().astype(int))
+    ):
+        filtered_data_factor = filtered_data[
+            filtered_data[isolated_factor] == str(factor_value)
+        ]
         filtered_data_factor["k"] = filtered_data_factor["k"].astype(int)
 
         # Normalize the intensity of the color based on factor value
-        color_intensity = int(factor_value) / (max_val+ 1)
+        color_intensity = int(factor_value) / (max_val + 1)
 
         rgba_color = mcolors.to_rgba(base_color, alpha=color_intensity)
-        
+
         # Calculate performance:
-        performance = (
-            filtered_data_factor.groupby("k")
-            ["Correct?"].mean()
-        )
-        if len(performance.values) == 0: continue
+        performance = filtered_data_factor.groupby("k")["Correct?"].mean()
+        if len(performance.values) == 0:
+            continue
         performance = performance.sort_index()
         used_vals.append(factor_value)
         # Plot the performance
@@ -281,7 +313,7 @@ def plot_correctness_by_k_isolate_factor(df, m, N, modelname):
             performance.values,
             color=rgba_color,
             label=f"{isolated_factor}={factor_value}",
-            marker="."
+            marker=".",
         )
 
         # Calculate and display confidence intervals
@@ -293,7 +325,12 @@ def plot_correctness_by_k_isolate_factor(df, m, N, modelname):
                 ci_lower.append(np.nan)
                 ci_upper.append(np.nan)
             else:
-                ci = np.percentile(np.random.choice(sample, size=(1000, len(sample)), replace=True).mean(axis=1), [2.5, 97.5])
+                ci = np.percentile(
+                    np.random.choice(
+                        sample, size=(1000, len(sample)), replace=True
+                    ).mean(axis=1),
+                    [2.5, 97.5],
+                )
                 ci_lower.append(ci[0])
                 ci_upper.append(ci[1])
 
@@ -306,8 +343,8 @@ def plot_correctness_by_k_isolate_factor(df, m, N, modelname):
             alpha=color_intensity,
         )
 
-
-    if not len(used_vals): return
+    if not len(used_vals):
+        return
 
     # Add random guessing baseline (1/k)
     if not filtered_data["k"].empty:
@@ -317,19 +354,17 @@ def plot_correctness_by_k_isolate_factor(df, m, N, modelname):
         plt.plot(
             k_values,
             baseline,
-            color='gray',
-            linestyle='--',
-            label='Random Guessing (1/k)',
+            color="gray",
+            linestyle="--",
+            label="Random Guessing (1/k)",
         )
-        
+
     # Customize plot labels and legend
     plt.xlim(xmin=0)
     plt.ylim(0, 1)
     plt.ylabel("Correctness")
     plt.xlabel("k")
-    plt.title(
-        f"Correctness vs. k ({m, N, modelname})"
-    )
+    plt.title(f"Correctness vs. k ({m, N, modelname})")
     plt.legend(loc="best", fancybox=True, shadow=True)
     plt.grid(True, linestyle="--", alpha=0.6)
 
@@ -340,13 +375,13 @@ def plot_correctness_by_k_isolate_factor(df, m, N, modelname):
     elif m is None:
         filename += f"N{N}_{modelname}.png"
     os.makedirs(os.path.join(foldername, "isolate_factor"), exist_ok=True)
-    plt.savefig(
-        os.path.join(foldername, "isolate_factor", filename)
-    )
+    plt.savefig(os.path.join(foldername, "isolate_factor", filename))
     plt.clf()
 
+
 def plot_correctness_by_m_isolate_factor(df, k, N, modelname):
-    if ONLY_PRODUCE_META_PLOTS: return
+    if ONLY_PRODUCE_META_PLOTS:
+        return
     assert sum((factor is None for factor in (k, N))) == 1, f"{(k, N)} one must be None"
     # Filter the data for the specific model, k, N, modelname
     filtered_data = df[
@@ -368,23 +403,25 @@ def plot_correctness_by_m_isolate_factor(df, k, N, modelname):
 
     plt.figure(figsize=(12, 6))
 
-    max_val = filtered_data[isolated_factor].unique().astype(int).max().item() 
+    max_val = filtered_data[isolated_factor].unique().astype(int).max().item()
     used_vals = []
-    for cmap_idx, factor_value in enumerate(sorted(filtered_data[isolated_factor].unique().astype(int))):
-        filtered_data_factor = filtered_data[filtered_data[isolated_factor] == str(factor_value)]
+    for cmap_idx, factor_value in enumerate(
+        sorted(filtered_data[isolated_factor].unique().astype(int))
+    ):
+        filtered_data_factor = filtered_data[
+            filtered_data[isolated_factor] == str(factor_value)
+        ]
         filtered_data_factor["m"] = filtered_data_factor["m"].astype(int)
 
         # Normalize the intensity of the color based on factor value
-        color_intensity = int(factor_value) / (max_val+ 1)
+        color_intensity = int(factor_value) / (max_val + 1)
 
         rgba_color = mcolors.to_rgba(base_color, alpha=color_intensity)
-        
+
         # Calculate performance:
-        performance = (
-            filtered_data_factor.groupby("m")
-            ["Correct?"].mean()
-        )
-        if len(performance.values) == 0: continue
+        performance = filtered_data_factor.groupby("m")["Correct?"].mean()
+        if len(performance.values) == 0:
+            continue
         performance = performance.sort_index()
         used_vals.append(factor_value)
         # Plot the performance
@@ -393,7 +430,7 @@ def plot_correctness_by_m_isolate_factor(df, k, N, modelname):
             performance.values,
             color=rgba_color,
             label=f"{isolated_factor}={factor_value}",
-            marker="."
+            marker=".",
         )
 
         # Calculate and display confidence intervals
@@ -405,7 +442,12 @@ def plot_correctness_by_m_isolate_factor(df, k, N, modelname):
                 ci_lower.append(np.nan)
                 ci_upper.append(np.nan)
             else:
-                ci = np.percentile(np.random.choice(sample, size=(1000, len(sample)), replace=True).mean(axis=1), [2.5, 97.5])
+                ci = np.percentile(
+                    np.random.choice(
+                        sample, size=(1000, len(sample)), replace=True
+                    ).mean(axis=1),
+                    [2.5, 97.5],
+                )
                 ci_lower.append(ci[0])
                 ci_upper.append(ci[1])
 
@@ -418,15 +460,16 @@ def plot_correctness_by_m_isolate_factor(df, k, N, modelname):
             alpha=color_intensity,
         )
 
-    if not len(used_vals): return
+    if not len(used_vals):
+        return
 
     # Add random guessing baseline (1/k)
     if k:
         plt.axhline(
-            y = compute_random(k),
-            color='gray',
-            linestyle='--',
-            label=f'Random Guessing (1/k)',
+            y=compute_random(k),
+            color="gray",
+            linestyle="--",
+            label=f"Random Guessing (1/k)",
         )
 
     # Customize plot labels and legend
@@ -434,9 +477,7 @@ def plot_correctness_by_m_isolate_factor(df, k, N, modelname):
     plt.ylim(0, 1)
     plt.ylabel("Correctness")
     plt.xlabel("m")
-    plt.title(
-        f"Correctness vs. m ({k, N, modelname})"
-    )
+    plt.title(f"Correctness vs. m ({k, N, modelname})")
     plt.legend(loc="best", fancybox=True, shadow=True)
     plt.grid(True, linestyle="--", alpha=0.6)
 
@@ -448,10 +489,9 @@ def plot_correctness_by_m_isolate_factor(df, k, N, modelname):
         filename += f"N{N}"
     filename += f"_{modelname}.png"
     os.makedirs(os.path.join(foldername, "isolate_factor"), exist_ok=True)
-    plt.savefig(
-        os.path.join(foldername, "isolate_factor", filename)
-    )
+    plt.savefig(os.path.join(foldername, "isolate_factor", filename))
     plt.clf()
+
 
 def parse_kmN(experiment_file):
     parsed_experimentname = re.search(r"k(\d+)_m(\d+)_N(\d+)", experiment_file)
@@ -462,7 +502,8 @@ def parse_kmN(experiment_file):
     m = parsed_experimentname.group(2)
     N = parsed_experimentname.group(3)
     return {"k": k, "m": m, "N": N, "Model": modelname}
-    
+
+
 if __name__ == "__main__":
     args = get_args()
 
@@ -470,11 +511,29 @@ if __name__ == "__main__":
         shutil.rmtree(args.foldername)
     os.makedirs(args.foldername, exist_ok=True)
 
-    plot_kwargs = {"n_buckets": args.n_buckets, "temperature": args.temperature, "num_beams": args.num_beams, "num_gens": args.num_gens, "foldername": args.foldername, "only_meta": args.only_meta, 'compute_random': compute_random}
+    plot_kwargs = {
+        "n_buckets": args.n_buckets,
+        "temperature": args.temperature,
+        "num_beams": args.num_beams,
+        "num_gens": args.num_gens,
+        "foldername": args.foldername,
+        "only_meta": args.only_meta,
+        "compute_random": compute_random,
+        "plot_incorrect": False,
+    }
 
-        
-    df = load_data(args.output_folder, {"k": args.k_vals, "m": args.m_vals, "N": args.N_vals, "Model": args.models}, parse_kmN, plot_kwargs)
-    df_nocot = load_data(args.output_folder+"_nocot", {"k": args.k_vals, "m": args.m_vals, "N": args.N_vals, "Model": args.models}, parse_kmN, plot_kwargs)
+    df = load_data(
+        args.output_folder,
+        {"k": args.k_vals, "m": args.m_vals, "N": args.N_vals, "Model": args.models},
+        parse_kmN,
+        plot_kwargs,
+    )
+    df_nocot = load_data(
+        args.output_folder + "_nocot",
+        {"k": args.k_vals, "m": args.m_vals, "N": args.N_vals, "Model": args.models},
+        parse_kmN,
+        plot_kwargs,
+    )
     df = pd.concat([df, df_nocot])
 
     plot_length_generated(df, plot_kwargs, "k")
@@ -490,42 +549,77 @@ if __name__ == "__main__":
     k_to_peak_ttoks = {}
     m_to_peak_ttoks = {}
 
+    kmN_to_peak_ttoks_incorrect = {}
+    kmN_to_peak_acc = {}
+
     for modelname in args.models:
         N_to_peak_ttoks[modelname] = {}
         k_to_peak_ttoks[modelname] = {}
         m_to_peak_ttoks[modelname] = {}
+        kmN_to_peak_ttoks_incorrect[modelname] = {}
+        kmN_to_peak_acc[modelname] = {}
         for m in m_vals:
             for k in k_vals:
-                if "N" in args.get_isolated:
-                    set_factors = {"k": k, "m": m, "Model": modelname}
-                    N_to_ptts = plot_correctness_by_ttoks_isolate_factor(df, set_factors, "N", plot_kwargs)
-                    if N_to_ptts:
-                        N_to_peak_ttoks[modelname][(k, m, None)] = N_to_ptts
-                
+                set_factors = {"k": k, "m": m, "Model": modelname}
+                (
+                    N_to_ptts,
+                    N_to_ptts_incorrect,
+                    N_to_peak_acc,
+                ) = plot_correctness_by_ttoks_isolate_factor(
+                    df, set_factors, "N", plot_kwargs
+                )
+                if N_to_ptts:
+                    N_to_peak_ttoks[modelname][(k, m, None)] = N_to_ptts
+                for N_val, peak_ttoks_incorrect in N_to_ptts_incorrect:
+                    kmN_to_peak_ttoks_incorrect[modelname][
+                        (k, m, N_val)
+                    ] = peak_ttoks_incorrect
+                for N_val, peak_acc in N_to_peak_acc:
+                    kmN_to_peak_acc[modelname][(k, m, N_val)] = peak_acc
+
+                # plot_correctness_by_ttoks_isolate_factor(
+                #     df, set_factors, "N", plot_kwargs | {"plot_incorrect": True}
+                # )
             # plot_correctness_by_N_isolate_factor(df, None, m, modelname)
             # plot_correctness_by_k_isolate_factor(df, m, None, modelname)
-            
+
             for N in N_vals:
-                if "k" in args.get_isolated:
-                    set_factors = {"N": N, "m": m, "Model": modelname}
-                    k_to_ptts = plot_correctness_by_ttoks_isolate_factor(df, set_factors, "k", plot_kwargs)
-                    if k_to_ptts:
-                        k_to_peak_ttoks[modelname][(None, m, N)] = k_to_ptts
-            
+                set_factors = {"N": N, "m": m, "Model": modelname}
+                (
+                    k_to_ptts,
+                    k_to_ptts_incorrect,
+                    k_to_peak_acc,
+                ) = plot_correctness_by_ttoks_isolate_factor(
+                    df, set_factors, "k", plot_kwargs
+                )
+                if k_to_ptts:
+                    k_to_peak_ttoks[modelname][(None, m, N)] = k_to_ptts
+                for k_val, peak_ttoks_incorrect in k_to_ptts_incorrect:
+                    kmN_to_peak_ttoks_incorrect[modelname][
+                        (k_val, m, N)
+                    ] = peak_ttoks_incorrect
+                for k_val, peak_acc in k_to_peak_acc:
+                    kmN_to_peak_acc[modelname][(k_val, m, N)] = peak_acc
+                # plot_correctness_by_ttoks_isolate_factor(
+                #     df, set_factors, "k", plot_kwargs | {"plot_incorrect": True}
+                # )
+
         for k in k_vals:
             # plot_correctness_by_N_isolate_factor(df, k, None, modelname)
             # plot_correctness_by_m_isolate_factor(df, k, None, modelname)
 
             for N in N_vals:
-                if "m" in args.get_isolated:
-                    set_factors = {"N": N, "k": k, "Model": modelname}
-                    m_to_ptts = plot_correctness_by_ttoks_isolate_factor(df, set_factors, "m", plot_kwargs)
-                    if m_to_ptts:
-                        m_to_peak_ttoks[modelname][(k, None, N)] = m_to_ptts
+                set_factors = {"N": N, "k": k, "Model": modelname}
+                plot_cdfs(df, set_factors, plot_kwargs)
+                m_to_ptts, _, _ = plot_correctness_by_ttoks_isolate_factor(
+                    df, set_factors, "m", plot_kwargs
+                )
+                if m_to_ptts:
+                    m_to_peak_ttoks[modelname][(k, None, N)] = m_to_ptts
 
         # for N in N_vals:
-            # plot_correctness_by_k_isolate_factor(df, None, N, modelname)
-            # plot_correctness_by_m_isolate_factor(df, None, N, modelname)
+        # plot_correctness_by_k_isolate_factor(df, None, N, modelname)
+        # plot_correctness_by_m_isolate_factor(df, None, N, modelname)
 
         if len(N_to_peak_ttoks[modelname]) == 0:
             del N_to_peak_ttoks[modelname]
@@ -542,6 +636,16 @@ if __name__ == "__main__":
     plot_ptt_by_factor(m_to_peak_ttoks, "m", False, plot_kwargs)
     plot_ptt_by_factor(m_to_peak_ttoks, "m", True, plot_kwargs)
 
+    plot_ptt_by_factor(N_to_peak_ttoks, "N", False, plot_kwargs, True)
+    plot_ptt_by_factor(N_to_peak_ttoks, "N", True, plot_kwargs, True)
+    plot_ptt_by_factor(k_to_peak_ttoks, "k", False, plot_kwargs, True)
+    plot_ptt_by_factor(k_to_peak_ttoks, "k", True, plot_kwargs, True)
+    plot_ptt_by_factor(m_to_peak_ttoks, "m", False, plot_kwargs, True)
+    plot_ptt_by_factor(m_to_peak_ttoks, "m", True, plot_kwargs, True)
+
+    plot_peak_accuracy_heatmap(kmN_to_peak_acc, plot_kwargs)
+    plot_peak_token_difference_heatmap(kmN_to_peak_ttoks_incorrect, plot_kwargs)
+
     # for k in k_vals:
     #     plot_gen_by_factor(df, k, None, None, "No gen toks")
     #     plot_gen_by_factor(df, k, None, None, "Len gen no digits")
@@ -553,7 +657,7 @@ if __name__ == "__main__":
     # for N in N_vals:
     #     plot_gen_by_factor(df, None, None, N, "No gen toks")
     #     plot_gen_by_factor(df, None, None, N, "Len gen no digits")
-        # for m in m_vals:
-        #     if "Model" in args.get_isolated:
-        #         for k in k_vals:
-        #             model_to_peak_ttoks = plot_correctness_by_ttoks_isolate_factor(df, k, m, N, None)
+    # for m in m_vals:
+    #     if "Model" in args.get_isolated:
+    #         for k in k_vals:
+    #             model_to_peak_ttoks = plot_correctness_by_ttoks_isolate_factor(df, k, m, N, None)
