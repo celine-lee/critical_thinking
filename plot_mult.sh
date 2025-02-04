@@ -4,6 +4,7 @@ python plot_mult.py --output_folder array_idx_mult/outputs  \
                --N_vals 1 10 16 24 \
                --get_isolated Model k m N \
                --n_buckets 5 \
+               --only_meta \
                --temperature 0.0 --num_beams 1 --num_gens 1 \
                --models gemma-2-9b-it Qwen2.5-32B-Instruct Qwen2.5-7B-Instruct Ministral-8B-Instruct-2410  
             
@@ -13,6 +14,7 @@ python plot_mult.py --output_folder array_idx_mult/outputs  \
                --N_vals 1 10 16 24 \
                --get_isolated Model k m N \
                --n_buckets 3 \
+               --only_meta \
                --temperature 0.0 --num_beams 1 --num_gens 1 \
                --models gemma-2-9b-it Qwen2.5-32B-Instruct Qwen2.5-7B-Instruct Ministral-8B-Instruct-2410  
 
@@ -22,6 +24,7 @@ python plot_mult.py --output_folder even_odd_mult/outputs  \
                --N_vals 1 10 16 24 \
                --get_isolated Model k m N \
                --n_buckets 5 \
+               --only_meta \
                --temperature 0.0 --num_beams 1 --num_gens 1 \
                --models gemma-2-9b-it Qwen2.5-32B-Instruct Qwen2.5-7B-Instruct Ministral-8B-Instruct-2410  
             
@@ -31,6 +34,7 @@ python plot_mult.py --output_folder even_odd_mult/outputs  \
                --N_vals 1 10 16 24 \
                --get_isolated Model k m N \
                --n_buckets 3 \
+               --only_meta \
                --temperature 0.0 --num_beams 1 --num_gens 1 \
                --models gemma-2-9b-it Qwen2.5-32B-Instruct Qwen2.5-7B-Instruct Ministral-8B-Instruct-2410  
                

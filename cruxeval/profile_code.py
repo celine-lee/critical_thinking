@@ -44,7 +44,8 @@ results = []
 for example in dataset["test"]: 
     code = example["code"]
     input_data = example["input"]
-    code_to_execute = code + f"\n\nf({input_data})"
+    uid = example['id']
+    code_to_execute = code + f"\n\nanswer = f({input_data})"
     lines = code_to_execute.split("\n")
     # Prepare environment
     global_env = {}
@@ -66,13 +67,21 @@ for example in dataset["test"]:
     finally:
         sys.settrace(None)  # Always disable trace after execution
 
+    if error_msg: continue
+
+    if isinstance(local_env['answer'], str):
+        answer = f"'{local_env['answer']}'"
+    else:
+        answer = str(local_env['answer'])
     # Collect results
     result = {
         "code": code,
         "input": input_data,
+        "output": answer,
         "line_execution_counts": line_counts,
         "ast_size": count_ast_nodes(code),
         "error": error_msg,
+        "id": uid,
     }
     results.append(result)
 

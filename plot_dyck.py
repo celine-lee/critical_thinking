@@ -113,9 +113,9 @@ if __name__ == "__main__":
                 for N_val, peak_acc in N_to_peak_acc:
                     kdN_to_peak_acc[modelname][(k, d, N_val)] = peak_acc
 
-                plot_correctness_by_ttoks_isolate_factor(
-                    df, set_factors, "N", plot_kwargs | {"plot_incorrect": True}
-                )
+                # plot_correctness_by_ttoks_isolate_factor(
+                #     df, set_factors, "N", plot_kwargs | {"plot_incorrect": True}
+                # )
 
             for N in N_vals:
                 set_factors = {"N": N, "d": d, "Model": modelname}
@@ -134,9 +134,9 @@ if __name__ == "__main__":
                     ] = peak_ttoks_incorrect
                 for k_val, peak_acc in k_to_peak_acc:
                     kdN_to_peak_acc[modelname][(k_val, d, N)] = peak_acc
-                plot_correctness_by_ttoks_isolate_factor(
-                    df, set_factors, "k", plot_kwargs | {"plot_incorrect": True}
-                )
+                # plot_correctness_by_ttoks_isolate_factor(
+                #     df, set_factors, "k", plot_kwargs | {"plot_incorrect": True}
+                # )
         for k in k_vals:
 
             for N in N_vals:
