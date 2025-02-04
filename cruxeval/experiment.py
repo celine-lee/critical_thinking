@@ -214,10 +214,11 @@ class Experiment:
 
         used_uids = set(ex["id"] for ex in results)
         idx = len(results)
-        while len(results) < self.n_samples:
+        while idx < min(len(examples), self.n_samples):
             prompts = []
             batch = []
             while len(prompts) < self.max_batch_size:
+                if idx >= len(examples): break
                 example = examples[idx]
                 idx += 1
                 if example["id"] in used_uids:
@@ -257,7 +258,6 @@ class Experiment:
                     model_generation,
                 ),
             ) in enumerate(extracted_answers):
-                breakpoint()
                 if pred_answer is None:
                     continue
                 input_idx = gen_idx // generation_config["num_return_sequences"]
@@ -271,6 +271,7 @@ class Experiment:
                     and len(evaluated_pred) == 2
                     and type(evaluated_pred[1]) == str
                 ):
+                    print("TUPLE MAYBE?", example, pred_answer)
                     is_correct = evaluated_pred[0] == eval(example["output"])
                 results.append(
                     {
@@ -287,9 +288,8 @@ class Experiment:
                     }
                 )
 
-            if len(results) % 10 < 2:
-                with open(filename, "w") as wf:
-                    json.dump(results, wf, indent=4)
+            with open(filename, "w") as wf:
+                json.dump(results, wf, indent=4)
 
         with open(filename, "w") as wf:
             json.dump(results, wf, indent=4)

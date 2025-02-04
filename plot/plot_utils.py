@@ -31,21 +31,21 @@ sys.excepthook = debughook
 
 
 model_colors = {
-    "Llama-3.1-8B-Instruct": "purple",
+    # "Llama-3.1-8B-Instruct": "purple",
     "Qwen2.5-32B-Instruct": "blue",
-    "Qwen2.5-14B-Instruct": "brown",
-    "Qwen2.5-7B-Instruct": "yellow",
-    "OLMo-2-1124-7B-Instruct": "black",
+    # "Qwen2.5-14B-Instruct": "brown",
+    "Qwen2.5-7B-Instruct": "purple",
+    # "OLMo-2-1124-7B-Instruct": "black",
     "Ministral-8B-Instruct-2410": "orange",
-    "gemma-2-9b-it": "pink",
+    "gemma-2-9b-it": "brown",
 }
 
 model_nicknames = {
-    "Llama-3.1-8B-Instruct": "Ll3.1-8B",
+    # "Llama-3.1-8B-Instruct": "Ll3.1-8B",
     "Qwen2.5-32B-Instruct": "Qw2.5-32B",
-    "Qwen2.5-14B-Instruct": "Qw2.5-14B",
+    # "Qwen2.5-14B-Instruct": "Qw2.5-14B",
     "Qwen2.5-7B-Instruct": "Qw2.5-7B",
-    "OLMo-2-1124-7B-Instruct": "OLMO-7B",
+    # "OLMo-2-1124-7B-Instruct": "OLMO-7B",
     "Ministral-8B-Instruct-2410": "Ministral-8B",
     "gemma-2-9b-it": "Ge2-9B",
 }
@@ -476,21 +476,21 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
 
         sns.scatterplot(x=factor_vals, y=normalized_avg_peak_tts, 
                     marker='o', color=rgba_color, label=legend_label)
-        if plot_error:
+        # if plot_error:
 
-            # Calculate yerr in (2, n) format
-            yerr = np.array([
-                [avg_ptt - ci_lower for avg_ptt, ci_lower in zip(avg_peak_tts, ci_lower_bounds)],  # Lower error
-                [ci_upper - avg_ptt for avg_ptt, ci_upper in zip(avg_peak_tts, ci_upper_bounds)]   # Upper error
-            ])
-            plt.errorbar(
-                factor_vals,
-                normalized_avg_peak_tts,
-                yerr=yerr,
-                fmt="o",
-                color=rgba_color,
-                alpha=0.7
-            )
+        #     # Calculate yerr in (2, n) format
+        #     yerr = np.array([
+        #         [avg_ptt - ci_lower for avg_ptt, ci_lower in zip(avg_peak_tts, ci_lower_bounds)],  # Lower error
+        #         [ci_upper - avg_ptt for avg_ptt, ci_upper in zip(avg_peak_tts, ci_upper_bounds)]   # Upper error
+        #     ])
+        #     plt.errorbar(
+        #         factor_vals,
+        #         normalized_avg_peak_tts,
+        #         yerr=yerr,
+        #         fmt="o",
+        #         color=rgba_color,
+        #         alpha=0.7
+        #     )
 
     if len(all_factor_vals) == 0: return
 
@@ -723,6 +723,8 @@ def plot_peak_token_difference_heatmap(experiment_to_tok_differences, kwargs):
     
     experiment_to_tok_differences: dict mapping modelname -> list of ((k, *, N) , (peak correct, peak incorrect))
     """
+    grouped_data = []
+
     for modelname, results in experiment_to_tok_differences.items():
         # Define the custom colormap
         base_color = model_colors.get(modelname, "blue")
@@ -736,10 +738,23 @@ def plot_peak_token_difference_heatmap(experiment_to_tok_differences, kwargs):
         for (dfa_details, peak_ttoks) in results.items():
             k = dfa_details[0]
             N = dfa_details[-1]
-            heatmap_data.append({"k": k, "N": N, "Token Diff": peak_ttoks[0] - peak_ttoks[1]})
+            token_diff = peak_ttoks[0] - peak_ttoks[1]
+            heatmap_data.append({"k": k, "N": N, "Token Diff": token_diff})
+            # grouped_data.append({"Model": modelname, "k": k, "N": N, "Token Diff": token_diff})
 
         # Convert to DataFrame
         df = pd.DataFrame(heatmap_data)
+
+        # Normalize Token Diff for the current model
+        if not df["Token Diff"].empty:
+            min_val = df["Token Diff"].min()
+            max_val = df["Token Diff"].max()
+            df["Normalized Token Diff"] = (
+                (df["Token Diff"] - min_val) / (max_val - min_val)
+                if max_val != min_val else 0
+            )
+            grouped_data.extend(df[["k", "N", "Normalized Token Diff"]].to_dict("records"))
+
 
         # Ensure k and N are integers for proper sorting
         df["k"] = df["k"].astype(int)
@@ -754,7 +769,8 @@ def plot_peak_token_difference_heatmap(experiment_to_tok_differences, kwargs):
         # Plot heatmap
         plt.figure(figsize=(10, 8))
         sns.heatmap(heatmap_df, annot=True, fmt=".2f", cmap=cmap, cbar=True, center=0)
-        plt.title(f"Token Difference Heatmap ({modelname})")
+        plt.title(f"Token Difference ({modelname})")
+
         plt.xlabel("k")
         plt.ylabel("N")
 
@@ -762,3 +778,34 @@ def plot_peak_token_difference_heatmap(experiment_to_tok_differences, kwargs):
         os.makedirs(os.path.join(kwargs['foldername'], "heatmaps"), exist_ok=True)
         plt.savefig(os.path.join(kwargs['foldername'], "heatmaps", f"{modelname}_peak_ttok_diffs.png"))
         plt.clf()
+
+    # Convert to DataFrame
+    df = pd.DataFrame(grouped_data)
+
+    # Ensure k and N are integers for proper sorting
+    df["k"] = df["k"].astype(int)
+    df["N"] = df["N"].astype(int)
+
+    # Compute averages across models
+    avg_df = df.groupby(["N", "k"], as_index=False)["Normalized Token Diff"].mean()
+
+    # Pivot the averaged data for heatmap
+    heatmap_df = avg_df.pivot_table(index="N", columns="k", values="Normalized Token Diff", aggfunc="mean")
+
+    # Sort index and columns
+    heatmap_df = heatmap_df.sort_index(axis=0).sort_index(axis=1)
+
+    # Define the colormap
+    cmap = LinearSegmentedColormap.from_list("custom_colormap", ["red", "white", "green"])
+
+    # Plot the grouped heatmap
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(heatmap_df, annot=True, fmt=".2f", cmap=cmap, cbar=True, center=0)
+    plt.title("Normalized Token Difference")
+    plt.xlabel("k")
+    plt.ylabel("N")
+
+    # Save the plot
+    os.makedirs(os.path.join(kwargs['foldername'], "heatmaps"), exist_ok=True)
+    plt.savefig(os.path.join(kwargs['foldername'], "heatmaps", "grouped_peak_ttok_diffs.png"))
+    plt.clf()

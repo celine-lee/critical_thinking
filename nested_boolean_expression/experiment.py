@@ -272,7 +272,7 @@ def get_args():
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--num_beams", type=int, default=1)
     parser.add_argument("--num_gens_per", type=int, default=1)
-    parser.add_argument("--k_vals", nargs='+', default=[2, 4])
+    parser.add_argument("--k_vals", nargs='+', default=[2, 3, 4])
     parser.add_argument("--N_vals", nargs='+', default=[1, 3, 5, 8])
     parser.add_argument("--models", nargs='+', default=["google/gemma-2-9b-it"])
     parser.add_argument("--disable_cot", action="store_true")
