@@ -231,7 +231,7 @@ class Experiment:
                 )
                 prompts.append(prompt)
                 batch.append(example)
-
+            if len(prompts) == 0: continue
             input_ids = self.tokenizer(
                 prompts,
                 padding=True,
@@ -262,17 +262,20 @@ class Experiment:
                     continue
                 input_idx = gen_idx // generation_config["num_return_sequences"]
                 example = batch[input_idx]
-                evaluated_pred = eval(pred_answer)
-                is_correct = evaluated_pred == eval(example["output"])
-                # If it was an assert with text for the printout, ignore the text.
-                if (
-                    (not is_correct)
-                    and type(evaluated_pred) == tuple
-                    and len(evaluated_pred) == 2
-                    and type(evaluated_pred[1]) == str
-                ):
-                    print("TUPLE MAYBE?", example, pred_answer)
-                    is_correct = evaluated_pred[0] == eval(example["output"])
+                try:
+                    evaluated_pred = eval(pred_answer)
+                    is_correct = evaluated_pred == eval(example["output"])
+                    # If it was an assert with text for the printout, ignore the text.
+                    if (
+                        (not is_correct)
+                        and type(evaluated_pred) == tuple
+                        and len(evaluated_pred) == 2
+                        and type(evaluated_pred[1]) == str
+                    ):
+                        print("TUPLE MAYBE?", example, pred_answer)
+                        is_correct = evaluated_pred[0] == eval(example["output"])
+                except: 
+                    continue
                 results.append(
                     {
                         "query": prompts[input_idx],
