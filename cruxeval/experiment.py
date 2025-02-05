@@ -288,6 +288,7 @@ class Experiment:
                         "id": example["id"],
                         "N": sum(example["line_execution_counts"].values()),
                         "k": example["ast_size"],
+                        "l": len(example["code"].splitlines())
                     }
                 )
 
