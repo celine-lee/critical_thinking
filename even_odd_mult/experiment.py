@@ -215,7 +215,7 @@ class Experiment:
         print(filename)
         results = []
         if os.path.exists(filename): results = json.load(open(filename))
-
+        just_move_on_counter = 0
         n_gens_remaining = self.n_samples - len(results)
         while n_gens_remaining > 0:
             prompts = []
@@ -246,7 +246,9 @@ class Experiment:
             extracted_answers_and_indices = self.extract_answers(input_ids, model_output)
 
             for gen_idx, (pred_answer, num_generated_tokens, total_compute_tokens, model_generation) in enumerate(extracted_answers_and_indices):
-                if pred_answer is None: continue
+                if pred_answer is None: 
+                    just_move_on_counter += 1
+                    continue
                 input_idx = gen_idx // generation_config["num_return_sequences"]
                 true_is_even = true_answers[input_idx]
                 is_correct = pred_answer is not None and eval(pred_answer) == true_is_even
@@ -268,6 +270,7 @@ class Experiment:
                 with open(filename, "w") as wf:
                     json.dump(results, wf, indent=4)
 
+            if just_move_on_counter > 30: break
         with open(filename, "w") as wf:
             json.dump(results, wf, indent=4)
         return results
@@ -318,10 +321,11 @@ def get_args():
 def run():
     args = get_args()
     n_samples = 100
+    max_new_tokens = 6000
 
     for model_name in args.models:
         model = load_model(model_name)
-        experiment = Experiment(model, model_name, args.num_gens_per, n_samples=n_samples, temperature=args.temperature, num_beams=args.num_beams)
+        experiment = Experiment(model, model_name, args.num_gens_per, n_samples=n_samples, temperature=args.temperature, num_beams=args.num_beams, max_new_tokens=max_new_tokens)
         for k in args.k_vals:
             for m in args.m_vals:
                 for N in args.N_vals:

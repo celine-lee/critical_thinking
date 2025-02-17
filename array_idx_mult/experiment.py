@@ -317,10 +317,11 @@ def get_args():
 def run():
     args = get_args()
     n_samples = 100
+    max_new_tokens = 6000
 
     for model_name in args.models:
         model = load_model(model_name)
-        experiment = Experiment(model, model_name, args.num_gens_per, n_samples=n_samples, temperature=args.temperature, num_beams=args.num_beams)
+        experiment = Experiment(model, model_name, args.num_gens_per, n_samples=n_samples, temperature=args.temperature, num_beams=args.num_beams, max_new_tokens=max_new_tokens)
         for k in args.k_vals:
             for m in args.m_vals:
                 for N in args.N_vals:

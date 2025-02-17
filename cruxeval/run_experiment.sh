@@ -1,8 +1,5 @@
 source ../.models_env
-# echo ${BIGGER_MODELS}
-# python experiment.py --models ${BIGGER_MODELS}
-# python experiment.py --disable_cot --models ${BIGGER_MODELS}
+echo ${DSR1_MODELS}
+python experiment_vllm.py --models ${DSR1_MODELS}
+python experiment_vllm.py --disable_cot --models ${DSR1_MODELS}
 
-echo ${SMALLER_MODELS}
-python experiment.py --models ${SMALLER_MODELS}
-python experiment.py --disable_cot --models ${SMALLER_MODELS}

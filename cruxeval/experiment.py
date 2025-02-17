@@ -214,6 +214,7 @@ class Experiment:
 
         used_uids = set(ex["id"] for ex in results)
         idx = len(results)
+        just_move_on_counter = 0
         while idx < min(len(examples), self.n_samples):
             prompts = []
             batch = []
@@ -259,6 +260,7 @@ class Experiment:
                 ),
             ) in enumerate(extracted_answers):
                 if pred_answer is None:
+                    just_move_on_counter += 1
                     continue
                 input_idx = gen_idx // generation_config["num_return_sequences"]
                 example = batch[input_idx]
@@ -295,6 +297,7 @@ class Experiment:
             with open(filename, "w") as wf:
                 json.dump(results, wf, indent=4)
 
+            if just_move_on_counter > 30: break
         with open(filename, "w") as wf:
             json.dump(results, wf, indent=4)
         return results
@@ -344,7 +347,7 @@ def get_args():
 
 def run():
     args = get_args()
-
+    max_new_tokens = 6000
     for model_name in args.models:
         model = load_model(model_name)
         experiment = Experiment(
@@ -355,7 +358,8 @@ def run():
             temperature=args.temperature,
             num_beams=args.num_beams,
             disable_cot=args.disable_cot,
-            max_batch_size=4 if "32B" in model_name else 8,
+            max_batch_size=2,
+            max_new_tokens=max_new_tokens
         )
         results = experiment.run_experiment()
         del model

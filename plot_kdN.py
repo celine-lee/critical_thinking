@@ -90,6 +90,8 @@ if __name__ == "__main__":
 
     kdN_to_peak_ttoks_incorrect = {}
     kdN_to_peak_acc = {}
+    kdN_to_peak_precision = {}
+    kdN_to_peak_recall = {}
 
 
     for modelname in args.models:
@@ -98,24 +100,30 @@ if __name__ == "__main__":
         d_to_peak_ttoks[modelname] = {}
         kdN_to_peak_ttoks_incorrect[modelname] = {}
         kdN_to_peak_acc[modelname] = {}
+        kdN_to_peak_precision[modelname] = {}
+        kdN_to_peak_recall[modelname] = {}
         for d in d_vals:
             for k in k_vals:
                 set_factors = {"k": k, "d": d, "Model": modelname}
+                ptt_data = plot_correctness_by_ttoks_isolate_factor(
+                    df, set_factors, "N", plot_kwargs
+                )
+                if ptt_data is None: continue
                 (
                     N_to_ptts,
                     N_to_ptts_incorrect,
                     N_to_peak_acc,
-                ) = plot_correctness_by_ttoks_isolate_factor(
-                    df, set_factors, "N", plot_kwargs
-                )
+                ) = ptt_data
                 if N_to_ptts:
                     N_to_peak_ttoks[modelname][(k, d, None)] = N_to_ptts
                 for N_val, peak_ttoks_incorrect in N_to_ptts_incorrect:
                     kdN_to_peak_ttoks_incorrect[modelname][
                         (k, d, N_val)
                     ] = peak_ttoks_incorrect
-                for N_val, peak_acc in N_to_peak_acc:
+                for N_val, (peak_acc, peak_precision, peak_recall) in N_to_peak_acc:
                     kdN_to_peak_acc[modelname][(k, d, N_val)] = peak_acc
+                    kdN_to_peak_precision[modelname][(k, d, N_val)] = peak_precision
+                    kdN_to_peak_recall[modelname][(k, d, N_val)] = peak_recall
 
                 # plot_correctness_by_ttoks_isolate_factor(
                 #     df, set_factors, "N", plot_kwargs | {"plot_incorrect": True}
@@ -123,21 +131,25 @@ if __name__ == "__main__":
 
             for N in N_vals:
                 set_factors = {"N": N, "d": d, "Model": modelname}
+                ptt_data = plot_correctness_by_ttoks_isolate_factor(
+                    df, set_factors, "k", plot_kwargs
+                )
+                if ptt_data is None: continue
                 (
                     k_to_ptts,
                     k_to_ptts_incorrect,
                     k_to_peak_acc,
-                ) = plot_correctness_by_ttoks_isolate_factor(
-                    df, set_factors, "k", plot_kwargs
-                )
+                ) = ptt_data
                 if k_to_ptts:
                     k_to_peak_ttoks[modelname][(None, d, N)] = k_to_ptts
                 for k_val, peak_ttoks_incorrect in k_to_ptts_incorrect:
                     kdN_to_peak_ttoks_incorrect[modelname][
                         (k_val, d, N)
                     ] = peak_ttoks_incorrect
-                for k_val, peak_acc in k_to_peak_acc:
+                for k_val, (peak_acc, peak_precision, peak_recall) in k_to_peak_acc:
                     kdN_to_peak_acc[modelname][(k_val, d, N)] = peak_acc
+                    kdN_to_peak_precision[modelname][(k_val, d, N)] = peak_precision
+                    kdN_to_peak_recall[modelname][(k_val, d, N)] = peak_recall
                 # plot_correctness_by_ttoks_isolate_factor(
                 #     df, set_factors, "k", plot_kwargs | {"plot_incorrect": True}
                 # )
@@ -145,10 +157,12 @@ if __name__ == "__main__":
 
             for N in N_vals:
                 set_factors = {"N": N, "k": k, "Model": modelname}
-                plot_cdfs(df, set_factors, plot_kwargs)
-                d_to_ptts, _, _ = plot_correctness_by_ttoks_isolate_factor(
+                # plot_cdfs(df, set_factors, plot_kwargs)
+                ptt_data = plot_correctness_by_ttoks_isolate_factor(
                     df, set_factors, "d", plot_kwargs
                 )
+                if ptt_data is None: continue
+                (d_to_ptts, _, _ ) = ptt_data
                 if d_to_ptts:
                     d_to_peak_ttoks[modelname][(k, None, N)] = d_to_ptts
 
@@ -164,19 +178,21 @@ if __name__ == "__main__":
             del d_to_peak_ttoks[modelname]
 
     plt.clf()
-    plot_ptt_by_factor(N_to_peak_ttoks, "N", False, plot_kwargs)
+    # plot_ptt_by_factor(N_to_peak_ttoks, "N", False, plot_kwargs)
     plot_ptt_by_factor(N_to_peak_ttoks, "N", True, plot_kwargs)
-    plot_ptt_by_factor(k_to_peak_ttoks, "k", False, plot_kwargs)
-    plot_ptt_by_factor(k_to_peak_ttoks, "k", True, plot_kwargs)
-    plot_ptt_by_factor(d_to_peak_ttoks, "d", False, plot_kwargs)
+    # plot_ptt_by_factor(k_to_peak_ttoks, "k", False, plot_kwargs)
+    plot_ptt_by_factor(k_to_peak_ttoks, "k", True, plot_kwargs) 
+    # plot_ptt_by_factor(d_to_peak_ttoks, "d", False, plot_kwargs)
     plot_ptt_by_factor(d_to_peak_ttoks, "d", True, plot_kwargs)
 
-    plot_ptt_by_factor(N_to_peak_ttoks, "N", False, plot_kwargs, True)
+    # plot_ptt_by_factor(N_to_peak_ttoks, "N", False, plot_kwargs, True)
     plot_ptt_by_factor(N_to_peak_ttoks, "N", True, plot_kwargs, True)
-    plot_ptt_by_factor(k_to_peak_ttoks, "k", False, plot_kwargs, True)
+    # plot_ptt_by_factor(k_to_peak_ttoks, "k", False, plot_kwargs, True)
     plot_ptt_by_factor(k_to_peak_ttoks, "k", True, plot_kwargs, True)
-    plot_ptt_by_factor(d_to_peak_ttoks, "d", False, plot_kwargs, True)
+    # plot_ptt_by_factor(d_to_peak_ttoks, "d", False, plot_kwargs, True)
     plot_ptt_by_factor(d_to_peak_ttoks, "d", True, plot_kwargs, True)
 
-    plot_peak_accuracy_heatmap(kdN_to_peak_acc, plot_kwargs)
+    plot_peak_accuracy_heatmap(kdN_to_peak_acc, "Peak Accuracy", plot_kwargs)
+    plot_peak_accuracy_heatmap(kdN_to_peak_precision, "Precision", plot_kwargs)
+    plot_peak_accuracy_heatmap(kdN_to_peak_recall, "Recall", plot_kwargs)
     plot_peak_token_difference_heatmap(kdN_to_peak_ttoks_incorrect, plot_kwargs)

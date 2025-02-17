@@ -31,13 +31,15 @@ sys.excepthook = debughook
 
 
 model_colors = {
-    # "Llama-3.1-8B-Instruct": "purple",
     "Qwen2.5-32B-Instruct": "blue",
-    # "Qwen2.5-14B-Instruct": "brown",
     "Qwen2.5-7B-Instruct": "purple",
-    # "OLMo-2-1124-7B-Instruct": "black",
     "Ministral-8B-Instruct-2410": "orange",
     "gemma-2-9b-it": "brown",
+    "DeepSeek-R1-Distill-Qwen-32B": "olive",
+    "DeepSeek-R1-Distill-Qwen-14B": "green",
+    "DeepSeek-R1-Distill-Qwen-7B": "yellow",
+    "DeepSeek-R1-Distill-Qwen-1.5B": "red",
+    "DeepSeek-R1-Distill-Llama-8B": "black",
 }
 
 model_nicknames = {
@@ -48,14 +50,29 @@ model_nicknames = {
     # "OLMo-2-1124-7B-Instruct": "OLMO-7B",
     "Ministral-8B-Instruct-2410": "Ministral-8B",
     "gemma-2-9b-it": "Ge2-9B",
+    "DeepSeek-R1-Distill-Qwen-32B": "R1-Qw-32B",
+    "DeepSeek-R1-Distill-Qwen-14B": "R1-Qw-14B",
+    "DeepSeek-R1-Distill-Qwen-7B": "R1-Qw-7B",
+    "DeepSeek-R1-Distill-Qwen-1.5B": "R1-Qw-1.5B",
+    "DeepSeek-R1-Distill-Llama-8B": "R1-Ll-8B",
 }
 colormap = get_cmap("tab10")  # Use a colormap with distinct colors
+
+factor_to_description = {
+    "k": "k (DFA size)",
+    "N": "N (run length)",
+    "m": "m (mult factor)",
+    "l": "l (no. lines)",
+    "d": "d (depth)",
+}
 
 
 def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, kwargs):
     loaded_data = {
         "No gen toks": [],
-        "Correct?": []
+        "Correct?": [],
+        "Predicted": [],
+        "True": [],
     }
     for varname in varnames_and_wanted_vals:
         loaded_data[varname] = []
@@ -85,37 +102,120 @@ def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, 
 
             loaded_data["No gen toks"].extend([ex["generated_tokens"] for ex in results])
             loaded_data["Correct?"].extend([ex["correct"] for ex in results])
+            loaded_data["Predicted"].extend([ex["pred_answer"] for ex in results])
+            loaded_data["True"].extend([ex["true_answer"] for ex in results])
 
     # Create a DataFrame for the new data
     df = pd.DataFrame(loaded_data)
 
     return df
 
-def calculate_buckets_samesize(sub_df, n_buckets, groupby_key="Model"):
-    if len(sub_df) == 0: return None, None
-    # Use qcut to create equal-sized buckets by count
-    if len(sub_df["No gen toks"].unique()) < n_buckets:    
-        sub_df.loc[:, "Length Bucket"] = pd.qcut(
-            sub_df["No gen toks"], q=len(sub_df["No gen toks"].unique()), duplicates="drop"
+def calculate_precision_recall(sub_df):
+    if len(sub_df) == 0:
+        return None
+
+    # Group by bucket and compute TP, FP, FN
+    grouped = sub_df.groupby("Length Bucket", observed=True)
+
+    precision_recall = grouped.apply(lambda x: pd.Series({
+        "TP": ((x["Correct?"] == True) & ((x["Predicted"] == True) | (x["Predicted"] == "True"))).sum(),
+        "FP": ((x["Correct?"] == False) & ((x["Predicted"] == True) | (x["Predicted"] == "True"))).sum(),
+        "FN": ((x["Correct?"] == False) & ((x["True"] == True) | (x["True"] == "True"))).sum(),
+    }))
+    if 'TP' not in precision_recall: return None
+    # Compute precision and recall with safe division
+    precision_recall["Precision"] = precision_recall["TP"] / (precision_recall["TP"] + precision_recall["FP"])
+    precision_recall["Recall"] = precision_recall["TP"] / (precision_recall["TP"] + precision_recall["FN"])
+
+    # Handle cases where all predictions were negative
+    precision_recall.loc[(precision_recall["TP"] == 0) & (precision_recall["FP"] == 0), "Precision"] = 1.0
+    precision_recall.loc[(precision_recall["TP"] == 0) & (precision_recall["FN"] == 0), "Recall"] = 0.0
+
+    # Fill any remaining NaN values with 0 (if there was no positive prediction at all)
+    precision_recall.fillna(0, inplace=True)
+
+    # Reset index for merging
+    precision_recall = precision_recall.reset_index()
+
+    return precision_recall
+
+def calculate_buckets(sub_df, n_buckets, groupby_key="Model"):
+    if len(sub_df) == 0:
+        return None, None
+
+    unique_lengths = sub_df["No gen toks"].unique()
+
+    if len(unique_lengths) == 1:
+        # Assign everything to a single bucket
+        sub_df["Length Bucket"] = f"({unique_lengths[0]}, {unique_lengths[0]})"
+        bucket_avg = (
+            sub_df.groupby([groupby_key, "Length Bucket"], observed=True)["Correct?"]
+            .mean()
+            .reset_index()
         )
+        bucket_avg["Bucket Center"] = unique_lengths[0]  # Single center
+        bucket_avg["Correct?"] = bucket_avg["Correct?"].astype(float)
     else:
-        sub_df.loc[:, "Length Bucket"] = pd.qcut(
-            sub_df["No gen toks"], q=n_buckets, duplicates="drop"
+        # Normal binning process
+        if len(unique_lengths) < n_buckets:
+            sub_df.loc[:, "Length Bucket"] = pd.qcut(
+                sub_df["No gen toks"], q=len(unique_lengths) + 1, duplicates="drop"
+            )
+        else:
+            unique_vals, counts = np.unique(sub_df["No gen toks"], return_counts=True)
+            total_count = len(sub_df)
+            cumulative_counts = np.cumsum(counts)
+
+            boundaries = [unique_vals[0]]
+            target_size = total_count / n_buckets
+
+            for b in range(1, n_buckets):
+                cutoff = b * target_size
+                idx = np.searchsorted(cumulative_counts, cutoff, side="left")
+
+                if idx >= len(unique_vals):
+                    idx = len(unique_vals) - 1
+
+                while idx < len(unique_vals) and unique_vals[idx] <= boundaries[-1]:
+                    idx += 1
+
+                if idx >= len(unique_vals):
+                    break
+
+                boundaries.append(unique_vals[idx])
+
+            if boundaries[-1] < unique_vals[-1]:
+                boundaries.append(unique_vals[-1])
+
+            boundaries = np.unique(boundaries)
+
+            sub_df.loc[:, "Length Bucket"] = pd.cut(
+                sub_df["No gen toks"], bins=boundaries, include_lowest=True, duplicates="drop"
+            )
+
+        bucket_avg = (
+            sub_df.groupby([groupby_key, "Length Bucket"], observed=True)["Correct?"]
+            .mean()
+            .reset_index()
         )
 
-    bucket_avg = (
-        sub_df.groupby([groupby_key, "Length Bucket"], observed=True)["Correct?"].mean().reset_index()
-    )
+        bucket_avg["Bucket Center"] = bucket_avg["Length Bucket"].apply(
+            lambda x: (x.left + x.right) / 2 if pd.notna(x) else np.nan
+        ).astype(float)
 
-    # Calculate the bucket center by averaging bin edges
-    bucket_avg["Bucket Center"] = bucket_avg["Length Bucket"].apply(
-        lambda x: (x.left + x.right) / 2
-    ).astype(float)
+        bucket_avg["Correct?"] = bucket_avg["Correct?"].astype(float)
 
-    bucket_avg["Correct?"] =  bucket_avg["Correct?"].astype(float)
-    sub_df = sub_df.merge(bucket_avg, on=groupby_key, suffixes=('', '_mean'))
+    # Compute precision and recall
+    precision_recall = calculate_precision_recall(sub_df)
+
+    # Merge precision-recall data
+    bucket_avg = bucket_avg.merge(precision_recall, on="Length Bucket", how="left")
+
+    sub_df = sub_df.merge(bucket_avg, on=[groupby_key, "Length Bucket"], suffixes=('', '_mean'))
 
     return bucket_avg, sub_df
+
+
 
 def global_parser():
     parser = argparse.ArgumentParser()
@@ -225,14 +325,22 @@ def plot_length_generated(df, kwargs, by_factor=None):
     plt.clf()
 
 def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_color, color_intensity, is_subplot, kwargs):
-    bucket_avg, filtered_data = calculate_buckets_samesize(filtered_data, kwargs['n_buckets'])
-    if filtered_data is None: return False
-    if len(bucket_avg) == 0: return False
+    bucket_avg, filtered_data = calculate_buckets(filtered_data, kwargs['n_buckets'])
+    if filtered_data is None: return None
+    if len(bucket_avg) == 0: return None
         
     # Find the index of the maximum value
     index_peak = np.argmax(bucket_avg["Correct?"])
     peak_ttoks = bucket_avg["Bucket Center"][index_peak]
     best_performance = bucket_avg["Correct?"][index_peak]
+
+    # Find the index of the best precision and recall
+    index_best_precision = np.argmax(bucket_avg["Precision"])
+    index_best_recall = np.argmax(bucket_avg["Recall"])
+
+    best_precision = bucket_avg["Precision"][index_best_precision]
+    best_recall = bucket_avg["Recall"][index_best_recall]
+
     # and maximum value for probability mass of incorrect sequences
     index_peak_incorrect = np.argmax(1 - bucket_avg["Correct?"]) #  bc of monte carlo we know probability mass is here, and we bucketed into even sizes...
     peak_ttoks_incorrect = bucket_avg["Bucket Center"][index_peak_incorrect]
@@ -249,7 +357,7 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
         bucket_avg["Bucket Center"],
         bucket_avg["Correct?"],
         color=rgba_color,
-        label=label,
+        label=label + f"({len(filtered_data)})",
     )
 
     plt.fill_between(
@@ -264,7 +372,7 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
             bucket_avg["Bucket Center"],
             1 - bucket_avg["Correct?"], # is this right?
             color="red", alpha=color_intensity,
-            label=label + " incorrect",
+            label=label + " incorrect" + f"({len(filtered_data)})",
         )
 
         plt.fill_between(
@@ -296,7 +404,7 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
             os.path.join(kwargs['foldername'], "isolate_factor", filename)
         )
         plt.clf()
-    return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), (best_performance - ci.values[index_peak]).item() > kwargs['compute_random'](set_factor_values))
+    return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), best_precision, best_recall, (best_performance - ci.values[index_peak]).item() > kwargs['compute_random'](set_factor_values))
 
 def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_factor, kwargs):
     # Filter the data for the specified factor_set_values
@@ -307,7 +415,7 @@ def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_fac
 
     if filtered_data.empty:
         print(f"No examples found for: {factor_set_values}.")
-        return
+        return None
 
     if isolated_factor == "Model":
         factor_values = sorted(filtered_data[isolated_factor].unique(), key=str)
@@ -338,11 +446,11 @@ def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_fac
         plot_results = plot_correctness_by_ttoks(factor_filtered_data, factor_set_values | {isolated_factor: factor_value}, label, rgba_color, color_intensity, True, kwargs)
         if plot_results:
             used_vals.append(factor_value)
-            (peak_ttoks, peak_ttoks_incorrect, peak_acc, task_doable) = plot_results
+            (peak_ttoks, peak_ttoks_incorrect, peak_acc, peak_precision, peak_recall, task_doable) = plot_results
             if task_doable:
                 factor_val_to_peak_ttoks.append((factor_value, peak_ttoks))
             factor_val_to_peak_ttoks_incorrect.append((factor_value, (peak_ttoks, peak_ttoks_incorrect)))
-            factor_val_to_peak_acc.append((factor_value, peak_acc))
+            factor_val_to_peak_acc.append((factor_value, (peak_acc, peak_precision, peak_recall)))
     if len(factor_val_to_peak_ttoks) == 0: return factor_val_to_peak_ttoks, factor_val_to_peak_ttoks_incorrect, factor_val_to_peak_acc
 
     if kwargs['only_meta']: 
@@ -369,7 +477,6 @@ def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_fac
 
 def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_lines, kwargs, plot_error=False, metric="pearsonr"):
     plt.figure(figsize=(8, 5))
-    # To store normalized values per model for later linregress
     # Find the factor vals that all models have at least some successes in
     min_max_factor_val = None
     max_min_factor_val = None
@@ -492,37 +599,12 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
         #         alpha=0.7
         #     )
 
-    if len(all_factor_vals) == 0: return
-
-    if not plot_individual_lines:
-        # See how well all collected points fit to the common linear regression line
-        slope, intercept, _, _, _ = stats.linregress([fv for (fv, _) in all_normalized_avg_peak_tts], [napt for (_, napt) in all_normalized_avg_peak_tts])
-
-        # Generate x values for the target regression line
-        x_vals = np.linspace(min(all_factor_vals), max(all_factor_vals), 100)
-        y_vals = slope * x_vals + intercept
-        # Plot the target linear line
-        plt.plot(x_vals, y_vals, color='black', linestyle='--')
-
-        if metric == 'mse':
-            # Calculate Mean Squared Error
-            predicted_vals = slope * np.array(all_factor_vals_normalized) + intercept
-            mse = np.mean((np.array(all_normalized_peak_tts) - predicted_vals) ** 2)
-            # Annotate the MSE on the plot
-            mse_annotation = f"MSE: {mse:.4f}"
-            plt.text(0.05, 0.95, mse_annotation, transform=plt.gca().transAxes,
-                    color='red', verticalalignment='top')
-        elif metric == 'pearsonr':
-            # Calculate pearson corr
-            correlation, _ = stats.pearsonr(all_factor_vals_normalized, all_normalized_peak_tts)
-            corr_annotation = f"Correlation: {correlation:.4f}"
-            plt.text(0.05, 0.95, corr_annotation, transform=plt.gca().transAxes,
-                    color='red', verticalalignment='top')
+    if len(all_factor_vals) == 0 or max(all_factor_vals) == min(all_factor_vals): return
 
     # Finalize and save the plot
     plt.ylim(-0.1, 1.1)
     plt.gca().set_aspect((max(all_factor_vals) - min(all_factor_vals)) / 1.2)
-    plt.xlabel(isolated_factor)
+    plt.xlabel(factor_to_description[isolated_factor])
     plt.ylabel("Normalized Avg. Peak Tokens")
     plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
     plt.tight_layout()
@@ -564,7 +646,7 @@ def plot_correctness_by_isolate_factor(df, plot_against_factor, set_factors, kwa
             performance.index.astype(int),
             performance.values,
             color=rgba_color,
-            label=modelname,
+            label=model_nicknames[modelname],
         )
 
         # Calculate and display confidence intervals
@@ -612,9 +694,9 @@ def plot_correctness_by_isolate_factor(df, plot_against_factor, set_factors, kwa
     plt.xlim(xmin=0)
     plt.ylim(0, 1)
     plt.ylabel("Correctness")
-    plt.xlabel(plot_against_factor)
+    plt.xlabel(factor_to_description[plot_against_factor])
     plt.title(
-        f"Correctness vs. {plot_against_factor}"
+        f"Correctness vs. {factor_to_description[plot_against_factor]}"
     )
     plt.legend(loc="best", fancybox=True, shadow=True)
     plt.grid(True, linestyle="--", alpha=0.6)
@@ -674,7 +756,7 @@ def plot_cdfs(df, desired_factors, kwargs):
     plt.savefig(os.path.join(kwargs['foldername'], "prob_distrs", ''.join(f"{k}{v}" for k, v in desired_factors.items()) + ".png"))
     plt.clf()
 
-def plot_peak_accuracy_heatmap(experiment_to_peak_accuracy, kwargs):
+def plot_peak_accuracy_heatmap(experiment_to_peak_accuracy, title, kwargs):
     """
     Heatmap of peak accuracies across k and N.
     
@@ -693,8 +775,8 @@ def plot_peak_accuracy_heatmap(experiment_to_peak_accuracy, kwargs):
         for (dfa_details, peak_accuracy) in results.items():
             k = dfa_details[0]
             N = dfa_details[-1]
-            heatmap_data.append({"k": k, "N": N, "Peak Accuracy": peak_accuracy})
-
+            heatmap_data.append({"k": k, "N": N, title: peak_accuracy})
+        if len(heatmap_data) == 0: continue
         # Convert to DataFrame
         df = pd.DataFrame(heatmap_data)
         df["k"] = df["k"].astype(int)
@@ -702,19 +784,19 @@ def plot_peak_accuracy_heatmap(experiment_to_peak_accuracy, kwargs):
 
 
         # Pivot the DataFrame for the heatmap
-        heatmap_df = df.pivot_table(index="N", columns="k", values="Peak Accuracy", aggfunc="mean")
+        heatmap_df = df.pivot_table(index="N", columns="k", values=title, aggfunc="mean")
         heatmap_df = heatmap_df.sort_index(axis=0).sort_index(axis=1)
 
         # Plot heatmap
         plt.figure(figsize=(10, 8))
         sns.heatmap(heatmap_df, annot=True, fmt=".2f", cmap=cmap, cbar=True, center=0)
-        plt.title(f"Peak Accuracy Heatmap ({modelname})")
-        plt.xlabel("k")
-        plt.ylabel("N")
+        plt.title(f"{title} Heatmap ({modelname})")
+        plt.xlabel(factor_to_description["k"])
+        plt.ylabel(factor_to_description["N"])
 
         # Save the plot
         os.makedirs(os.path.join(kwargs['foldername'], "heatmaps"), exist_ok=True)
-        plt.savefig(os.path.join(kwargs['foldername'], "heatmaps", f"{modelname}_peak_acc.png"))
+        plt.savefig(os.path.join(kwargs['foldername'], "heatmaps", f"{modelname}_{title}.png"))
         plt.clf()
 
 def plot_peak_token_difference_heatmap(experiment_to_tok_differences, kwargs):
@@ -741,7 +823,7 @@ def plot_peak_token_difference_heatmap(experiment_to_tok_differences, kwargs):
             token_diff = peak_ttoks[0] - peak_ttoks[1]
             heatmap_data.append({"k": k, "N": N, "Token Diff": token_diff})
             # grouped_data.append({"Model": modelname, "k": k, "N": N, "Token Diff": token_diff})
-
+        if len(heatmap_data) == 0: continue
         # Convert to DataFrame
         df = pd.DataFrame(heatmap_data)
 
@@ -771,8 +853,8 @@ def plot_peak_token_difference_heatmap(experiment_to_tok_differences, kwargs):
         sns.heatmap(heatmap_df, annot=True, fmt=".2f", cmap=cmap, cbar=True, center=0)
         plt.title(f"Token Difference ({modelname})")
 
-        plt.xlabel("k")
-        plt.ylabel("N")
+        plt.xlabel(factor_to_description["k"])
+        plt.ylabel(factor_to_description["N"])
 
         # Save the plot
         os.makedirs(os.path.join(kwargs['foldername'], "heatmaps"), exist_ok=True)
@@ -802,8 +884,8 @@ def plot_peak_token_difference_heatmap(experiment_to_tok_differences, kwargs):
     plt.figure(figsize=(10, 8))
     sns.heatmap(heatmap_df, annot=True, fmt=".2f", cmap=cmap, cbar=True, center=0)
     plt.title("Normalized Token Difference")
-    plt.xlabel("k")
-    plt.ylabel("N")
+    plt.xlabel(factor_to_description["k"])
+    plt.ylabel(factor_to_description["N"])
 
     # Save the plot
     os.makedirs(os.path.join(kwargs['foldername'], "heatmaps"), exist_ok=True)

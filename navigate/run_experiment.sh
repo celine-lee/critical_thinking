@@ -1,6 +1,6 @@
-python experiment.py --models   "Qwen/Qwen2.5-32B-Instruct" "google/gemma-2-9b-it"  "Qwen/Qwen2.5-7B-Instruct"  "mistralai/Ministral-8B-Instruct-2410"  #
-# python experiment.py --disable_cot --models "Qwen/Qwen2.5-32B-Instruct" "Qwen/Qwen2.5-7B-Instruct" # done:  "mistralai/Ministral-8B-Instruct-2410" "google/gemma-2-9b-it"
-
-# python experiment.py --temperature 0.9 --num_gens_per 6 --models  "Qwen/Qwen2.5-32B-Instruct" "Qwen/Qwen2.5-7B-Instruct"  "mistralai/Ministral-8B-Instruct-2410" "google/gemma-2-9b-it" 
-# python experiment.py --temperature 0.9 --num_gens_per 6 --disable_cot --models "Qwen/Qwen2.5-32B-Instruct" "Qwen/Qwen2.5-7B-Instruct"  "mistralai/Ministral-8B-Instruct-2410" "google/gemma-2-9b-it" 
+source ../.models_env
+echo ${DSR1_MODELS}
+python experiment.py --disable_cot --models deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+python experiment.py --models ${DSR1_MODELS}
+python experiment.py --disable_cot --models ${DSR1_MODELS}
 

@@ -28,7 +28,7 @@ from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM, BitsAn
 foldername = "outputs"
 
 class Experiment:
-    def __init__(self, model, model_name, num_gens_per, n_samples, temperature, num_beams=1, max_new_tokens=2400, max_batch_size=4, disable_cot=False):
+    def __init__(self, model, model_name, num_gens_per, n_samples, temperature, num_beams=1, max_new_tokens=2400, max_batch_size=2, disable_cot=False):
         self.model = model
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name, padding_side="left", truncation_side="left"
@@ -184,6 +184,7 @@ class Experiment:
         if os.path.exists(filename): results = json.load(open(filename))
 
         n_gens_remaining = self.n_samples - len(results)
+        just_move_on_counter = 0
         while n_gens_remaining > 0:
             prompts = []
             true_answers = []
@@ -212,6 +213,7 @@ class Experiment:
 
             for gen_idx, (pred_answer, num_generated_tokens, total_compute_tokens, model_generation) in enumerate(extracted_answers):
                 if pred_answer is None: 
+                    just_move_on_counter += 1
                     continue
                 input_idx = gen_idx // generation_config["num_return_sequences"]
                 true_answer = true_answers[input_idx]
@@ -233,6 +235,7 @@ class Experiment:
                 with open(filename, "w") as wf:
                     json.dump(results, wf, indent=4)
 
+            if just_move_on_counter > 30: break
         with open(filename, "w") as wf:
             json.dump(results, wf, indent=4)
         return results
@@ -283,10 +286,11 @@ def get_args():
 def run():
     args = get_args()
     n_samples = 100
+    max_new_tokens = 6000
 
     for model_name in args.models:
         model = load_model(model_name)
-        experiment = Experiment(model, model_name, args.num_gens_per, n_samples=n_samples, temperature=args.temperature, num_beams=args.num_beams, disable_cot=args.disable_cot)
+        experiment = Experiment(model, model_name, args.num_gens_per, n_samples=n_samples, temperature=args.temperature, num_beams=args.num_beams, disable_cot=args.disable_cot, max_new_tokens=max_new_tokens)
         for k in args.k_vals:
             for N in args.N_vals:
                 results = experiment.run_experiment(int(k), int(N))
