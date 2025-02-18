@@ -202,12 +202,12 @@ class Experiment:
             "pad_token_id": self.tokenizer.eos_token_id,
         }
 
-    def run_experiment(self):
-        subfolder = os.path.join(f"{foldername}{'_nocot' if self.disable_cot else ''}")
+    def run_experiment(self, straightlined=False):
+        subfolder = os.path.join(f"{foldername}{'_straightlined' if straightlined else ''}{'_nocot' if self.disable_cot else ''}")
         os.makedirs(subfolder, exist_ok=True)
         filename = f"{subfolder}/{self.filename}.json"
         print(filename)
-        examples = json.load(open("cruxeval_profiled.json"))
+        examples = json.load(open(f"synth_cruxeval_profiled{'_straightlined' if straightlined else ''}.json"))
         results = []
         if os.path.exists(filename):
             results = json.load(open(filename))
@@ -215,7 +215,7 @@ class Experiment:
         used_uids = set(ex["id"] for ex in results)
         idx = len(results)
         just_move_on_counter = 0
-        while idx < min(len(examples), self.n_samples):
+        while idx < len(examples):
             prompts = []
             batch = []
             while len(prompts) < self.max_batch_size:
@@ -341,6 +341,7 @@ def get_args():
     parser.add_argument("--num_gens_per", type=int, default=1)
     parser.add_argument("--models", nargs="+", default=["google/gemma-2-9b-it"])
     parser.add_argument("--disable_cot", action="store_true")
+    parser.add_argument("--straightlined", action="store_true")
     args = parser.parse_args()
     return args
 
@@ -354,14 +355,14 @@ def run():
             model,
             model_name,
             args.num_gens_per,
-            n_samples=800,
+            n_samples=900,
             temperature=args.temperature,
             num_beams=args.num_beams,
             disable_cot=args.disable_cot,
             max_batch_size=2,
             max_new_tokens=max_new_tokens
         )
-        results = experiment.run_experiment()
+        results = experiment.run_experiment(args.straightlined)
         del model
 
 

@@ -275,9 +275,9 @@ def get_args():
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--num_beams", type=int, default=1)
     parser.add_argument("--num_gens_per", type=int, default=1)
-    parser.add_argument("--k_vals", nargs='+', default=[1, 4])
-    parser.add_argument("--d_vals", nargs='+', default=[2, 5, 8])
-    parser.add_argument("--N_vals", nargs='+', default=[16, 24, 30])
+    parser.add_argument("--d_vals", nargs='+', default=[1, 2, 4]) # num diff operators
+    parser.add_argument("--k_vals", nargs='+', default=[2, 5, 8]) # depth
+    parser.add_argument("--N_vals", nargs='+', default=[8, 16, 24, 30])
     parser.add_argument("--models", nargs='+', default=["google/gemma-2-9b-it"])
     parser.add_argument("--disable_cot", action="store_true")
     args = parser.parse_args()

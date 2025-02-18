@@ -476,7 +476,7 @@ def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_fac
     return factor_val_to_peak_ttoks, factor_val_to_peak_ttoks_incorrect, factor_val_to_peak_acc
 
 def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_lines, kwargs, plot_error=False, metric="pearsonr"):
-    plt.figure(figsize=(8, 5))
+    plt.figure(figsize=(10, 6))
     # Find the factor vals that all models have at least some successes in
     min_max_factor_val = None
     max_min_factor_val = None
@@ -602,7 +602,7 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
     if len(all_factor_vals) == 0 or max(all_factor_vals) == min(all_factor_vals): return
 
     # Finalize and save the plot
-    plt.ylim(-0.1, 1.1)
+    plt.ylim(-0.5, 1.5)
     plt.gca().set_aspect((max(all_factor_vals) - min(all_factor_vals)) / 1.2)
     plt.xlabel(factor_to_description[isolated_factor])
     plt.ylabel("Normalized Avg. Peak Tokens")

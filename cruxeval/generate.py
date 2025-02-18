@@ -14,6 +14,7 @@ import sys
 import ipdb
 import traceback
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def debughook(etype, value, tb):
     traceback.print_exception(etype, value, tb)
@@ -23,9 +24,10 @@ def debughook(etype, value, tb):
 
 sys.excepthook = debughook
 
-fs_insn = """You will be given a desired function AST size between [TASK] and [/TASK] tags. Following the examples given, write a Python function of the given AST size and several varying test inputs for that function."""
+fs_insn = """You will be given a desired function AST size and trace length between [TASK] and [/TASK] tags. Following the examples given, write a Python function of the given AST size and a test input that produces the given trace length."""
 fs_template = """[TASK]
 ast_size = {ast_size}
+trace_length = {trace_length}
 [/TASK]
 [PYTHON]
 {fn_def}
@@ -35,6 +37,7 @@ ast_size = {ast_size}
 [/TEST]"""
 query_template = """[TASK]
 ast_size = {ast_size}
+trace_length = {trace_length}
 [/TASK]
 [PYTHON]
 """
@@ -68,6 +71,7 @@ def load_model(model_name, quantize=True):
         model_name, padding_side="left", truncation_side="left"
     )
 
+    tokenizer.pad_token_id = tokenizer.eos_token_id
     return model, tokenizer
 
 
@@ -107,6 +111,7 @@ def get_kN_info(example):
     sys.settrace(trace_f)
     
     try:
+        # TODO add timeout
         exec(code_to_execute, global_env, local_env)
         error_msg = None
     except Exception as e:
@@ -137,11 +142,11 @@ def map_to(value, ranges):
 
 def map_to(value, value_ranges):
     if value < min(value_ranges)[0]: return min(value_ranges)
-    if value > max(value_ranges)[1]: return max(value_ranges)
-    for value_range in value_range:
+    if value >= max(value_ranges)[1]: return max(value_ranges)
+    for value_range in value_ranges:
         if value in range(*value_range):
             return value_range
-    return None
+    assert False
 
 def create_examples(model_name, existing, k_ranges, N_ranges, num_ex_per=100):
     """Generates synthetic examples using VLLM."""
@@ -154,9 +159,9 @@ def create_examples(model_name, existing, k_ranges, N_ranges, num_ex_per=100):
         "stop_strings": ["[/TEST]"],
         "pad_token_id": tokenizer.eos_token_id,
         "num_return_sequences": 4,
-
+        "tokenizer": tokenizer,
     }
-    
+    all_examples = list(existing)
     dataset = {(kr, Nr): [] for kr in k_ranges for Nr in N_ranges}
     for ex in existing:
         k_range = map_to(ex["ast_size"], k_ranges)
@@ -166,27 +171,28 @@ def create_examples(model_name, existing, k_ranges, N_ranges, num_ex_per=100):
     uid_counter = len(existing)
 
     for kr_idx, kr in enumerate(k_ranges):
-        if len(dataset[(kr, N_ranges[0])]) >= num_ex_per:
-            continue
-        
-        all_kr_ex = [ex for Nr in N_ranges for ex in dataset[(kr, Nr)]]
-
         for Nr_idx, Nr in enumerate(N_ranges):
+            all_other_ex = []
+            for other_kr in k_ranges[:kr_idx]+k_ranges[kr_idx+1:]:
+                for other_Nr in N_ranges[:Nr_idx]+N_ranges[Nr_idx+1:]:
+                    all_other_ex.extend(dataset[(other_kr, other_Nr)] )
+
             while len(dataset[(kr, Nr)]) < num_ex_per:
                 prompt = fs_insn + "\n\n"
-                other_samples = random.sample(all_kr_ex, min(4, len(all_kr_ex)))
+                other_samples = random.sample(dataset[(kr, Nr)], min(3, len(dataset[(kr, Nr)])))
+                other_samples += random.sample(dataset[(kr, Nr)], min(4-len(other_samples), len(all_other_ex)))
 
                 fs_ex = []
                 for other_ex in other_samples:
                     ast_size = other_ex["ast_size"]
                     fn_def = other_ex["code"]
+                    trace_length = sum(other_ex["line_execution_counts"].values())
                     test_cases = f"assert f({other_ex['input']}) == {other_ex['output']}"
-                    fs_ex.append(fs_template.format(ast_size=ast_size, fn_def=fn_def, test_cases=test_cases))
+                    fs_ex.append(fs_template.format(ast_size=ast_size, trace_length=trace_length, fn_def=fn_def, test_cases=test_cases))
                 
                 random.shuffle(fs_ex)
-                prompt += "\n".join(fs_ex) + '\n' + query_template.format(ast_size=random.choice(range(Nr[0], Nr[1])))
-                print(prompt)
-                input_ids = self.tokenizer(
+                prompt += "\n".join(fs_ex) + '\n' + query_template.format(ast_size=random.choice(range(kr[0], kr[1])), trace_length=random.choice(range(Nr[0], Nr[1])))
+                input_ids = tokenizer(
                     [prompt],
                     padding=True,
                     truncation=True,
@@ -196,10 +202,9 @@ def create_examples(model_name, existing, k_ranges, N_ranges, num_ex_per=100):
                 ).to(device)
                 outputs = model.generate(input_ids=input_ids.input_ids, attention_mask=input_ids.attention_mask, **generation_config)
 
-                for output in self.tokenizer.decode(outputs.sequences):
-                    print(output)
-                    generated_code_match = re.search(r'\[PYTHON\]\n(.*?)\[\/PYTHON\]', output.text, re.DOTALL)
-                    generated_test_match = re.search(r'\[TEST\]\s*assert f\((.+?)\)\s*==', output.text)
+                for output in tokenizer.batch_decode(outputs[:, input_ids.input_ids.shape[-1]:], skip_special_tokens=True):
+                    generated_code_match = re.search(r'(def f[\s\S]*?)\[\/PYTHON\]', output)
+                    generated_test_match = re.search(r'\[TEST\]\s*assert f\((.+?)\)\s*==', output)
 
                     if not generated_code_match or not generated_test_match:
                         continue
@@ -220,11 +225,16 @@ def create_examples(model_name, existing, k_ranges, N_ranges, num_ex_per=100):
                     new_ex_k = map_to(full_ex["ast_size"], k_ranges)
                     new_ex_N = map_to(sum(full_ex["line_execution_counts"].values()), N_ranges)
 
-                    if (new_ex_k, new_ex_N) not in dataset:
-                        continue
-
-                    dataset[(new_ex_k, new_ex_N)].append(full_ex)
-                    uid_counter += 1
+                    if (new_ex_k, new_ex_N) in dataset:
+                        if len(dataset[(new_ex_k, new_ex_N)]) < 1.2 * num_ex_per: 
+                            dataset[(new_ex_k, new_ex_N)].append(full_ex)
+                            all_examples.append(full_ex)
+                            uid_counter += 1
+                        if uid_counter % 10 == 0:
+                            output_filename = "synth_cruxeval_profiled.json"
+                            with open(output_filename, 'w') as wf:
+                                json.dump(all_examples, wf, indent=4)
+                                print(kr, Nr, len(dataset[(kr, Nr)]), "/", num_ex_per)
 
     return dataset
 
@@ -257,11 +267,11 @@ def make_straightline(file_to_straightline):
 
 if __name__ == "__main__":
     # Load existing dataset
-    with open("cruxeval_profiled.json") as f:
+    with open("synth_cruxeval_profiled.json") as f:
         existing = json.load(f)
 
-    k_ranges = [(0, 30), (30, 60), (60, 120)]
-    N_ranges = [(0, 3), (3, 10), (10, 40)]
+    k_ranges = [(10, 25), (25, 50), (50, 120)]
+    N_ranges = [(1, 3), (3, 10), (10, 40)]
     model_name = "codellama/CodeLlama-34b-hf"
 
     dataset = create_examples(model_name, existing, k_ranges, N_ranges, num_ex_per=100)

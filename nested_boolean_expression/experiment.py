@@ -28,7 +28,7 @@ from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM, BitsAn
 foldername = "outputs"
 
 class Experiment:
-    def __init__(self, model, model_name, num_gens_per, n_samples, temperature, num_beams=1, max_new_tokens=2400, max_batch_size=2, disable_cot=False):
+    def __init__(self, model, model_name, num_gens_per, n_samples, temperature, num_beams=1, max_new_tokens=2400, max_batch_size=1, disable_cot=False):
         self.model = model
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name, padding_side="left", truncation_side="left"
