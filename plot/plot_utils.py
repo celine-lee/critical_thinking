@@ -113,12 +113,12 @@ def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, 
 
     return df
 
-def calculate_precision_recall(sub_df):
+def calculate_precision_recall(sub_df, bucket_name):
     if len(sub_df) == 0:
         return None
 
     # Group by bucket and compute TP, FP, FN
-    grouped = sub_df.groupby("Length Bucket", observed=True)
+    grouped = sub_df.groupby(bucket_name, observed=True)
 
     precision_recall = grouped.apply(lambda x: pd.Series({
         "TP": ((x["Correct?"] == True) & ((x["Predicted"] == True) | (x["Predicted"] == "True"))).sum(),
@@ -142,30 +142,30 @@ def calculate_precision_recall(sub_df):
 
     return precision_recall
 
-def calculate_buckets(sub_df, n_buckets, groupby_key="Model"):
+def calculate_buckets(sub_df, n_buckets, bucket_by="No gen toks", bucket_name="Length Bucket", y_axis="Correct?", groupby_key="Model", get_precision_metrics=True):
     if len(sub_df) == 0:
         return None, None
 
-    unique_lengths = sub_df["No gen toks"].unique()
+    unique_lengths = sub_df[bucket_by].unique()
 
     if len(unique_lengths) == 1:
         # Assign everything to a single bucket
-        sub_df["Length Bucket"] = f"({unique_lengths[0]}, {unique_lengths[0]})"
+        sub_df[bucket_name] = f"({unique_lengths[0]}, {unique_lengths[0]})"
         bucket_avg = (
-            sub_df.groupby([groupby_key, "Length Bucket"], observed=True)["Correct?"]
+            sub_df.groupby([groupby_key, bucket_name], observed=True)[y_axis]
             .mean()
             .reset_index()
         )
-        bucket_avg["Bucket Center"] = unique_lengths[0]  # Single center
-        bucket_avg["Correct?"] = bucket_avg["Correct?"].astype(float)
+        bucket_avg[bucket_name + " Center"] = unique_lengths[0]  # Single center
+        bucket_avg[y_axis] = bucket_avg[y_axis].astype(float)
     else:
         # Normal binning process
         if len(unique_lengths) < n_buckets:
-            sub_df.loc[:, "Length Bucket"] = pd.qcut(
-                sub_df["No gen toks"], q=len(unique_lengths) + 1, duplicates="drop"
+            sub_df.loc[:, bucket_name] = pd.qcut(
+                sub_df[bucket_by], q=len(unique_lengths) + 1, duplicates="drop"
             )
         else:
-            unique_vals, counts = np.unique(sub_df["No gen toks"], return_counts=True)
+            unique_vals, counts = np.unique(sub_df[bucket_by], return_counts=True)
             total_count = len(sub_df)
             cumulative_counts = np.cumsum(counts)
 
@@ -192,60 +192,39 @@ def calculate_buckets(sub_df, n_buckets, groupby_key="Model"):
 
             boundaries = np.unique(boundaries)
 
-            sub_df.loc[:, "Length Bucket"] = pd.cut(
-                sub_df["No gen toks"], bins=boundaries, include_lowest=True, duplicates="drop"
+            sub_df.loc[:, bucket_name] = pd.cut(
+                sub_df[bucket_by], bins=boundaries, include_lowest=True, duplicates="drop"
             )
 
         bucket_avg = (
-            sub_df.groupby([groupby_key, "Length Bucket"], observed=True)["Correct?"]
+            sub_df.groupby([groupby_key, bucket_name], observed=True)[y_axis]
             .mean()
             .reset_index()
         )
 
-        bucket_avg["Bucket Center"] = bucket_avg["Length Bucket"].apply(
+        bucket_avg[bucket_name + " Center"] = bucket_avg[bucket_name].apply(
             lambda x: (x.left + x.right) / 2 if pd.notna(x) else np.nan
         ).astype(float)
 
-        bucket_avg["Correct?"] = bucket_avg["Correct?"].astype(float)
+        bucket_avg[y_axis] = bucket_avg[y_axis].astype(float)
 
-    # Compute precision and recall
-    precision_recall = calculate_precision_recall(sub_df)
+    # Group the original sub_df by the same keys and compute std and count.
+    grouped = sub_df.groupby([groupby_key, bucket_name], observed=True)[y_axis]
+    bucket_sem = grouped.std() / np.sqrt(grouped.count())
+    bucket_sem = bucket_sem.reset_index().rename(columns={y_axis: "sem"})
+    bucket_avg = bucket_avg.merge(bucket_sem, on=[groupby_key, bucket_name], how="left")
+    bucket_avg["ci95"] = bucket_avg["sem"] * 1.96
 
-    # Merge precision-recall data
-    bucket_avg = bucket_avg.merge(precision_recall, on="Length Bucket", how="left")
+    if get_precision_metrics:
+        # Compute precision and recall
+        precision_recall = calculate_precision_recall(sub_df, bucket_name)
 
-    sub_df = sub_df.merge(bucket_avg, on=[groupby_key, "Length Bucket"], suffixes=('', '_mean'))
+        # Merge precision-recall data
+        bucket_avg = bucket_avg.merge(precision_recall, on=bucket_name, how="left")
+
+    sub_df = sub_df.merge(bucket_avg, on=[groupby_key, bucket_name], suffixes=('', '_mean'))
 
     return bucket_avg, sub_df
-
-def transform_curve(df, x_col="Bucket Center", y_col="Correct?"):
-    """
-    Given a DataFrame with a curve defined by x_col (e.g., token count bucket centers)
-    and y_col (accuracy), this function returns a new DataFrame where each x value is transformed
-    according to:
-    
-        norm_x = 2 * (x - p) / (b - a)
-        
-    where:
-      - a is the minimum x value,
-      - b is the maximum x value, and
-      - p is the x value corresponding to the maximum y.
-      
-    This transformation always produces a range of size 2 and shifts the peak to 0.
-    """
-    df_sorted = df.sort_values(x_col).copy()
-    a = df_sorted[x_col].min()
-    b = df_sorted[x_col].max()
-    # p is the token count where accuracy is maximum.
-    p = df_sorted.loc[df_sorted[y_col].idxmax(), x_col]
-    
-    # Avoid division by zero if all x values are equal.
-    if b == a:
-        df_sorted["norm_x"] = 0
-    else:
-        df_sorted["norm_x"] = 2 * (df_sorted[x_col] - p) / (b - a)
-    return df_sorted
-
 
 def global_parser():
     parser = argparse.ArgumentParser()
@@ -361,7 +340,7 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
         
     # Find the index of the maximum value
     index_peak = np.argmax(bucket_avg["Correct?"])
-    peak_ttoks = bucket_avg["Bucket Center"][index_peak]
+    peak_ttoks = bucket_avg["Length Bucket Center"][index_peak]
     best_performance = bucket_avg["Correct?"][index_peak]
 
     # Find the index of the best precision and recall
@@ -373,25 +352,25 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
 
     # and maximum value for probability mass of incorrect sequences
     index_peak_incorrect = np.argmax(1 - bucket_avg["Correct?"]) #  bc of monte carlo we know probability mass is here, and we bucketed into even sizes...
-    peak_ttoks_incorrect = bucket_avg["Bucket Center"][index_peak_incorrect]
+    peak_ttoks_incorrect = bucket_avg["Length Bucket Center"][index_peak_incorrect]
     
-    sem_values = filtered_data.groupby("Bucket Center", observed=True)["Correct?"].apply(stats.sem)
+    sem_values = filtered_data.groupby("Length Bucket Center", observed=True)["Correct?"].apply(stats.sem)
     # Calculate confidence intervals
     ci = sem_values * 1.96  # For 95% confidence
-    ci = sem_values.reindex(bucket_avg["Bucket Center"]).fillna(0)
+    ci = sem_values.reindex(bucket_avg["Length Bucket Center"]).fillna(0)
 
     if kwargs['only_meta']: 
         return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), best_precision, best_recall, (best_performance - ci.values[index_peak]).item() > kwargs['compute_random'](set_factor_values))
     # Plot the average correctness for each model size and method
     plt.plot(
-        bucket_avg["Bucket Center"],
+        bucket_avg["Length Bucket Center"],
         bucket_avg["Correct?"],
         color=rgba_color,
         label=label + f"({len(filtered_data)})",
     )
 
     plt.fill_between(
-        bucket_avg["Bucket Center"],
+        bucket_avg["Length Bucket Center"],
         bucket_avg["Correct?"] - ci.values,
         bucket_avg["Correct?"] + ci.values,
         color=rgba_color,
@@ -399,14 +378,14 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
 
     if kwargs["plot_incorrect"]:
         plt.plot(
-            bucket_avg["Bucket Center"],
+            bucket_avg["Length Bucket Center"],
             1 - bucket_avg["Correct?"], # is this right?
             color="red", alpha=color_intensity,
             label=label + " incorrect" + f"({len(filtered_data)})",
         )
 
         plt.fill_between(
-            bucket_avg["Bucket Center"],
+            bucket_avg["Length Bucket Center"],
             1 - (bucket_avg["Correct?"] + ci.values),
             1 - (bucket_avg["Correct?"] - ci.values), # flip bounds 
             color="red", alpha=color_intensity,
@@ -505,83 +484,166 @@ def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_fac
 
     return factor_val_to_peak_ttoks, factor_val_to_peak_ttoks_incorrect, factor_val_to_peak_acc
 
-
 def plot_normalized_correctness_by_ttoks(df, kwargs):
     """
-    Plots normalized accuracy curves for each model.
-    For each model, a global linear transformation is applied so that:
-      - the entire x-axis is scaled to a range of size 2,
-      - the peak (maximum accuracy) is shifted to 0.
-      
-    Shaded error regions (95% CI based on SEM) are added.
-    We also extend the x-axis and move the legend so it doesn't obscure the peak.
-    """
-    # Collect all normalized x-values to determine a suitable axis range
-    all_norm_x = []
+    1. For each (Model, k, N):
+       - Bucket the data by 'No gen toks'.
+       - Find the bucket with peak correctness (peak bucket center).
+       - Shift & scale x -> domain of size 2, with peak at 0.
+       - Normalize y -> [0,1] by min & max correctness in that subset.
+       - Store the resulting curve (x, y) in a list.
 
-    plt.figure(figsize=(10, 6))
+    2. For each Model:
+       - Combine all (k, N) curves by interpolation onto a common x-grid.
+       - Average them pointwise, compute SEM -> 95% CI.
+       - Plot one aggregated curve with confidence band.
+    """
+
+    # A place to store all normalized curves for each model.
+    # curves_by_model[model_name] = list of (x_array, y_array) for each (k,N).
+    curves_by_model = {}
+
+    # --- STEP 1: Build normalized curves per (Model, k, N) ---
     for model_name in df["Model"].unique():
-        filtered_data = df[df["Model"] == model_name]
+        model_subdf = df[df["Model"] == model_name]
+        curves_list = []
+
+        # Group by (k, N)
+        for (k_val, n_val), group_kN in model_subdf.groupby(["k", "N"]):
+            if group_kN.empty:
+                continue
+
+            # 1a) Bucket in original domain to find peak bucket
+            bucket_avg, _ = calculate_buckets(
+                group_kN, 
+                n_buckets=kwargs["n_buckets"], 
+                bucket_by="No gen toks", 
+                bucket_name="Toks Bucket",
+                y_axis="Correct?", 
+                groupby_key="Model", 
+                get_precision_metrics=False
+            )
+            if bucket_avg is None or len(bucket_avg) == 0:
+                continue
+
+            # 1b) Identify the bucket with the highest correctness
+            idx_peak = bucket_avg["Correct?"].idxmax()
+            peak_x = bucket_avg.loc[idx_peak, "Toks Bucket Center"]
+
+            # We'll also get the min & max from the bucketed correctness
+            # to define a [0,1] range in y for this subset
+            min_y = bucket_avg["Correct?"].min()
+            max_y = bucket_avg["Correct?"].max()
+            if max_y == min_y:
+                # Degenerate case: all correctness the same
+                max_y = min_y + 1e-9
+
+            # For the x-scaling to size 2, we need the overall min_x and max_x in this subset
+            # (Alternatively, you could use the min and max from the bucketed data.)
+            raw_min_x = group_kN["No gen toks"].min()
+            raw_max_x = group_kN["No gen toks"].max()
+            if raw_max_x == raw_min_x:
+                raw_max_x = raw_min_x + 1e-9
+
+            # 1c) Build a "curve" from the *bucketed* data or from the raw points?
+            #     Usually for interpolation, we want an (x, y) series. We'll do it from the bucketed data.
+            #     That way we have ~n_buckets points. Then we do a second interpolation step across (k,N).
+            #     Alternatively, you could re-bucket raw points for finer resolution.
+            
+            curve_x = []
+            curve_y = []
+
+            # Sort the bucket_avg by the bucket center
+            bucket_sorted = bucket_avg.sort_values("Toks Bucket Center")
+            for i, row in bucket_sorted.iterrows():
+                original_center = row["Toks Bucket Center"]
+                # Shift & scale x so peak -> 0, domain -> size 2
+                norm_x = 2.0 * (original_center - peak_x) / (raw_max_x - raw_min_x)
+
+                original_correct = row["Correct?"]
+                # Normalize correctness to [0,1]
+                norm_y = (original_correct - min_y) / (max_y - min_y)
+
+                curve_x.append(norm_x)
+                curve_y.append(norm_y)
+
+            # We store the resulting curve
+            curves_list.append((np.array(curve_x), np.array(curve_y)))
+
+        # Store all (k, N) curves for this model
+        curves_by_model[model_name] = curves_list
+
+    # --- STEP 2: Interpolate & Aggregate per Model ---
+    plt.figure(figsize=(10, 6))
+    all_x_for_plot = []
+
+    for model_name, curve_list in curves_by_model.items():
+        if not curve_list:
+            continue
+
+        # 2a) Gather all x-values from all (k,N) curves to define a global min/max
+        all_x = np.concatenate([c[0] for c in curve_list])
+        global_min_x = all_x.min()
+        global_max_x = all_x.max()
+        if global_min_x == global_max_x:
+            global_max_x = global_min_x + 1e-9
+
+        # 2b) Create a common grid
+        num_points = 100
+        common_grid = np.linspace(global_min_x, global_max_x, num_points)
+
+        # 2c) Interpolate each (k,N) curve onto the common grid
+        interpolated_curves = []
+        for (x_vals, y_vals) in curve_list:
+            # Make sure x_vals is sorted
+            sort_idx = np.argsort(x_vals)
+            x_sorted = x_vals[sort_idx]
+            y_sorted = y_vals[sort_idx]
+            interp_y = np.interp(common_grid, x_sorted, y_sorted)
+            interpolated_curves.append(interp_y)
+
+        interpolated_curves = np.array(interpolated_curves)  # shape: (num_curves, num_points)
+
+        # 2d) Average & SEM
+        mean_curve = interpolated_curves.mean(axis=0)
+        sem_curve = stats.sem(interpolated_curves, axis=0)
+        ci95 = 1.96 * sem_curve
+
+        # 2e) Plot
         base_color = model_colors.get(model_name, "blue")
         rgba_color = mcolors.to_rgba(base_color, alpha=0.8)
-        
-        # Compute bucket averages using your existing function.
-        bucket_avg, filtered_data = calculate_buckets(filtered_data, kwargs['n_buckets'])
-        if bucket_avg is None or len(bucket_avg) == 0:
-            continue
-        
-        # Compute SEM-based 95% CI for each bucket.
-        sem_values = filtered_data.groupby("Bucket Center", observed=True)["Correct?"].apply(stats.sem)
-        ci = sem_values * 1.96  # 95% confidence interval
-        # Align CI values with bucket_avg's order.
-        ci = ci.reindex(bucket_avg["Bucket Center"]).fillna(0)
-        
-        # Apply the global linear transformation.
-        norm_df = transform_curve(bucket_avg, x_col="Bucket Center", y_col="Correct?")
-        
-        # Collect normalized x-values for later axis-limits adjustments
-        all_norm_x.extend(norm_df["norm_x"].values)
-        
-        # Plot the normalized curve.
-        plt.plot(
-            norm_df["norm_x"],
-            norm_df["Correct?"],
-            color=rgba_color,
-            marker="o",
-            label=model_nicknames[model_name]
-        )
-        # Add shaded error region (vertical error bars).
+        label = model_nicknames.get(model_name, model_name)
+
+        plt.plot(common_grid, mean_curve, color=rgba_color, marker=",", label=label)
         plt.fill_between(
-            norm_df["norm_x"],
-            norm_df["Correct?"] - ci.values,
-            norm_df["Correct?"] + ci.values,
+            common_grid,
+            mean_curve - ci95,
+            mean_curve + ci95,
             color=rgba_color,
             alpha=0.3
         )
-        # Mark the normalized peak (should be at norm_x = 0).
-        norm_peak = norm_df.loc[norm_df["Correct?"].idxmax()]
-        plt.scatter(norm_peak["norm_x"], norm_peak["Correct?"], 
-                    s=100, edgecolor='k', facecolor='none')
 
+        all_x_for_plot.extend(common_grid)
+
+    # --- STEP 3: Final Plot Settings ---
     plt.xlabel("Normalized Generation Length")
-    plt.ylabel("Average Correctness")
+    plt.ylabel("Normalized Correctness")
     plt.ylim(0, 1)
 
-    if all_norm_x:
-        min_x, max_x = min(all_norm_x), max(all_norm_x)
-        margin = 0.2 * (max_x - min_x) if (max_x != min_x) else 1.0
+    if len(all_x_for_plot) > 0:
+        min_x, max_x = min(all_x_for_plot), max(all_x_for_plot)
+        margin = 0.1 * (max_x - min_x)
         plt.xlim(min_x - margin, max_x + margin)
     else:
-        plt.xlim(-1.5, 1.5)  # Fallback if no data
+        plt.xlim(-1.5, 1.5)
 
     plt.legend(loc="lower right", fancybox=True, shadow=True)
-    
-    plt.tight_layout()
     plt.grid(True, linestyle="--", alpha=0.6)
-    
-    norm_filename = "normalized.png"
+    plt.tight_layout()
+
+    norm_filename = "combined_corr_vs_len.png"
     os.makedirs(os.path.join(kwargs['foldername'], "meta_plots"), exist_ok=True)
-    plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", norm_filename), bbox_inches='tight')
+    plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", norm_filename), bbox_inches="tight")
     plt.clf()
 
 
