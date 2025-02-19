@@ -222,6 +222,7 @@ if __name__ == "__main__":
         plot_correctness_by_isolate_factor(df, "N", ["k", "l"], plot_kwargs)
         plot_correctness_by_isolate_factor(df, "l", ["k", "N"], plot_kwargs)
 
+    plot_normalized_correctness_by_ttoks(df, plot_kwargs)
     plt.clf()
     # plot_ptt_by_factor(N_to_peak_ttoks, "N", False, plot_kwargs)
     plot_ptt_by_factor(N_to_peak_ttoks, "N", True, plot_kwargs)

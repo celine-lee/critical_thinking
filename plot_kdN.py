@@ -176,7 +176,7 @@ if __name__ == "__main__":
             del k_to_peak_ttoks[modelname]
         if len(d_to_peak_ttoks[modelname]) == 0:
             del d_to_peak_ttoks[modelname]
-
+    plot_normalized_correctness_by_ttoks(df, plot_kwargs)
     plt.clf()
     # plot_ptt_by_factor(N_to_peak_ttoks, "N", False, plot_kwargs)
     plot_ptt_by_factor(N_to_peak_ttoks, "N", True, plot_kwargs)

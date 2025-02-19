@@ -6,7 +6,7 @@ python plot_kdN.py --output_folder dyck/outputs  \
                --N_vals 16 24 30 \
                --temperature 0.0 --num_beams 1 --num_gens 1 \
                --models ${ALL_MODELS_PLOTTING} \
-                --delete_old
+               --delete_old --only_meta
 
 python plot_kdN.py --output_folder  dyck/outputs  \
                --n_buckets 3 \
@@ -15,4 +15,4 @@ python plot_kdN.py --output_folder  dyck/outputs  \
                --N_vals 16 24 30 \
                --temperature 0.0 --num_beams 1 --num_gens 1 \
                --models ${ALL_MODELS_PLOTTING} \
-                --delete_old
+               --delete_old --only_meta

@@ -238,6 +238,24 @@ def create_examples(model_name, existing, k_ranges, N_ranges, num_ex_per=100):
 
     return dataset
 
+
+
+def get_complete_paren(code_str):
+    if code_str.count("(") == 0 and code_str.count(")") == 0: return code_str
+    cursor = 0
+    open_p = 1
+    while cursor < len(code_str):
+        if code_str[cursor] in {'"', "'"}:
+            cursor += code_str[cursor+1:].find(code_str[cursor]) + 1 + 1
+            continue
+        if code_str[cursor] == "(": open_p += 1
+        if code_str[cursor] == ")": 
+            open_p -= 1
+            if open_p == 0:
+                return code_str[:cursor]
+        cursor += 1
+    return code_str
+    
 def make_straightline(file_to_straightline):
     straightlined_dataset = []
     for ex in json.load(open(file_to_straightline)):
@@ -271,7 +289,7 @@ if __name__ == "__main__":
         existing = json.load(f)
 
     k_ranges = [(10, 25), (25, 50), (50, 120)]
-    N_ranges = [(1, 3), (3, 10), (10, 40)]
+    N_ranges = [(3, 10), (10, 40), (1, 3)]
     model_name = "codellama/CodeLlama-34b-hf"
 
     dataset = create_examples(model_name, existing, k_ranges, N_ranges, num_ex_per=100)

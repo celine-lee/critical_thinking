@@ -43,11 +43,11 @@ model_colors = {
 }
 
 model_nicknames = {
-    # "Llama-3.1-8B-Instruct": "Ll3.1-8B",
+    "Llama-3.1-8B-Instruct": "Ll3.1-8B",
     "Qwen2.5-32B-Instruct": "Qw2.5-32B",
     # "Qwen2.5-14B-Instruct": "Qw2.5-14B",
     "Qwen2.5-7B-Instruct": "Qw2.5-7B",
-    # "OLMo-2-1124-7B-Instruct": "OLMO-7B",
+    "OLMo-2-1124-7B-Instruct": "OLMO-7B",
     "Ministral-8B-Instruct-2410": "Ministral-8B",
     "gemma-2-9b-it": "Ge2-9B",
     "DeepSeek-R1-Distill-Qwen-32B": "R1-Qw-32B",
@@ -90,9 +90,12 @@ def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, 
             
             experiment_details = experiment_details_parser(experiment_file)
             if experiment_details is None: continue
+            skip_this = False
             for detail_name, detail_value in experiment_details.items():
                 if (varnames_and_wanted_vals[detail_name] is not None) and detail_value not in varnames_and_wanted_vals[detail_name]:
-                    continue
+                    skip_this = True
+                    break
+            if skip_this: continue
             
             results = json.load(open(experiment_file))
             results = [res for res in results if res["pred_answer"]]
@@ -215,6 +218,33 @@ def calculate_buckets(sub_df, n_buckets, groupby_key="Model"):
 
     return bucket_avg, sub_df
 
+def transform_curve(df, x_col="Bucket Center", y_col="Correct?"):
+    """
+    Given a DataFrame with a curve defined by x_col (e.g., token count bucket centers)
+    and y_col (accuracy), this function returns a new DataFrame where each x value is transformed
+    according to:
+    
+        norm_x = 2 * (x - p) / (b - a)
+        
+    where:
+      - a is the minimum x value,
+      - b is the maximum x value, and
+      - p is the x value corresponding to the maximum y.
+      
+    This transformation always produces a range of size 2 and shifts the peak to 0.
+    """
+    df_sorted = df.sort_values(x_col).copy()
+    a = df_sorted[x_col].min()
+    b = df_sorted[x_col].max()
+    # p is the token count where accuracy is maximum.
+    p = df_sorted.loc[df_sorted[y_col].idxmax(), x_col]
+    
+    # Avoid division by zero if all x values are equal.
+    if b == a:
+        df_sorted["norm_x"] = 0
+    else:
+        df_sorted["norm_x"] = 2 * (df_sorted[x_col] - p) / (b - a)
+    return df_sorted
 
 
 def global_parser():
@@ -351,7 +381,7 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
     ci = sem_values.reindex(bucket_avg["Bucket Center"]).fillna(0)
 
     if kwargs['only_meta']: 
-        return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), (best_performance - ci.values[index_peak]).item() > kwargs['compute_random'](set_factor_values))
+        return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), best_precision, best_recall, (best_performance - ci.values[index_peak]).item() > kwargs['compute_random'](set_factor_values))
     # Plot the average correctness for each model size and method
     plt.plot(
         bucket_avg["Bucket Center"],
@@ -474,6 +504,86 @@ def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_fac
     plt.clf()
 
     return factor_val_to_peak_ttoks, factor_val_to_peak_ttoks_incorrect, factor_val_to_peak_acc
+
+
+def plot_normalized_correctness_by_ttoks(df, kwargs):
+    """
+    Plots normalized accuracy curves for each model.
+    For each model, a global linear transformation is applied so that:
+      - the entire x-axis is scaled to a range of size 2,
+      - the peak (maximum accuracy) is shifted to 0.
+      
+    Shaded error regions (95% CI based on SEM) are added.
+    We also extend the x-axis and move the legend so it doesn't obscure the peak.
+    """
+    # Collect all normalized x-values to determine a suitable axis range
+    all_norm_x = []
+
+    plt.figure(figsize=(10, 6))
+    for model_name in df["Model"].unique():
+        filtered_data = df[df["Model"] == model_name]
+        base_color = model_colors.get(model_name, "blue")
+        rgba_color = mcolors.to_rgba(base_color, alpha=0.8)
+        
+        # Compute bucket averages using your existing function.
+        bucket_avg, filtered_data = calculate_buckets(filtered_data, kwargs['n_buckets'])
+        if bucket_avg is None or len(bucket_avg) == 0:
+            continue
+        
+        # Compute SEM-based 95% CI for each bucket.
+        sem_values = filtered_data.groupby("Bucket Center", observed=True)["Correct?"].apply(stats.sem)
+        ci = sem_values * 1.96  # 95% confidence interval
+        # Align CI values with bucket_avg's order.
+        ci = ci.reindex(bucket_avg["Bucket Center"]).fillna(0)
+        
+        # Apply the global linear transformation.
+        norm_df = transform_curve(bucket_avg, x_col="Bucket Center", y_col="Correct?")
+        
+        # Collect normalized x-values for later axis-limits adjustments
+        all_norm_x.extend(norm_df["norm_x"].values)
+        
+        # Plot the normalized curve.
+        plt.plot(
+            norm_df["norm_x"],
+            norm_df["Correct?"],
+            color=rgba_color,
+            marker="o",
+            label=model_nicknames[model_name]
+        )
+        # Add shaded error region (vertical error bars).
+        plt.fill_between(
+            norm_df["norm_x"],
+            norm_df["Correct?"] - ci.values,
+            norm_df["Correct?"] + ci.values,
+            color=rgba_color,
+            alpha=0.3
+        )
+        # Mark the normalized peak (should be at norm_x = 0).
+        norm_peak = norm_df.loc[norm_df["Correct?"].idxmax()]
+        plt.scatter(norm_peak["norm_x"], norm_peak["Correct?"], 
+                    s=100, edgecolor='k', facecolor='none')
+
+    plt.xlabel("Normalized Generation Length")
+    plt.ylabel("Average Correctness")
+    plt.ylim(0, 1)
+
+    if all_norm_x:
+        min_x, max_x = min(all_norm_x), max(all_norm_x)
+        margin = 0.2 * (max_x - min_x) if (max_x != min_x) else 1.0
+        plt.xlim(min_x - margin, max_x + margin)
+    else:
+        plt.xlim(-1.5, 1.5)  # Fallback if no data
+
+    plt.legend(loc="lower right", fancybox=True, shadow=True)
+    
+    plt.tight_layout()
+    plt.grid(True, linestyle="--", alpha=0.6)
+    
+    norm_filename = "normalized.png"
+    os.makedirs(os.path.join(kwargs['foldername'], "meta_plots"), exist_ok=True)
+    plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", norm_filename), bbox_inches='tight')
+    plt.clf()
+
 
 def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_lines, kwargs, plot_error=False, metric="pearsonr"):
     plt.figure(figsize=(10, 6))
@@ -609,7 +719,7 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
     plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
     plt.tight_layout()
     os.makedirs(os.path.join(kwargs['foldername'], "meta_plots"), exist_ok=True)
-    plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", f"diminish_{isolated_factor}{'_ind' if plot_individual_lines else ''}{'_err' if plot_error else ''}_{metric}.png"))
+    plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", f"diminish_{isolated_factor}{'_ind' if plot_individual_lines else ''}{'_err' if plot_error else ''}_{metric}.png"), bbox_inches='tight')
     plt.clf()
 
 def plot_correctness_by_isolate_factor(df, plot_against_factor, set_factors, kwargs):

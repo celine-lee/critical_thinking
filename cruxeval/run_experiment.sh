@@ -1,5 +1,4 @@
 source ../.models_env
-echo ${DSR1_MODELS}
-python experiment_vllm.py --models ${DSR1_MODELS}
-python experiment_vllm.py --disable_cot --models ${DSR1_MODELS}
-
+echo ${ALL_MODELS}
+python experiment.py --models ${ALL_MODELS}
+python experiment.py --disable_cot --models ${ALL_MODELS}

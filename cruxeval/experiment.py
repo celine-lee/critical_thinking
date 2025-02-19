@@ -359,7 +359,7 @@ def run():
             temperature=args.temperature,
             num_beams=args.num_beams,
             disable_cot=args.disable_cot,
-            max_batch_size=2,
+            max_batch_size=1,
             max_new_tokens=max_new_tokens
         )
         results = experiment.run_experiment(args.straightlined)
