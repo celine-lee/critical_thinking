@@ -9,13 +9,20 @@ answer = f({input_str})
 assert answer == ??
 """
 
+query_template_straightlined = """You are given a snippet of Python code. Complete the assertion with the resulting value in `answer`.
+
+{fn_def}
+
+assert answer == ??
+"""
+
 generation_instruction = "Provide your final answer following this template: [ANSWER]\nassert answer == YOUR ANSWER\n[/ANSWER]"
 
 reprompt_string = "[ANSWER]\nassert answer == "
 answer_regex = r'\[ANSWER\]\s*assert answer\s*==\s*(.+)\s*\[\/ANSWER\]'
 stop_strings = ["[/ANSWER]"]
 
-def prompt_with_chat_template(tokenizer, fn_def, input_str):
+def prompt_with_chat_template(tokenizer, fn_def, input_str, straightlined):
     messages = []
     if "gemma" not in tokenizer.name_or_path:
         messages.append({
@@ -23,7 +30,10 @@ def prompt_with_chat_template(tokenizer, fn_def, input_str):
             "content": system_instruction
         }
         )
-    prompt = query_template.format(fn_def=fn_def, input_str=input_str) + "\n"
+    if straightlined:
+        prompt = query_template_straightlined.format(fn_def=fn_def) + "\n"
+    else:
+        prompt = query_template.format(fn_def=fn_def, input_str=input_str) + "\n"
     prompt += generation_instruction
     messages.append({
         "role": "user",
@@ -31,12 +41,15 @@ def prompt_with_chat_template(tokenizer, fn_def, input_str):
     })
     return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     
-def make_prompt(tokenizer, fn_def, input_str, include_starter=False):
+def make_prompt(tokenizer, fn_def, input_str, straightlined=False, include_starter=False):
     if tokenizer.chat_template: 
-        prompt = prompt_with_chat_template(tokenizer, fn_def, input_str)
+        prompt = prompt_with_chat_template(tokenizer, fn_def, input_str, straightlined)
     else:
         prompt = system_instruction + "\n\n"
-        prompt = query_template.format(fn_def=fn_def, input_str=input_str) + "\n"
+        if straightlined:
+            prompt = query_template_straightlined.format(fn_def=fn_def) + "\n"
+        else:
+            prompt = query_template.format(fn_def=fn_def, input_str=input_str) + "\n"
         prompt += generation_instruction + "\n\n"
     if include_starter:
         prompt += reprompt_string

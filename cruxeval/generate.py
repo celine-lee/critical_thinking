@@ -265,8 +265,7 @@ def make_straightline(file_to_straightline):
         function_arguments = helpful_parses.group(2)
         code = helpful_parses.group(3)
         starting_space = re.search(r'\s*', code[:code.find('\n')]).group(0)
-        code_lines = [re.sub(r'return\s+(.*)', r'f = \1', cl[len(starting_space):]) for cl in code.splitlines()] # assuming that doesnt dedent...
-
+        code_lines = [re.sub(r'return\s+(.*)', r'answer = \1', cl[len(starting_space):]) for cl in code.splitlines()] # assuming that doesnt dedent...
         # get variables from fn header and initialize them with some value
         try:
             variable_matches = get_complete_paren(function_arguments)
@@ -285,17 +284,17 @@ def make_straightline(file_to_straightline):
 
 if __name__ == "__main__":
     # Load existing dataset
-    with open("synth_cruxeval_profiled.json") as f:
-        existing = json.load(f)
+    # with open("synth_cruxeval_profiled.json") as f:
+    #     existing = json.load(f)
 
-    k_ranges = [(10, 25), (25, 50), (50, 120)]
-    N_ranges = [(3, 10), (10, 40), (1, 3)]
-    model_name = "codellama/CodeLlama-34b-hf"
+    # k_ranges = [(10, 25), (25, 50), (50, 120)]
+    # N_ranges = [(3, 10), (10, 40), (1, 3)]
+    # model_name = "codellama/CodeLlama-34b-hf"
 
-    dataset = create_examples(model_name, existing, k_ranges, N_ranges, num_ex_per=100)
+    # dataset = create_examples(model_name, existing, k_ranges, N_ranges, num_ex_per=100)
 
     output_filename = "synth_cruxeval_profiled.json"
-    with open(output_filename, 'w') as wf:
-        json.dump([ex for ex_list in dataset.values() for ex in ex_list], wf, indent=4)
+    # with open(output_filename, 'w') as wf:
+    #     json.dump([ex for ex_list in dataset.values() for ex in ex_list], wf, indent=4)
 
     make_straightline(output_filename)

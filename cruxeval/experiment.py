@@ -226,9 +226,10 @@ class Experiment:
                     continue
                 prompt = make_prompt(
                     self.tokenizer,
-                    example["code"],
+                    example[f"{'straightlined_' if straightlined else ''}code"],
                     example["input"],
                     include_starter=self.disable_cot,
+                    straightlined=straightlined
                 )
                 prompts.append(prompt)
                 batch.append(example)
@@ -290,7 +291,7 @@ class Experiment:
                         "id": example["id"],
                         "N": sum(example["line_execution_counts"].values()),
                         "k": example["ast_size"],
-                        "l": len(example["code"].splitlines())
+                        "l": len(example[f"{'straightlined_' if straightlined else ''}code"].splitlines())
                     }
                 )
 
