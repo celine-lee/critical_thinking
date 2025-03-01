@@ -28,7 +28,7 @@ from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM, BitsAn
 foldername = "outputs"
 
 class Experiment:
-    def __init__(self, model, model_name, num_gens_per, n_samples, temperature, num_beams=1, max_new_tokens=2400, max_batch_size=2):
+    def __init__(self, model, model_name, num_gens_per, n_samples, temperature, num_beams=1, max_new_tokens=2400, max_batch_size=1):
         self.model = model
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name, padding_side="left", truncation_side="left"
@@ -72,8 +72,6 @@ class Experiment:
                 answer = None
             else:
                 answer = parsed_answer.group(1).rstrip(" .")
-                string_index_start = parsed_answer.start() + parsed_answer.group(0).index(answer)
-                string_index_end = string_index_start + len(answer)
             num_generated_tokens = torch.sum(
                 model_output.sequences[gen_idx, input_ids.input_ids.shape[-1] :]
                 != self.tokenizer.pad_token_id
@@ -114,8 +112,6 @@ class Experiment:
                 answer = None
             else:
                 answer = parsed_answer.group(1).rstrip(" .")
-                string_index_start = parsed_answer.start() + parsed_answer.group(0).index(answer)
-                string_index_end = string_index_start + len(answer)
             (_, prev_num_generated_tokens, _, prev_generated) = extracted_answers[orig_idx]
             num_generated_tokens = torch.sum(
                 model_output.sequences[new_idx, new_input_ids.input_ids.shape[-1] :]
@@ -177,36 +173,6 @@ class Experiment:
             "top_p": None,
             "pad_token_id": self.tokenizer.eos_token_id,
         }
-
-    def get_token_indices(
-        self, output_ids, answer_string, string_index_start, string_index_end, init_tok_offset=0, init_char_offset=0
-    ):
-        output_tokens = self.tokenizer.convert_ids_to_tokens(output_ids)
-        start_tok_idx = init_tok_offset
-        curr_offset = init_char_offset
-        while start_tok_idx < len(output_tokens):
-            output_tok = output_tokens[start_tok_idx]
-            if output_tok in self.tokenizer.all_special_tokens:
-                start_tok_idx += 1
-                continue
-            # Reconstruct the decoded text to align tokenization and character-level offsets
-            decoded_token = self.tokenizer.convert_tokens_to_string([output_tok])
-            token_start_offset = curr_offset
-            token_end_offset = curr_offset + len(decoded_token)
-
-            # Check if this token contributes to or overlaps the target start index
-            if token_start_offset <= string_index_start < token_end_offset:
-                break
-            # Update current character offset
-            curr_offset = token_end_offset
-
-        end_tok_idx = start_tok_idx + 1
-        while answer_string not in self.tokenizer.decode(
-            output_ids[start_tok_idx:end_tok_idx], 
-            skip_special_tokens=True):
-            end_tok_idx += 1
-            if end_tok_idx > len(output_ids): breakpoint()
-        return (start_tok_idx, end_tok_idx)
 
     def run_experiment(self, k, m, N):
         subfolder = os.path.join(foldername, f"k{k}_m{m}_N{N}")

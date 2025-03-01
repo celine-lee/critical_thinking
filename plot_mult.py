@@ -83,7 +83,6 @@ if __name__ == "__main__":
     plot_length_generated(df, plot_kwargs, "k")
     plot_length_generated(df, plot_kwargs, "N")
     plot_length_generated(df, plot_kwargs, "m")
-    plot_length_generated(df, plot_kwargs)
 
     k_vals = df["k"].unique()
     m_vals = df["m"].unique()
@@ -181,21 +180,15 @@ if __name__ == "__main__":
 
     plot_normalized_correctness_by_ttoks(df, plot_kwargs)
     plt.clf()
-    # plot_ptt_by_factor(N_to_peak_ttoks, "N", False, plot_kwargs)
-    plot_ptt_by_factor(N_to_peak_ttoks, "N", True, plot_kwargs)
-    # plot_ptt_by_factor(k_to_peak_ttoks, "k", False, plot_kwargs)
-    plot_ptt_by_factor(k_to_peak_ttoks, "k", True, plot_kwargs)
-    # plot_ptt_by_factor(m_to_peak_ttoks, "m", False, plot_kwargs)
-    plot_ptt_by_factor(m_to_peak_ttoks, "m", True, plot_kwargs)
-
-    # plot_ptt_by_factor(N_to_peak_ttoks, "N", False, plot_kwargs, True)
-    plot_ptt_by_factor(N_to_peak_ttoks, "N", True, plot_kwargs, True)
-    # plot_ptt_by_factor(k_to_peak_ttoks, "k", False, plot_kwargs, True)
-    plot_ptt_by_factor(k_to_peak_ttoks, "k", True, plot_kwargs, True)
-    # plot_ptt_by_factor(m_to_peak_ttoks, "m", False, plot_kwargs, True)
-    plot_ptt_by_factor(m_to_peak_ttoks, "m", True, plot_kwargs, True)
+    
+    
+    N_corrs = plot_ptt_by_factor(N_to_peak_ttoks, "N", plot_kwargs)
+    k_corrs = plot_ptt_by_factor(k_to_peak_ttoks, "k", plot_kwargs)
+    m_corrs = plot_ptt_by_factor(m_to_peak_ttoks, "m", plot_kwargs)
+    ptt_table((N_corrs, k_corrs, m_corrs), plot_kwargs["foldername"])
+    acc_table(df, plot_kwargs["foldername"])
 
     plot_peak_accuracy_heatmap(kmN_to_peak_acc, "Peak Accuracy", plot_kwargs)
-    plot_peak_accuracy_heatmap(kmN_to_peak_precision, "Precision", plot_kwargs)
-    plot_peak_accuracy_heatmap(kmN_to_peak_recall, "Recall", plot_kwargs)
-    plot_peak_token_difference_heatmap(kmN_to_peak_ttoks_incorrect, plot_kwargs)
+    # plot_peak_accuracy_heatmap(kmN_to_peak_precision, "Precision", plot_kwargs)
+    # plot_peak_accuracy_heatmap(kmN_to_peak_recall, "Recall", plot_kwargs)
+    # plot_peak_token_difference_heatmap(kmN_to_peak_ttoks_incorrect, plot_kwargs)

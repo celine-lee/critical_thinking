@@ -121,7 +121,7 @@ def calculate_precision_recall(sub_df, bucket_name):
     grouped = sub_df.groupby(bucket_name, observed=True)
 
     precision_recall = grouped.apply(lambda x: pd.Series({
-        "TP": ((x["Correct?"] == True) & ((x["Predicted"] == True) | (x["Predicted"] == "True"))).sum(),
+        "TP": ((x["Correct?"] == True) & ((x["True"] == True) | (x["True"] == "True"))).sum(),
         "FP": ((x["Correct?"] == False) & ((x["Predicted"] == True) | (x["Predicted"] == "True"))).sum(),
         "FN": ((x["Correct?"] == False) & ((x["True"] == True) | (x["True"] == "True"))).sum(),
     }))
@@ -484,12 +484,12 @@ def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_fac
 
     return factor_val_to_peak_ttoks, factor_val_to_peak_ttoks_incorrect, factor_val_to_peak_acc
 
-def plot_normalized_correctness_by_ttoks(df, kwargs):
+def plot_normalized_correctness_by_ttoks(df, kwargs, include_legend=False):
     """
     1. For each (Model, k, N):
        - Bucket the data by 'No gen toks'.
        - Find the bucket with peak correctness (peak bucket center).
-       - Shift & scale x -> domain of size 2, with peak at 0.
+       - Shift & scale x -> domain of size 1, with peak at 0.
        - Normalize y -> [0,1] by min & max correctness in that subset.
        - Store the resulting curve (x, y) in a list.
 
@@ -557,8 +557,8 @@ def plot_normalized_correctness_by_ttoks(df, kwargs):
             bucket_sorted = bucket_avg.sort_values("Toks Bucket Center")
             for i, row in bucket_sorted.iterrows():
                 original_center = row["Toks Bucket Center"]
-                # Shift & scale x so peak -> 0, domain -> size 2
-                norm_x = 2.0 * (original_center - peak_x) / (raw_max_x - raw_min_x)
+                # Shift & scale x so peak -> 0, domain -> size 1
+                norm_x = 1. * (original_center - peak_x) / (raw_max_x - raw_min_x)
 
                 original_correct = row["Correct?"]
                 # Normalize correctness to [0,1]
@@ -626,9 +626,14 @@ def plot_normalized_correctness_by_ttoks(df, kwargs):
         all_x_for_plot.extend(common_grid)
 
     # --- STEP 3: Final Plot Settings ---
-    plt.xlabel("Normalized Generation Length")
-    plt.ylabel("Normalized Correctness")
+    # plt.xlabel("Normalized Generation Length")
+    # plt.ylabel("Normalized Correctness")
     plt.ylim(0, 1)
+    plt.tick_params(
+        axis='y',          # changes apply to the x-axis
+        which='both',      # both major and minor ticks are affected
+        left=False,      # ticks along the left edge are off
+        labelleft=False) # labels along the bottom edge are off
 
     if len(all_x_for_plot) > 0:
         min_x, max_x = min(all_x_for_plot), max(all_x_for_plot)
@@ -637,18 +642,66 @@ def plot_normalized_correctness_by_ttoks(df, kwargs):
     else:
         plt.xlim(-1.5, 1.5)
 
-    plt.legend(loc="lower right", fancybox=True, shadow=True)
+    if include_legend:
+        plt.legend(loc="lower right", fancybox=True, shadow=True)
     plt.grid(True, linestyle="--", alpha=0.6)
     plt.tight_layout()
 
-    norm_filename = "combined_corr_vs_len.png"
+    norm_filename = "normalized_corr_vs_len.png"
     os.makedirs(os.path.join(kwargs['foldername'], "meta_plots"), exist_ok=True)
     plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", norm_filename), bbox_inches="tight")
     plt.clf()
 
 
-def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_lines, kwargs, plot_error=False, metric="pearsonr"):
-    plt.figure(figsize=(10, 6))
+def make_just_title_and_legend(
+    title,
+    models,
+    filename, 
+    kwargs,
+    title_fontsize=40,
+    legend_fontsize=16
+    ):
+    """
+    Creates a figure with only a title (top-left or center) and a legend on the right.
+    'models' should be a list of label strings.
+    """
+    # Create a figure; adjust figsize as needed
+    fig = plt.figure(figsize=(20, 2))
+    ax = fig.add_subplot(111)
+
+    # Hide the axes themselves (so you only see title & legend)
+    ax.set_axis_off()
+
+    # Create some dummy lines for the legend
+    for model in models:
+        # We don't actually plot any data; we just need a "handle" for the legend
+        ax.plot([], [], label=model_nicknames[model])
+
+    # Place the legend on the right side
+    # bbox_to_anchor=(1, 0.5) means anchor the legend at x=1 (right edge), y=0.5 (center)
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.), fontsize=legend_fontsize)
+
+    # Center the title at the top; adjust x, y, and fontsize
+    fig.suptitle(
+        title,
+        x=0.5,       # horizontal center
+        y=0.95,      # near top
+        ha='center', # horizontally centered
+        fontsize=title_fontsize
+    )
+
+    # Option B: Title at the top-center
+    # fig.suptitle(title)
+
+    # Tighten layout so there's minimal extra space
+    plt.tight_layout()
+
+    os.makedirs(os.path.join(kwargs['foldername'], "meta_plots"), exist_ok=True)
+    plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", filename), bbox_inches="tight")
+    plt.clf()
+
+def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, kwargs):
+    plt.figure(figsize=(12, 6))
     # Find the factor vals that all models have at least some successes in
     min_max_factor_val = None
     max_min_factor_val = None
@@ -670,6 +723,8 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
     all_factor_vals_normalized = []
     all_normalized_peak_tts =  []
     all_normalized_avg_peak_tts = []
+
+    corrs = {}
 
     for modelname, factor_to_ptts in factor_to_peak_ttoks.items():
         base_color = model_colors.get(modelname, "blue")
@@ -730,59 +785,77 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, plot_individual_li
         # plot the normalized averageds
         normalized_avg_peak_tts = [(val - min_val) / (max_val - min_val) if max_val != min_val else 0 for val in avg_peak_tts]
         all_normalized_avg_peak_tts.extend([(fv, napt) for fv, napt in zip(factor_vals, normalized_avg_peak_tts)])
-        if plot_individual_lines:
-            plt.plot(factor_vals, normalized_avg_peak_tts, color=rgba_color, linestyle="--")
-            
-            if plot_error:
-                # Plot the confidence intervals as a shaded region
-                plt.fill_between(
-                    factor_vals,
-                    [(ci - min_val) / (max_val - min_val) if max_val != min_val else 0 for ci in ci_lower_bounds],
-                    [(ci - min_val) / (max_val - min_val) if max_val != min_val else 0 for ci in ci_upper_bounds],
-                    color=rgba_color,
-                    alpha=0.2
-                )
+        plt.plot(factor_vals, normalized_avg_peak_tts, color=rgba_color, linestyle="--")
+        
+        # Plot the confidence intervals as a shaded region
+        plt.fill_between(
+            factor_vals,
+            [(ci - min_val) / (max_val - min_val) if max_val != min_val else 0 for ci in ci_lower_bounds],
+            [(ci - min_val) / (max_val - min_val) if max_val != min_val else 0 for ci in ci_upper_bounds],
+            color=rgba_color,
+            alpha=0.2
+            )
 
-            if metric == 'mse':
-                # Calculate Mean Squared Error
-                predicted_vals = slope * np.array(normalized_factor_vals[-len(normalized_peak_tts):]) + intercept
-                mse = np.mean((np.array(normalized_peak_tts) - predicted_vals) ** 2)
-                legend_label = f"{model_nicknames[modelname]} (MSE: {mse_annotation:.2f})"
-            elif metric == 'pearsonr':
-                # Calculate pearson corr
-                correlation, _ = stats.pearsonr(normalized_factor_vals[-len(normalized_peak_tts):], normalized_peak_tts)
-                legend_label = f"{model_nicknames[modelname]} (Corr: {correlation:.2f})"
+        # Calculate pearson corr
+        correlation, _ = stats.pearsonr(normalized_factor_vals[-len(normalized_peak_tts):], normalized_peak_tts)
+        legend_label = f"{model_nicknames[modelname]} (Corr: {correlation:.2f})"
+        corrs[model_nicknames[modelname]] = correlation
 
         sns.scatterplot(x=factor_vals, y=normalized_avg_peak_tts, 
                     marker='o', color=rgba_color, label=legend_label)
-        # if plot_error:
 
-        #     # Calculate yerr in (2, n) format
-        #     yerr = np.array([
-        #         [avg_ptt - ci_lower for avg_ptt, ci_lower in zip(avg_peak_tts, ci_lower_bounds)],  # Lower error
-        #         [ci_upper - avg_ptt for avg_ptt, ci_upper in zip(avg_peak_tts, ci_upper_bounds)]   # Upper error
-        #     ])
-        #     plt.errorbar(
-        #         factor_vals,
-        #         normalized_avg_peak_tts,
-        #         yerr=yerr,
-        #         fmt="o",
-        #         color=rgba_color,
-        #         alpha=0.7
-        #     )
-
-    if len(all_factor_vals) == 0 or max(all_factor_vals) == min(all_factor_vals): return
+    if len(all_factor_vals) == 0 or max(all_factor_vals) == min(all_factor_vals): return {f"Corr(ptts, {isolated_factor})": corrs}
 
     # Finalize and save the plot
-    plt.ylim(-0.5, 1.5)
+    plt.ylim(-1, 2)
+    plt.xlim(min(all_factor_vals)-1, max(all_factor_vals)+1)
     plt.gca().set_aspect((max(all_factor_vals) - min(all_factor_vals)) / 1.2)
     plt.xlabel(factor_to_description[isolated_factor])
-    plt.ylabel("Normalized Avg. Peak Tokens")
+    plt.ylabel("Normalized Peak Tokens")
     plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
     plt.tight_layout()
     os.makedirs(os.path.join(kwargs['foldername'], "meta_plots"), exist_ok=True)
-    plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", f"diminish_{isolated_factor}{'_ind' if plot_individual_lines else ''}{'_err' if plot_error else ''}_{metric}.png"), bbox_inches='tight')
+    plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", f"diminish_{isolated_factor}_ind_err.png"), bbox_inches='tight')
     plt.clf()
+
+    return {f"Corr(ptts, {isolated_factor})": corrs}
+
+
+from tabulate import tabulate
+def ptt_table(factor_model_corrs, output_folder):
+    # factors_to_peak_ttoks is a dict of isolated_factor string to its values and peak ttoks. 
+    # | model | corr(normalized ptts, k) | corr(normalized ptts, N) | ** any other isolated_factors included  
+
+    # merge them first
+    combined_corrs = {}
+    for model_corrs in factor_model_corrs:
+        for corr_title, correlation_info_dict in model_corrs.items():
+            if corr_title not in combined_corrs: combined_corrs[corr_title] = {}
+            combined_corrs[corr_title] |= correlation_info_dict
+
+    df = pd.DataFrame(combined_corrs)
+
+    with open(os.path.join(output_folder, "ptt_table.txt"), 'w') as wf:
+        wf.write(tabulate(df, headers='keys', tablefmt='psql'))
+
+
+def acc_table(df, output_folder):
+    # | model | accuracy | precision | recall | random |
+    # Compute accuracy, precision, and recall per task
+    TP = lambda x: (((x["Predicted"] == True) | (x["Predicted"] == "True")) & ((x["True"] == True) | (x["True"] == "True"))).sum() 
+    FP = lambda x: (((x["Predicted"] == True) | (x["Predicted"] == "True")) & ((x["True"] == False) | (x["True"] == "False"))).sum() 
+    FN = lambda x: (((x["Predicted"] == False) | (x["Predicted"] == "False")) & ((x["True"] == True) | (x["True"] == "True"))).sum() 
+    model_metrics = df.groupby("Model").apply(lambda x: pd.Series({
+        "Accuracy": x["Correct?"].mean(),
+        "Precision": TP(x) / (TP(x) + FP(x)),
+        "Recall": TP(x) / (TP(x) + FN(x)),
+        "Random": ((x["True"] == True) | (x["True"] == "True")).sum() / len(x)
+    })).reset_index()
+    
+    with open(os.path.join(output_folder, "accuracy_table.txt"), 'w') as wf:
+        wf.write(tabulate(model_metrics, headers='keys', tablefmt='psql'))
+    
+
 
 def plot_correctness_by_isolate_factor(df, plot_against_factor, set_factors, kwargs):
     # Loop across modelnames... x axis is plot_against_factor. Each point is averaged across set_factors
