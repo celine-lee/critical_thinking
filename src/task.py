@@ -33,8 +33,8 @@ class Task:
 
 class ArrayIdxTask(Task):
     def  __init__(self):
-        super().__init__(self, "array_idx_mult", r'pointer ==\s*(\d+)')
-        self.foldername = "arry_idx_mult/outputs"
+        super(ArrayIdxTask, self).__init__("array_idx_mult", r'pointer ==\s*(\d+)')
+        self.foldername = "array_idx_mult/outputs"
 
         self.query_template = """You are given a length-{full_size} array and must track the index of a 0-indexed pointer to the array. The pointer undergoes several modifications. The pointer wraps around the length of the array on both ends, so when it reaches {full_size} it becomes 0, when it reaches {full_size_plus_1} it becomes 1, when it reaches -1 it becomes {full_size_minus_1}, etc. What is the index of the pointer after all the modifications are complete? Provide the answer in the range [0, {full_size}).
 
@@ -70,7 +70,7 @@ pointer = 0
         return turns, curr_state
 
     def make_prompt(self, generator, k, m, turns):
-        if isinstance(generator, HFGenerator):
+        if 'tokenizer' in dir(generator) and generator.tokenizer.chat_template:
             if "gemma" in generator.model_name:
                 messages = [{
                     "role": "user",
@@ -88,9 +88,11 @@ pointer = 0
                 }]
                 prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
             else:
-                prompt = self.system_instruction + "\n\n"
-                prompt += self.query_template.format(full_size=k*m, full_size_plus_1=(k*m)+1, full_size_minus_1=(k*m)-1, sequence="\n".join(turns)) + "\n"
-                prompt += self.generation_instruction + "\n\n"
+                breakpoint()
+        else:
+            prompt = self.system_instruction + "\n\n"
+            prompt += self.query_template.format(full_size=k*m, full_size_plus_1=(k*m)+1, full_size_minus_1=(k*m)-1, sequence="\n".join(turns)) + "\n"
+            prompt += self.generation_instruction + "\n\n"
         return prompt
 
     def generate_random(self, generator, kmn):

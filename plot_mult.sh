@@ -17,7 +17,7 @@ python plot_mult.py --output_folder even_odd_mult/outputs  \
                --n_buckets 3 \
                --delete_old --only_meta \
                --temperature 0.0 --num_beams 1 --num_gens 1 \
-               --models ${FEW_MODELS_PLOTTING}
+               --models ${FEW_MODELS_PLOTTING} 
                
             
 python plot_mult.py --output_folder array_idx_mult/outputs  \
@@ -28,7 +28,7 @@ python plot_mult.py --output_folder array_idx_mult/outputs  \
                --n_buckets 3 \
                --delete_old --only_meta \
                --temperature 0.0 --num_beams 1 --num_gens 1 \
-               --models ${ALL_MODELS_PLOTTING}
+               --models ${ALL_MODELS_PLOTTING} ${OPENAI_MODELS}
 
 # python plot_mult.py --output_folder even_odd_mult/outputs  \
 #                --k_vals 5 9 17 \

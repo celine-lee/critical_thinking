@@ -24,15 +24,17 @@ def get_args():
     parser.add_argument("--num_gens_per", type=int, default=1)
     parser.add_argument("--max_num_tokens", type=int, default=6000)
     parser.add_argument("--batch_size", type=int, default=8)
-    parser.add_argument("--d_vals", nargs='+', default=[1, 2, 4]) # num diff operators
-    parser.add_argument("--k_vals", nargs='+', default=[2, 5, 8]) # depth
-    parser.add_argument("--N_vals", nargs='+', default=[8, 16, 24, 30])
+    parser.add_argument("--d_vals", type=int, nargs='+', default=[1, 2, 4]) # num diff operators
+    parser.add_argument("--k_vals", type=int, nargs='+', default=[2, 5, 8]) # depth
+    parser.add_argument("--N_vals", type=int, nargs='+', default=[8, 16, 24, 30])
     parser.add_argument("--models", nargs='+', default=["google/gemma-2-9b-it"])
     parser.add_argument("--disable_cot", action="store_true")
+    parser.add_argument("--generator", type=str, default='hf')
     args = parser.parse_args()
     return args
 
 def run(args):
+    print(args.generator)
     gen_kwargs = {
         "max_new_tokens": args.max_num_tokens,
         "num_beams": args.num_beams, 
@@ -44,7 +46,11 @@ def run(args):
 
     dyck_task = DyckNTask()
     for model_name in args.models:
-        generator = HFGenerator(model_name, gen_kwargs, args.batch_size)
+        if 'openai' == args.generator:
+            generator = OpenAIGenerator(model_name, gen_kwargs, args.batch_size)
+        elif 'hf' == args.generator:
+            generator = HFGenerator(model_name, gen_kwargs, args.batch_size)
+        else: assert False, f"{args.generator} not supported yet"
         experimentor = Experimenter(dyck_task, generator, n_samples_per, force_no_cot=args.disable_cot)
 
         for k in args.k_vals:

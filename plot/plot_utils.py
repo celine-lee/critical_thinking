@@ -40,6 +40,7 @@ model_colors = {
     "DeepSeek-R1-Distill-Qwen-7B": "yellow",
     "DeepSeek-R1-Distill-Qwen-1.5B": "red",
     "DeepSeek-R1-Distill-Llama-8B": "black",
+    "gpt-4o-mini": "indigo",
 }
 
 model_nicknames = {
@@ -55,6 +56,7 @@ model_nicknames = {
     "DeepSeek-R1-Distill-Qwen-7B": "R1-Qw-7B",
     "DeepSeek-R1-Distill-Qwen-1.5B": "R1-Qw-1.5B",
     "DeepSeek-R1-Distill-Llama-8B": "R1-Ll-8B",
+    "gpt-4o-mini": "gpt4om"
 }
 colormap = get_cmap("tab10")  # Use a colormap with distinct colors
 

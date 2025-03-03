@@ -38,6 +38,7 @@ class HFGenerator(Generator):
             "do_sample": gen_kwargs["temperature"] > 0.,
             "temperature": gen_kwargs["temperature"] if gen_kwargs["temperature"] > 0. else None,
             "pad_token_id": self.tokenizer.eos_token_id,
+            "top_k": None,
             "top_p": 0.9 if gen_kwargs["temperature"] > 0. else None,
         }
         force_gen_args = {
@@ -164,21 +165,26 @@ class OpenAIGenerator(Generator):
         self.max_batch_size = max_batch_size
         self.sampling_args = {
             "temperature": gen_kwargs["temperature"],
-            "max_tokens": gen_kwargs["max_new_tokens"],
+            "max_completion_tokens": gen_kwargs["max_new_tokens"],
             "n": gen_kwargs["num_return_sequences"],
             "top_p": 0.9 if gen_kwargs["temperature"] > 0 else None,
             "stop": gen_kwargs["stop_strings"],
         }
         self.force_gen_args = {
             "temperature": 0.0,
-            "max_tokens": 50,
+            "max_completion_tokens": 50,
             "n": 1,
             "top_p": None,
             "stop": gen_kwargs["stop_strings"],
         }
         super().__init__(model_name, self.sampling_args, self.force_gen_args)
         self.client = OpenAI()
-
+        if 'o3' in model_name: 
+            # temperature and top_p top_n not supported in reasoning models
+            del self.sampling_args["temperature"]
+            del self.force_gen_args["temperature"]
+            del self.sampling_args["top_p"]
+            del self.force_gen_args["top_p"]
 
     def generate(self, input_prompts, task):
         """
@@ -197,16 +203,12 @@ class OpenAIGenerator(Generator):
 
         responses = []
         for idx, prompt in enumerate(input_prompts):
-            # Step 1: Generate responses
             response = self.client.chat.completions.create(
                 model=self.model_name,
                 messages=[{"role": "user", "content": prompt}],
                 **self.sampling_args
             )
             responses.append(response)
-
-        new_queries = []
-        gens_need_augmenting = []
         for i, response in enumerate(responses):
             model_prediction = response.choices[0].message.content
             full_generations[i] = model_prediction
@@ -216,35 +218,12 @@ class OpenAIGenerator(Generator):
             for match in re.finditer(task.answer_extraction_regex, model_prediction):
                 parsed_answer = match  # Get the last match
 
-            if parsed_answer is None or (
-                not input_prompts[i].endswith(task.reprompt_string) and parsed_answer.start() < len(input_prompts[i])
-            ):
+            if parsed_answer is None:
                 gens_need_augmenting.append(i)
                 new_queries.append(input_prompts[i] + full_generations[i] + task.reprompt_string)
             else:
                 extracted_answers[i] = parsed_answer.group(1).rstrip(" .")
 
-        # Step 2: Force generation for unextracted answers
-        force_responses = []
-        for idx, prompt in enumerate(new_queries):
-            response = self.client.chat.completions.create(
-                model=self.model_name,
-                messages=[{"role": "user", "content": prompt}],
-                **self.force_gen_args
-            )
-            force_responses.append(response)
-
-        for new_idx, orig_idx in enumerate(gens_need_augmenting):
-            model_prediction = force_responses[new_idx].choices[0].message.content
-            parsed_answer = None
-            for match in re.finditer(task.answer_extraction_regex, model_prediction):
-                parsed_answer = match  # Get the last match
-
-            if parsed_answer:
-                extracted_answers[orig_idx] = parsed_answer.group(1).rstrip(" .")
-
-            full_generations[orig_idx] += task.reprompt_string + model_prediction
-            generation_lengths[orig_idx] += force_responses[new_idx].usage.completion_tokens
         return full_generations, generation_lengths, extracted_answers
 
 class VLLMGenerator(Generator):

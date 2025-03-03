@@ -11,7 +11,7 @@ class Experimenter:
         self.force_no_cot = force_no_cot
 
         modelname = os.path.basename(generator.model_name)
-        self.filename = f"{modelname}_T{generator.sampling_args['temperature'] if generator.sampling_args['temperature'] else '0.0'}"
+        self.filename = f"{modelname}_T{generator.sampling_args['temperature'] if ('temperature' in generator.sampling_args and generator.sampling_args['temperature'] > 0) else '0.0'}"
 
     def run(self, dfa_param_vals):
         subfolder = self.task.create_subfolder_name(dfa_param_vals, self.force_no_cot)
@@ -28,7 +28,6 @@ class Experimenter:
                 prompts = [prompt + self.task.reprompt_string for prompt in prompts]
 
             generations, generation_lengths, extracted_answers = self.generator.generate(prompts, self.task)
-
             for prompt, model_generation, num_generated_tokens, pred_answer, true_answer in zip(prompts, generations, generation_lengths, extracted_answers, true_answers):
                 if pred_answer is None: 
                     just_move_on_counter += 1
