@@ -11,7 +11,15 @@ class Experimenter:
         self.force_no_cot = force_no_cot
 
         modelname = os.path.basename(generator.model_name)
-        self.filename = f"{modelname}_T{generator.sampling_args['temperature'] if ('temperature' in generator.sampling_args and generator.sampling_args['temperature'] > 0) else '0.0'}"
+        self.filename = f"{modelname}_T0.0" # TODO get rid of temperature configs eventually, once we know no need.
+        # try:
+        #     self.filename = str(modelname)
+        #     if isinstance(generator.sampling_args, dict):
+        #         if "temperature" in generator.sampling_args and (generator.sampling_args['temperature'] > 0):
+        #             self.filename += f"_T{generator.sampling_args['temperature']}"
+        #         else: 
+        #             self.filename += f"_T0.0"
+        # except: pass
 
     def run(self, dfa_param_vals):
         subfolder = self.task.create_subfolder_name(dfa_param_vals, self.force_no_cot)
@@ -44,9 +52,8 @@ class Experimenter:
                     }
                 )
                 
-            if len(results) % 10 < 2:
-                with open(filename, "w") as wf:
-                    json.dump(results, wf, indent=4)
+            with open(filename, "w") as wf:
+                json.dump(results, wf, indent=4)
             
             if just_move_on_counter > 30: break
 
@@ -122,9 +129,8 @@ class CRUXEvalExperimenter(Experimenter):
                     }
                 )
                 
-            if len(results) % 10 < 2:
-                with open(filename, "w") as wf:
-                    json.dump(results, wf, indent=4)
+            with open(filename, "w") as wf:
+                json.dump(results, wf, indent=4)
 
         with open(filename, "w") as wf:
             json.dump(results, wf, indent=4)

@@ -5,21 +5,18 @@ import torch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM, BitsAndBytesConfig
 
-from openai import OpenAI
-import tiktoken
-
-# openai.api_key = os.getenv("OPENAI_API_KEY")  
-
-
 class Generator:
-
-    def __init__(self, model_name, sampling_args, force_gen_args):
+    def __init__(self, model_name, max_batch_size, sampling_args, force_gen_args):
         self.model_name = model_name
         self.sampling_args = sampling_args
         self.force_gen_args = force_gen_args
+        self.max_batch_size = max_batch_size
 
-    def generate(self, input_prompts):
+    def generate(self, input_prompts, task):
         raise NotImplementedError
+
+    def free_and_delete(self):
+        pass
 
 class HFGenerator(Generator):
     def __init__(self, model_name, gen_kwargs, max_batch_size):
@@ -53,11 +50,8 @@ class HFGenerator(Generator):
             "top_p": None,
             "pad_token_id": self.tokenizer.eos_token_id,
         }
-        super().__init__(model_name, sampling_args, force_gen_args)
+        super().__init__(model_name, max_batch_size, sampling_args, force_gen_args)
         self.model = self.load_model(model_name)
-
-        self.max_batch_size = max_batch_size
-
 
     def load_model(self, model_name, quantize=True):
         config = AutoConfig.from_pretrained(model_name)
@@ -107,8 +101,9 @@ class HFGenerator(Generator):
         full_generations = [None for _ in model_output.sequences]
         extracted_answers = [None for _ in model_output.sequences]
         generation_lengths = [None for _ in model_output.sequences]
+
         for input_idx, generation in enumerate(model_output.sequences):
-            
+            # ASSUME EACH PROMPT ONLY PRODUCES ONE OUTPUT
             model_prediction = self.tokenizer.decode(generation, skip_special_tokens=True)
             just_generation = generation[input_ids.input_ids.shape[-1] :]
             generation_lengths[input_idx] = torch.sum(
@@ -119,9 +114,9 @@ class HFGenerator(Generator):
             parsed_answer = None
             for parsed_answer in re.finditer(task.answer_extraction_regex, model_prediction):
                 pass # only get the last
-            if parsed_answer is None or ((not disable_cot) and parsed_answer.start() < len(input_prompts[0])):
+            if parsed_answer is None or ((not disable_cot) and parsed_answer.start() < len(input_prompts[input_idx])):
                 gens_need_augmenting.append(input_idx)
-                new_queries.append(input_prompts[0] +full_generations[input_idx] + task.reprompt_string)
+                new_queries.append(input_prompts[input_idx] +full_generations[input_idx] + task.reprompt_string)
             else:
                 extracted_answers[input_idx] = parsed_answer.group(1).rstrip(" .")
         
@@ -157,12 +152,17 @@ class HFGenerator(Generator):
 
         return full_generations, generation_lengths, extracted_answers
 
+    def free_and_delete(self):
+        del self.model
+        del self.tokenizer
+        gc.collect()
+        torch.cuda.empty_cache()
 
 class OpenAIGenerator(Generator):
     def __init__(self, model_name, gen_kwargs, max_batch_size):
-        self.model_name = model_name
-        self.enc = tiktoken.encoding_for_model(model_name)
-        self.max_batch_size = max_batch_size
+        from openai import OpenAI
+        # openai.api_key = os.getenv("OPENAI_API_KEY")  
+
         self.sampling_args = {
             "temperature": gen_kwargs["temperature"],
             "max_completion_tokens": gen_kwargs["max_new_tokens"],
@@ -177,7 +177,7 @@ class OpenAIGenerator(Generator):
             "top_p": None,
             "stop": gen_kwargs["stop_strings"],
         }
-        super().__init__(model_name, self.sampling_args, self.force_gen_args)
+        super().__init__(model_name, max_batch_size, self.sampling_args, self.force_gen_args)
         self.client = OpenAI()
         if 'o3' in model_name: 
             # temperature and top_p top_n not supported in reasoning models
@@ -185,6 +185,14 @@ class OpenAIGenerator(Generator):
             del self.force_gen_args["temperature"]
             del self.sampling_args["top_p"]
             del self.force_gen_args["top_p"]
+
+    def call_model(self, messages):
+        response = self.client.chat.completions.create(
+            model=self.model_name,
+            messages=messages,
+            **self.sampling_args
+        )
+        return response
 
     def generate(self, input_prompts, task):
         """
@@ -197,35 +205,141 @@ class OpenAIGenerator(Generator):
         Returns:
             tuple: (full_generations, generation_lengths, extracted_answers)
         """
-        full_generations = [None] * len(input_prompts)
-        extracted_answers = [None] * len(input_prompts)
-        generation_lengths = [None] * len(input_prompts)
+        full_generations = [None for _ in input_prompts]
+        extracted_answers = [None for _ in input_prompts]
+        generation_lengths = [None for _ in input_prompts]
 
         responses = []
         for idx, prompt in enumerate(input_prompts):
-            response = self.client.chat.completions.create(
-                model=self.model_name,
-                messages=[{"role": "user", "content": prompt}],
-                **self.sampling_args
-            )
-            responses.append(response)
+            try:
+                response = self.call_model([{"role": "user", "content": prompt}])
+                responses.append(response)
+            except: 
+                # DeepSeek API often returns null https://github.com/deepseek-ai/DeepSeek-V3/issues/599
+                responses.append(None)
         for i, response in enumerate(responses):
+            if response is None: continue
             model_prediction = response.choices[0].message.content
             full_generations[i] = model_prediction
+            try:
+                reasoning_content = response.choices[0].message.reasoning_content
+                full_generations[i] = reasoning_content + full_generations[i] 
+            except: pass
             generation_lengths[i] = response.usage.completion_tokens
 
             parsed_answer = None
             for match in re.finditer(task.answer_extraction_regex, model_prediction):
                 parsed_answer = match  # Get the last match
 
-            if parsed_answer is None:
+            if parsed_answer is not None:
+                extracted_answers[i] = parsed_answer.group(1).rstrip(" .")
+
+        return full_generations, generation_lengths, extracted_answers
+
+class DeepseekGenerator(OpenAIGenerator):
+    def __init__(self, model_name, gen_kwargs, max_batch_size):
+        super().__init__(model_name, gen_kwargs, max_batch_size)
+        ds_api_key = os.getenv("DEEPSEEK_API_KEY")  
+        self.client = OpenAI(api_key=ds_api_key, base_url="https://api.deepseek.com")
+        # temperature and top_p top_n not supported in reasoning models
+        del self.sampling_args["temperature"]
+        del self.force_gen_args["temperature"]
+        del self.sampling_args["top_p"]
+        del self.force_gen_args["top_p"]
+
+    def call_model(self, messages):
+        response = self.client.chat.completions.create(
+            model="deepseek-reasoner",
+            messages=messages,
+            # **self.sampling_args
+        )
+        return response
+
+class VLLMGenerator(Generator):
+    def __init__(self, model_name, gen_kwargs, max_batch_size):
+        from vllm import LLM, SamplingParams
+        from vllm.distributed.parallel_state import destroy_model_parallel
+
+        max_model_len = 10000
+        max_num_seqs = 1
+        quantization_config = {
+            "dtype": torch.bfloat16,
+            "trust_remote_code": True,
+            "quantization": "bitsandbytes",
+            "load_format": "bitsandbytes"
+        }
+
+        self.llm = LLM(model=model_name, max_num_seqs=max_num_seqs, max_model_len=max_model_len, **quantization_config)
+        print(torch.cuda.memory_allocated() / 1e9, "GB allocated")
+        print(torch.cuda.memory_reserved() / 1e9, "GB reserved")
+
+        self.sampling_args = SamplingParams(
+            temperature=gen_kwargs["temperature"],
+            max_tokens=gen_kwargs["max_new_tokens"],
+            n=gen_kwargs["num_return_sequences"],
+            stop=gen_kwargs["stop_strings"],
+        )
+        self.force_gen_args = SamplingParams(
+            temperature=0.0,
+            max_tokens=50,
+            n=1,
+            stop=gen_kwargs["stop_strings"],
+        )
+        super().__init__(model_name, max_batch_size, self.sampling_args, self.force_gen_args)
+    
+    def generate(self, input_prompts, task):
+        """
+        Args:
+            input_prompts (list of str): List of input prompts.
+            task (object): Task object containing regex for answer extraction.
+
+        Returns:
+            tuple: (full_generations, generation_lengths, extracted_answers)
+        """
+        disable_cot = input_prompts[-1].endswith(task.reprompt_string)
+
+        full_generations = [None for _ in input_prompts]
+        extracted_answers = [None for _ in input_prompts]
+        generation_lengths = [None for _ in input_prompts]
+
+        outputs = self.llm.generate(input_prompts, self.sampling_args)
+
+        new_queries = []
+        gens_need_augmenting = []
+        for i, response in enumerate(outputs):
+            prompt = response.prompt
+            model_prediction = response.outputs[0].text
+            full_generations[i] = model_prediction
+            generation_lengths[i] = len(response.outputs[0].token_ids) # len([tid !=  for tid in response.outputs[0].token_ids])
+
+            parsed_answer = None
+            for match in re.finditer(task.answer_extraction_regex, model_prediction):
+                parsed_answer = match  # Get the last match
+
+            if parsed_answer is None or ((not disable_cot) and parsed_answer.start() < len(input_prompts[i])):
                 gens_need_augmenting.append(i)
                 new_queries.append(input_prompts[i] + full_generations[i] + task.reprompt_string)
             else:
                 extracted_answers[i] = parsed_answer.group(1).rstrip(" .")
 
+        if len(new_queries) > 0:
+            new_outputs = self.llm.generate(new_queries, self.force_gen_args)
+            for new_idx, orig_idx in enumerate(gens_need_augmenting):
+                model_prediction = new_outputs[new_idx].outputs[0].text
+                parsed_answer = None
+                for parsed_answer in re.finditer(task.answer_extraction_regex, model_prediction):
+                    pass # only get the last
+                if parsed_answer is not None:
+                    extracted_answers[orig_idx] = parsed_answer.group(1).rstrip(" .")
+                full_generations[orig_idx] += task.reprompt_string + model_prediction
+                generation_lengths[orig_idx] += len(new_outputs[new_idx].outputs[0].token_ids) # doesnt account for extra from reprompt but..
+
         return full_generations, generation_lengths, extracted_answers
 
-class VLLMGenerator(Generator):
-    def __init__(self, model_name, gen_kwargs, max_batch_size):
-        raise NotImplementedError
+    def free_and_delete(self):
+        os.environ["TOKENIZERS_PARALLELISM"] = "false"
+        destroy_model_parallel()
+        del self.llm.llm_engine.model_executor.driver_worker
+        gc.collect()
+        torch.cuda.empty_cache()
+        torch.distributed.destroy_process_group()

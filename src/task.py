@@ -293,6 +293,186 @@ Input: {dyck_word}
         return prompt
 
 
+class NestedBoolTask(Task):
+    def  __init__(self):
+        super(NestedBoolTask, self).__init__("bool", r'truth_value\s*==\s*(True|False|0|1)\s*')
+        self.foldername = "nested_boolean_expression/outputs"
+
+        self.query_template = """Evaluate the following boolean expression:
+
+truth_value = {expression}
+"""
+        self.generation_instruction = "Provide your final answer following this template: [ANSWER]\ntruth_value == YOUR ANSWER\n[/ANSWER]"
+        self.reprompt_string = "[ANSWER]\ntruth_value == "
+
+    def create_subfolder_name(self, dfa_kwargs, force_no_cot):
+        subfolder = os.path.join(f"{self.foldername}{'_nocot' if force_no_cot else ''}", f"k{dfa_kwargs['k']}_N{dfa_kwargs['N']}")
+        return subfolder
+
+    def make_prompt(self, generator, expression):
+        if 'tokenizer' in dir(generator) and generator.tokenizer.chat_template:
+            if "gemma" in generator.model_name:
+                messages = [{
+                    "role": "user",
+                    "content": self.system_instruction + "\n\n" + self.query_template.format(expression=expression) + "\n" + self.generation_instruction
+                }]
+                prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            elif generator.tokenizer.chat_template:
+                messages = [{
+                    "role": "system",
+                    "content": self.system_instruction
+                },
+                {
+                    "role": "user",
+                    "content": self.query_template.format(expression=expression) + "\n" + self.generation_instruction
+                }]
+                prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            else:
+                breakpoint()
+        else:
+            prompt = self.system_instruction + "\n\n"
+            prompt += self.query_template.format(expression=expression) + "\n"
+            prompt += self.generation_instruction + "\n\n"
+        return prompt
+    
+    def generate_random_helper(self, operator_options, nesting_level):
+        if nesting_level == 1:
+            operator = random.choice(operator_options)
+            rside = random.choice(("True", "False"))
+            if operator in {"not"}:
+                return f"{operator} {rside}"
+            else:
+                lside = random.choice(("True", "False"))
+                return f"{lside} {operator} {rside}"
+        operator = random.choice(operator_options)
+        rside = self.generate_random_helper(operator_options, nesting_level - 1)
+        if operator in {"not"}:
+            return f"{operator} ({rside})"
+        else:
+            lside = self.generate_random_helper(operator_options, nesting_level - 1)
+            return f"({lside}) {operator} ({rside})"
+
+    def generate_random(self, generator, kN):
+        _ALL_OPERATORS = ["and", "or", "not", "xor"]
+        num_diff_ops = kN['k']
+        nesting_level = kN['N']
+        prompts = []
+        true_answers = []
+        while len(prompts) < generator.max_batch_size:
+            operator_options = random.sample(_ALL_OPERATORS, num_diff_ops)
+            expression = self.generate_random_helper(operator_options, nesting_level)
+            answer = eval(expression.replace("xor", "^"))
+            
+            prompt = self.make_prompt(generator, expression)
+            prompts.append(prompt)
+            true_answers.append(answer)
+        return prompts, true_answers
+
+class NavigateTask(Task):
+    def  __init__(self):
+        super(NavigateTask, self).__init__("bool", r'returned_to_start\s*==\s*(True|False|0|1)\s*')
+        self.foldername = "nested_boolean_expression/outputs"
+
+        self.query_template = """If you follow these instructions, do you return to the starting point? Always face forward. 
+
+{sequence}
+"""
+        self.generation_instruction = "Provide your final answer as True or False, following this template: [ANSWER]\nreturned_to_start == YOUR ANSWER\n[/ANSWER]"
+        self.reprompt_string = "[ANSWER]\nreturned_to_start == "
+
+    def create_subfolder_name(self, dfa_kwargs, force_no_cot):
+        subfolder = os.path.join(f"{self.foldername}{'_nocot' if force_no_cot else ''}", f"k{dfa_kwargs['k']}_d{dfa_kwargs['d']}_N{dfa_kwargs['N']}")
+        return subfolder
+
+    def make_prompt(self, generator, sequence):
+        if 'tokenizer' in dir(generator) and generator.tokenizer.chat_template:
+            if "gemma" in generator.model_name:
+                messages = [{
+                    "role": "user",
+                    "content": self.system_instruction + "\n\n" + self.query_template.format(sequence=sequence) + "\n" + self.generation_instruction
+                }]
+                prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            elif generator.tokenizer.chat_template:
+                messages = [{
+                    "role": "system",
+                    "content": self.system_instruction
+                },
+                {
+                    "role": "user",
+                    "content": self.query_template.format(sequence=sequence) + "\n" + self.generation_instruction
+                }]
+                prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            else:
+                breakpoint()
+        else:
+            prompt = self.system_instruction + "\n\n"
+            prompt += self.query_template.format(sequence=sequence) + "\n"
+            prompt += self.generation_instruction + "\n\n"
+        return prompt
+    
+    def generate_random_helper(self, max_distance_away, target_length, current_length, curr_position, end_at_start):
+        """
+        Generates a random sequence that either ends at the origin or does not.
+        
+        Args:
+            max_distance_away (int): Size of the world in terms of no. steps away from the origin.
+            target_length (int): Target number of turns.
+            current_length (int): Current number of steps taken.
+            curr_position (List[int]): dimensions (1, 2, or 3)-size tuple describing position before adding this step
+            end_at_start (bool): Whether we have to end at the start
+
+        Returns:
+            List[str]: List of strings describing the navigation from this step
+            bool: ends at start
+        """
+        directions = [("forward", "backwards"), ("right", "left"), ("up", "down")]
+        template = "Take {num_steps} step{multiplier_s} {direction}."
+
+        if current_length >= target_length:
+            return [], all(dim == 0 for dim in curr_position)
+
+        if end_at_start and sum(offset != 0 for offset in curr_position) >= target_length - current_length:
+            dim_to_move = random.choice([dim for dim, offset in enumerate(curr_position) if offset != 0])
+            amount_to_move = 0 - curr_position[dim_to_move]
+        elif end_at_start and (target_length - current_length < 2):
+            dim_to_move = random.choice(list(range(len(curr_position))))
+            amount_to_move = 0
+        else:
+            dim_to_move = random.choice(list(range(len(curr_position))))
+            if curr_position[dim_to_move] >= max_distance_away:
+                amount_to_move = random.choice(list(range(-2 * max_distance_away, 0)))
+            elif curr_position[dim_to_move] <= -max_distance_away:
+                amount_to_move = random.choice(list(range(0, 2 * max_distance_away)))
+            else:
+                can_move_left = - (max_distance_away + curr_position[dim_to_move])
+                can_move_right = max_distance_away - curr_position[dim_to_move]
+                amount_to_move = random.choice(list(range(can_move_left, can_move_right)))
+
+        new_position = list(curr_position)
+        new_position[dim_to_move] += amount_to_move
+        
+        if amount_to_move > 0: direction_idx = 0
+        else: direction_idx = 1
+
+        rest_of_navigation, actually_ends_at_start = seflf.generate_random_helper(max_distance_away, target_length, current_length + 1, new_position, end_at_start)
+        num_steps = amount_to_move if amount_to_move >=0 else -amount_to_move
+        multiplier_s = '' if num_steps == 1 else 's'
+        return [template.format(num_steps=num_steps, multiplier_s=multiplier_s, direction=directions[dim_to_move][direction_idx])] + rest_of_navigation, actually_ends_at_start
+
+    def generate_random(self, generator, kdN):
+        max_distance_away = kdN['k']
+        num_dimensions = kdN['d']
+        target_length = kdN['N']
+        prompts = []
+        true_answers = []
+        while len(prompts) < generator.max_batch_size:
+            end_at_start = random.choice([False, True])
+            sequence, actually_ends_at_start = self.generate_random_helper(max_distance_away, target_length, 0, [0 for _ in range(num_dimensions)], end_at_start)
+            prompt = self.make_prompt(generator, sequence)
+            prompts.append(prompt)
+            true_answers.append(actually_ends_at_start)
+        return prompts, true_answers
+
 
 class CRUXEvalTask(Task):
     def __init__(self):

@@ -41,6 +41,7 @@ model_colors = {
     "DeepSeek-R1-Distill-Qwen-1.5B": "red",
     "DeepSeek-R1-Distill-Llama-8B": "black",
     "gpt-4o-mini": "indigo",
+    "o3-mini": "pink"
 }
 
 model_nicknames = {
@@ -56,7 +57,8 @@ model_nicknames = {
     "DeepSeek-R1-Distill-Qwen-7B": "R1-Qw-7B",
     "DeepSeek-R1-Distill-Qwen-1.5B": "R1-Qw-1.5B",
     "DeepSeek-R1-Distill-Llama-8B": "R1-Ll-8B",
-    "gpt-4o-mini": "gpt4om"
+    "gpt-4o-mini": "gpt4om",
+    "o3-mini": "o3-mini"
 }
 colormap = get_cmap("tab10")  # Use a colormap with distinct colors
 
@@ -809,7 +811,7 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, kwargs):
     if len(all_factor_vals) == 0 or max(all_factor_vals) == min(all_factor_vals): return {f"Corr(ptts, {isolated_factor})": corrs}
 
     # Finalize and save the plot
-    plt.ylim(-1, 2)
+    plt.ylim(-3, 4)
     plt.xlim(min(all_factor_vals)-1, max(all_factor_vals)+1)
     plt.gca().set_aspect((max(all_factor_vals) - min(all_factor_vals)) / 1.2)
     plt.xlabel(factor_to_description[isolated_factor])
