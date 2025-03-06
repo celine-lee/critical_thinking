@@ -1,5 +1,6 @@
 import re
 import os
+import gc
 
 import torch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -138,12 +139,12 @@ class HFGenerator(Generator):
                 generation = model_output.sequences[new_idx]
                 model_prediction = self.tokenizer.decode(generation, skip_special_tokens=True)
                 just_generation = generation[new_input_ids.input_ids.shape[-1] :]
+                full_generations[orig_idx] += task.reprompt_string + self.tokenizer.decode(just_generation, skip_special_tokens=True)
                 parsed_answer = None
-                for parsed_answer in re.finditer(task.answer_extraction_regex, model_prediction):
+                for parsed_answer in re.finditer(task.answer_extraction_regex, full_generations[orig_idx]):
                     pass # only get the last
                 if parsed_answer is not None:
                     extracted_answers[orig_idx] = parsed_answer.group(1).rstrip(" .")
-                full_generations[orig_idx] += task.reprompt_string + self.tokenizer.decode(just_generation, skip_special_tokens=True)
                 num_generated_tokens = torch.sum(
                     just_generation
                     != self.tokenizer.pad_token_id
@@ -237,6 +238,7 @@ class OpenAIGenerator(Generator):
         return full_generations, generation_lengths, extracted_answers
 
 class DeepseekGenerator(OpenAIGenerator):
+    # https://api-docs.deepseek.com/quick_start/pricing $2.19 1M toks output
     def __init__(self, model_name, gen_kwargs, max_batch_size):
         super().__init__(model_name, gen_kwargs, max_batch_size)
         ds_api_key = os.getenv("DEEPSEEK_API_KEY")  
@@ -247,6 +249,8 @@ class DeepseekGenerator(OpenAIGenerator):
         del self.sampling_args["top_p"]
         del self.force_gen_args["top_p"]
 
+
+
     def call_model(self, messages):
         response = self.client.chat.completions.create(
             model="deepseek-reasoner",
@@ -255,12 +259,12 @@ class DeepseekGenerator(OpenAIGenerator):
         )
         return response
 
+from vllm import LLM, SamplingParams
+from vllm.distributed.parallel_state import destroy_model_parallel
+
 class VLLMGenerator(Generator):
     def __init__(self, model_name, gen_kwargs, max_batch_size):
-        from vllm import LLM, SamplingParams
-        from vllm.distributed.parallel_state import destroy_model_parallel
-
-        max_model_len = 10000
+        max_model_len = 20000
         max_num_seqs = 1
         quantization_config = {
             "dtype": torch.bfloat16,
@@ -326,12 +330,12 @@ class VLLMGenerator(Generator):
             new_outputs = self.llm.generate(new_queries, self.force_gen_args)
             for new_idx, orig_idx in enumerate(gens_need_augmenting):
                 model_prediction = new_outputs[new_idx].outputs[0].text
+                full_generations[orig_idx] += task.reprompt_string + model_prediction
                 parsed_answer = None
-                for parsed_answer in re.finditer(task.answer_extraction_regex, model_prediction):
+                for parsed_answer in re.finditer(task.answer_extraction_regex, full_generations[orig_idx]):
                     pass # only get the last
                 if parsed_answer is not None:
                     extracted_answers[orig_idx] = parsed_answer.group(1).rstrip(" .")
-                full_generations[orig_idx] += task.reprompt_string + model_prediction
                 generation_lengths[orig_idx] += len(new_outputs[new_idx].outputs[0].token_ids) # doesnt account for extra from reprompt but..
 
         return full_generations, generation_lengths, extracted_answers
@@ -339,7 +343,22 @@ class VLLMGenerator(Generator):
     def free_and_delete(self):
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
         destroy_model_parallel()
-        del self.llm.llm_engine.model_executor.driver_worker
+        # del self.llm.llm_engine.model_executor
         gc.collect()
         torch.cuda.empty_cache()
         torch.distributed.destroy_process_group()
+
+from together import Together
+class TogetherGenerator(OpenAIGenerator):
+    def __init__(self, model_name, gen_kwargs, max_batch_size):
+        super().__init__(model_name, gen_kwargs, max_batch_size)
+        ds_api_key = os.getenv("DEEPSEEK_API_KEY")  
+        self.client = Together()
+
+    def call_model(self, messages):
+        response = self.client.chat.completions.create(
+            model=self.model_name,
+            messages=messages,
+            **self.sampling_args
+        )
+        return response

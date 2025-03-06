@@ -41,7 +41,8 @@ model_colors = {
     "DeepSeek-R1-Distill-Qwen-1.5B": "red",
     "DeepSeek-R1-Distill-Llama-8B": "black",
     "gpt-4o-mini": "indigo",
-    "o3-mini": "pink"
+    "o3-mini": "pink",
+    "DeepSeek-R1": "gray",
 }
 
 model_nicknames = {
@@ -58,7 +59,8 @@ model_nicknames = {
     "DeepSeek-R1-Distill-Qwen-1.5B": "R1-Qw-1.5B",
     "DeepSeek-R1-Distill-Llama-8B": "R1-Ll-8B",
     "gpt-4o-mini": "gpt4om",
-    "o3-mini": "o3-mini"
+    "o3-mini": "o3-mini",
+    "DeepSeek-R1": "DSR1",
 }
 colormap = get_cmap("tab10")  # Use a colormap with distinct colors
 
@@ -100,7 +102,6 @@ def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, 
                     skip_this = True
                     break
             if skip_this: continue
-            
             results = json.load(open(experiment_file))
             results = [res for res in results if res["pred_answer"]]
 
@@ -246,7 +247,8 @@ def global_parser():
 def plot_length_generated(df, kwargs, by_factor=None):
     # Separate data by model size
     model_data = {
-        model_name: df[df["Model"].str.contains(model_name)].sort_values(by="No gen toks")
+        model_name: df[df["Model"] == model_name].sort_values(by="No gen toks")
+        # model_name: df[df["Model"].str.contains(model_name)].sort_values(by="No gen toks")
         for model_name in model_colors
     }
 
@@ -753,6 +755,8 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, kwargs):
 
         # Calculate averages and confidence intervals
         for fv, ptts in sorted(fv_to_ptts_avged.items(), key = lambda item: item[0]):
+            # fv: value of factor , e.g. k=2
+            # ptts: list of L*s for all configurations where factor=factor value, e.g. for [(k=2,N=5), (k=2,N=9), (k=2,N=12)]
             avg_ptt = np.mean(ptts)
             factor_vals.append(fv)
             all_factor_vals.extend(fv for _ in ptts)
@@ -786,11 +790,10 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, kwargs):
         all_factor_vals_normalized.extend(normalized_factor_vals)
         legend_label = model_nicknames[modelname]
 
-        # plot the normalized averageds
+        # plot the normalized averages
         normalized_avg_peak_tts = [(val - min_val) / (max_val - min_val) if max_val != min_val else 0 for val in avg_peak_tts]
         all_normalized_avg_peak_tts.extend([(fv, napt) for fv, napt in zip(factor_vals, normalized_avg_peak_tts)])
         plt.plot(factor_vals, normalized_avg_peak_tts, color=rgba_color, linestyle="--")
-        
         # Plot the confidence intervals as a shaded region
         plt.fill_between(
             factor_vals,
@@ -811,7 +814,7 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, kwargs):
     if len(all_factor_vals) == 0 or max(all_factor_vals) == min(all_factor_vals): return {f"Corr(ptts, {isolated_factor})": corrs}
 
     # Finalize and save the plot
-    plt.ylim(-3, 4)
+    plt.ylim(-10, 11)
     plt.xlim(min(all_factor_vals)-1, max(all_factor_vals)+1)
     plt.gca().set_aspect((max(all_factor_vals) - min(all_factor_vals)) / 1.2)
     plt.xlabel(factor_to_description[isolated_factor])
@@ -871,7 +874,8 @@ def plot_correctness_by_isolate_factor(df, plot_against_factor, set_factors, kwa
 
     for modelname in df["Model"].unique():
         filtered_data = df[
-            df["Model"].str.contains(modelname)
+            df["Model"] == modelname
+            # df["Model"].str.contains(modelname)
         ]
         base_color = model_colors.get(modelname, "blue")
         rgba_color = mcolors.to_rgba(base_color, alpha=0.8)

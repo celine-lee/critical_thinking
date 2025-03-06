@@ -12,14 +12,6 @@ class Experimenter:
 
         modelname = os.path.basename(generator.model_name)
         self.filename = f"{modelname}_T0.0" # TODO get rid of temperature configs eventually, once we know no need.
-        # try:
-        #     self.filename = str(modelname)
-        #     if isinstance(generator.sampling_args, dict):
-        #         if "temperature" in generator.sampling_args and (generator.sampling_args['temperature'] > 0):
-        #             self.filename += f"_T{generator.sampling_args['temperature']}"
-        #         else: 
-        #             self.filename += f"_T0.0"
-        # except: pass
 
     def run(self, dfa_param_vals):
         subfolder = self.task.create_subfolder_name(dfa_param_vals, self.force_no_cot)
@@ -34,7 +26,7 @@ class Experimenter:
             prompts, true_answers = self.task.generate_random(self.generator, dfa_param_vals)
             if self.force_no_cot:
                 prompts = [prompt + self.task.reprompt_string for prompt in prompts]
-
+            if len(prompts) == 0: break
             generations, generation_lengths, extracted_answers = self.generator.generate(prompts, self.task)
             for prompt, model_generation, num_generated_tokens, pred_answer, true_answer in zip(prompts, generations, generation_lengths, extracted_answers, true_answers):
                 if pred_answer is None: 
@@ -80,7 +72,7 @@ class CRUXEvalExperimenter(Experimenter):
         while idx < len(examples):
             prompts = []
             batch = []
-            while len(prompts) < self.generator.batch_size:
+            while len(prompts) < self.generator.max_batch_size:
                 if idx >= len(examples): break
                 example = examples[idx]
                 idx += 1
@@ -95,6 +87,7 @@ class CRUXEvalExperimenter(Experimenter):
                 batch.append(example)
             if self.force_no_cot:
                 prompts = [prompt + self.task.reprompt_string for prompt in prompts]
+            if len(prompts) == 0: break
 
             generations, generation_lengths, extracted_answers = self.generator.generate(prompts, self.task)
 
@@ -125,7 +118,7 @@ class CRUXEvalExperimenter(Experimenter):
                         "id": example["id"],
                         "N": sum(example["line_execution_counts"].values()),
                         "k": example["ast_size"],
-                        "l": len(example[f"{'straightlined_' if straightlined else ''}code"].splitlines())
+                        "l": len(example["straightlined_code"].splitlines())
                     }
                 )
                 

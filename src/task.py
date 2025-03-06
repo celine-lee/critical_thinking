@@ -11,6 +11,7 @@ class Task:
         self.stop_strings = ["[/ANSWER]"]
 
     def generate_random(self, how_many, dfa_kwargs):
+        # TODO if theres only so many random options, limit up to that
         raise NotImplementedError
 
     def make_prompt(self, kwargs):
@@ -477,7 +478,7 @@ class NavigateTask(Task):
 class CRUXEvalTask(Task):
     def __init__(self):
         super(CRUXEvalTask, self).__init__("cruxeval_straightlined", r'assert answer\s*==\s*(.+)')
-        self.foldername = "cruxeval_straightlined/outputs"
+        self.foldername = "cruxeval/outputs_straightlined"
         self.query_template = """You are given a snippet of Python code. Complete the assertion with the resulting value in `answer`.
 
 {fn_def}
@@ -529,3 +530,51 @@ assert answer == ??
             prompt += self.query_template.format(fn_def=fn_def) + "\n"
             prompt += self.generation_instruction + "\n\n"
         return prompt
+
+
+class ArithmeticTask(NestedBoolTask):
+    # https://github.com/suzgunmirac/BIG-Bench-Hard/blob/main/cot-prompts/multistep_arithmetic_two.txt
+    # each parentheses will always be 3 ops, 4 vals
+    def  __init__(self):
+        super(ArithmeticTask, self).__init__()
+        self.name = "arithmetic"
+        self.answer_extraction_regex = r'answer\s*==\s*(\d+)\s*'
+        self.foldername = "arithmetic/outputs"
+
+        self.query_template = """Solve the following multi-step arithmetic problem:
+
+answer = {expression}
+"""
+        self.generation_instruction = "Provide your final answer following this template: [ANSWER]\nanswer == YOUR ANSWER\n[/ANSWER]"
+        self.reprompt_string = "[ANSWER]\nanswer == "
+
+    def create_subfolder_name(self, dfa_kwargs, force_no_cot):
+        subfolder = os.path.join(f"{self.foldername}{'_nocot' if force_no_cot else ''}", f"k{dfa_kwargs['k']}_m{dfa_kwargs['m']}_N{dfa_kwargs['N']}")
+        return subfolder
+    
+    def generate_random_helper(self, operator_options, number_range, num_steps):
+        if num_steps == 1:
+            operators = random.choices(operator_options, k=3)
+            numbers = random.choices(list(range(number_range)), k=4)
+            return f"{numbers[0]} {operators[0]} {numbers[1]} {operators[1]} {numbers[2]} {operators[2]} {numbers[3]}"
+        operator = random.choice(operator_options)
+        rside = self.generate_random_helper(operator_options, number_range, num_steps - 1)
+        lside = self.generate_random_helper(operator_options, number_range, num_steps - 1)
+        return f"({lside}) {operator} ({rside})"
+
+    def generate_random(self, generator, kmN):
+        _ALL_OPERATORS = ["+", "*", "-"]
+        num_diff_ops = kmN['k']
+        number_range = kmN['m']
+        num_steps = kmN['N']
+        prompts = []
+        true_answers = []
+        while len(prompts) < generator.max_batch_size:
+            operator_options = random.sample(_ALL_OPERATORS, num_diff_ops)
+            expression = self.generate_random_helper(operator_options, number_range, num_steps)
+            answer = eval(expression)
+            
+            prompt = self.make_prompt(generator, expression)
+            prompts.append(prompt)
+            true_answers.append(answer)
+        return prompts, true_answers

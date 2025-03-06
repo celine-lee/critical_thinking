@@ -31,8 +31,8 @@ def get_args():
     parser.add_argument("--N_vals", type=int, nargs='+')
     parser.add_argument("--models", nargs='+')
     parser.add_argument("--disable_cot", action="store_true")
-    parser.add_argument("--generator", choices=['hf', 'openai', 'deepseek', 'vllm'])
-    parser.add_argument("--task", choices=['dyck', 'array_idx', 'cruxeval', 'even_odd', 'navigate', 'bool'])
+    parser.add_argument("--generator", choices=['hf', 'openai', 'deepseek', 'vllm', 'together'])
+    parser.add_argument("--task", choices=['dyck', 'array_idx', 'cruxeval', 'even_odd', 'navigate', 'bool', 'arith'])
     args = parser.parse_args()
     return args
 
@@ -47,15 +47,21 @@ def run(args):
     }
     n_samples_per = args.n_samples_per
 
+    experimentor = Experimenter
     match args.task:
         case 'dyck':
             task = DyckNTask()
+        case 'arith':
+            task = ArithmeticTask()
         case 'array_idx':
             task = ArrayIdxTask()
         case 'bool':
             task = NestedBoolTask()
         case 'navigate':
             task = NavigateTask()
+        case 'cruxeval':
+            task = CRUXEvalTask()
+            experimentor = CRUXEvalExperimenter
 
     match args.generator:
         case 'openai':
@@ -66,11 +72,18 @@ def run(args):
             generator = DeepseekGenerator
         case 'vllm':
             generator = VLLMGenerator
+        case 'together':
+            generator = TogetherGenerator
 
     for model_name in args.models:
         # TODO add a check saying that if all experiments wanted are done, dont load the model
         model_generator = generator(model_name, gen_kwargs, args.batch_size)
-        experimentor = Experimenter(task, model_generator, n_samples_per, force_no_cot=args.disable_cot)
+        experimentor = experimentor(task, model_generator, n_samples_per, force_no_cot=args.disable_cot)
+        if args.task == 'cruxeval':
+            experimentor.run()
+            model_generator.free_and_delete()
+            continue
+
         keys = ["k", "N"]
         values = [args.k_vals, args.N_vals]
         if args.m_vals: 
@@ -79,6 +92,7 @@ def run(args):
         if args.d_vals: 
             keys.append("d")
             values.append(args.d_vals)
+
         all_dfa_configs = [dict(zip(keys, combination)) for combination in itertools.product(*values)]
         
         for dfa_config in all_dfa_configs:
