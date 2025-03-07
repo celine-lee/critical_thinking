@@ -293,7 +293,7 @@ class VLLMGenerator(Generator):
             "quantization": "bitsandbytes",
             "load_format": "bitsandbytes"
         }
-        self.model = LLM(model=self.model_name, max_num_seqs=max_num_seqs, max_model_len=max_model_len, **quantization_config)
+        self.llm = LLM(model=self.model_name, max_num_seqs=max_num_seqs, max_model_len=max_model_len, **quantization_config)
         print(torch.cuda.memory_allocated() / 1e9, "GB allocated")
         print(torch.cuda.memory_reserved() / 1e9, "GB reserved")
     
@@ -306,7 +306,7 @@ class VLLMGenerator(Generator):
         Returns:
             tuple: (full_generations, generation_lengths, extracted_answers)
         """
-        if self.model is None: self.load_model()
+        if self.llm is None: self.load_model()
         disable_cot = input_prompts[-1].endswith(task.reprompt_string)
 
         full_generations = [None for _ in input_prompts]
@@ -348,13 +348,13 @@ class VLLMGenerator(Generator):
         return full_generations, generation_lengths, extracted_answers
 
     def free_and_delete(self):
+        pass
         # os.environ["TOKENIZERS_PARALLELISM"] = "false"
         # destroy_model_parallel()
         # del self.llm.llm_engine.model_executor
-        gc.collect()
-        torch.cuda.empty_cache()
-        torch.distributed.destroy_process_group()
-        pass
+        # gc.collect()
+        # torch.cuda.empty_cache()
+        # torch.distributed.destroy_process_group()
 
 from together import Together
 class TogetherGenerator(OpenAIGenerator):

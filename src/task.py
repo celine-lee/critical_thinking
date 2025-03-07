@@ -93,7 +93,7 @@ pointer = 0
         else:
             prompt = self.system_instruction + "\n\n"
             prompt += self.query_template.format(full_size=k*m, full_size_plus_1=(k*m)+1, full_size_minus_1=(k*m)-1, sequence="\n".join(turns)) + "\n"
-            prompt += self.generation_instruction + "\n\n"
+            prompt += self.generation_instruction
         return prompt
 
     def generate_random(self, generator, kmn):
@@ -318,7 +318,7 @@ Input: {dyck_word}
         else:
             prompt = self.system_instruction + "\n\n"
             prompt += self.query_template.format(dyck_word=dyck_word) + "\n"
-            prompt += self.generation_instruction + "\n\n"
+            prompt += self.generation_instruction
         return prompt
 
 
@@ -361,7 +361,7 @@ truth_value = {expression}
         else:
             prompt = self.system_instruction + "\n\n"
             prompt += self.query_template.format(expression=expression) + "\n"
-            prompt += self.generation_instruction + "\n\n"
+            prompt += self.generation_instruction
         return prompt
     
     def generate_random_helper(self, operator_options, nesting_level):
@@ -436,7 +436,7 @@ class NavigateTask(Task):
         else:
             prompt = self.system_instruction + "\n\n"
             prompt += self.query_template.format(sequence=sequence) + "\n"
-            prompt += self.generation_instruction + "\n\n"
+            prompt += self.generation_instruction
         return prompt
     
     def generate_random_helper(self, max_distance_away, target_length, current_length, curr_position, end_at_start):
@@ -556,7 +556,7 @@ assert answer == ??
         else:
             prompt = self.system_instruction + "\n\n"
             prompt += self.query_template.format(fn_def=fn_def) + "\n"
-            prompt += self.generation_instruction + "\n\n"
+            prompt += self.generation_instruction
         return prompt
 
 
@@ -607,8 +607,126 @@ answer = {expression}
             true_answers.append(answer)
         return prompts, true_answers
 
+# https://github.com/suzgunmirac/BIG-Bench-Hard/blob/main/bbh/tracking_shuffled_objects_three_objects.json
+class ShuffledObjectsTask(Task):
+    def  __init__(self):
+        super(ShuffledObjectsTask, self).__init__("shuffled_objects", r'Answer\s*:\s*(.+)')
+        self.foldername = "shuffled_objects/outputs"
+
+        self.query_template = """{intro} {sequence}
+{final_question}"""
+        self.generation_instruction = "Provide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]"
+        self.reprompt_string = "[ANSWER]\nAnswer: "
+
+        self.all_names = ["Alice", "Bob", "Claire", "Ophelia", "Lola", "Izzi", "Helga"]
+
+    def create_subfolder_name(self, dfa_kwargs, force_no_cot):
+        subfolder = os.path.join(f"{self.foldername}{'_nocot' if force_no_cot else ''}", f"k{dfa_kwargs['k']}_N{dfa_kwargs['N']}")
+        return subfolder
+
+    def generate_random_example(self, num_objects, num_swaps, random_num):
+        
+        match random_num:
+            case 0: #books
+                intro = "{names} are friends and avid readers who occasionally trade books. At the start of the semester, they each buy one new book: {initial_assignments}.\nAs the semester proceeds, they start trading around the new books. "
+                initial_assignments_template = "{name} gets {object}"
+                swap_template = "{order}, {name_1} and {name_2} swap books."
+                final_question = "At the end of the semester, which book does {name} have?"
+                selected_objects = random.sample(["Moby Dick", "The Great Gatsby", "Frankenstein", "Ulysses", "The Pearl", "The Fellowship of the Ring", "Catch-22"], k=num_objects)
+            case 1: #dancers
+                intro = "{names} are dancers at a square dance. At the start of a song, they each have a partner: {initial_assignments}.\nThroughout the song, the dancers often trade partners. "
+                initial_assignments_template = "{name} is dancing with {object}"
+                swap_template = "{order}, {name_1} and {name_2} switch partners."
+                final_question = "At the end of the dance, who is {name} dancing with?"
+                partners = ["Sam", "Patrick", "Jamie", "Melissa", "Rodrigo", "Stacey", "George"]
+                selected_objects = random.sample(partners, k=num_objects)
+            case 2: #game
+                intro = "{names} are playing a game. At the start of the game, they are each holding a ball: {initial_assignments}.\nAs the game progresses, pairs of players trade balls. "
+                initial_assignments_template = "{name} has a {object} ball"
+                swap_template = "{order}, {name_1} and {name_2} swap balls."
+                final_question = "At the end of the game, what color ball is {name} holding?"
+                colors = ["red", "white", "blue", "black", "orange", "green", "yellow", "purple"]
+                selected_objects = random.sample(colors, k=num_objects)
+            case 3: #present
+                intro = "{names} are holding a white elephant gift exchange. At the start of the event, they are each holding a present of a different color: {initial_assignments}.\nAs the event progresses, pairs of people swap gifts. "
+                initial_assignments_template = "{name} has a {object} present"
+                swap_template = "{order}, {name_1} and {name_2} swap their gifts."
+                final_question = "At the end of the event, what color gift does {name} have?"
+                colors = ["red", "white", "blue", "black", "orange", "green", "yellow", "purple"]
+                selected_objects = random.sample(colors, k=num_objects)
+            case 4: #soccer
+                intro = "{names} are on the same team in a soccer match. At the start of the match, they are each assigned to a position: {initial_assignments}.\nAs the game progresses, pairs of players occasionally swap positions. "
+                initial_assignments_template = "{name} is playing {object}"
+                swap_template = "{order}, {name_1} and {name_2} trade positions."
+                final_question = "At the end of the match, what position is {name} playing?"
+                positions = ["cheerleader", "right winger", "left winger", "goalkeeper", "center midfielder", "benchwarmer", "striker", "fullback"]
+                selected_objects = random.sample(positions, k=num_objects)
+
+        selected_names = random.sample(self.all_names, k=num_objects)
+        final_name_str = random.choice(selected_names)
+
+        assignments = {name: obj for (name, obj) in zip(selected_names, selected_objects)}
+        initial_assignments = [initial_assignments_template.format(name=name, object=obj) for (name, obj) in assignments.items()]
+        swaps = []
+        while len(swaps) < num_swaps:
+            swappers = random.sample(selected_names, k=2)
+            temp = assignments[swappers[0]]
+            assignments[swappers[0]] = assignments[swappers[1]]
+            assignments[swappers[1]] = temp
+            if len(swaps) == 0:
+                swaps.append(swap_template.format(order="First", name_1=swappers[0], name_2=swappers[1]))
+            elif len(swaps) == num_swaps - 1:
+                swaps.append(swap_template.format(order="Finally", name_1=swappers[0], name_2=swappers[1]))
+            else:
+                swaps.append(swap_template.format(order="Then", name_1=swappers[0], name_2=swappers[1]))
+        true_answer_str = assignments[final_name_str]
+        intro_str = intro.format(
+            names=", ".join(selected_names[:-1]) + f", and {selected_names[-1]}", 
+            initial_assignments=", ".join(initial_assignments[:-1]) + f", and {initial_assignments[-1]}"
+        )
+        sequence_str = " ".join(swaps)
+        final_question_str = final_question.format(name=final_name_str)
+        return intro_str, sequence_str, final_question_str, true_answer_str
+
+    def generate_random(self, generator, kN):
+        num_objects = kN['k']
+        num_swaps = kN['N']
+
+        prompts = []
+        true_answers = []
+        while len(prompts) < generator.max_batch_size:
+            domain_idx = random.choice(range(5))
+            intro_str, sequence_str, final_question_str, true_answer = self.generate_random_example(num_objects, num_swaps, domain_idx)
+
+            prompt = self.make_prompt(generator, intro_str, sequence_str, final_question_str)
+            prompts.append(prompt)
+            true_answers.append(true_answer)
+        return prompts, true_answers
+
+    def make_prompt(self, generator, intro_str, sequence_str, final_question_str):
+        if 'tokenizer' in dir(generator) and generator.tokenizer.chat_template:
+            if "gemma" in generator.model_name:
+                messages = [{
+                    "role": "user",
+                    "content": self.system_instruction + "\n\n" + self.query_template.format(intro=intro_str, sequence=sequence_str, final_question=final_question_str) + "\n" + self.generation_instruction
+                }]
+                prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            else:
+                messages = [{
+                    "role": "system",
+                    "content": self.system_instruction
+                },
+                {
+                    "role": "user",
+                    "content": self.query_template.format(intro=intro_str, sequence=sequence_str, final_question=final_question_str) + "\n" + self.generation_instruction
+                }]
+                prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        else:
+            prompt = self.system_instruction + "\n\n"
+            prompt += self.query_template.format(intro=intro_str, sequence=sequence_str, final_question=final_question_str) + "\n"
+            prompt += self.generation_instruction
+        return prompt
 
 
 
 # https://raw.githubusercontent.com/suzgunmirac/BIG-Bench-Hard/refs/heads/main/bbh/web_of_lies.json
-# https://github.com/suzgunmirac/BIG-Bench-Hard/blob/main/bbh/tracking_shuffled_objects_three_objects.json
