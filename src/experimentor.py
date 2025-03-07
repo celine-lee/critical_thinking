@@ -6,9 +6,9 @@ import json
 modelname_mappings = {
     "DeepSeek-R1-Distill-Llama-70B-free": "DeepSeek-R1-Distill-Llama-70B",
     "Llama-3.3-70B-Instruct-Turbo-Free": "Llama-3.3-70B-Instruct",
-    "Meta-Llama-3-8B-Instruct-Turbo": "Llama-3.1-8B-Instruct", 
-    "Meta-Llama-3-8B-Instruct-Lite": "Llama-3.1-8B-Instruct", 
-    "Qwen2.5-7B-Instruct-Turbo": "Qwen2.5-7B-Instruct",
+    # "Meta-Llama-3-8B-Instruct-Turbo": "Llama-3.1-8B-Instruct", 
+    # "Meta-Llama-3-8B-Instruct-Lite": "Llama-3.1-8B-Instruct", 
+    # "Qwen2.5-7B-Instruct-Turbo": "Qwen2.5-7B-Instruct",
 }
 
 class Experimenter:
@@ -33,6 +33,7 @@ class Experimenter:
         if os.path.exists(filename): results = json.load(open(filename))
         
         just_move_on_counter = 0
+        added_tokens_gen = 0
         while len(results) < self.n_samples:
             prompts, true_answers = self.task.generate_random(self.generator, dfa_param_vals)
             if self.force_no_cot:
@@ -40,6 +41,7 @@ class Experimenter:
             if len(prompts) == 0: break
             generations, generation_lengths, extracted_answers = self.generator.generate(prompts, self.task)
             for prompt, model_generation, num_generated_tokens, pred_answer, true_answer in zip(prompts, generations, generation_lengths, extracted_answers, true_answers):
+                added_tokens_gen += num_generated_tokens
                 if pred_answer is None: 
                     just_move_on_counter += 1
                     continue
@@ -63,6 +65,8 @@ class Experimenter:
         with open(filename, "w") as wf:
             json.dump(results, wf, indent=4)
 
+        return added_tokens_gen
+
 
 class CRUXEvalExperimenter(Experimenter):
 
@@ -80,7 +84,8 @@ class CRUXEvalExperimenter(Experimenter):
         
         used_uids = set(ex["id"] for ex in results)
         idx = len(results)
-        while idx < len(examples):
+        added_tokens_gen = 0
+        while idx < len(examples[:100]):
             prompts = []
             batch = []
             while len(prompts) < self.generator.max_batch_size:
@@ -103,6 +108,7 @@ class CRUXEvalExperimenter(Experimenter):
             generations, generation_lengths, extracted_answers = self.generator.generate(prompts, self.task)
 
             for prompt, model_generation, num_generated_tokens, pred_answer, example in zip(prompts, generations, generation_lengths, extracted_answers, batch):
+                added_tokens_gen += num_generated_tokens
                 if pred_answer is None: continue
                 try:
                     evaluated_pred = eval(pred_answer)
@@ -138,3 +144,5 @@ class CRUXEvalExperimenter(Experimenter):
 
         with open(filename, "w") as wf:
             json.dump(results, wf, indent=4)
+
+        return added_tokens_gen

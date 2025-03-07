@@ -31,23 +31,26 @@ sys.excepthook = debughook
 
 
 model_colors = {
-    "Llama-3.1-8B-Instruct": "red",
-    "Qwen2.5-32B-Instruct": "blue",
-    "Qwen2.5-7B-Instruct": "purple",
+    "Llama-3.1-8B-Instruct": "tomato",
+    "Llama-3.3-70B-Instruct": "yellow",
+    "Qwen2.5-7B-Instruct": "greenyellow",
+    "Qwen2.5-32B-Instruct": "aquamarine",
     "Ministral-8B-Instruct-2410": "orange",
     "gemma-2-9b-it": "brown",
-    "DeepSeek-R1-Distill-Qwen-32B": "olive",
-    # "DeepSeek-R1-Distill-Qwen-14B": "green",
-    "DeepSeek-R1-Distill-Qwen-7B": "yellow",
-    # "DeepSeek-R1-Distill-Qwen-1.5B": "red",
-    "DeepSeek-R1-Distill-Llama-8B": "black",
-    "gpt-4o-mini": "indigo",
-    "o3-mini": "pink",
+    "DeepSeek-R1-Distill-Llama-8B": "red",
+    "DeepSeek-R1-Distill-Llama-70B": "gold"
+    "DeepSeek-R1-Distill-Qwen-7B": "seagreen",
+    "DeepSeek-R1-Distill-Qwen-32B": "lightseagreen",
     "DeepSeek-R1": "gray",
+    # "DeepSeek-R1-Distill-Qwen-14B": "green",
+    # "DeepSeek-R1-Distill-Qwen-1.5B": "red",
+    "gpt-4o-mini": "cornflowerblue",
+    "o3-mini": "purple",
 }
 
 model_nicknames = {
     "Llama-3.1-8B-Instruct": "Ll3.1-8B",
+    "Llama-3.3-70B-Instruct": "Ll3.3-70B"
     "Qwen2.5-32B-Instruct": "Qw2.5-32B",
     # "Qwen2.5-14B-Instruct": "Qw2.5-14B",
     "Qwen2.5-7B-Instruct": "Qw2.5-7B",
@@ -72,7 +75,6 @@ factor_to_description = {
     "l": "l (no. lines)",
     "d": "d (depth)",
 }
-
 
 def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, kwargs):
     loaded_data = {
