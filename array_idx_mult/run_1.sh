@@ -1,5 +1,0 @@
-source ../.env
-echo ${ALL_MODELS}
-python experiment.py --models ${ALL_MODELS}
-python experiment_no_cot.py --models ${ALL_MODELS}
-

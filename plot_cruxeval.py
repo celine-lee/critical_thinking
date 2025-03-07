@@ -50,7 +50,6 @@ def load_data(data_folder, varnames_and_wanted_vals, kwargs):
         
         results = json.load(open(experiment_file))
         for ex in results:
-            code = re.search(r'def f\(.*\):\s*\n\s+([\s\S]+?)\nanswer = f', ex["query"]).group(1).strip()
             if ex["k"] not in varnames_and_wanted_vals["k"]: continue
             if ex["N"] not in varnames_and_wanted_vals["N"]: continue
             loaded_data["Model"].append(modelname)
@@ -181,19 +180,16 @@ if __name__ == "__main__":
         plot_correctness_by_isolate_factor(df, "k", ["N"], plot_kwargs)
         plot_correctness_by_isolate_factor(df, "N", ["k"], plot_kwargs)
 
-    plot_normalized_correctness_by_ttoks(df, plot_kwargs)
+    plot_normalized_correctness_by_ttoks(df, plot_kwargs, include_legend=True)
     plt.clf()
-    # plot_ptt_by_factor(N_to_peak_ttoks, "N", False, plot_kwargs)
-    plot_ptt_by_factor(N_to_peak_ttoks, "N", True, plot_kwargs)
-    # plot_ptt_by_factor(k_to_peak_ttoks, "k", False, plot_kwargs)
-    plot_ptt_by_factor(k_to_peak_ttoks, "k", True, plot_kwargs)
 
-    # plot_ptt_by_factor(N_to_peak_ttoks, "N", False, plot_kwargs, True)
-    plot_ptt_by_factor(N_to_peak_ttoks, "N", True, plot_kwargs, True)
-    # plot_ptt_by_factor(k_to_peak_ttoks, "k", False, plot_kwargs, True)
-    plot_ptt_by_factor(k_to_peak_ttoks, "k", True, plot_kwargs, True)
+
+    N_corrs = plot_ptt_by_factor(N_to_peak_ttoks, "N", plot_kwargs)
+    k_corrs = plot_ptt_by_factor(k_to_peak_ttoks, "k", plot_kwargs)
+    ptt_table((N_corrs, k_corrs), plot_kwargs["foldername"])
+    acc_table(df, plot_kwargs["foldername"])
 
     plot_peak_accuracy_heatmap(kN_to_peak_acc, "Peak Accuracy", plot_kwargs)
-    plot_peak_accuracy_heatmap(kN_to_peak_precision, "Precision", plot_kwargs)
-    plot_peak_accuracy_heatmap(kN_to_peak_recall, "Recall", plot_kwargs)
-    plot_peak_token_difference_heatmap(kN_to_peak_ttoks_incorrect, plot_kwargs)
+    # plot_peak_accuracy_heatmap(kN_to_peak_precision, "Precision", plot_kwargs)
+    # plot_peak_accuracy_heatmap(kN_to_peak_recall, "Recall", plot_kwargs)
+    # plot_peak_token_difference_heatmap(kN_to_peak_ttoks_incorrect, plot_kwargs)
