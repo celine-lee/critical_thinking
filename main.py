@@ -32,7 +32,7 @@ def get_args():
     parser.add_argument("--models", nargs='+')
     parser.add_argument("--disable_cot", action="store_true")
     parser.add_argument("--generator", choices=['hf', 'openai', 'deepseek', 'vllm', 'together'])
-    parser.add_argument("--task", choices=['dyck', 'array_idx', 'cruxeval', 'even_odd', 'navigate', 'bool', 'arith'])
+    parser.add_argument("--task", choices=['dyck', 'array_idx', 'cruxeval', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects'])
     args = parser.parse_args()
     return args
 
@@ -61,6 +61,8 @@ def run(args):
             task = NestedBoolTask()
         case 'navigate':
             task = NavigateTask()
+        case 'shuffled_objects':
+            task = ShuffledObjectsTask()
         case 'cruxeval':
             task = CRUXEvalTask()
             experimentor_class = CRUXEvalExperimenter

@@ -2,13 +2,10 @@ import os
 import re
 import json
 
-# handle shared models across providers
+# handle shared models across providers 
 modelname_mappings = {
     "DeepSeek-R1-Distill-Llama-70B-free": "DeepSeek-R1-Distill-Llama-70B",
-    "Llama-3.3-70B-Instruct-Turbo-Free": "Llama-3.3-70B-Instruct",
-    # "Meta-Llama-3-8B-Instruct-Turbo": "Llama-3.1-8B-Instruct", 
-    # "Meta-Llama-3-8B-Instruct-Lite": "Llama-3.1-8B-Instruct", 
-    # "Qwen2.5-7B-Instruct-Turbo": "Qwen2.5-7B-Instruct",
+    "Llama-3.3-70B-Instruct-Turbo-Free": "Llama-3.3-70B-Instruct-Turbo",
 }
 
 class Experimenter:
@@ -41,11 +38,14 @@ class Experimenter:
             if len(prompts) == 0: break
             generations, generation_lengths, extracted_answers = self.generator.generate(prompts, self.task)
             for prompt, model_generation, num_generated_tokens, pred_answer, true_answer in zip(prompts, generations, generation_lengths, extracted_answers, true_answers):
-                added_tokens_gen += num_generated_tokens
+                added_tokens_gen += num_generated_tokens if num_generated_tokens else 0
                 if pred_answer is None: 
                     just_move_on_counter += 1
                     continue
-                is_correct = eval(pred_answer) == true_answer
+                if self.task.name == "shuffled_objects":
+                    is_correct = pred_answer.lower().strip() == true_answer.lower().strip()
+                else:
+                    is_correct = eval(pred_answer) == true_answer
                 results.append(
                     {
                         "query": prompt,
@@ -85,7 +85,7 @@ class CRUXEvalExperimenter(Experimenter):
         used_uids = set(ex["id"] for ex in results)
         idx = len(results)
         added_tokens_gen = 0
-        while idx < len(examples[:100]):
+        while idx < len(examples):
             prompts = []
             batch = []
             while len(prompts) < self.generator.max_batch_size:
@@ -108,7 +108,7 @@ class CRUXEvalExperimenter(Experimenter):
             generations, generation_lengths, extracted_answers = self.generator.generate(prompts, self.task)
 
             for prompt, model_generation, num_generated_tokens, pred_answer, example in zip(prompts, generations, generation_lengths, extracted_answers, batch):
-                added_tokens_gen += num_generated_tokens
+                added_tokens_gen += num_generated_tokens if num_generated_tokens else 0
                 if pred_answer is None: continue
                 try:
                     evaluated_pred = eval(pred_answer)

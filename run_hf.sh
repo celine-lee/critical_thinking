@@ -11,3 +11,4 @@ python main.py $BOOL_TASK_FLAGS --models $ALL_MODELS --generator hf  --n_samples
 python main.py $DYCK_TASK_FLAGS --models $ALL_MODELS --generator hf  --n_samples_per 30
 python main.py $NAVIGATE_TASK_FLAGS --models $ALL_MODELS --generator hf  --n_samples_per 30
 python main.py $CRUXEVAL_TASK_FLAGS --models $ALL_MODELS --generator hf  --n_samples_per 30
+python main.py $SHUFFLE_TASK_FLAGS --models $ALL_MODELS --generator hf  --n_samples_per 30
