@@ -38,7 +38,7 @@ model_colors = {
     "Ministral-8B-Instruct-2410": "orange",
     "gemma-2-9b-it": "brown",
     "DeepSeek-R1-Distill-Llama-8B": "red",
-    "DeepSeek-R1-Distill-Llama-70B": "gold"
+    "DeepSeek-R1-Distill-Llama-70B": "gold",
     "DeepSeek-R1-Distill-Qwen-7B": "seagreen",
     "DeepSeek-R1-Distill-Qwen-32B": "lightseagreen",
     "DeepSeek-R1": "gray",
@@ -50,7 +50,7 @@ model_colors = {
 
 model_nicknames = {
     "Llama-3.1-8B-Instruct": "Ll3.1-8B",
-    "Llama-3.3-70B-Instruct": "Ll3.3-70B"
+    "Llama-3.3-70B-Instruct": "Ll3.3-70B",
     "Qwen2.5-32B-Instruct": "Qw2.5-32B",
     # "Qwen2.5-14B-Instruct": "Qw2.5-14B",
     "Qwen2.5-7B-Instruct": "Qw2.5-7B",
@@ -236,12 +236,11 @@ def calculate_buckets(sub_df, n_buckets, bucket_by="No gen toks", bucket_name="L
 
 def global_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output_folder", type=str)
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--n_buckets", type=int, default=5)
     parser.add_argument("--num_gens", type=int, default=1)
     parser.add_argument("--num_beams", type=int, default=1)
-    parser.add_argument("--get_isolated", nargs='+')
+    # parser.add_argument("--get_isolated", nargs='+')
     parser.add_argument("--models", nargs='+')
     parser.add_argument("--delete_old", action="store_true")
     parser.add_argument("--only_meta", action="store_true")
