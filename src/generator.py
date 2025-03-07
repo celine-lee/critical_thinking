@@ -4,7 +4,6 @@ import gc
 
 import torch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM, BitsAndBytesConfig
 
 class Generator:
     def __init__(self, model_name, max_batch_size, sampling_args, force_gen_args):
@@ -19,6 +18,7 @@ class Generator:
     def free_and_delete(self):
         pass
 
+from transformers import AutoTokenizer, AutoConfig, AutoModelForCausalLM, BitsAndBytesConfig
 class HFGenerator(Generator):
     def __init__(self, model_name, gen_kwargs, max_batch_size):
         self.tokenizer = AutoTokenizer.from_pretrained(
@@ -52,7 +52,8 @@ class HFGenerator(Generator):
             "pad_token_id": self.tokenizer.eos_token_id,
         }
         super().__init__(model_name, max_batch_size, sampling_args, force_gen_args)
-        self.model = self.load_model(model_name)
+        self.model = None # don't load until we need it
+        # self.load_model(model_name)
 
     def load_model(self, model_name, quantize=True):
         config = AutoConfig.from_pretrained(model_name)
@@ -82,6 +83,9 @@ class HFGenerator(Generator):
         return model
 
     def generate(self, input_prompts, task):
+        # Load in if it hasn't been loaded yet
+        if self.model is None: 
+            self.model = self.load_model(model_name)
         disable_cot = input_prompts[-1].endswith(task.reprompt_string)
         input_ids = self.tokenizer(
             input_prompts,
@@ -159,9 +163,9 @@ class HFGenerator(Generator):
         gc.collect()
         torch.cuda.empty_cache()
 
+from openai import OpenAI
 class OpenAIGenerator(Generator):
     def __init__(self, model_name, gen_kwargs, max_batch_size):
-        from openai import OpenAI
         # openai.api_key = os.getenv("OPENAI_API_KEY")  
 
         self.sampling_args = {
@@ -264,19 +268,6 @@ from vllm.distributed.parallel_state import destroy_model_parallel
 
 class VLLMGenerator(Generator):
     def __init__(self, model_name, gen_kwargs, max_batch_size):
-        max_model_len = 20000
-        max_num_seqs = 1
-        quantization_config = {
-            "dtype": torch.bfloat16,
-            "trust_remote_code": True,
-            "quantization": "bitsandbytes",
-            "load_format": "bitsandbytes"
-        }
-
-        self.llm = LLM(model=model_name, max_num_seqs=max_num_seqs, max_model_len=max_model_len, **quantization_config)
-        print(torch.cuda.memory_allocated() / 1e9, "GB allocated")
-        print(torch.cuda.memory_reserved() / 1e9, "GB reserved")
-
         self.sampling_args = SamplingParams(
             temperature=gen_kwargs["temperature"],
             max_tokens=gen_kwargs["max_new_tokens"],
@@ -290,6 +281,21 @@ class VLLMGenerator(Generator):
             stop=gen_kwargs["stop_strings"],
         )
         super().__init__(model_name, max_batch_size, self.sampling_args, self.force_gen_args)
+        self.llm = None
+        # don't load until need
+
+    def load_model(self):
+        max_model_len = 20000
+        max_num_seqs = 1
+        quantization_config = {
+            "dtype": torch.bfloat16,
+            "trust_remote_code": True,
+            "quantization": "bitsandbytes",
+            "load_format": "bitsandbytes"
+        }
+        self.model = LLM(model=self.model_name, max_num_seqs=max_num_seqs, max_model_len=max_model_len, **quantization_config)
+        print(torch.cuda.memory_allocated() / 1e9, "GB allocated")
+        print(torch.cuda.memory_reserved() / 1e9, "GB reserved")
     
     def generate(self, input_prompts, task):
         """
@@ -300,6 +306,7 @@ class VLLMGenerator(Generator):
         Returns:
             tuple: (full_generations, generation_lengths, extracted_answers)
         """
+        if self.model is None: self.load_model()
         disable_cot = input_prompts[-1].endswith(task.reprompt_string)
 
         full_generations = [None for _ in input_prompts]

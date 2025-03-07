@@ -109,6 +109,34 @@ pointer = 0
             true_answers.append(true_final_location)
         return prompts, true_answers
 
+class EvenOddTask(ArrayIdxTask):
+    def  __init__(self):
+        super(EvenOddTask, self).__init__()
+        self.name = "even_odd"
+        self.answer_extraction_regex = r'pointer_is_even ==\s*(True|False|0|1)'
+        self.foldername = "even_odd_mult/outputs"
+
+        self.query_template =  """You are tracking a pointer into a length-{full_size} array. The pointer is zero-indexed. It undergoes several modifications. The pointer wraps around the length of the array on both ends, so when it reaches {full_size} it becomes 0, when it reaches {full_size_plus_1} it becomes 1, when it reaches -1 it becomes {full_size_minus_1}, etc. After all the modifications are complete, is the final pointer index even?
+
+pointer = 0
+{sequence}
+"""
+        self.generation_instruction = "Provide your final answer as True or False following this template: [ANSWER]\npointer_is_even == YOUR ANSWER\n[/ANSWER]"
+        self.reprompt_string = "[ANSWER]\npointer_is_even == "
+
+    def generate_random(self, generator, kmn):
+        k = kmn['k']
+        m = kmn['m']
+        N = kmn['N']
+        prompts = []
+        true_answers = []
+        while len(prompts) < generator.max_batch_size:
+            turns, true_final_location = self.random_walk(k, m, N)
+            loc_is_even = true_final_location % 2 == 0
+            prompt = self.make_prompt(generator, k, m, turns)
+            prompts.append(prompt)
+            true_answers.append(loc_is_even)
+        return prompts, true_answers
 
 class DyckNTask(Task):
     def __init__(self):
@@ -578,6 +606,8 @@ answer = {expression}
             prompts.append(prompt)
             true_answers.append(answer)
         return prompts, true_answers
+
+
 
 
 # https://raw.githubusercontent.com/suzgunmirac/BIG-Bench-Hard/refs/heads/main/bbh/web_of_lies.json

@@ -1,7 +1,7 @@
 from src.task import *
 from src.experimentor import *
 from src.generator import *
-
+import time
 import itertools
 import sys
 import ipdb
@@ -23,7 +23,7 @@ def get_args():
     parser.add_argument("--num_beams", type=int, default=1)
     parser.add_argument("--num_gens_per", type=int, default=1)
     parser.add_argument("--max_num_tokens", type=int, default=10000)
-    parser.add_argument("--n_samples_per", type=int, default=100)
+    parser.add_argument("--n_samples_per", type=int, default=40)
     parser.add_argument("--batch_size", type=int, default=4)
     parser.add_argument("--d_vals", type=int, nargs='+') 
     parser.add_argument("--m_vals", type=int, nargs='+') 
@@ -47,7 +47,7 @@ def run(args):
     }
     n_samples_per = args.n_samples_per
 
-    experimentor = Experimenter
+    experimentor_class = Experimenter
     match args.task:
         case 'dyck':
             task = DyckNTask()
@@ -55,13 +55,15 @@ def run(args):
             task = ArithmeticTask()
         case 'array_idx':
             task = ArrayIdxTask()
+        case 'even_odd':
+            task = EvenOddTask()
         case 'bool':
             task = NestedBoolTask()
         case 'navigate':
             task = NavigateTask()
         case 'cruxeval':
             task = CRUXEvalTask()
-            experimentor = CRUXEvalExperimenter
+            experimentor_class = CRUXEvalExperimenter
 
     match args.generator:
         case 'openai':
@@ -76,9 +78,8 @@ def run(args):
             generator = TogetherGenerator
 
     for model_name in args.models:
-        # TODO add a check saying that if all experiments wanted are done, dont load the model
         model_generator = generator(model_name, gen_kwargs, args.batch_size)
-        experimentor = experimentor(task, model_generator, n_samples_per, force_no_cot=args.disable_cot)
+        experimentor = experimentor_class(task, model_generator, n_samples_per, force_no_cot=args.disable_cot)
         if args.task == 'cruxeval':
             experimentor.run()
             model_generator.free_and_delete()
@@ -95,9 +96,13 @@ def run(args):
 
         all_dfa_configs = [dict(zip(keys, combination)) for combination in itertools.product(*values)]
         
+        tokens_generated = 0
+        start_time = time.time()
         for dfa_config in all_dfa_configs:
-            experimentor.run(dfa_config)
-        
+            added_tokens_gen = experimentor.run(dfa_config)
+            tokens_generated += added_tokens_gen
+        end_time = time.time()
+        print(f"With {model_name} on {args.generator}, took {(end_time-start_time)/60.:.1f}min to generate {tokens_generated} toks")
         model_generator.free_and_delete()
 
 if __name__ == "__main__":
