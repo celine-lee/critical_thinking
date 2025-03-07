@@ -372,7 +372,7 @@ truth_value = {expression}
 class NavigateTask(Task):
     def  __init__(self):
         super(NavigateTask, self).__init__("bool", r'returned_to_start\s*==\s*(True|False|0|1)\s*')
-        self.foldername = "nested_boolean_expression/outputs"
+        self.foldername = "navigate/outputs"
 
         self.query_template = """If you follow these instructions, do you return to the starting point? Always face forward. 
 
@@ -455,7 +455,7 @@ class NavigateTask(Task):
         if amount_to_move > 0: direction_idx = 0
         else: direction_idx = 1
 
-        rest_of_navigation, actually_ends_at_start = seflf.generate_random_helper(max_distance_away, target_length, current_length + 1, new_position, end_at_start)
+        rest_of_navigation, actually_ends_at_start = self.generate_random_helper(max_distance_away, target_length, current_length + 1, new_position, end_at_start)
         num_steps = amount_to_move if amount_to_move >=0 else -amount_to_move
         multiplier_s = '' if num_steps == 1 else 's'
         return [template.format(num_steps=num_steps, multiplier_s=multiplier_s, direction=directions[dim_to_move][direction_idx])] + rest_of_navigation, actually_ends_at_start
@@ -578,3 +578,7 @@ answer = {expression}
             prompts.append(prompt)
             true_answers.append(answer)
         return prompts, true_answers
+
+
+# https://raw.githubusercontent.com/suzgunmirac/BIG-Bench-Hard/refs/heads/main/bbh/web_of_lies.json
+# https://github.com/suzgunmirac/BIG-Bench-Hard/blob/main/bbh/tracking_shuffled_objects_three_objects.json

@@ -2,6 +2,15 @@ import os
 import re
 import json
 
+# handle shared models across providers
+modelname_mappings = {
+    "DeepSeek-R1-Distill-Llama-70B-free": "DeepSeek-R1-Distill-Llama-70B",
+    "Llama-3.3-70B-Instruct-Turbo-Free": "Llama-3.3-70B-Instruct",
+    "Meta-Llama-3-8B-Instruct-Turbo": "Llama-3.1-8B-Instruct", 
+    "Meta-Llama-3-8B-Instruct-Lite": "Llama-3.1-8B-Instruct", 
+    "Qwen2.5-7B-Instruct-Turbo": "Qwen2.5-7B-Instruct",
+}
+
 class Experimenter:
 
     def __init__(self, task, generator, n_samples_per, force_no_cot=False):
@@ -11,6 +20,8 @@ class Experimenter:
         self.force_no_cot = force_no_cot
 
         modelname = os.path.basename(generator.model_name)
+        if modelname in modelname_mappings:
+            modelname = modelname_mappings[modelname]
         self.filename = f"{modelname}_T0.0" # TODO get rid of temperature configs eventually, once we know no need.
 
     def run(self, dfa_param_vals):

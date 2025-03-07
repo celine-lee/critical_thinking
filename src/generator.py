@@ -341,18 +341,18 @@ class VLLMGenerator(Generator):
         return full_generations, generation_lengths, extracted_answers
 
     def free_and_delete(self):
-        os.environ["TOKENIZERS_PARALLELISM"] = "false"
-        destroy_model_parallel()
+        # os.environ["TOKENIZERS_PARALLELISM"] = "false"
+        # destroy_model_parallel()
         # del self.llm.llm_engine.model_executor
         gc.collect()
         torch.cuda.empty_cache()
         torch.distributed.destroy_process_group()
+        pass
 
 from together import Together
 class TogetherGenerator(OpenAIGenerator):
     def __init__(self, model_name, gen_kwargs, max_batch_size):
         super().__init__(model_name, gen_kwargs, max_batch_size)
-        ds_api_key = os.getenv("DEEPSEEK_API_KEY")  
         self.client = Together()
 
     def call_model(self, messages):
