@@ -20,3 +20,8 @@ python main.py $ARRAY_IDX_TASK_FLAGS \
 
 python main.py $SHUFFLE_TASK_FLAGS \
                --models ${TOGETHER_MODELS_2} --generator together --n_samples_per 30
+python main.py $ARITH_TASK_FLAGS \
+               --models ${TOGETHER_MODELS_2} --generator together --n_samples_per 30
+
+python main.py $EVEN_ODD_TASK_FLAGS \
+               --models ${TOGETHER_MODELS_2} --generator together --n_samples_per 30
