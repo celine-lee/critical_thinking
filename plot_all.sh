@@ -2,7 +2,7 @@ source .models_env
 source .tasks_env 
 
 
-python src/plot/plot.py ${ARRAY_IDX_TASK_FLAGS} \
+python src/plot/plot.py ${SHUFFLE_TASK_FLAGS} \
                --n_buckets 4 \
                --delete_old --only_meta \
                --models ${ALL_MODELS_PLOTTING} 
