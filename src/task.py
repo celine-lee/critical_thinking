@@ -625,7 +625,6 @@ class ShuffledObjectsTask(Task):
         return subfolder
 
     def generate_random_example(self, num_objects, num_swaps, random_num):
-        
         match random_num:
             case 0: #books
                 intro = "{names} are friends and avid readers who occasionally trade books. At the start of the semester, they each buy one new book: {initial_assignments}.\nAs the semester proceeds, they start trading around the new books. "
@@ -727,6 +726,73 @@ class ShuffledObjectsTask(Task):
             prompt += self.generation_instruction
         return prompt
 
-
-
 # https://raw.githubusercontent.com/suzgunmirac/BIG-Bench-Hard/refs/heads/main/bbh/web_of_lies.json
+class WebOfLiesTask(Task): # i dont like this one bc it doesnt have k and N.
+    def  __init__(self):
+        super(WebOfLiesTask, self).__init__("web_of_lies", r'Answer\s*:\s*(.+)')
+        self.foldername = "web_of_lies/outputs"
+
+        self.query_template = """Question: {sequence} Does {final_name} tell the truth?"""
+        self.generation_instruction = "Provide your final answer as Yes or No, following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]"
+        self.reprompt_string = "[ANSWER]\nAnswer: "
+
+        self.all_names = ["Sherrie", "Vernell", "Elanor", "Ka", "Delbert", "Jamey", "William", "Sima", "Shaunda", "Tamika", "Teressa", "Lorine", "Conception", "Millicent", "Fletcher", "Alejandro", "Shenna", "Alexa"]
+        self.starter = ["{name} lies.", "{name} tells the truth."]
+        self.mid = ["{name_1} says {name_2} lies.", "{name_1} says {name_2} tells the truth."]
+
+    def create_subfolder_name(self, dfa_kwargs, force_no_cot):
+        subfolder = os.path.join(f"{self.foldername}{'_nocot' if force_no_cot else ''}", f"k{dfa_kwargs['k']}_N{dfa_kwargs['N']}")
+        return subfolder
+
+    def generate_random_example(self, num_people):
+        selected_names = random.sample(self.all_names, k=num_people+1)
+
+        first_lies_or_truths = random.choice([0, 1])
+        tells = [self.starter[first_lies_or_truths].format(selected_names[0])]
+        tells_truth = first_lies_or_truths
+        while len(tells) < num_people:
+            says_prev_tells_truth = random.choice([0,1])
+            tells_truth = (tells_truth and says_prev_tells_truth) or (not tells_truth and not says_prev_tells_truth)
+            name_1 = selected_names[len(tells)]
+            name_2 = selected_names[len(tells)-1]
+            tells.append(self.mid[lies_or_truths].format(name_1=name_1, name_2=name_2))
+            swaps.append(swap_template.format(order="Then", name_1=swappers[0], name_2=swappers[1]))
+        sequence_str = " ".join(tells)
+        return sequence_str, selected_names[-1], "Yes" if tells_truth else "Noe"
+
+    def generate_random(self, generator, kN):
+        num_people = kN['k']
+
+        prompts = []
+        true_answers = []
+        while len(prompts) < generator.max_batch_size:
+            sequence_str, final_name, true_answer = self.generate_random_example(num_people)
+
+            prompt = self.make_prompt(generator, sequence_str, final_name)
+            prompts.append(prompt)
+            true_answers.append(true_answer)
+        return prompts, true_answers
+
+    def make_prompt(self, generator, sequence_str, final_name):
+        if 'tokenizer' in dir(generator) and generator.tokenizer.chat_template:
+            if "gemma" in generator.model_name:
+                messages = [{
+                    "role": "user",
+                    "content": self.system_instruction + "\n\n" + self.query_template.format(sequence=sequence_str, final_name=final_name) + "\n" + self.generation_instruction
+                }]
+                prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            else:
+                messages = [{
+                    "role": "system",
+                    "content": self.system_instruction
+                },
+                {
+                    "role": "user",
+                    "content": self.query_template.format(sequence=sequence_str, final_name=final_name) + "\n" + self.generation_instruction
+                }]
+                prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        else:
+            prompt = self.system_instruction + "\n\n"
+            prompt += self.query_template.format(sequence=sequence_str, final_name=final_name) + "\n"
+            prompt += self.generation_instruction
+        return prompt
