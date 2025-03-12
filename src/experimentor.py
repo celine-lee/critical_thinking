@@ -45,7 +45,11 @@ class Experimenter:
                 if self.task.name in {"shuffled_objects", "web_of_lies"}:
                     is_correct = pred_answer.lower().strip() == true_answer.lower().strip()
                 else:
-                    is_correct = eval(pred_answer) == true_answer
+                    try:
+                        is_correct = eval(pred_answer) == true_answer
+                    except:
+                        just_move_on_counter += 1
+                        continue
                 results.append(
                     {
                         "query": prompt,

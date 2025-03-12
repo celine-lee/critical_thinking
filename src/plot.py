@@ -81,6 +81,7 @@ def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, 
         "Correct?": [],
         "Predicted": [],
         "True": [],
+        "prompt": []
     }
     for varname in varnames_and_wanted_vals:
         loaded_data[varname] = []
@@ -114,6 +115,7 @@ def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, 
             loaded_data["Correct?"].extend([ex["correct"] for ex in results])
             loaded_data["Predicted"].extend([ex["pred_answer"] for ex in results])
             loaded_data["True"].extend([ex["true_answer"] for ex in results])
+            loaded_data["prompt"].extend([ex["query"] for ex in results])
 
     # Create a DataFrame for the new data
     df = pd.DataFrame(loaded_data)
@@ -232,18 +234,6 @@ def calculate_buckets(sub_df, n_buckets, bucket_by="No gen toks", bucket_name="L
     sub_df = sub_df.merge(bucket_avg, on=[groupby_key, bucket_name], suffixes=('', '_mean'))
 
     return bucket_avg, sub_df
-
-def global_parser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--temperature", type=float, default=0.0)
-    parser.add_argument("--n_buckets", type=int, default=3)
-    parser.add_argument("--num_gens", type=int, default=1)
-    parser.add_argument("--num_beams", type=int, default=1)
-    # parser.add_argument("--get_isolated", nargs='+')
-    parser.add_argument("--models", nargs='+')
-    parser.add_argument("--delete_old", action="store_true")
-    parser.add_argument("--only_meta", action="store_true")
-    return parser
 
 def plot_length_generated(df, kwargs, by_factor=None):
     # Separate data by model size
@@ -820,7 +810,95 @@ def plot_correctness_by_ttoks_all_kN(df, kwargs):
     plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", plot_filename), bbox_inches="tight")
     plt.clf()
 
+def plot_correctness_by_ttoks_avg_by_k(df, kwargs):
+    """
+    Create a plot that shows the correctness vs. generated tokens.
+    For each (model, N):
+         - average across 'k'
+         - Bucket the data by 'No gen toks' (using calculate_buckets).
+         - Identify the bucket with the peak correctness (record its center and value).
+         - Plot the resulting line (colored by the model) along with a scatter point at the peak.
+    
+    The legend includes only one entry per model.
+    
+    Parameters:
+      df: DataFrame containing the data.
+      kwargs: Dictionary with additional arguments (expects at least "n_buckets" and "foldername").
+    """
+    plt.figure(figsize=(12, 8))
+    
+    # To track which models have already been added to the legend
+    labeled_models = set()
+    
+    # Group by (k, N, Model) to process each curve individually.
+    grouped = df.groupby(["N", "Model"])
+    
+    for (n_val, model_name), group in grouped:
+        if group.empty:
+            continue
+        
+        # Bucket the data using the provided bucket function.
+        # This should return a DataFrame with columns "Toks Bucket Center" and "Correct?"
+        bucket_avg, _ = calculate_buckets(
+            group,
+            n_buckets=kwargs["n_buckets"],
+            bucket_by="No gen toks",
+            bucket_name="Toks Bucket",
+            y_axis="Correct?",
+            groupby_key="Model",
+            get_precision_metrics=False
+        )
+        if bucket_avg is None or len(bucket_avg) == 0:
+            continue
+        
+        # Identify the bucket with the highest raw correctness.
+        idx_peak = bucket_avg["Correct?"].idxmax()
+        peak_x = bucket_avg.loc[idx_peak, "Toks Bucket Center"]
 
+        # Build the curve from the bucketed data.
+        curve_x = []
+        curve_y = []
+        bucket_sorted = bucket_avg.sort_values("Toks Bucket Center")
+        for _, row in bucket_sorted.iterrows():
+            x_val = row["Toks Bucket Center"]  # unnormalized x value
+            y_val = row["Correct?"]            # unnormalized correctness
+            curve_x.append(x_val)
+            curve_y.append(y_val)
+        
+        curve_x = np.array(curve_x)
+        curve_y = np.array(curve_y)
+        
+        # Compute the correctness at the peak bucket.
+        if len(curve_x) > 1:
+            peak_y = np.interp(peak_x, curve_x, curve_y)
+        else:
+            peak_y = curve_y[0]
+        
+        # Determine the color and (if not already added) the label.
+        base_color = model_colors.get(model_name, "blue")
+        if model_name not in labeled_models:
+            label = model_nicknames.get(model_name, model_name)
+            labeled_models.add(model_name)
+        else:
+            label = None
+        
+        # Plot the curve and its peak.
+        plt.plot(curve_x, curve_y, color=base_color, marker=",", label=label)
+        plt.scatter(peak_x, peak_y, color=base_color, zorder=5)
+    
+    plt.xlabel("Generated Tokens")
+    plt.ylabel("Accuracy")
+    plt.ylim(0, 1)
+    plt.legend(loc="lower right", fancybox=True, shadow=True)
+    plt.grid(True, linestyle="--", alpha=0.6)
+    plt.tight_layout()
+
+    # Save the plot.
+    plot_filename = "corr_vs_len_avg_across_k.png"
+    os.makedirs(os.path.join(kwargs['foldername'], "meta_plots"), exist_ok=True)
+    plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", plot_filename), bbox_inches="tight")
+    plt.clf()
+    
 def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, kwargs):
     plt.figure(figsize=(12, 6))
     # Find the factor vals that all models have at least some successes in
@@ -1085,12 +1163,19 @@ def get_args():
     global compute_random
     global foldername_parser
     global dfa_factors_order
-    parser = global_parser()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--temperature", type=float, default=0.0)
+    parser.add_argument("--n_buckets", type=int, default=4)
+    parser.add_argument("--num_gens", type=int, default=1)
+    parser.add_argument("--num_beams", type=int, default=1)
+    parser.add_argument("--models", nargs='+')
+    parser.add_argument("--delete_old", action="store_true")
+    parser.add_argument("--only_meta", action="store_true")
     parser.add_argument("--d_vals", type=int, nargs='+') 
     parser.add_argument("--m_vals", type=int, nargs='+') 
     parser.add_argument("--k_vals", type=int, nargs='+') 
     parser.add_argument("--N_vals", type=int, nargs='+')
-    parser.add_argument("--task", choices=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects'])
+    parser.add_argument("--task", choices=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies'])
 
     args = parser.parse_args()
     match args.task:
@@ -1127,7 +1212,13 @@ def get_args():
         case 'shuffled_objects':
             compute_random = lambda factor_vals: 0.
             foldername_parser = parse_kN
+            dfa_factors_order = {"k": 0, "N": 1}
             output_folder = "shuffled_objects/outputs"
+        case 'web_of_lies':
+            compute_random = lambda factor_vals: 1/factor_vals["k"]
+            foldername_parser = parse_kN
+            dfa_factors_order = {"k": 0, "N": 1}
+            output_folder = "web_of_lies/outputs"
 
     args.foldername = os.path.join(
         f"{output_folder}_graphs_{args.n_buckets}buckets"
@@ -1248,6 +1339,7 @@ if __name__ == "__main__":
     plot_correctness_by_ttoks_per_kN(df, plot_kwargs)
     plot_correctness_by_ttoks_all_kN(df, plot_kwargs)
     plot_normalized_correctness_by_ttoks(df, plot_kwargs)
+    plot_correctness_by_ttoks_avg_by_k(df, plot_kwargs)
     plt.clf()
 
     all_factor_corrs = []
