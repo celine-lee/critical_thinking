@@ -22,7 +22,8 @@ def get_args():
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--num_beams", type=int, default=1)
     parser.add_argument("--num_gens_per", type=int, default=1)
-    parser.add_argument("--max_num_tokens", type=int, default=10000)
+    parser.add_argument("--max_num_tokens", type=int, default=20000)
+    parser.add_argument("--min_num_tokens", type=int, default=3)
     parser.add_argument("--n_samples_per", type=int, default=40)
     parser.add_argument("--batch_size", type=int, default=4)
     parser.add_argument("--d_vals", type=int, nargs='+') 
@@ -40,6 +41,7 @@ def run(args):
     print(args.generator)
     gen_kwargs = {
         "max_new_tokens": args.max_num_tokens,
+        "min_new_tokens": args.min_num_tokens,
         "num_beams": args.num_beams, 
         "stop_strings": ["[/ANSWER]"],
         "num_return_sequences": args.num_gens_per,

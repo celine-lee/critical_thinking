@@ -12,6 +12,9 @@ class Generator:
         self.force_gen_args = force_gen_args
         self.max_batch_size = max_batch_size
 
+    def update_sampling_args_bounds(self, low_bound, high_bound):
+        raise NotImplementedError
+
     def generate(self, input_prompts, task):
         raise NotImplementedError
 
@@ -28,6 +31,7 @@ class HFGenerator(Generator):
         sampling_args = {
             "return_dict_in_generate": True,
             "max_new_tokens": gen_kwargs["max_new_tokens"],
+            "min_new_tokens": gen_kwargs["min_new_tokens"],
             "no_repeat_ngram_size": 0, 
             "num_beams": gen_kwargs["num_beams"],
             "tokenizer": self.tokenizer,
@@ -54,6 +58,11 @@ class HFGenerator(Generator):
         super().__init__(model_name, max_batch_size, sampling_args, force_gen_args)
         self.model = None # don't load until we need it
         # self.load_model(model_name)
+
+    def update_sampling_args_bounds(self, low_bound, high_bound):
+        self.sampling_args["min_new_tokens"] = low_bound
+        self.sampling_args["max_new_tokens"] = high_bound
+        return True
 
     def load_model(self, model_name, quantize=True):
         config = AutoConfig.from_pretrained(model_name)
@@ -171,25 +180,23 @@ class OpenAIGenerator(Generator):
         self.sampling_args = {
             "temperature": gen_kwargs["temperature"],
             "max_completion_tokens": gen_kwargs["max_new_tokens"],
+            # no min tokens option...
             "n": gen_kwargs["num_return_sequences"],
             "top_p": 0.9 if gen_kwargs["temperature"] > 0 else None,
             "stop": gen_kwargs["stop_strings"],
         }
-        self.force_gen_args = {
-            "temperature": 0.0,
-            "max_completion_tokens": 50,
-            "n": 1,
-            "top_p": None,
-            "stop": gen_kwargs["stop_strings"],
-        }
+        self.force_gen_args = None
         super().__init__(model_name, max_batch_size, self.sampling_args, self.force_gen_args)
         self.client = OpenAI()
         if 'o3' in model_name: 
             # temperature and top_p top_n not supported in reasoning models
             del self.sampling_args["temperature"]
-            del self.force_gen_args["temperature"]
             del self.sampling_args["top_p"]
-            del self.force_gen_args["top_p"]
+
+    def update_sampling_args_bounds(self, low_bound, high_bound):
+        print("OpenAIGenerator cannot update min number of tokens")
+        self.sampling_args["max_completion_tokens"] = high_bound
+        return False
 
     def call_model(self, messages):
         response = self.client.chat.completions.create(
@@ -219,7 +226,7 @@ class OpenAIGenerator(Generator):
             try:
                 response = self.call_model([{"role": "user", "content": prompt}])
                 responses.append(response)
-            except: 
+            except Exception as exc: 
                 # DeepSeek API often returns null https://github.com/deepseek-ai/DeepSeek-V3/issues/599
                 responses.append(None)
         for i, response in enumerate(responses):
@@ -249,11 +256,7 @@ class DeepseekGenerator(OpenAIGenerator):
         self.client = OpenAI(api_key=ds_api_key, base_url="https://api.deepseek.com")
         # temperature and top_p top_n not supported in reasoning models
         del self.sampling_args["temperature"]
-        del self.force_gen_args["temperature"]
         del self.sampling_args["top_p"]
-        del self.force_gen_args["top_p"]
-
-
 
     def call_model(self, messages):
         response = self.client.chat.completions.create(
@@ -271,6 +274,7 @@ class VLLMGenerator(Generator):
         self.sampling_args = SamplingParams(
             temperature=gen_kwargs["temperature"],
             max_tokens=gen_kwargs["max_new_tokens"],
+            min_tokens=gen_kwargs["min_new_tokens"],
             n=gen_kwargs["num_return_sequences"],
             stop=gen_kwargs["stop_strings"],
         )
@@ -283,6 +287,12 @@ class VLLMGenerator(Generator):
         super().__init__(model_name, max_batch_size, self.sampling_args, self.force_gen_args)
         self.llm = None
         # don't load until need
+
+
+    def update_sampling_args_bounds(self, low_bound, high_bound):
+        self.sampling_args["max_tokens"] = low_bound
+        self.sampling_args["max_tokens"] = high_bound
+        return True
 
     def load_model(self):
         max_model_len = 20000
