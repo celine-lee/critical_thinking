@@ -796,3 +796,182 @@ class WebOfLiesTask(Task): # this one, k and N are the same....
             prompt += self.query_template.format(sequence=sequence_str, final_name=final_name) + "\n"
             prompt += self.generation_instruction
         return prompt
+
+from num2words import num2words
+# https://github.com/suzgunmirac/BIG-Bench-Hard/blob/main/cot-prompts/logical_deduction_five_objects.txt
+class LogicalDeductionTask(Task):
+    def  __init__(self):
+        super(LogicalDeductionTask, self).__init__("logical_deduction", r'Answer\s*:\s*(.+)')
+        self.foldername = "logical_deduction/outputs"
+
+        self.query_template = """The following is a logical deduction task which requires deducing the order of a sequence of objects.
+
+The following sentences each describe a set of {num_objects} objects arranged in a fixed order. The statements are logically consistent within each paragraph. {intro} {sequence} {final_question}"""
+        self.generation_instruction = "Provide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]"
+        self.reprompt_string = "[ANSWER]\nAnswer: "
+
+    def create_subfolder_name(self, dfa_kwargs, force_no_cot):
+        subfolder = os.path.join(f"{self.foldername}{'_nocot' if force_no_cot else ''}", f"k{dfa_kwargs['k']}_N{dfa_kwargs['N']}")
+        return subfolder
+
+    def generate_random_example(self, num_objects, num_steps_to_answer, random_num):
+        match random_num:
+            case 0: #books
+                intro_template = "On a shelf, there are {num_objects} books: {objects}."
+                relative_order_template = "The {object_1} is {num_spots} to the {direction} of the {object_2}."
+                directions = ["left", "right"]
+                positions_from_start = ["leftmost", "second from the left", "third from the left", "fourth from the left", "fifth from the left"]
+                positions_from_end = ["fourth from the right", "third from the right", "second from the right", "rightmost"]
+                absolute_order_template = "The {object} is {position}."
+                final_question_template = "Which color book is {query_position}?"
+                colors = ["red book", "white book", "blue book", "black book", "orange book", "green book", "yellow book", "purple book", "brown book", "indigo book"]
+                selected_objects = random.sample(colors, k=num_objects)
+                object_to_answer_formatter = lambda book_name: book_name.split()[0]
+            case 1: #car show
+                intro_template = "In an antique car show, there are {num_objects} vehicles: {objects}."
+                relative_order_template = "The {object_1} is {num_spots} spots {direction} than the {object_2}."
+                directions = ["older", "newer"]
+                positions_from_start = ["oldest", "second-oldest", "third-oldest", "fourth-oldest", "fifth-oldest"]
+                positions_from_end = ["fourth-newest", "third-newest", "second-newest", "newest"]
+                absolute_order_template = "The {object} is {position}."
+                final_question_template = "Which vehicle is {query_position}?"
+                vehicles = ["hatchback", "bus", "convertible", "tractor", "minivan", "sedan", "golf cart", "scooter", "motorcycle", "limousine"]
+                selected_objects = random.sample(vehicles, k=num_objects)
+                object_to_answer_formatter = lambda vehicle_name: vehicle_name
+            case 2: #branch
+                intro_template = "On a branch, there are {num_objects} birds: {objects}."
+                relative_order_template = "The {object_1} is {num_spots} to the {direction} of the {object_2}."
+                directions = ["left", "right"]
+                positions_from_start = ["leftmost", "second from the left", "third from the left", "fourth from the left", "fifth from the left"]
+                positions_from_end = ["fourth from the right", "third from the right", "second from the right", "rightmost"]
+                absolute_order_template = "The {object} is {position}."
+                final_question_template = "Which bird is {query_position}?"
+                birds = ["quail", "owl", "raven", "falcon", "robin", "tit", "pigeon", "eagle", "bluejay", "dove"]
+                selected_objects = random.sample(birds, k=num_objects)
+                object_to_answer_formatter = lambda bird_name: bird_name
+            case 3: #golf
+                intro_template = "In a golf tournament, there were {num_objects} golfers: {objects}."
+                relative_order_template = "{object_1} finished {num_spots} spots {direction} {object_2}."
+                directions = ["above", "below"]
+                positions_from_start = ["first", "second", "third", "fourth", "fifth"]
+                positions_from_end = ["fourth-last", "third-last", "second-last", "last"]
+                absolute_order_template = "{object} finished {position}."
+                final_question_template = "Who finished {query_position}?"
+                people = ["Rob", "Ada", "Dan", "Joe", "Mel", "Jack", "Sue", "Pat", "Amy", "Lee"]
+                selected_objects = random.sample(people, k=num_objects)
+                object_to_answer_formatter = lambda person_name: person_name
+            case 4: #fruit
+                intro_template = "A fruit stand sells {num_objects} fruits: {objects}."
+                relative_order_template = "{object_1} are {num_spots} dollars {direction} than {object_2}."
+                directions = ["cheaper", "more expensive"]
+                positions_from_start = ["cheapest", "second-cheapest", "third-cheapest", "fourth-cheapest", "fifth-cheapest"]
+                positions_from_end = ["fourth-most expensive", "third-most expensive", "second-most expensive", "most expensive"]
+                absolute_order_template = "The {object} are {position}."
+                final_question_template = "Which fruits are {query_position}?"
+                fruits = ["kiwis", "pears", "peaches", "loquats", "apples", "cherries", "raspberries", "blackberries", "bananas", "guavas"]
+                selected_objects = random.sample(fruits, k=num_objects)
+                object_to_answer_formatter = lambda fruit_name: fruit_name
+
+        object_list = ", ".join(selected_objects[:-1]) + f", and {selected_objects[-1]}"
+        intro_str = intro_template.format(num_objects=num2words(num_objects), objects=object_list)
+
+        assignments = list(selected_objects)
+        random.shuffle(assignments)
+
+        final_pos = random.choice(list(range(len(selected_objects))))
+        true_answer_str = assignments[final_pos]
+        if final_pos > len(selected_objects) // 2:
+            final_question_str = final_question_template.format(query_position=positions_from_end[final_pos-len(selected_objects)])
+        else:
+            final_question_str = final_question_template.format(query_position=positions_from_start[final_pos])
+
+        remaining_objects = set(selected_objects) - {true_answer_str}
+        order_info = []
+        # start with one absolute
+        first_absolute_object = random.choice(list(remaining_objects))
+        first_absolute_position = assignments.index(first_absolute_object)
+        if first_absolute_position > len(selected_objects) // 2:
+            order_info.append(absolute_order_template.format(object=first_absolute_object, position=positions_from_end[first_absolute_position-len(selected_objects)]))
+        else:
+            order_info.append(absolute_order_template.format(object=first_absolute_object, position=positions_from_start[first_absolute_position]))
+        remaining_objects.remove(first_absolute_object)
+        last_object = first_absolute_object
+        
+        # add relative orders until the target 
+        while len(order_info) < num_steps_to_answer - 1:
+            next_object = random.choice(list(remaining_objects))
+            pos_diff = assignments.index(next_object) - assignments.index(last_object)
+            if pos_diff < 0: 
+                direction = directions[0]
+            else: direction = directions[1]
+            order_info.append(relative_order_template.format(object_1=next_object, object_2=last_object, num_spots=num2words(abs(pos_diff)), direction=direction))
+
+            remaining_objects.remove(next_object)
+            last_object = next_object
+        
+        # now at the target, add last relative order
+        pos_diff = final_pos - assignments.index(last_object)
+        if pos_diff < 0: 
+            direction = directions[0]
+        else: direction = directions[1]
+        order_info.append(relative_order_template.format(object_1=true_answer_str, object_2=last_object, num_spots=num2words(abs(pos_diff)), direction=direction))
+        
+        # add miscellaneous information about the rest
+        for object_1 in remaining_objects:
+            pos_of_object = assignments.index(object_1)
+            # maybe absolute or relative
+            random_num = random.choice([0,1])
+            if random_num == 0:
+                if pos_of_object > len(selected_objects) // 2:
+                    order_info.append(absolute_order_template.format(object=object_1, position=positions_from_end[pos_of_object-len(selected_objects)]))
+                else:
+                    order_info.append(absolute_order_template.format(object=object_1, position=positions_from_start[pos_of_object]))
+            else:
+                random_other_object = random.choice([other_obj for other_obj in selected_objects if other_obj != object_1])
+                pos_diff = pos_of_object - assignments.index(random_other_object)
+                if pos_diff < 0: 
+                    direction = directions[0]
+                else: direction = directions[1]
+                order_info.append(relative_order_template.format(object_1=object_1, object_2=random_other_object, num_spots=num2words(abs(pos_diff)), direction=direction))
+        random.shuffle(order_info)
+        sequence_str = " ".join(order_info)
+        return intro_str, sequence_str, final_question_str, object_to_answer_formatter(true_answer_str)
+
+    def generate_random(self, generator, kN):
+        num_objects = kN['k']
+        num_steps = kN['N']
+
+        prompts = []
+        true_answers = []
+        while len(prompts) < generator.max_batch_size:
+            domain_idx = random.choice(range(5))
+            intro_str, sequence_str, final_question_str, true_answer = self.generate_random_example(num_objects, num_steps, domain_idx)
+
+            prompt = self.make_prompt(generator, num_objects, intro_str, sequence_str, final_question_str)
+            prompts.append(prompt)
+            true_answers.append(true_answer)
+        return prompts, true_answers
+
+    def make_prompt(self, generator, num_objects, intro_str, sequence_str, final_question_str):
+        if 'tokenizer' in dir(generator) and generator.tokenizer.chat_template:
+            if "gemma" in generator.model_name:
+                messages = [{
+                    "role": "user",
+                    "content": self.system_instruction + "\n\n" + self.query_template.format(num_objects=num2words(num_objects), intro=intro_str, sequence=sequence_str, final_question=final_question_str) + "\n" + self.generation_instruction
+                }]
+                prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            else:
+                messages = [{
+                    "role": "system",
+                    "content": self.system_instruction
+                },
+                {
+                    "role": "user",
+                    "content": self.query_template.format(num_objects=num2words(num_objects), intro=intro_str, sequence=sequence_str, final_question=final_question_str) + "\n" + self.generation_instruction
+                }]
+                prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        else:
+            prompt = self.system_instruction + "\n\n"
+            prompt += self.query_template.format(num_objects=num2words(num_objects), intro=intro_str, sequence=sequence_str, final_question=final_question_str) + "\n"
+            prompt += self.generation_instruction
+        return prompt
