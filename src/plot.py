@@ -104,7 +104,7 @@ def get_args():
             dfa_factors_order = {"k": 0, "d": 1, "N": 2}
             output_folder = "dyck/outputs"
         case 'arith':
-            compute_random = lambda factor_vals: 1. / (factor_vals["k"] * factor_vals["m"])
+            compute_random = lambda factor_vals: 1. / (factor_vals["k"])
             foldername_parser = parse_kmN
             dfa_factors_order = {"k": 0, "m": 1, "N": 2}
             output_folder = "arithmetic/outputs"
@@ -219,26 +219,20 @@ def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, 
 
     # Create a DataFrame for the new data
     df = pd.DataFrame(loaded_data)
+    # Remove models that fail in any configuration
+    grouped_df = df.groupby("Model")
+    models_to_remove = set()
 
-    # remove (Model, k, N) that either: (a) do not produce enough of a range of No gen toks (at least 5 distinct values) or (b) have accuracy < random + stddev
-    dfa_keys = list(varnames_and_wanted_vals.keys())
-    grouped_df = df.groupby(dfa_keys)
-    valid_indices = []
-    
-    for param_combo, group in grouped_df:
+    for modelname, group in grouped_df:
         accuracy = group["Correct?"].mean()
-        param_combo = {dfa_keys[idx]: param_combo[idx] for idx in range(len(param_combo))}
-        random_baseline = compute_random(param_combo)
+        avg_param_combo = {"k": group["k"].mean(), "N": group["N"].mean()}
+        random_baseline = compute_random(avg_param_combo)
         stddev = group["Correct?"].std() if len(group) > 1 else 0
         
-        if accuracy < random_baseline + stddev:
-            continue  # Remove this parameter combo
-        if group["No gen toks"].nunique() < 5:
-            continue  # Remove if it lacks diversity
-        
-        valid_indices.extend(group.index)
+        if accuracy < random_baseline + stddev or group["No gen toks"].nunique() < 5:
+            models_to_remove.add(modelname) 
+    df = df[~df["Model"].isin(models_to_remove)].reset_index(drop=True)
     
-    df = df.loc[valid_indices].reset_index(drop=True)
     return df
 
 def calculate_precision_recall(sub_df, bucket_name):
