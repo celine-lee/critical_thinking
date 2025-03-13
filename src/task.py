@@ -820,55 +820,55 @@ The following sentences each describe a set of {num_objects} objects arranged in
                 intro_template = "On a shelf, there are {num_objects} books: {objects}."
                 relative_order_template = "The {object_1} is {num_spots} to the {direction} of the {object_2}."
                 directions = ["left", "right"]
-                positions_from_start = ["leftmost", "second from the left", "third from the left", "fourth from the left", "fifth from the left"]
-                positions_from_end = ["fourth from the right", "third from the right", "second from the right", "rightmost"]
+                positions_from_start = ["leftmost", "second from the left", "third from the left", "fourth from the left", "fifth from the left", "sixth from the left", "seventh from the left"]
+                positions_from_end = ["sixth from the right", "fifth from the right", "fourth from the right", "third from the right", "second from the right", "rightmost"]
                 absolute_order_template = "The {object} is {position}."
                 final_question_template = "Which color book is {query_position}?"
-                colors = ["red book", "white book", "blue book", "black book", "orange book", "green book", "yellow book", "purple book", "brown book", "indigo book"]
+                colors = ["red book", "white book", "blue book", "black book", "orange book", "green book", "yellow book", "purple book", "brown book", "indigo book", "pink book", "gray book"]
                 selected_objects = random.sample(colors, k=num_objects)
                 object_to_answer_formatter = lambda book_name: book_name.split()[0]
             case 1: #car show
                 intro_template = "In an antique car show, there are {num_objects} vehicles: {objects}."
                 relative_order_template = "The {object_1} is {num_spots} spots {direction} than the {object_2}."
                 directions = ["older", "newer"]
-                positions_from_start = ["oldest", "second-oldest", "third-oldest", "fourth-oldest", "fifth-oldest"]
-                positions_from_end = ["fourth-newest", "third-newest", "second-newest", "newest"]
+                positions_from_start = ["oldest", "second-oldest", "third-oldest", "fourth-oldest", "fifth-oldest", "sixth-oldest", "seventh-oldest"]
+                positions_from_end = ["sixth-newest", "fifth-newest", "fourth-newest", "third-newest", "second-newest", "newest"]
                 absolute_order_template = "The {object} is {position}."
                 final_question_template = "Which vehicle is {query_position}?"
-                vehicles = ["hatchback", "bus", "convertible", "tractor", "minivan", "sedan", "golf cart", "scooter", "motorcycle", "limousine"]
+                vehicles = ["hatchback", "bus", "convertible", "tractor", "minivan", "sedan", "golf cart", "scooter", "motorcycle", "limousine", "prius", "truck"]
                 selected_objects = random.sample(vehicles, k=num_objects)
                 object_to_answer_formatter = lambda vehicle_name: vehicle_name
             case 2: #branch
                 intro_template = "On a branch, there are {num_objects} birds: {objects}."
                 relative_order_template = "The {object_1} is {num_spots} to the {direction} of the {object_2}."
                 directions = ["left", "right"]
-                positions_from_start = ["leftmost", "second from the left", "third from the left", "fourth from the left", "fifth from the left"]
-                positions_from_end = ["fourth from the right", "third from the right", "second from the right", "rightmost"]
+                positions_from_start = ["leftmost", "second from the left", "third from the left", "fourth from the left", "fifth from the left", "sixth from the left", "seventh from the left"]
+                positions_from_end = ["sixth from the right", "fifth from the right", "fourth from the right", "third from the right", "second from the right", "rightmost"]
                 absolute_order_template = "The {object} is {position}."
                 final_question_template = "Which bird is {query_position}?"
-                birds = ["quail", "owl", "raven", "falcon", "robin", "tit", "pigeon", "eagle", "bluejay", "dove"]
+                birds = ["quail", "owl", "raven", "falcon", "robin", "tit", "pigeon", "eagle", "bluejay", "dove", "chicken", "parrot"]
                 selected_objects = random.sample(birds, k=num_objects)
                 object_to_answer_formatter = lambda bird_name: bird_name
             case 3: #golf
                 intro_template = "In a golf tournament, there were {num_objects} golfers: {objects}."
                 relative_order_template = "{object_1} finished {num_spots} spots {direction} {object_2}."
                 directions = ["above", "below"]
-                positions_from_start = ["first", "second", "third", "fourth", "fifth"]
-                positions_from_end = ["fourth-last", "third-last", "second-last", "last"]
+                positions_from_start = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh"]
+                positions_from_end = ["sixth-last", "fifth-last", "fourth-last", "third-last", "second-last", "last"]
                 absolute_order_template = "{object} finished {position}."
                 final_question_template = "Who finished {query_position}?"
-                people = ["Rob", "Ada", "Dan", "Joe", "Mel", "Jack", "Sue", "Pat", "Amy", "Lee"]
+                people = ["Rob", "Ada", "Dan", "Joe", "Mel", "Jack", "Sue", "Pat", "Amy", "Lee", "Jon", "Lev"]
                 selected_objects = random.sample(people, k=num_objects)
                 object_to_answer_formatter = lambda person_name: person_name
             case 4: #fruit
                 intro_template = "A fruit stand sells {num_objects} fruits: {objects}."
                 relative_order_template = "{object_1} are {num_spots} dollars {direction} than {object_2}."
                 directions = ["cheaper", "more expensive"]
-                positions_from_start = ["cheapest", "second-cheapest", "third-cheapest", "fourth-cheapest", "fifth-cheapest"]
-                positions_from_end = ["fourth-most expensive", "third-most expensive", "second-most expensive", "most expensive"]
+                positions_from_start = ["cheapest", "second-cheapest", "third-cheapest", "fourth-cheapest", "fifth-cheapest", "sixth-cheapest", "seventh-cheapest"]
+                positions_from_end = ["sixth-most expensive", "fifth-most expensive", "fourth-most expensive", "third-most expensive", "second-most expensive", "most expensive"]
                 absolute_order_template = "The {object} are {position}."
                 final_question_template = "Which fruits are {query_position}?"
-                fruits = ["kiwis", "pears", "peaches", "loquats", "apples", "cherries", "raspberries", "blackberries", "bananas", "guavas"]
+                fruits = ["kiwis", "pears", "peaches", "loquats", "apples", "cherries", "raspberries", "blackberries", "bananas", "guavas", "lemons", "oranges"]
                 selected_objects = random.sample(fruits, k=num_objects)
                 object_to_answer_formatter = lambda fruit_name: fruit_name
 
