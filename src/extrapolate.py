@@ -217,12 +217,15 @@ def linear_interpolate(df, new_k, new_N, kwargs):
 
 
 def predict_with_constraint(df_model_task, low_bound, high_bound, generator, task, test_set_size, output_filename, max_tries=5):
+    print(output_filename)
     # For new_acc, filter rows to those with token count in [pred_Lstar - tol, pred_Lstar + tol]
     df_filtered = df_model_task[(df_model_task["No gen toks"] >= low_bound) & 
                                 (df_model_task["No gen toks"] <= high_bound)].copy()
     orig_len = len(df_filtered)
     df_need_regen = df_model_task[(df_model_task["No gen toks"] < low_bound) | 
                                   (df_model_task["No gen toks"] > high_bound)].copy()
+    if os.path.exists(output_filename): 
+        return
 
     just_move_on_counter = {}
     old_acc = df_need_regen["Correct?"].mean()
@@ -282,8 +285,8 @@ def predict_with_constraint(df_model_task, low_bound, high_bound, generator, tas
             # Remove the processed row from df_need_regen
             df_need_regen = df_need_regen.drop(idx)
             df_filtered.to_json(output_filename, orient="records", indent=4)
-            if not df_filtered.empty:
-                print(f"\tProgress... old acc {old_acc:.3f} --> {df_filtered.iloc[orig_len:]["Correct?"].mean()}")
+            # if not df_filtered.empty:
+            #     print(f"\tProgress... old acc {old_acc:.3f} --> {df_filtered.iloc[orig_len:]["Correct?"].mean()}")
     new_acc = df_filtered["Correct?"].mean() if not df_filtered.empty else 0.0
 
     return new_acc
@@ -322,6 +325,7 @@ if __name__ == "__main__":
         dfa_config_info,
         foldername_parser,
         kwargs,
+        filter_stddev_count=0
     )
 
     # Exclude rows corresponding to the new (k, N) pair from the data used for interpolation.
@@ -361,8 +365,8 @@ if __name__ == "__main__":
         delta=f"{'+' if new_acc-old_acc >= 0 else ''}{new_acc-old_acc:.3f}"
         row = [
             model_nicknames[modelname],
-            f"{coeffs_low[0]} + {coeffs_low[1]}*k + {coeffs_low[2]}*N",
-            f"{coeffs_high[0]} + {coeffs_high[1]}*k + {coeffs_high[2]}*N",
+            f"{coeffs_low[0]:2f} + {coeffs_low[1]:2f}*k + {coeffs_low[2]:2f}*N",
+            f"{coeffs_high[0]:2f} + {coeffs_high[1]:2f}*k + {coeffs_high[2]:2f}*N",
             f"({pred_Lstar_low:.2f}, {pred_Lstar_high:.2f}]",
             f"{tol:.2f}",
             f"{old_acc:.3f}",
