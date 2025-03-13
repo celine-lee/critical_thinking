@@ -65,7 +65,6 @@ model_nicknames = {
     "o3-mini": "o3-mini",
     "DeepSeek-R1": "DSR1",
 }
-# colormap = get_cmap("tab10")  # Use a colormap with distinct colors
 
 factor_to_description = {
     "k": "k (DFA size)",
@@ -75,13 +74,114 @@ factor_to_description = {
     "d": "d (depth)",
 }
 
+global compute_random
+global foldername_parser
+global dfa_factors_order
+
+def get_args():
+    global compute_random
+    global foldername_parser
+    global dfa_factors_order
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--temperature", type=float, default=0.0)
+    parser.add_argument("--n_buckets", type=int, default=4)
+    parser.add_argument("--num_gens", type=int, default=1)
+    parser.add_argument("--num_beams", type=int, default=1)
+    parser.add_argument("--models", nargs='+')
+    parser.add_argument("--delete_old", action="store_true")
+    parser.add_argument("--only_meta", action="store_true")
+    parser.add_argument("--d_vals", type=int, nargs='+') 
+    parser.add_argument("--m_vals", type=int, nargs='+') 
+    parser.add_argument("--k_vals", type=int, nargs='+') 
+    parser.add_argument("--N_vals", type=int, nargs='+')
+    parser.add_argument("--task", choices=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies'])
+
+    args = parser.parse_args()
+    match args.task:
+        case 'dyck':
+            compute_random = lambda factor_vals: 0.5
+            foldername_parser = parse_kdN
+            dfa_factors_order = {"k": 0, "d": 1, "N": 2}
+            output_folder = "dyck/outputs"
+        case 'arith':
+            compute_random = lambda factor_vals: 1. / (factor_vals["k"] * factor_vals["m"])
+            foldername_parser = parse_kmN
+            dfa_factors_order = {"k": 0, "m": 1, "N": 2}
+            output_folder = "arithmetic/outputs"
+        case 'array_idx':
+            compute_random = lambda factor_vals: 1. / (factor_vals["k"])
+            foldername_parser = parse_kmN
+            dfa_factors_order = {"k": 0, "m": 1, "N": 2}
+            output_folder = "array_idx_mult/outputs"
+        case 'even_odd':
+            compute_random = lambda factor_vals: 0.5
+            foldername_parser = parse_kmN
+            dfa_factors_order = {"k": 0, "m": 1, "N": 2}
+            output_folder = "even_odd_mult/outputs"
+        case 'bool':
+            compute_random = lambda factor_vals: 0.5
+            foldername_parser = parse_kN
+            dfa_factors_order = {"k": 0, "N": 1}
+            output_folder = "nested_boolean_expression/outputs"
+        case 'navigate':
+            compute_random = lambda factor_vals: 0.5
+            foldername_parser = parse_kdN
+            dfa_factors_order = {"k": 0, "d": 1, "N": 2}
+            output_folder = "navigate/outputs"
+        case 'shuffled_objects':
+            compute_random = lambda factor_vals: 1. / factor_vals["k"]
+            foldername_parser = parse_kN
+            dfa_factors_order = {"k": 0, "N": 1}
+            output_folder = "shuffled_objects/outputs"
+        case 'web_of_lies':
+            compute_random = lambda factor_vals: 1/factor_vals["N"]
+            foldername_parser = parse_kN
+            dfa_factors_order = {"k": 0, "N": 1}
+            output_folder = "web_of_lies/outputs"
+
+    args.foldername = os.path.join(
+        f"{output_folder}_graphs_{args.n_buckets}buckets"
+    )
+    args.output_folder = output_folder
+
+    return args
+
+def parse_kdN(experiment_file):
+    parsed_experimentname = re.search(r"k(\d+)_d(\d+)_N(\d+)", experiment_file)
+    if parsed_experimentname is None:
+        return None
+    modelname = re.search(r"([^\/]+)_T", experiment_file).group(1)
+    k = int(parsed_experimentname.group(1))
+    d = int(parsed_experimentname.group(2))
+    N = int(parsed_experimentname.group(3))
+    return {"k": k, "d": d, "N": N, "Model": modelname}
+
+def parse_kmN(experiment_file):
+    parsed_experimentname = re.search(r"k(\d+)_m(\d+)_N(\d+)", experiment_file)
+    if parsed_experimentname is None:
+        return None
+    modelname = re.search(r"([^\/]+)_T", experiment_file).group(1)
+    k = int(parsed_experimentname.group(1))
+    m = int(parsed_experimentname.group(2))
+    N = int(parsed_experimentname.group(3))
+    return {"k": k, "m": m, "N": N, "Model": modelname}
+
+def parse_kN(experiment_file):
+    parsed_experimentname = re.search(r"k(\d+)_N(\d+)", experiment_file)
+    if parsed_experimentname is None:
+        return None
+    modelname = re.search(r"([^\/]+)_T", experiment_file).group(1)
+    k = int(parsed_experimentname.group(1))
+    N = int(parsed_experimentname.group(2))
+    return {"k": k, "N": N, "Model": modelname}
+
 def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, kwargs):
     loaded_data = {
         "No gen toks": [],
         "Correct?": [],
         "Predicted": [],
         "True": [],
-        "prompt": []
+        "prompt": [],
     }
     for varname in varnames_and_wanted_vals:
         loaded_data[varname] = []
@@ -120,6 +220,25 @@ def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, 
     # Create a DataFrame for the new data
     df = pd.DataFrame(loaded_data)
 
+    # remove (Model, k, N) that either: (a) do not produce enough of a range of No gen toks (at least 5 distinct values) or (b) have accuracy < random + stddev
+    dfa_keys = list(varnames_and_wanted_vals.keys())
+    grouped_df = df.groupby(dfa_keys)
+    valid_indices = []
+    
+    for param_combo, group in grouped_df:
+        accuracy = group["Correct?"].mean()
+        param_combo = {dfa_keys[idx]: param_combo[idx] for idx in range(len(param_combo))}
+        random_baseline = compute_random(param_combo)
+        stddev = group["Correct?"].std() if len(group) > 1 else 0
+        
+        if accuracy < random_baseline + stddev:
+            continue  # Remove this parameter combo
+        if group["No gen toks"].nunique() < 5:
+            continue  # Remove if it lacks diversity
+        
+        valid_indices.extend(group.index)
+    
+    df = df.loc[valid_indices].reset_index(drop=True)
     return df
 
 def calculate_precision_recall(sub_df, bucket_name):
@@ -336,6 +455,7 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
     if len(bucket_avg) == 0: return None
         
     # Find the index of the maximum value
+    performance = filtered_data["Correct?"].mean()
     index_peak = np.argmax(bucket_avg["Correct?"])
     peak_ttoks = bucket_avg["Length Bucket Center"][index_peak]
     best_performance = bucket_avg["Correct?"][index_peak]
@@ -357,7 +477,8 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
     ci = sem_values.reindex(bucket_avg["Length Bucket Center"]).fillna(0)
 
     if kwargs['only_meta']: 
-        return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), best_precision, best_recall, (best_performance - ci.values[index_peak]).item() > kwargs['compute_random'](set_factor_values))
+        return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), best_precision, best_recall)
+        # return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), best_precision, best_recall, (best_performance - ci.values[index_peak]).item() > compute_random(set_factor_values))
     # Plot the average correctness for each model size and method
     plt.plot(
         bucket_avg["Length Bucket Center"],
@@ -390,13 +511,14 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
         plt.grid(True, linestyle="--", alpha=0.6)
 
         # Save and clear the figure
-        filename = "_".join(f"{factor_name}{factor_value}" for factor_name, factor_value in set_factor_values.items()) + f"{'_wincorrect' if kwargs['plot_incorrect'] else ''}.png"
+        filename = "_".join(f"{factor_name}{factor_value}" for factor_name, factor_value in set_factor_values.items()) + ".png"
         os.makedirs(os.path.join(kwargs['foldername'], "isolate_factor"), exist_ok=True)
         plt.savefig(
             os.path.join(kwargs['foldername'], "isolate_factor", filename)
         )
         plt.clf()
-    return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), best_precision, best_recall, (best_performance - ci.values[index_peak]).item() > kwargs['compute_random'](set_factor_values))
+    return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), best_precision, best_recall)
+    # return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), best_precision, best_recall, (best_performance - ci.values[index_peak]).item() > compute_random(set_factor_values))
 
 def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_factor, kwargs):
     # Filter the data for the specified factor_set_values
@@ -438,9 +560,8 @@ def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_fac
         plot_results = plot_correctness_by_ttoks(factor_filtered_data, factor_set_values | {isolated_factor: factor_value}, label, rgba_color, color_intensity, True, kwargs)
         if plot_results:
             used_vals.append(factor_value)
-            (peak_ttoks, peak_ttoks_incorrect, peak_acc, peak_precision, peak_recall, task_doable) = plot_results
-            if task_doable:
-                factor_val_to_peak_ttoks.append((factor_value, peak_ttoks))
+            (peak_ttoks, peak_ttoks_incorrect, peak_acc, peak_precision, peak_recall) = plot_results
+            factor_val_to_peak_ttoks.append((factor_value, peak_ttoks))
             factor_val_to_peak_ttoks_incorrect.append((factor_value, (peak_ttoks, peak_ttoks_incorrect)))
             factor_val_to_peak_acc.append((factor_value, (peak_acc, peak_precision, peak_recall)))
     if len(factor_val_to_peak_ttoks) == 0: return factor_val_to_peak_ttoks, factor_val_to_peak_ttoks_incorrect, factor_val_to_peak_acc
@@ -1038,7 +1159,6 @@ def ptt_table(factor_model_corrs, output_folder):
     with open(os.path.join(output_folder, "ptt_table.txt"), 'w') as wf:
         wf.write(tabulate(df, headers='keys', tablefmt='psql'))
 
-
 def acc_table(df, output_folder):
     # | model | accuracy | precision | recall | random |
     # Compute accuracy, precision, and recall per task
@@ -1055,7 +1175,6 @@ def acc_table(df, output_folder):
     with open(os.path.join(output_folder, "accuracy_table.txt"), 'w') as wf:
         wf.write(tabulate(model_metrics, headers='keys', tablefmt='psql'))
     
-
 
 def plot_correctness_by_isolate_factor(df, plot_against_factor, set_factors, kwargs):
     # Loop across modelnames... x axis is plot_against_factor. Each point is averaged across set_factors
@@ -1155,107 +1274,6 @@ def plot_correctness_by_isolate_factor(df, plot_against_factor, set_factors, kwa
     )
     plt.clf()
 
-global compute_random
-global foldername_parser
-global dfa_factors_order
-
-def get_args():
-    global compute_random
-    global foldername_parser
-    global dfa_factors_order
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--temperature", type=float, default=0.0)
-    parser.add_argument("--n_buckets", type=int, default=4)
-    parser.add_argument("--num_gens", type=int, default=1)
-    parser.add_argument("--num_beams", type=int, default=1)
-    parser.add_argument("--models", nargs='+')
-    parser.add_argument("--delete_old", action="store_true")
-    parser.add_argument("--only_meta", action="store_true")
-    parser.add_argument("--d_vals", type=int, nargs='+') 
-    parser.add_argument("--m_vals", type=int, nargs='+') 
-    parser.add_argument("--k_vals", type=int, nargs='+') 
-    parser.add_argument("--N_vals", type=int, nargs='+')
-    parser.add_argument("--task", choices=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies'])
-
-    args = parser.parse_args()
-    match args.task:
-        case 'dyck':
-            compute_random = lambda factor_vals: 0.5
-            foldername_parser = parse_kdN
-            dfa_factors_order = {"k": 0, "d": 1, "N": 2}
-            output_folder = "dyck/outputs"
-        case 'arith':
-            compute_random = lambda factor_vals: 0.
-            foldername_parser = parse_kmN
-            dfa_factors_order = {"k": 0, "m": 1, "N": 2}
-            output_folder = "arithmetic/outputs"
-        case 'array_idx':
-            compute_random = lambda factor_vals: 0.
-            foldername_parser = parse_kmN
-            dfa_factors_order = {"k": 0, "m": 1, "N": 2}
-            output_folder = "array_idx_mult/outputs"
-        case 'even_odd':
-            compute_random = lambda factor_vals: 0.5
-            foldername_parser = parse_kmN
-            dfa_factors_order = {"k": 0, "m": 1, "N": 2}
-            output_folder = "even_odd_mult/outputs"
-        case 'bool':
-            compute_random = lambda factor_vals: 0.5
-            foldername_parser = parse_kN
-            dfa_factors_order = {"k": 0, "N": 1}
-            output_folder = "nested_boolean_expression/outputs"
-        case 'navigate':
-            compute_random = lambda factor_vals: 0.5
-            foldername_parser = parse_kdN
-            dfa_factors_order = {"k": 0, "d": 1, "N": 2}
-            output_folder = "navigate/outputs"
-        case 'shuffled_objects':
-            compute_random = lambda factor_vals: 0.
-            foldername_parser = parse_kN
-            dfa_factors_order = {"k": 0, "N": 1}
-            output_folder = "shuffled_objects/outputs"
-        case 'web_of_lies':
-            compute_random = lambda factor_vals: 1/factor_vals["k"]
-            foldername_parser = parse_kN
-            dfa_factors_order = {"k": 0, "N": 1}
-            output_folder = "web_of_lies/outputs"
-
-    args.foldername = os.path.join(
-        f"{output_folder}_graphs_{args.n_buckets}buckets"
-    )
-    args.output_folder = output_folder
-
-    return args
-
-def parse_kdN(experiment_file):
-    parsed_experimentname = re.search(r"k(\d+)_d(\d+)_N(\d+)", experiment_file)
-    if parsed_experimentname is None:
-        return None
-    modelname = re.search(r"([^\/]+)_T", experiment_file).group(1)
-    k = int(parsed_experimentname.group(1))
-    d = int(parsed_experimentname.group(2))
-    N = int(parsed_experimentname.group(3))
-    return {"k": k, "d": d, "N": N, "Model": modelname}
-
-def parse_kmN(experiment_file):
-    parsed_experimentname = re.search(r"k(\d+)_m(\d+)_N(\d+)", experiment_file)
-    if parsed_experimentname is None:
-        return None
-    modelname = re.search(r"([^\/]+)_T", experiment_file).group(1)
-    k = int(parsed_experimentname.group(1))
-    m = int(parsed_experimentname.group(2))
-    N = int(parsed_experimentname.group(3))
-    return {"k": k, "m": m, "N": N, "Model": modelname}
-
-def parse_kN(experiment_file):
-    parsed_experimentname = re.search(r"k(\d+)_N(\d+)", experiment_file)
-    if parsed_experimentname is None:
-        return None
-    modelname = re.search(r"([^\/]+)_T", experiment_file).group(1)
-    k = int(parsed_experimentname.group(1))
-    N = int(parsed_experimentname.group(2))
-    return {"k": k, "N": N, "Model": modelname}
-
 if __name__ == "__main__":
     args = get_args()
 
@@ -1270,8 +1288,6 @@ if __name__ == "__main__":
         "num_gens": args.num_gens,
         "foldername": args.foldername,
         "only_meta": args.only_meta,
-        "compute_random": compute_random,
-        "plot_incorrect": False,
     }
 
     factor_names = ["k", "N"]
