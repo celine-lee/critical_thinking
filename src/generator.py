@@ -295,7 +295,7 @@ class VLLMGenerator(Generator):
         return True
 
     def load_model(self):
-        max_model_len = 20000
+        max_model_len = 32768
         max_num_seqs = 1
         quantization_config = {
             "dtype": torch.bfloat16,

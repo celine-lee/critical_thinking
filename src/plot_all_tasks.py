@@ -358,7 +358,7 @@ def plot_correctness_by_ttoks(df, kwargs):
 
         plt.plot(task_model_df["No gen toks"], task_model_df["Correct?"], color=line_color, marker=",")
         plt.scatter(peak_x, peak_y_normalized, color=dot_color, zorder=dotsize, label=label)
-    
+    max_x = 0
     for (task, modelname) in kwargs["to_highlight"]:
         group = df[(df["task"] == task) * (df["Model"] == modelname)]
         if group.empty:
@@ -393,6 +393,7 @@ def plot_correctness_by_ttoks(df, kwargs):
             task_model_df["No gen toks"].append(x_val)
             task_model_df["Correct?"].append(y_val)
     
+        max_x = max(max_x, max(task_model_df["No gen toks"]))
         task_model_df = pd.DataFrame(task_model_df)
         
         peak_row = bucket_avg.loc[bucket_avg["Correct?"].idxmax()]
@@ -409,7 +410,7 @@ def plot_correctness_by_ttoks(df, kwargs):
     plt.xlabel("Generated Tokens")
     plt.ylabel("Accuracy (normalized)")
     plt.ylim(0, 1)
-    plt.xlim(0, 5000)
+    plt.xlim(0, min(5000, max_x))
     plt.legend(loc="lower right", fancybox=True, shadow=True)
     plt.grid(True, linestyle="--", alpha=0.6)
     plt.tight_layout()

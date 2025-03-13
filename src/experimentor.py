@@ -42,7 +42,7 @@ class Experimenter:
                 if pred_answer is None: 
                     just_move_on_counter += 1
                     continue
-                if self.task.name in {"shuffled_objects", "web_of_lies"}:
+                if self.task.name in {"shuffled_objects", "web_of_lies", "logical_deduction"}:
                     is_correct = pred_answer.lower().strip() == true_answer.lower().strip()
                 else:
                     try:
