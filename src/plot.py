@@ -45,7 +45,8 @@ model_colors = {
     "gpt-4o-mini": "cornflowerblue",
     "gpt-4o": "blue",
     "o3-mini": "purple",
-    "DeepSeek-R1": "gray",
+    "DeepSeek-R1": "black",
+    "DeepSeek-V3": "pink"
 }
 
 model_nicknames = {
@@ -64,6 +65,7 @@ model_nicknames = {
     "gpt-4o": "gpt4o",
     "o3-mini": "o3-mini",
     "DeepSeek-R1": "DSR1",
+    "DeepSeek-V3": "DSV3"
 }
 
 factor_to_description = {
@@ -175,7 +177,7 @@ def parse_kN(experiment_file):
     N = int(parsed_experimentname.group(2))
     return {"k": k, "N": N, "Model": modelname}
 
-def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, kwargs):
+def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, kwargs, filter_stddev_count=1):
     loaded_data = {
         "No gen toks": [],
         "Correct?": [],
@@ -219,20 +221,22 @@ def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, 
 
     # Create a DataFrame for the new data
     df = pd.DataFrame(loaded_data)
-    # Remove models that fail in any configuration
-    grouped_df = df.groupby("Model")
-    models_to_remove = set()
 
-    for modelname, group in grouped_df:
-        accuracy = group["Correct?"].mean()
-        avg_param_combo = {"k": group["k"].mean(), "N": group["N"].mean()}
-        random_baseline = compute_random(avg_param_combo)
-        stddev = group["Correct?"].std() if len(group) > 1 else 0
+    if filter_stddev_count is not None:
+        # Remove models that fail in any configuration
+        grouped_df = df.groupby("Model")
+        models_to_remove = set()
+
+        for modelname, group in grouped_df:
+            accuracy = group["Correct?"].mean()
+            avg_param_combo = {"k": group["k"].mean(), "N": group["N"].mean()}
+            random_baseline = compute_random(avg_param_combo)
+            stddev = group["Correct?"].std() if len(group) > 1 else 0
+            
+            if accuracy < random_baseline + filter_stddev_count * stddev or group["No gen toks"].nunique() < 5:
+                models_to_remove.add(modelname) 
+        df = df[~df["Model"].isin(models_to_remove)].reset_index(drop=True)
         
-        if accuracy < random_baseline + stddev or group["No gen toks"].nunique() < 5:
-            models_to_remove.add(modelname) 
-    df = df[~df["Model"].isin(models_to_remove)].reset_index(drop=True)
-    
     return df
 
 def calculate_precision_recall(sub_df, bucket_name):
@@ -925,7 +929,7 @@ def plot_correctness_by_ttoks_all_kN(df, kwargs):
     plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", plot_filename), bbox_inches="tight")
     plt.clf()
 
-def plot_correctness_by_ttoks_avg_by_k(df, kwargs):
+def plot_correctness_by_ttoks_avg_by_k(df, normalize_y, grayscale, kwargs):
     """
     Create a plot that shows the correctness vs. generated tokens.
     For each (model, N):
@@ -974,9 +978,13 @@ def plot_correctness_by_ttoks_avg_by_k(df, kwargs):
         curve_x = []
         curve_y = []
         bucket_sorted = bucket_avg.sort_values("Toks Bucket Center")
+        max_y = bucket_sorted["Correct?"].max()
+        min_y = bucket_sorted["Correct?"].min()
         for _, row in bucket_sorted.iterrows():
             x_val = row["Toks Bucket Center"]  # unnormalized x value
             y_val = row["Correct?"]            # unnormalized correctness
+            if normalize_y:
+                y_val = (y_val - min_y) / (max_y - min_y) if max_y != min_y else y_val
             curve_x.append(x_val)
             curve_y.append(y_val)
         
@@ -990,16 +998,19 @@ def plot_correctness_by_ttoks_avg_by_k(df, kwargs):
             peak_y = curve_y[0]
         
         # Determine the color and (if not already added) the label.
+        label = None
+        if grayscale:
+            line_color = "gray"
+        else:
+            line_color = model_colors.get(model_name, "blue")
         base_color = model_colors.get(model_name, "blue")
         if model_name not in labeled_models:
             label = model_nicknames.get(model_name, model_name)
             labeled_models.add(model_name)
-        else:
-            label = None
         
         # Plot the curve and its peak.
-        plt.plot(curve_x, curve_y, color=base_color, marker=",", label=label)
-        plt.scatter(peak_x, peak_y, color=base_color, zorder=5)
+        plt.plot(curve_x, curve_y, color=line_color, marker=",")
+        plt.scatter(peak_x, peak_y, color=base_color, zorder=5, label=label)
     
     plt.xlabel("Generated Tokens")
     plt.ylabel("Accuracy")
@@ -1009,7 +1020,7 @@ def plot_correctness_by_ttoks_avg_by_k(df, kwargs):
     plt.tight_layout()
 
     # Save the plot.
-    plot_filename = "corr_vs_len_avg_across_k.png"
+    plot_filename = f"corr_vs_len_avg_across_k{'_normy' if normalize_y else ''}{'_grayscale' if grayscale else ''}.png"
     os.makedirs(os.path.join(kwargs['foldername'], "meta_plots"), exist_ok=True)
     plt.savefig(os.path.join(kwargs['foldername'], "meta_plots", plot_filename), bbox_inches="tight")
     plt.clf()
@@ -1113,7 +1124,7 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, kwargs):
 
         # Calculate pearson corr
         correlation, _ = stats.pearsonr(normalized_factor_vals[-len(normalized_peak_tts):], normalized_peak_tts)
-        legend_label = f"{model_nicknames[modelname]} (Corr: {correlation:.2f})"
+        legend_label = f"{model_nicknames[modelname]} ({correlation:.2f})"
         corrs[model_nicknames[modelname]] = correlation
 
         sns.scatterplot(x=factor_vals, y=normalized_avg_peak_tts, 
@@ -1349,7 +1360,9 @@ if __name__ == "__main__":
     plot_correctness_by_ttoks_per_kN(df, plot_kwargs)
     plot_correctness_by_ttoks_all_kN(df, plot_kwargs)
     plot_normalized_correctness_by_ttoks(df, plot_kwargs)
-    plot_correctness_by_ttoks_avg_by_k(df, plot_kwargs)
+    plot_correctness_by_ttoks_avg_by_k(df, False, False, plot_kwargs)
+    plot_correctness_by_ttoks_avg_by_k(df, True, True, plot_kwargs)
+    plot_correctness_by_ttoks_avg_by_k(df, False, True, plot_kwargs)
     plt.clf()
 
     all_factor_corrs = []
