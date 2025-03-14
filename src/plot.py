@@ -35,55 +35,10 @@ def get_args():
     parser.add_argument("--m_vals", type=int, nargs='+') 
     parser.add_argument("--k_vals", type=int, nargs='+') 
     parser.add_argument("--N_vals", type=int, nargs='+')
-    parser.add_argument("--task", choices=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'logical_deduction'])
+    parser.add_argument("--task", choices=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'logical_deduction', 'cruxeval'])
 
     args = parser.parse_args()
-    match args.task:
-        case 'dyck':
-            compute_random = lambda factor_vals: 0.5
-            foldername_parser = parse_kdN
-            dfa_factors_order = {"k": 0, "d": 1, "N": 2}
-            output_folder = "dyck/outputs"
-        case 'arith':
-            compute_random = lambda factor_vals: 1. / (factor_vals["k"])
-            foldername_parser = parse_kmN
-            dfa_factors_order = {"k": 0, "m": 1, "N": 2}
-            output_folder = "arithmetic/outputs"
-        case 'array_idx':
-            compute_random = lambda factor_vals: 1. / (factor_vals["k"])
-            foldername_parser = parse_kmN
-            dfa_factors_order = {"k": 0, "m": 1, "N": 2}
-            output_folder = "array_idx_mult/outputs"
-        case 'even_odd':
-            compute_random = lambda factor_vals: 0.5
-            foldername_parser = parse_kmN
-            dfa_factors_order = {"k": 0, "m": 1, "N": 2}
-            output_folder = "even_odd_mult/outputs"
-        case 'bool':
-            compute_random = lambda factor_vals: 0.5
-            foldername_parser = parse_kN
-            dfa_factors_order = {"k": 0, "N": 1}
-            output_folder = "nested_boolean_expression/outputs"
-        case 'navigate':
-            compute_random = lambda factor_vals: 0.5
-            foldername_parser = parse_kdN
-            dfa_factors_order = {"k": 0, "d": 1, "N": 2}
-            output_folder = "navigate/outputs"
-        case 'shuffled_objects':
-            compute_random = lambda factor_vals: 1. / factor_vals["k"]
-            foldername_parser = parse_kN
-            dfa_factors_order = {"k": 0, "N": 1}
-            output_folder = "shuffled_objects/outputs"
-        case 'web_of_lies':
-            compute_random = lambda factor_vals: 1/factor_vals["N"]
-            foldername_parser = parse_kN
-            dfa_factors_order = {"k": 0, "N": 1}
-            output_folder = "web_of_lies/outputs"
-        case 'logical_deduction':
-            compute_random = lambda factor_vals: 1/factor_vals["k"]
-            foldername_parser = parse_kN
-            dfa_factors_order = {"k": 0, "N": 1}
-            output_folder = "logical_deduction/outputs"
+    compute_random, foldername_parser, dfa_factors_order, output_folder = get_task_info(args.task)
 
     args.foldername = os.path.join(
         f"{output_folder}_graphs_{args.n_buckets}buckets"
@@ -91,35 +46,6 @@ def get_args():
     args.output_folder = output_folder
 
     return args
-
-def parse_kdN(experiment_file):
-    parsed_experimentname = re.search(r"k(\d+)_d(\d+)_N(\d+)", experiment_file)
-    if parsed_experimentname is None:
-        return None
-    modelname = re.search(r"([^\/]+)_T", experiment_file).group(1)
-    k = int(parsed_experimentname.group(1))
-    d = int(parsed_experimentname.group(2))
-    N = int(parsed_experimentname.group(3))
-    return {"k": k, "d": d, "N": N, "Model": modelname}
-
-def parse_kmN(experiment_file):
-    parsed_experimentname = re.search(r"k(\d+)_m(\d+)_N(\d+)", experiment_file)
-    if parsed_experimentname is None:
-        return None
-    modelname = re.search(r"([^\/]+)_T", experiment_file).group(1)
-    k = int(parsed_experimentname.group(1))
-    m = int(parsed_experimentname.group(2))
-    N = int(parsed_experimentname.group(3))
-    return {"k": k, "m": m, "N": N, "Model": modelname}
-
-def parse_kN(experiment_file):
-    parsed_experimentname = re.search(r"k(\d+)_N(\d+)", experiment_file)
-    if parsed_experimentname is None:
-        return None
-    modelname = re.search(r"([^\/]+)_T", experiment_file).group(1)
-    k = int(parsed_experimentname.group(1))
-    N = int(parsed_experimentname.group(2))
-    return {"k": k, "N": N, "Model": modelname}
 
 def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, kwargs, filter_stddev_count=1):
     loaded_data = {
@@ -211,90 +137,6 @@ def calculate_precision_recall(sub_df, bucket_name):
     precision_recall = precision_recall.reset_index()
 
     return precision_recall
-
-def calculate_buckets(sub_df, n_buckets, bucket_by="No gen toks", bucket_name="Length Bucket", y_axis="Correct?", groupby_key="Model", get_precision_metrics=True):
-    if len(sub_df) == 0:
-        return None, None
-
-    unique_lengths = sub_df[bucket_by].unique()
-
-    if len(unique_lengths) == 1:
-        # Assign everything to a single bucket
-        sub_df[bucket_name] = f"({unique_lengths[0]}, {unique_lengths[0]})"
-        bucket_avg = (
-            sub_df.groupby([groupby_key, bucket_name], observed=True)[y_axis]
-            .mean()
-            .reset_index()
-        )
-        bucket_avg[bucket_name + " Center"] = unique_lengths[0]  # Single center
-        bucket_avg[y_axis] = bucket_avg[y_axis].astype(float)
-    else:
-        # Normal binning process
-        if len(unique_lengths) < n_buckets:
-            sub_df.loc[:, bucket_name] = pd.qcut(
-                sub_df[bucket_by], q=len(unique_lengths) + 1, duplicates="drop"
-            )
-        else:
-            unique_vals, counts = np.unique(sub_df[bucket_by], return_counts=True)
-            total_count = len(sub_df)
-            cumulative_counts = np.cumsum(counts)
-
-            boundaries = [unique_vals[0]]
-            target_size = total_count / n_buckets
-
-            for b in range(1, n_buckets):
-                cutoff = b * target_size
-                idx = np.searchsorted(cumulative_counts, cutoff, side="left")
-
-                if idx >= len(unique_vals):
-                    idx = len(unique_vals) - 1
-
-                while idx < len(unique_vals) and unique_vals[idx] <= boundaries[-1]:
-                    idx += 1
-
-                if idx >= len(unique_vals):
-                    break
-
-                boundaries.append(unique_vals[idx])
-
-            if boundaries[-1] < unique_vals[-1]:
-                boundaries.append(unique_vals[-1])
-
-            boundaries = np.unique(boundaries)
-
-            sub_df.loc[:, bucket_name] = pd.cut(
-                sub_df[bucket_by], bins=boundaries, include_lowest=True, duplicates="drop"
-            )
-
-        bucket_avg = (
-            sub_df.groupby([groupby_key, bucket_name], observed=True)[y_axis]
-            .mean()
-            .reset_index()
-        )
-
-        bucket_avg[bucket_name + " Center"] = bucket_avg[bucket_name].apply(
-            lambda x: (x.left + x.right) / 2 if pd.notna(x) else np.nan
-        ).astype(float)
-
-        bucket_avg[y_axis] = bucket_avg[y_axis].astype(float)
-
-    # Group the original sub_df by the same keys and compute std and count.
-    grouped = sub_df.groupby([groupby_key, bucket_name], observed=True)[y_axis]
-    bucket_sem = grouped.std() / np.sqrt(grouped.count())
-    bucket_sem = bucket_sem.reset_index().rename(columns={y_axis: "sem"})
-    bucket_avg = bucket_avg.merge(bucket_sem, on=[groupby_key, bucket_name], how="left")
-    bucket_avg["ci95"] = bucket_avg["sem"] * 1.96
-
-    if get_precision_metrics:
-        # Compute precision and recall
-        precision_recall = calculate_precision_recall(sub_df, bucket_name)
-
-        # Merge precision-recall data
-        bucket_avg = bucket_avg.merge(precision_recall, on=bucket_name, how="left")
-
-    sub_df = sub_df.merge(bucket_avg, on=[groupby_key, bucket_name], suffixes=('', '_mean'))
-
-    return bucket_avg, sub_df
 
 def plot_length_generated(df, kwargs, by_factor=None):
     # Separate data by model size
@@ -402,25 +244,13 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
     peak_ttoks = bucket_avg["Length Bucket Center"][index_peak]
     best_performance = bucket_avg["Correct?"][index_peak]
 
-    # Find the index of the best precision and recall
-    index_best_precision = np.argmax(bucket_avg["Precision"])
-    index_best_recall = np.argmax(bucket_avg["Recall"])
-
-    best_precision = bucket_avg["Precision"][index_best_precision]
-    best_recall = bucket_avg["Recall"][index_best_recall]
-
-    # and maximum value for probability mass of incorrect sequences
-    index_peak_incorrect = np.argmax(1 - bucket_avg["Correct?"]) #  bc of monte carlo we know probability mass is here, and we bucketed into even sizes...
-    peak_ttoks_incorrect = bucket_avg["Length Bucket Center"][index_peak_incorrect]
-    
     sem_values = filtered_data.groupby("Length Bucket Center", observed=True)["Correct?"].apply(stats.sem)
     # Calculate confidence intervals
     ci = sem_values * 1.96  # For 95% confidence
     ci = sem_values.reindex(bucket_avg["Length Bucket Center"]).fillna(0)
 
     if kwargs['only_meta']: 
-        return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), best_precision, best_recall)
-        # return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), best_precision, best_recall, (best_performance - ci.values[index_peak]).item() > compute_random(set_factor_values))
+        return (peak_ttoks.item(), best_performance.item())
     # Plot the average correctness for each model size and method
     plt.plot(
         bucket_avg["Length Bucket Center"],
@@ -459,8 +289,7 @@ def plot_correctness_by_ttoks(filtered_data, set_factor_values, label, rgba_colo
             os.path.join(kwargs['foldername'], "isolate_factor", filename)
         )
         plt.clf()
-    return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), best_precision, best_recall)
-    # return (peak_ttoks.item(), peak_ttoks_incorrect.item(), best_performance.item(), best_precision, best_recall, (best_performance - ci.values[index_peak]).item() > compute_random(set_factor_values))
+    return (peak_ttoks.item(), best_performance.item())
 
 def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_factor, kwargs):
     # Filter the data for the specified factor_set_values
@@ -480,7 +309,7 @@ def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_fac
         base_color = model_colors.get(factor_set_values["Model"], "blue")
         max_factor = int(factor_values[-1])
 
-    factor_val_to_peak_ttoks, factor_val_to_peak_ttoks_incorrect, factor_val_to_peak_acc = [], [], []
+    factor_val_to_peak_ttoks, factor_val_to_peak_acc = [], []
     used_vals = []
     plt.figure(figsize=(12, 6))
     # Iterate over unique t values
@@ -502,14 +331,13 @@ def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_fac
         plot_results = plot_correctness_by_ttoks(factor_filtered_data, factor_set_values | {isolated_factor: factor_value}, label, rgba_color, color_intensity, True, kwargs)
         if plot_results:
             used_vals.append(factor_value)
-            (peak_ttoks, peak_ttoks_incorrect, peak_acc, peak_precision, peak_recall) = plot_results
+            (peak_ttoks, peak_acc) = plot_results
             factor_val_to_peak_ttoks.append((factor_value, peak_ttoks))
-            factor_val_to_peak_ttoks_incorrect.append((factor_value, (peak_ttoks, peak_ttoks_incorrect)))
-            factor_val_to_peak_acc.append((factor_value, (peak_acc, peak_precision, peak_recall)))
-    if len(factor_val_to_peak_ttoks) == 0: return factor_val_to_peak_ttoks, factor_val_to_peak_ttoks_incorrect, factor_val_to_peak_acc
+            factor_val_to_peak_acc.append((factor_value, peak_acc))
+    if len(factor_val_to_peak_ttoks) == 0: return factor_val_to_peak_ttoks, factor_val_to_peak_acc
 
     if kwargs['only_meta']: 
-        return factor_val_to_peak_ttoks, factor_val_to_peak_ttoks_incorrect, factor_val_to_peak_acc
+        return factor_val_to_peak_ttoks, factor_val_to_peak_acc
 
     # Customize plot labels and legend
     plt.xlim(xmin=0)
@@ -528,7 +356,7 @@ def plot_correctness_by_ttoks_isolate_factor(df, factor_set_values, isolated_fac
     )
     plt.clf()
 
-    return factor_val_to_peak_ttoks, factor_val_to_peak_ttoks_incorrect, factor_val_to_peak_acc
+    return factor_val_to_peak_ttoks, factor_val_to_peak_acc
 
 def plot_normalized_correctness_by_ttoks(df, kwargs, include_legend=False):
     """
@@ -1285,7 +1113,7 @@ if __name__ == "__main__":
                     df, set_factors | {"Model": modelname}, free_factor_name, plot_kwargs
                 )
                 if ptt_data is None: continue
-                ffn_to_ptts, _, _= ptt_data
+                ffn_to_ptts, _= ptt_data
                 if ffn_to_ptts:
                     dfa_config = [None for _ in dfa_factors_order.keys()]
                     for set_factor_name, set_factor_val in set_factors.items():
