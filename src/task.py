@@ -571,7 +571,7 @@ assert answer == ??
                 prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         else:
             prompt = self.system_instruction + "\n\n"
-            prompt += self.query_template.format(fn_def=fn_def) + "\n"
+            prompt += self.query_template.format(straightlined_code=straightlined_code) + "\n"
             prompt += self.generation_instruction
         return prompt
 
