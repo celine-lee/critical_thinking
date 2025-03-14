@@ -81,81 +81,81 @@ class Experimenter:
         return added_tokens_gen
 
 
-class CRUXEvalExperimenter(Experimenter):
+# class CRUXEvalExperimenter(Experimenter):
 
-    def __init__(self, task, generator, n_samples_per, force_no_cot=False):
-        super(CRUXEvalExperimenter, self).__init__(task, generator, n_samples_per, force_no_cot)
+#     def __init__(self, task, generator, n_samples_per, force_no_cot=False):
+#         super(CRUXEvalExperimenter, self).__init__(task, generator, n_samples_per, force_no_cot)
 
-    def run(self, dfa_param_vals):
-        subfolder = self.task.create_subfolder_name(dfa_param_vals, self.force_no_cot)
-        os.makedirs(subfolder, exist_ok=True)
-        filename = f"{subfolder}/{self.filename}.json"
-        print(filename)
-        examples = json.load(open("cruxeval/synth_cruxeval_profiled_straightlined.json"))
-        results = []
-        if os.path.exists(filename): results = json.load(open(filename))
+#     def run(self, dfa_param_vals):
+#         subfolder = self.task.create_subfolder_name(dfa_param_vals, self.force_no_cot)
+#         os.makedirs(subfolder, exist_ok=True)
+#         filename = f"{subfolder}/{self.filename}.json"
+#         print(filename)
+#         examples = json.load(open("cruxeval/synth_cruxeval_profiled_straightlined.json"))
+#         results = []
+#         if os.path.exists(filename): results = json.load(open(filename))
         
-        used_uids = set(ex["id"] for ex in results)
-        idx = len(results)
-        added_tokens_gen = 0
-        while idx < len(examples):
-            prompts = []
-            batch = []
-            while len(prompts) < self.generator.max_batch_size:
-                if idx >= len(examples): break
-                example = examples[idx]
-                idx += 1
-                if example["id"] in used_uids:
-                    continue
-                prompt = self.task.make_prompt(
-                    self.generator,
-                    example["straightlined_code"],
-                    example["input"],
-                )
-                prompts.append(prompt)
-                batch.append(example)
-            if self.force_no_cot:
-                prompts = [prompt + self.task.reprompt_string for prompt in prompts]
-            if len(prompts) == 0: break
+#         used_uids = set(ex["id"] for ex in results)
+#         idx = len(results)
+#         added_tokens_gen = 0
+#         while idx < len(examples):
+#             prompts = []
+#             batch = []
+#             while len(prompts) < self.generator.max_batch_size:
+#                 if idx >= len(examples): break
+#                 example = examples[idx]
+#                 idx += 1
+#                 if example["id"] in used_uids:
+#                     continue
+#                 prompt = self.task.make_prompt(
+#                     self.generator,
+#                     example["straightlined_code"],
+#                     example["input"],
+#                 )
+#                 prompts.append(prompt)
+#                 batch.append(example)
+#             if self.force_no_cot:
+#                 prompts = [prompt + self.task.reprompt_string for prompt in prompts]
+#             if len(prompts) == 0: break
 
-            generations, generation_lengths, extracted_answers = self.generator.generate(prompts, self.task)
+#             generations, generation_lengths, extracted_answers = self.generator.generate(prompts, self.task)
 
-            for prompt, model_generation, num_generated_tokens, pred_answer, example in zip(prompts, generations, generation_lengths, extracted_answers, batch):
-                added_tokens_gen += num_generated_tokens if num_generated_tokens else 0
-                if pred_answer is None: continue
-                try:
-                    evaluated_pred = eval(pred_answer)
-                    is_correct = evaluated_pred == eval(example["output"])
-                    # If it was an assert with text for the printout, ignore the text.
-                    if (
-                        (not is_correct)
-                        and type(evaluated_pred) == tuple
-                        and len(evaluated_pred) == 2
-                        and type(evaluated_pred[1]) == str
-                    ):
-                        print("TUPLE MAYBE?", example, pred_answer)
-                        is_correct = evaluated_pred[0] == eval(example["output"])
-                except:
-                    continue
-                results.append(
-                    {
-                        "query": prompt,
-                        "model_generation": model_generation,
-                        "generated_tokens": num_generated_tokens,
-                        "pred_answer": pred_answer,
-                        "true_answer": example["output"],
-                        "correct": is_correct,
-                        "id": example["id"],
-                        "N": sum(example["line_execution_counts"].values()),
-                        "k": example["ast_size"],
-                        "l": len(example["straightlined_code"].splitlines())
-                    }
-                )
+#             for prompt, model_generation, num_generated_tokens, pred_answer, example in zip(prompts, generations, generation_lengths, extracted_answers, batch):
+#                 added_tokens_gen += num_generated_tokens if num_generated_tokens else 0
+#                 if pred_answer is None: continue
+#                 try:
+#                     evaluated_pred = eval(pred_answer)
+#                     is_correct = evaluated_pred == eval(example["output"])
+#                     # If it was an assert with text for the printout, ignore the text.
+#                     if (
+#                         (not is_correct)
+#                         and type(evaluated_pred) == tuple
+#                         and len(evaluated_pred) == 2
+#                         and type(evaluated_pred[1]) == str
+#                     ):
+#                         print("TUPLE MAYBE?", example, pred_answer)
+#                         is_correct = evaluated_pred[0] == eval(example["output"])
+#                 except:
+#                     continue
+#                 results.append(
+#                     {
+#                         "query": prompt,
+#                         "model_generation": model_generation,
+#                         "generated_tokens": num_generated_tokens,
+#                         "pred_answer": pred_answer,
+#                         "true_answer": example["output"],
+#                         "correct": is_correct,
+#                         "id": example["id"],
+#                         "N": sum(example["line_execution_counts"].values()),
+#                         "k": example["ast_size"],
+#                         "l": len(example["straightlined_code"].splitlines())
+#                     }
+#                 )
                 
-            with open(filename, "w") as wf:
-                json.dump(results, wf, indent=4)
+#             with open(filename, "w") as wf:
+#                 json.dump(results, wf, indent=4)
 
-        with open(filename, "w") as wf:
-            json.dump(results, wf, indent=4)
+#         with open(filename, "w") as wf:
+#             json.dump(results, wf, indent=4)
 
-        return added_tokens_gen
+#         return added_tokens_gen

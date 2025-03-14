@@ -100,7 +100,7 @@ def load_data(data_folder, varnames_and_wanted_vals, experiment_details_parser, 
         for modelname, group in grouped_df:
             accuracy = group["Correct?"].mean()
             avg_param_combo = {"k": group["k"].mean(), "N": group["N"].mean()}
-            random_baseline = compute_random(avg_param_combo)
+            random_baseline = kwargs["compute_random"](avg_param_combo)
             stddev = group["Correct?"].std() if len(group) > 1 else 0
             
             if accuracy < random_baseline + filter_stddev_count * stddev or group["No gen toks"].nunique() < 5:
