@@ -1,0 +1,1288 @@
+[
+    {
+        "code": "def f(sentence):\n    for c in sentence:\n        if c.isascii() is False:\n            return False\n        else:\n            continue\n    return True",
+        "input": "'1z1z1'",
+        "output": "True",
+        "line_execution_counts": {
+            "1": 6,
+            "2": 5,
+            "5": 5,
+            "6": 1
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "sample_56",
+        "straightlined_code": "sentence = '1z1z1'\nfor c in sentence:\n    if c.isascii() is False:\n        answer = False\n    else:\n        continue\nanswer = True"
+    },
+    {
+        "code": "def f(text):\n    return not any([c.isupper() for c in text])",
+        "input": "'lunabotics'",
+        "output": "True",
+        "line_execution_counts": {
+            "1": 11
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "sample_96",
+        "straightlined_code": "text = 'lunabotics'\nanswer = not any([c.isupper() for c in text])"
+    },
+    {
+        "code": "def f(s):\n    return ''.join((c.casefold() for c in s))",
+        "input": "'abcDEFGhIJ'",
+        "output": "'abcdefghij'",
+        "line_execution_counts": {
+            "1": 12
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "sample_103",
+        "straightlined_code": "s = 'abcDEFGhIJ'\nanswer = ''.join((c.casefold() for c in s))"
+    },
+    {
+        "code": "def f(li):\n    return [li.count(i) for i in li]",
+        "input": "['k', 'x', 'c', 'x', 'x', 'b', 'l', 'f', 'r', 'n', 'g']",
+        "output": "[1, 3, 1, 3, 3, 1, 1, 1, 1, 1, 1]",
+        "line_execution_counts": {
+            "1": 12
+        },
+        "ast_size": 18,
+        "error": null,
+        "id": "sample_141",
+        "straightlined_code": "li = ['k', 'x', 'c', 'x', 'x', 'b', 'l', 'f', 'r', 'n', 'g']\nanswer = [li.count(i) for i in li]"
+    },
+    {
+        "code": "def f(text):\n    for char in text:\n        if not char.isspace():\n            return False\n    return True",
+        "input": "'     i'",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 6,
+            "2": 6,
+            "3": 1
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "sample_370",
+        "straightlined_code": "text = '     i'\nfor char in text:\n    if not char.isspace():\n        answer = False\nanswer = True"
+    },
+    {
+        "code": "def f(s):\n    return ''.join([c for c in s if c.isspace()])",
+        "input": " '\\ngiyixjkvu\\n\\r\\r \\frgjuo'",
+        "output": "'\n\n\r\r \f'",
+        "line_execution_counts": {
+            "1": 21
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "sample_490",
+        "straightlined_code": "s =  '\\ngiyixjkvu\\n\\r\\r \\frgjuo'\nanswer = ''.join([c for c in s if c.isspace()])"
+    },
+    {
+        "code": "def f(text):\n    return ''.join(x for x in text if x != ')')",
+        "input": "('(((((((((((d))))))))).))))(((((')",
+        "output": "'(((((((((((d.((((('",
+        "line_execution_counts": {
+            "1": 33
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "sample_698",
+        "straightlined_code": "text = ('(((((((((((d))))))))).))))(((((')\nanswer = ''.join(x for x in text if x != ')')"
+    },
+    {
+        "code": "def f(stg, tabs):\n    for tab in tabs:\n        stg = stg.rstrip(tab)\n    return stg",
+        "input": "'31849 let it!31849 pass!', ('3','1','8',' ','1','9','2','d')",
+        "output": "'31849 let it!31849 pass!'",
+        "line_execution_counts": {
+            "1": 9,
+            "2": 8,
+            "3": 1
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "sample_701",
+        "straightlined_code": "stg, tabs = '31849 let it!31849 pass!', ('3','1','8',' ','1','9','2','d')\nfor tab in tabs:\n    stg = stg.rstrip(tab)\nanswer = stg"
+    },
+    {
+        "code": "def f(input):\n    for char in input:\n        if char.isupper():\n            return False\n    return True",
+        "input": "\"a j c n x X k\"",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 11,
+            "2": 11,
+            "3": 1
+        },
+        "ast_size": 19,
+        "error": null,
+        "id": "sample_782",
+        "straightlined_code": "input = \"a j c n x X k\"\nfor char in input:\n    if char.isupper():\n        answer = False\nanswer = True"
+    },
+    {
+        "code": "def f(doc):\n    for ch in doc:\n        if ch in 'aeiou':\n            return ch.capitalize()\n    return ''",
+        "input": "'jnkp'",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 5,
+            "2": 4,
+            "4": 1
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_843",
+        "straightlined_code": "doc = 'jnkp'\nfor ch in doc:\n    if ch in 'aeiou':\n        answer = ch.capitalize()\nanswer = ''"
+    },
+    {
+        "code": "def f(a):\n    b = 1\n    for c in a:\n        b *= c\n    return b",
+        "input": "[1,2,3,4]",
+        "output": "24",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 5,
+            "3": 4,
+            "4": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_850",
+        "straightlined_code": "a = [1,2,3,4]\nb = 1\nfor c in a:\n    b *= c\nanswer = b"
+    },
+    {
+        "code": "def f(s):\n    return [ch for ch in s if ch in 'aeiou']",
+        "input": "'aeiouaeiouaeiouaeiou'",
+        "output": "['a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u', 'a', 'e', 'i', 'o', 'u']",
+        "line_execution_counts": {
+            "1": 21
+        },
+        "ast_size": 18,
+        "error": null,
+        "id": "new_synth_854",
+        "straightlined_code": "s = 'aeiouaeiouaeiouaeiou'\nanswer = [ch for ch in s if ch in 'aeiou']"
+    },
+    {
+        "code": "def f(L):\n    return list(filter(lambda x: x % 2 == 0, L))",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[2, 4, 6, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_885",
+        "straightlined_code": "L = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = list(filter(lambda x: x % 2 == 0, L))"
+    },
+    {
+        "code": "def f(L):\n    for ch in 'aeiou':\n        if ch in L:\n            return False\n    return True",
+        "input": "['y', 'w', 'r']",
+        "output": "True",
+        "line_execution_counts": {
+            "1": 6,
+            "2": 5,
+            "4": 1
+        },
+        "ast_size": 19,
+        "error": null,
+        "id": "new_synth_897",
+        "straightlined_code": "L = ['y', 'w', 'r']\nfor ch in 'aeiou':\n    if ch in L:\n        answer = False\nanswer = True"
+    },
+    {
+        "code": "def f(t):\n    return sum(1 for x in t)",
+        "input": "range(10)",
+        "output": "10",
+        "line_execution_counts": {
+            "1": 12
+        },
+        "ast_size": 15,
+        "error": null,
+        "id": "new_synth_900",
+        "straightlined_code": "t = range(10)\nanswer = sum(1 for x in t)"
+    },
+    {
+        "code": "def f(s):\n    # return a string with only lowercase letters\n    return \"\".join(c for c in s if c.islower())",
+        "input": "'Hello123'",
+        "output": "'ello'",
+        "line_execution_counts": {
+            "2": 10
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_912",
+        "straightlined_code": "s = 'Hello123'\n# answer = a string with only lowercase letters\nanswer = \"\".join(c for c in s if c.islower())"
+    },
+    {
+        "code": "def f(data):\n    return ''.join([c for c in data if not c in \"aeiouAEIOU\"])",
+        "input": "'I am the one'",
+        "output": "' m th n'",
+        "line_execution_counts": {
+            "1": 13
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_922",
+        "straightlined_code": "data = 'I am the one'\nanswer = ''.join([c for c in data if not c in \"aeiouAEIOU\"])"
+    },
+    {
+        "code": "def f(text):    \n    # print it\n    for c in text:\n        print(c, end='')",
+        "input": "'Hello world!'",
+        "output": "None",
+        "line_execution_counts": {
+            "2": 13,
+            "3": 12
+        },
+        "ast_size": 17,
+        "error": null,
+        "id": "new_synth_924",
+        "straightlined_code": "text = 'Hello world!'\n# print it\nfor c in text:\n    print(c, end='')"
+    },
+    {
+        "code": "def f(m):\n    s = 0\n    for i in m:\n        s += i\n    return s",
+        "input": "[1,2,3,4,5,6]",
+        "output": "21",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 7,
+            "3": 6,
+            "4": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_927",
+        "straightlined_code": "m = [1,2,3,4,5,6]\ns = 0\nfor i in m:\n    s += i\nanswer = s"
+    },
+    {
+        "code": "def f(a):\n    b = 1\n    while b < 10:\n        b += 1\n    return b",
+        "input": "0",
+        "output": "10",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 10,
+            "3": 9,
+            "4": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_931",
+        "straightlined_code": "a = 0\nb = 1\nwhile b < 10:\n    b += 1\nanswer = b"
+    },
+    {
+        "code": "def f(L):\n    return list(map(lambda i: i % 2 == 0, L))",
+        "input": "[1,2,3,4,5,6,7,8,9,10]",
+        "output": "[False, True, False, True, False, True, False, True, False, True]",
+        "line_execution_counts": {
+            "1": 11
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_933",
+        "straightlined_code": "L = [1,2,3,4,5,6,7,8,9,10]\nanswer = list(map(lambda i: i % 2 == 0, L))"
+    },
+    {
+        "code": "def f(t):\n    s = sum(1 for x in t)\n    return s",
+        "input": "range(10)",
+        "output": "10",
+        "line_execution_counts": {
+            "1": 12,
+            "2": 1
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_934",
+        "straightlined_code": "t = range(10)\ns = sum(1 for x in t)\nanswer = s"
+    },
+    {
+        "code": "def f(seq):\n    return list(filter(lambda x: x % 3 == 0, seq))",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[3, 6, 9]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_935",
+        "straightlined_code": "seq = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = list(filter(lambda x: x % 3 == 0, seq))"
+    },
+    {
+        "code": "def f(L):\n    return [x for x in L if x % 2 == 0]",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[2, 4, 6, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_936",
+        "straightlined_code": "L = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = [x for x in L if x % 2 == 0]"
+    },
+    {
+        "code": "def f(li):\n    return [[x for x in s.split()] for s in li]",
+        "input": "['This is a text', 'of multiple', 'lines']",
+        "output": "[['This', 'is', 'a', 'text'], ['of', 'multiple'], ['lines']]",
+        "line_execution_counts": {
+            "1": 11
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_939",
+        "straightlined_code": "li = ['This is a text', 'of multiple', 'lines']\nanswer = [[x for x in s.split()] for s in li]"
+    },
+    {
+        "code": "def f(stg, tabs):\n    for tab in tabs:\n        stg = stg.rstrip(tab)\n    return stg",
+        "input": "'31849 let it!31849 pass!', ('3','1','8',' ','1','9','2','d')",
+        "output": "'31849 let it!31849 pass!'",
+        "line_execution_counts": {
+            "1": 9,
+            "2": 8,
+            "3": 1
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_941",
+        "straightlined_code": "stg, tabs = '31849 let it!31849 pass!', ('3','1','8',' ','1','9','2','d')\nfor tab in tabs:\n    stg = stg.rstrip(tab)\nanswer = stg"
+    },
+    {
+        "code": "def f(a):\n    b = 1\n    while b < 10:\n        b += 1\n    return b",
+        "input": "0",
+        "output": "10",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 10,
+            "3": 9,
+            "4": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_943",
+        "straightlined_code": "a = 0\nb = 1\nwhile b < 10:\n    b += 1\nanswer = b"
+    },
+    {
+        "code": "def f(stg, tabs):\n    for tab in tabs:\n        stg = stg.rstrip(tab)\n    return stg",
+        "input": "'31849 let it!31849 pass!', ('3','1','8',' ','1','9','2','d')",
+        "output": "'31849 let it!31849 pass!'",
+        "line_execution_counts": {
+            "1": 9,
+            "2": 8,
+            "3": 1
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_944",
+        "straightlined_code": "stg, tabs = '31849 let it!31849 pass!', ('3','1','8',' ','1','9','2','d')\nfor tab in tabs:\n    stg = stg.rstrip(tab)\nanswer = stg"
+    },
+    {
+        "code": "def f(seq):\n    return [2 * x for x in seq if x % 3 == 0]",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[6, 12, 18]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_945",
+        "straightlined_code": "seq = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = [2 * x for x in seq if x % 3 == 0]"
+    },
+    {
+        "code": "def f(a):\n    return list(filter(lambda x: 5 <= x < 12, a))",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]",
+        "output": "[5, 6, 7, 8, 9, 10]",
+        "line_execution_counts": {
+            "1": 11
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_947",
+        "straightlined_code": "a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nanswer = list(filter(lambda x: 5 <= x < 12, a))"
+    },
+    {
+        "code": "def f(L):\n    return [x for x in L if not x % 2]",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[2, 4, 6, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_952",
+        "straightlined_code": "L = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = [x for x in L if not x % 2]"
+    },
+    {
+        "code": "def f(L):\n    return [x for x in L if not x % 2]",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[2, 4, 6, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_954",
+        "straightlined_code": "L = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = [x for x in L if not x % 2]"
+    },
+    {
+        "code": "def f(L):\n    return [x for x in L if not x % 2]",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[2, 4, 6, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_956",
+        "straightlined_code": "L = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = [x for x in L if not x % 2]"
+    },
+    {
+        "code": "def f(li):\n    s = 0\n    for c in li:\n        s += c\n    return s",
+        "input": "range(10)",
+        "output": "45",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 11,
+            "3": 10,
+            "4": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_958",
+        "straightlined_code": "li = range(10)\ns = 0\nfor c in li:\n    s += c\nanswer = s"
+    },
+    {
+        "code": "def f(L):\n    return list(filter(lambda i: i % 2 == 0, L))",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[2, 4, 6, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_962",
+        "straightlined_code": "L = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = list(filter(lambda i: i % 2 == 0, L))"
+    },
+    {
+        "code": "def f(seq):\n    return [2 * x for x in seq if x % 3 == 0]",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[6, 12, 18]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_963",
+        "straightlined_code": "seq = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = [2 * x for x in seq if x % 3 == 0]"
+    },
+    {
+        "code": "def f(li):\n    return [i for i in li if i % 2 == 0]",
+        "input": "range(10)",
+        "output": "[0, 2, 4, 6, 8]",
+        "line_execution_counts": {
+            "1": 11
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_969",
+        "straightlined_code": "li = range(10)\nanswer = [i for i in li if i % 2 == 0]"
+    },
+    {
+        "code": "def f(seq):\n    return [x * 2 for x in seq if x % 2 == 1]",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[6, 18, 2, 10, 14]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_970",
+        "straightlined_code": "seq = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = [x * 2 for x in seq if x % 2 == 1]"
+    },
+    {
+        "code": "def f(seq):\n    return [2 * x for x in seq if x % 3 == 0]",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[6, 12, 18]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_971",
+        "straightlined_code": "seq = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = [2 * x for x in seq if x % 3 == 0]"
+    },
+    {
+        "code": "def f(seq):\n    return list(filter(lambda x: x % 2 == 0, seq))",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[6, 2, 4, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_972",
+        "straightlined_code": "seq = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = list(filter(lambda x: x % 2 == 0, seq))"
+    },
+    {
+        "code": "def f(L):\n    return list(filter(lambda i: i % 7 == 0, L))",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[7]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_973",
+        "straightlined_code": "L = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = list(filter(lambda i: i % 7 == 0, L))"
+    },
+    {
+        "code": "def f(data):\n    return ''.join([c for c in data if not c in \"aeiou\"])",
+        "input": "'hello world!'",
+        "output": "'hll wrld!'",
+        "line_execution_counts": {
+            "1": 13
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_975",
+        "straightlined_code": "data = 'hello world!'\nanswer = ''.join([c for c in data if not c in \"aeiou\"])"
+    },
+    {
+        "code": "def f(L):\n    return list(filter(lambda i: i % 3 == 0, L))",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[3, 6, 9]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_976",
+        "straightlined_code": "L = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = list(filter(lambda i: i % 3 == 0, L))"
+    },
+    {
+        "code": "def f(li):\n    for n in li:\n        if n % 2 != 0:\n            print(n)",
+        "input": "[1, 2, 3, 4, 5, 6]",
+        "output": "None",
+        "line_execution_counts": {
+            "1": 7,
+            "2": 6,
+            "3": 3
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_977",
+        "straightlined_code": "li = [1, 2, 3, 4, 5, 6]\nfor n in li:\n    if n % 2 != 0:\n        print(n)"
+    },
+    {
+        "code": "def f(s):\n    return [s.index(i) for i in s]",
+        "input": "'dYLgdGgVo'",
+        "output": "[0, 1, 2, 3, 0, 5, 3, 7, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 18,
+        "error": null,
+        "id": "new_synth_978",
+        "straightlined_code": "s = 'dYLgdGgVo'\nanswer = [s.index(i) for i in s]"
+    },
+    {
+        "code": "def f(seq):\n    return [x * 2 for x in seq if x % 2 == 1]",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[6, 18, 2, 10, 14]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_979",
+        "straightlined_code": "seq = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = [x * 2 for x in seq if x % 2 == 1]"
+    },
+    {
+        "code": "def f(seq):\n    return [x for x in seq if x % 3 != 0]",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[1, 2, 4, 5, 7, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_981",
+        "straightlined_code": "seq = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = [x for x in seq if x % 3 != 0]"
+    },
+    {
+        "code": "def f(a):\n    for _ in range(5):\n        a += 1\n    return a",
+        "input": "1",
+        "output": "6",
+        "line_execution_counts": {
+            "1": 6,
+            "2": 5,
+            "3": 1
+        },
+        "ast_size": 19,
+        "error": null,
+        "id": "new_synth_982",
+        "straightlined_code": "a = 1\nfor _ in range(5):\n    a += 1\nanswer = a"
+    },
+    {
+        "code": "def f(a, b):\n    for i in range(a):\n        b.append(a)\n    return b",
+        "input": "5, []",
+        "output": "[5, 5, 5, 5, 5]",
+        "line_execution_counts": {
+            "1": 6,
+            "2": 5,
+            "3": 1
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_983",
+        "straightlined_code": "a, b = 5, []\nfor i in range(a):\n    b.append(a)\nanswer = b"
+    },
+    {
+        "code": "def f(L):\n    return [x for x in L if x in [1, 3, 5, 7]]",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[3, 1, 5, 7]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_984",
+        "straightlined_code": "L = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = [x for x in L if x in [1, 3, 5, 7]]"
+    },
+    {
+        "code": "def f(stg, tabs):\n    for tab in tabs:\n        stg = stg.replace(tab, '')\n    return stg",
+        "input": "'31849 let it!31849 pass!', ('3','1','8',' ','1','9','2','d')",
+        "output": "'4letit!4pass!'",
+        "line_execution_counts": {
+            "1": 9,
+            "2": 8,
+            "3": 1
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_985",
+        "straightlined_code": "stg, tabs = '31849 let it!31849 pass!', ('3','1','8',' ','1','9','2','d')\nfor tab in tabs:\n    stg = stg.replace(tab, '')\nanswer = stg"
+    },
+    {
+        "code": "def f(a):\n    for i in a:\n        print(i)",
+        "input": "'Hello world!'",
+        "output": "None",
+        "line_execution_counts": {
+            "1": 13,
+            "2": 12
+        },
+        "ast_size": 15,
+        "error": null,
+        "id": "new_synth_986",
+        "straightlined_code": "a = 'Hello world!'\nfor i in a:\n    print(i)"
+    },
+    {
+        "code": "def f(text):\n    for c in text:\n        if not c.isalnum():\n            return False\n    return True",
+        "input": "'abc012def'",
+        "output": "True",
+        "line_execution_counts": {
+            "1": 10,
+            "2": 9,
+            "4": 1
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_987",
+        "straightlined_code": "text = 'abc012def'\nfor c in text:\n    if not c.isalnum():\n        answer = False\nanswer = True"
+    },
+    {
+        "code": "def f(seq):\n    return [2 * x for x in seq if x % 3 == 0]",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[6, 12, 18]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_988",
+        "straightlined_code": "seq = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = [2 * x for x in seq if x % 3 == 0]"
+    },
+    {
+        "code": "def f(seq):\n    return [i for i in seq if i % 3 == 0]",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[3, 6, 9]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_989",
+        "straightlined_code": "seq = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = [i for i in seq if i % 3 == 0]"
+    },
+    {
+        "code": "def f(L):\n    return list(filter(lambda i: i % 2 == 0, L))",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[2, 4, 6, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_992",
+        "straightlined_code": "L = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = list(filter(lambda i: i % 2 == 0, L))"
+    },
+    {
+        "code": "def f(a):\n    for i in a:\n        print(i)",
+        "input": "'Hello world!'",
+        "output": "None",
+        "line_execution_counts": {
+            "1": 13,
+            "2": 12
+        },
+        "ast_size": 15,
+        "error": null,
+        "id": "new_synth_993",
+        "straightlined_code": "a = 'Hello world!'\nfor i in a:\n    print(i)"
+    },
+    {
+        "code": "def f(s):\n    return list(filter(lambda c: c in 'aeiou', s))",
+        "input": "'Hey look Words!'",
+        "output": "['e', 'o', 'o', 'o']",
+        "line_execution_counts": {
+            "1": 16
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_994",
+        "straightlined_code": "s = 'Hey look Words!'\nanswer = list(filter(lambda c: c in 'aeiou', s))"
+    },
+    {
+        "code": "def f(x, y):\n    for i in range(y):\n        x += i\n    return x",
+        "input": "1, 5",
+        "output": "11",
+        "line_execution_counts": {
+            "1": 6,
+            "2": 5,
+            "3": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_995",
+        "straightlined_code": "x, y = 1, 5\nfor i in range(y):\n    x += i\nanswer = x"
+    },
+    {
+        "code": "def f(L):\n    return list(filter(lambda i: i % 7 == 0, L))",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[7]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_997",
+        "straightlined_code": "L = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = list(filter(lambda i: i % 7 == 0, L))"
+    },
+    {
+        "code": "def f(a, b):\n    for _ in range(a):\n        b += 1\n    return b",
+        "input": "10, 1",
+        "output": "11",
+        "line_execution_counts": {
+            "1": 11,
+            "2": 10,
+            "3": 1
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_998",
+        "straightlined_code": "a, b = 10, 1\nfor _ in range(a):\n    b += 1\nanswer = b"
+    },
+    {
+        "code": "def f(a, b, c):\n    for i in range(a):\n        b += c\n    return b",
+        "input": "10, 1, 2",
+        "output": "21",
+        "line_execution_counts": {
+            "1": 11,
+            "2": 10,
+            "3": 1
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_1002",
+        "straightlined_code": "a, b, c = 10, 1, 2\nfor i in range(a):\n    b += c\nanswer = b"
+    },
+    {
+        "code": "def f(a, b):\n    for i in range(a, b):\n        print(i)",
+        "input": "2, 10",
+        "output": "None",
+        "line_execution_counts": {
+            "1": 9,
+            "2": 8
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_1003",
+        "straightlined_code": "a, b = 2, 10\nfor i in range(a, b):\n    print(i)"
+    },
+    {
+        "code": "def f(L):\n    return [i for i in L if 4 < i < 7]",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[5, 6]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_1004",
+        "straightlined_code": "L = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = [i for i in L if 4 < i < 7]"
+    },
+    {
+        "code": "def f(a):\n    return list(filter(lambda x: x >= 0, a))",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_1005",
+        "straightlined_code": "a = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = list(filter(lambda x: x >= 0, a))"
+    },
+    {
+        "code": "def f(li):\n    return len([x for x in li if x % 2 == 0])",
+        "input": "range(10)",
+        "output": "5",
+        "line_execution_counts": {
+            "1": 11
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_1006",
+        "straightlined_code": "li = range(10)\nanswer = len([x for x in li if x % 2 == 0])"
+    },
+    {
+        "code": "def f(L):\n    return [x for x in L if x % 2]",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[1, 3, 5, 7, 9]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 18,
+        "error": null,
+        "id": "new_synth_1007",
+        "straightlined_code": "L = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = [x for x in L if x % 2]"
+    },
+    {
+        "code": "def f(a, b, c):\n    for i in range(a):\n        b += c\n    return b",
+        "input": "10, 1, 2",
+        "output": "21",
+        "line_execution_counts": {
+            "1": 11,
+            "2": 10,
+            "3": 1
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_1008",
+        "straightlined_code": "a, b, c = 10, 1, 2\nfor i in range(a):\n    b += c\nanswer = b"
+    },
+    {
+        "code": "def f(seq):\n    return list(filter(lambda x: x % 2 != 0, seq))",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[1, 3, 5, 7, 9]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_1011",
+        "straightlined_code": "seq = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = list(filter(lambda x: x % 2 != 0, seq))"
+    },
+    {
+        "code": "def f(a):\n    return sum(x*x for x in a)",
+        "input": "range(10)",
+        "output": "285",
+        "line_execution_counts": {
+            "1": 12
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_1012",
+        "straightlined_code": "a = range(10)\nanswer = sum(x*x for x in a)"
+    },
+    {
+        "code": "def f(seq):\n    return sum(x % 2 for x in seq)",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "5",
+        "line_execution_counts": {
+            "1": 11
+        },
+        "ast_size": 19,
+        "error": null,
+        "id": "new_synth_1013",
+        "straightlined_code": "seq = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = sum(x % 2 for x in seq)"
+    },
+    {
+        "code": "def f(seq):\n    return [x for x in seq if x % 2 == 0]",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[6, 2, 4, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_1014",
+        "straightlined_code": "seq = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = [x for x in seq if x % 2 == 0]"
+    },
+    {
+        "code": "def f(seq):\n    return [x for x in seq if x % 3 == 0]",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[3, 6, 9]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_1015",
+        "straightlined_code": "seq = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = [x for x in seq if x % 3 == 0]"
+    },
+    {
+        "code": "def f(L):\n    return list(filter(lambda i: i % 2 == 0, L))",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[6, 2, 4, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_1016",
+        "straightlined_code": "L = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = list(filter(lambda i: i % 2 == 0, L))"
+    },
+    {
+        "code": "def f(L):\n    return list(filter(lambda i: not i % 5, L))",
+        "input": "[1,2,3,4,5,6,7,8,9,10]",
+        "output": "[5, 10]",
+        "line_execution_counts": {
+            "1": 11
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_1017",
+        "straightlined_code": "L = [1,2,3,4,5,6,7,8,9,10]\nanswer = list(filter(lambda i: not i % 5, L))"
+    },
+    {
+        "code": "def f(stg, tabs):\n    for tab in tabs:\n        stg = stg.replace(tab, '')\n    return stg",
+        "input": "'31849 let it!31849 pass!', ('3','1','8',' ','1','9','2','d')",
+        "output": "'4letit!4pass!'",
+        "line_execution_counts": {
+            "1": 9,
+            "2": 8,
+            "3": 1
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_1018",
+        "straightlined_code": "stg, tabs = '31849 let it!31849 pass!', ('3','1','8',' ','1','9','2','d')\nfor tab in tabs:\n    stg = stg.replace(tab, '')\nanswer = stg"
+    },
+    {
+        "code": "def f(seq):\n    return [e for e in seq if seq.count(e) == 1]",
+        "input": "[1, 2, 3, 2, 1, 1, 1, 2, 3, 3, 2, 1, 1, 2]",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 15
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_1019",
+        "straightlined_code": "seq = [1, 2, 3, 2, 1, 1, 1, 2, 3, 3, 2, 1, 1, 2]\nanswer = [e for e in seq if seq.count(e) == 1]"
+    },
+    {
+        "code": "def f(seq):\n    return [x for x in seq if x % 2 == 0]",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[2, 4, 6, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_1020",
+        "straightlined_code": "seq = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = [x for x in seq if x % 2 == 0]"
+    },
+    {
+        "code": "def f(L):\n    return list(filter(lambda x: x % 2 == 0, L))",
+        "input": "[1,2,3,4,5,6,7,8,9]",
+        "output": "[2, 4, 6, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_1021",
+        "straightlined_code": "L = [1,2,3,4,5,6,7,8,9]\nanswer = list(filter(lambda x: x % 2 == 0, L))"
+    },
+    {
+        "code": "def f(seq):\n    return list(filter(lambda x: x % 2 == 0, seq))",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[2, 4, 6, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_1022",
+        "straightlined_code": "seq = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = list(filter(lambda x: x % 2 == 0, seq))"
+    },
+    {
+        "code": "def f(seq):\n    return [(i, el) for i, el in enumerate(seq)]",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[(0, 3), (1, 6), (2, 9), (3, 1), (4, 2), (5, 4), (6, 5), (7, 7), (8, 8)]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_1023",
+        "straightlined_code": "seq = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = [(i, el) for i, el in enumerate(seq)]"
+    },
+    {
+        "code": "def f(seq):\n    return sorted(seq, key=lambda x: x % 2)",
+        "input": "[1, 2, 3, 2, 1, 1, 1, 2, 3, 3, 2, 1, 1, 2]",
+        "output": "[2, 2, 2, 2, 2, 1, 3, 1, 1, 1, 3, 3, 1, 1]",
+        "line_execution_counts": {
+            "1": 15
+        },
+        "ast_size": 19,
+        "error": null,
+        "id": "new_synth_1024",
+        "straightlined_code": "seq = [1, 2, 3, 2, 1, 1, 1, 2, 3, 3, 2, 1, 1, 2]\nanswer = sorted(seq, key=lambda x: x % 2)"
+    },
+    {
+        "code": "def f(s):\n    return ''.join([c for c in s if c.isalnum()])",
+        "input": "'T0s.is&*aT3xt!'",
+        "output": "'T0sisaT3xt'",
+        "line_execution_counts": {
+            "1": 15
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_1025",
+        "straightlined_code": "s = 'T0s.is&*aT3xt!'\nanswer = ''.join([c for c in s if c.isalnum()])"
+    },
+    {
+        "code": "def f(li):\n    s = 0\n    for e in li:\n        s += e\n    return s",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "45",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 10,
+            "3": 9,
+            "4": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_1026",
+        "straightlined_code": "li = [3, 6, 9, 1, 2, 4, 5, 7, 8]\ns = 0\nfor e in li:\n    s += e\nanswer = s"
+    },
+    {
+        "code": "def f(seq):\n    return [x for x in seq if x % 2 == 0]",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[2, 4, 6, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_1027",
+        "straightlined_code": "seq = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = [x for x in seq if x % 2 == 0]"
+    },
+    {
+        "code": "def f(L):\n    return [x for x in L if 0 <= x <= 100]",
+        "input": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "output": "[3, 6, 9, 1, 2, 4, 5, 7, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_1028",
+        "straightlined_code": "L = [3, 6, 9, 1, 2, 4, 5, 7, 8]\nanswer = [x for x in L if 0 <= x <= 100]"
+    },
+    {
+        "code": "def f(a):\n    return list(filter(lambda x: x > 5, a))",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[6, 7, 8, 9]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_1029",
+        "straightlined_code": "a = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = list(filter(lambda x: x > 5, a))"
+    },
+    {
+        "code": "def f(seq):\n    return [x for x in seq if x % 3 != 0]",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[1, 2, 4, 5, 7, 8]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_1030",
+        "straightlined_code": "seq = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = [x for x in seq if x % 3 != 0]"
+    },
+    {
+        "code": "def f(x, y, z):\n    for i in range(z):\n        x += y\n    return x",
+        "input": "2, 5, 10",
+        "output": "52",
+        "line_execution_counts": {
+            "1": 11,
+            "2": 10,
+            "3": 1
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_1031",
+        "straightlined_code": "x, y, z = 2, 5, 10\nfor i in range(z):\n    x += y\nanswer = x"
+    },
+    {
+        "code": "def f(a, b):\n    return [x for x in a if x != b]",
+        "input": "'abcabcabc', 'c'",
+        "output": "['a', 'b', 'a', 'b', 'a', 'b']",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_1032",
+        "straightlined_code": "a, b = 'abcabcabc', 'c'\nanswer = [x for x in a if x != b]"
+    },
+    {
+        "code": "def f(seq):\n    return list(filter(lambda x: x % 3 == 0, seq))",
+        "input": "range(30)",
+        "output": "[0, 3, 6, 9, 12, 15, 18, 21, 24, 27]",
+        "line_execution_counts": {
+            "1": 31
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_1033",
+        "straightlined_code": "seq = range(30)\nanswer = list(filter(lambda x: x % 3 == 0, seq))"
+    },
+    {
+        "code": "def f(a, b):\n    for i in range(b):\n        a.append(b)\n    return a",
+        "input": "[], 5",
+        "output": "[5, 5, 5, 5, 5]",
+        "line_execution_counts": {
+            "1": 6,
+            "2": 5,
+            "3": 1
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_1034",
+        "straightlined_code": "a, b = [], 5\nfor i in range(b):\n    a.append(b)\nanswer = a"
+    },
+    {
+        "code": "def f(x, y):\n    for i in range(x):\n        y -= 1\n    return y",
+        "input": "5, 1",
+        "output": "-4",
+        "line_execution_counts": {
+            "1": 6,
+            "2": 5,
+            "3": 1
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_1035",
+        "straightlined_code": "x, y = 5, 1\nfor i in range(x):\n    y -= 1\nanswer = y"
+    },
+    {
+        "code": "def f(seq):\n    return [x for x in seq if x % 2 != 0]",
+        "input": "[1, 2, 3, 4, 5, 6, 7, 8, 9]",
+        "output": "[1, 3, 5, 7, 9]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_1036",
+        "straightlined_code": "seq = [1, 2, 3, 4, 5, 6, 7, 8, 9]\nanswer = [x for x in seq if x % 2 != 0]"
+    },
+    {
+        "code": "def f(l):\n    return [item for item in l if item > 0]",
+        "input": "[-1, 0, 1, 2, 3, 4, 5, 6, 7]",
+        "output": "[1, 2, 3, 4, 5, 6, 7]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 18,
+        "error": null,
+        "id": "new_synth_1037",
+        "straightlined_code": "l = [-1, 0, 1, 2, 3, 4, 5, 6, 7]\nanswer = [item for item in l if item > 0]"
+    },
+    {
+        "code": "def f(text):\n    return ''.join(x for x in text if x not in '()')",
+        "input": "('(((((((((((d))))))))).))))(((((')",
+        "output": "'d.'",
+        "line_execution_counts": {
+            "1": 33
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_1038",
+        "straightlined_code": "text = ('(((((((((((d))))))))).))))(((((')\nanswer = ''.join(x for x in text if x not in '()')"
+    },
+    {
+        "code": "def f(seq, pred):\n    return [x for x in seq if pred(x)]",
+        "input": "[3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5], lambda x: x % 2 != 0",
+        "output": "[3, 1, 1, 5, 9, 5, 3, 5]",
+        "line_execution_counts": {
+            "1": 12
+        },
+        "ast_size": 19,
+        "error": null,
+        "id": "new_synth_1039",
+        "straightlined_code": "seq, pred = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5], lambda x: x % 2 != 0\nanswer = [x for x in seq if pred(x)]"
+    },
+    {
+        "code": "def f(n):\n    r = 1\n    for _ in range(n):\n        r *= 3\n    return r",
+        "input": "5",
+        "output": "243",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 6,
+            "3": 5,
+            "4": 1
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_1040",
+        "straightlined_code": "n = 5\nr = 1\nfor _ in range(n):\n    r *= 3\nanswer = r"
+    },
+    {
+        "code": "def f(a):\n    b = 1\n    while b < 10:\n        b += 1\n    return b",
+        "input": "0",
+        "output": "10",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 10,
+            "3": 9,
+            "4": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_1042",
+        "straightlined_code": "a = 0\nb = 1\nwhile b < 10:\n    b += 1\nanswer = b"
+    },
+    {
+        "code": "def f(li):\n    return [y for x in li for y in x]",
+        "input": "[[1, 2], [3, 4], [5, 6]]",
+        "output": "[1, 2, 3, 4, 5, 6]",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 18,
+        "error": null,
+        "id": "new_synth_1043",
+        "straightlined_code": "li = [[1, 2], [3, 4], [5, 6]]\nanswer = [y for x in li for y in x]"
+    },
+    {
+        "code": "def f(s):\n    for ch in s:\n        if ch != s[0]:\n            return 'no'\n    return 'yes'",
+        "input": "'xxxxx'",
+        "output": "'yes'",
+        "line_execution_counts": {
+            "1": 6,
+            "2": 5,
+            "4": 1
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_1060",
+        "straightlined_code": "s = 'xxxxx'\nfor ch in s:\n    if ch != s[0]:\n        answer = 'no'\nanswer = 'yes'"
+    }
+]

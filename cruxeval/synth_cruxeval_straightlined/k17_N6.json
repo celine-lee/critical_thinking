@@ -1,0 +1,1521 @@
+[
+    {
+        "code": "def f(array):\n    s = ' '\n    s += ''.join(array)\n    return s",
+        "input": "[' ', '  ', '    ', '   ']",
+        "output": "'           '",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "sample_4",
+        "straightlined_code": "array = [' ', '  ', '    ', '   ']\ns = ' '\ns += ''.join(array)\nanswer = s"
+    },
+    {
+        "code": "def f(t):\n    for c in t:\n        if not c.isnumeric():\n            return False\n    return True",
+        "input": "'#284376598'",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "sample_9",
+        "straightlined_code": "t = '#284376598'\nfor c in t:\n    if not c.isnumeric():\n        answer = False\nanswer = True"
+    },
+    {
+        "code": "def f(d):\n    d = d.copy()\n    d.popitem()\n    return d",
+        "input": "{\"l\": 1, \"t\": 2, \"x:\": 3}",
+        "output": "{'l': 1, 't': 2}",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "sample_25",
+        "straightlined_code": "d = {\"l\": 1, \"t\": 2, \"x:\": 3}\nd = d.copy()\nd.popitem()\nanswer = d"
+    },
+    {
+        "code": "def f(doc):\n    for x in doc:\n        if x.isalpha():\n            return x.capitalize()\n    return '-'",
+        "input": "'raruwa'",
+        "output": "'R'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "sample_60",
+        "straightlined_code": "doc = 'raruwa'\nfor x in doc:\n    if x.isalpha():\n        answer = x.capitalize()\nanswer = '-'"
+    },
+    {
+        "code": "def f(s):\n    return sum([s.istitle() for s in s.split()])",
+        "input": "'SOME OF THIS Is uknowN!'",
+        "output": "1",
+        "line_execution_counts": {
+            "1": 6
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "sample_98",
+        "straightlined_code": "s = 'SOME OF THIS Is uknowN!'\nanswer = sum([s.istitle() for s in s.split()])"
+    },
+    {
+        "code": "def f(dic):\n    return sorted(dic.items(), key=lambda x: x[0])",
+        "input": "{'b': 1, 'a': 2}",
+        "output": "[('a', 2), ('b', 1)]",
+        "line_execution_counts": {
+            "1": 3
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "sample_182",
+        "straightlined_code": "dic = {'b': 1, 'a': 2}\nanswer = sorted(dic.items(), key=lambda x: x[0])"
+    },
+    {
+        "code": "def f(commands):\n    d = {}\n    for c in commands:\n        d.update(c)\n    return d",
+        "input": "[{\"brown\": 2}, {\"blue\": 5}, {\"bright\": 4}]",
+        "output": "{'brown': 2, 'blue': 5, 'bright': 4}",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 4,
+            "3": 3,
+            "4": 1
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "sample_207",
+        "straightlined_code": "commands = [{\"brown\": 2}, {\"blue\": 5}, {\"bright\": 4}]\nd = {}\nfor c in commands:\n    d.update(c)\nanswer = d"
+    },
+    {
+        "code": "def f(text):    \n    try:\n        while 'nnet lloP' in text:\n            text = text.replace('nnet lloP', 'nnet loLp')\n    finally:\n        return text",
+        "input": "'a_A_b_B3 '",
+        "output": "'a_A_b_B3 '",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "5": 1
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "sample_351",
+        "straightlined_code": "text = 'a_A_b_B3 '\ntry:\n    while 'nnet lloP' in text:\n        text = text.replace('nnet lloP', 'nnet loLp')\nfinally:\n    answer = text"
+    },
+    {
+        "code": "def f(arr1, arr2):\n    new_arr = arr1.copy()\n    new_arr.extend(arr2)\n    return new_arr",
+        "input": "[5, 1, 3, 7, 8], ['', 0, -1, []]",
+        "output": "[5, 1, 3, 7, 8, '', 0, -1, []]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "sample_430",
+        "straightlined_code": "arr1, arr2 = [5, 1, 3, 7, 8], ['', 0, -1, []]\nnew_arr = arr1.copy()\nnew_arr.extend(arr2)\nanswer = new_arr"
+    },
+    {
+        "code": "def f(s, characters):\n    return [s[i:i+1] for i in characters]",
+        "input": "'s7 6s 1ss', [1, 3, 6, 1, 2]",
+        "output": "['7', '6', '1', '7', ' ']",
+        "line_execution_counts": {
+            "1": 6
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "sample_436",
+        "straightlined_code": "s, characters = 's7 6s 1ss', [1, 3, 6, 1, 2]\nanswer = [s[i:i+1] for i in characters]"
+    },
+    {
+        "code": "def f(d):\n    d['luck'] = 42\n    d.clear()\n    return {1: False, 2 :0}",
+        "input": "{}",
+        "output": "{1: False, 2: 0}",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "sample_519",
+        "straightlined_code": "d = {}\nd['luck'] = 42\nd.clear()\nanswer = {1: False, 2 :0}"
+    },
+    {
+        "code": "def f(text):\n    return max(text.find(ch) for ch in 'aeiou')",
+        "input": "\"qsqgijwmmhbchoj\"",
+        "output": "13",
+        "line_execution_counts": {
+            "1": 7
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "sample_565",
+        "straightlined_code": "text = \"qsqgijwmmhbchoj\"\nanswer = max(text.find(ch) for ch in 'aeiou')"
+    },
+    {
+        "code": "def f(text):\n    for i in ['.', '!', '?']:\n        if text.endswith(i):\n            return True\n    return False",
+        "input": "'. C.'",
+        "output": "True",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "sample_607",
+        "straightlined_code": "text = '. C.'\nfor i in ['.', '!', '?']:\n    if text.endswith(i):\n        answer = True\nanswer = False"
+    },
+    {
+        "code": "def f(aDict):\n    # transpose the keys and values into a new dict\n    return dict([v for v in aDict.items()])",
+        "input": "{1:1, 2:2, 3:3}",
+        "output": "{1: 1, 2: 2, 3: 3}",
+        "line_execution_counts": {
+            "2": 4
+        },
+        "ast_size": 19,
+        "error": null,
+        "id": "sample_608",
+        "straightlined_code": "aDict = {1:1, 2:2, 3:3}\n# transpose the keys and values into a new dict\nanswer = dict([v for v in aDict.items()])"
+    },
+    {
+        "code": "def f(text):\n    return sum(1 for c in text if c.isdigit())",
+        "input": "'so456'",
+        "output": "3",
+        "line_execution_counts": {
+            "1": 7
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "sample_765",
+        "straightlined_code": "text = 'so456'\nanswer = sum(1 for c in text if c.isdigit())"
+    },
+    {
+        "code": "def f(d):\n    for ch in d:\n        if ch in 'aeiou':\n            return ''.join(ch)",
+        "input": "'a_A_b_B3 '",
+        "output": "'a'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_813",
+        "straightlined_code": "d = 'a_A_b_B3 '\nfor ch in d:\n    if ch in 'aeiou':\n        answer = ''.join(ch)"
+    },
+    {
+        "code": "def f(aList):\n    return sum(len(aString) for aString in aList)",
+        "input": "['abcd', 'ABC']",
+        "output": "7",
+        "line_execution_counts": {
+            "1": 4
+        },
+        "ast_size": 19,
+        "error": null,
+        "id": "new_synth_814",
+        "straightlined_code": "aList = ['abcd', 'ABC']\nanswer = sum(len(aString) for aString in aList)"
+    },
+    {
+        "code": "def f(c):\n    if c == '(':\n        return 1\n    elif c == ')':\n        return -1\n    else:\n        return 0",
+        "input": "')('",
+        "output": "0",
+        "line_execution_counts": {
+            "1": 1,
+            "3": 1,
+            "6": 1
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_815",
+        "straightlined_code": "c = ')('\nif c == '(':\n    answer = 1\nelif c == ')':\n    answer = -1\nelse:\n    answer = 0"
+    },
+    {
+        "code": "def f(d):\n    return sorted(d.items(), key=lambda x: x[1])",
+        "input": "{1: 1, 2: 0, 3: 1, 4: 2}",
+        "output": "[(2, 0), (1, 1), (3, 1), (4, 2)]",
+        "line_execution_counts": {
+            "1": 5
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_819",
+        "straightlined_code": "d = {1: 1, 2: 0, 3: 1, 4: 2}\nanswer = sorted(d.items(), key=lambda x: x[1])"
+    },
+    {
+        "code": "def f(text):\n    return ' '.join([s.capitalize() for s in text.split()])",
+        "input": "'the world and everything'",
+        "output": "'The World And Everything'",
+        "line_execution_counts": {
+            "1": 5
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_820",
+        "straightlined_code": "text = 'the world and everything'\nanswer = ' '.join([s.capitalize() for s in text.split()])"
+    },
+    {
+        "code": "def f(c):\n    if c == \"a\":\n        return 1\n    if c == \"b\":\n        return 2\n    return 0",
+        "input": "'x'",
+        "output": "0",
+        "line_execution_counts": {
+            "1": 1,
+            "3": 1,
+            "5": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_821",
+        "straightlined_code": "c = 'x'\nif c == \"a\":\n    answer = 1\nif c == \"b\":\n    answer = 2\nanswer = 0"
+    },
+    {
+        "code": "def f(a):\n    return sum(1 for c in a if c.isdigit())",
+        "input": "'$35.89'",
+        "output": "4",
+        "line_execution_counts": {
+            "1": 8
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_822",
+        "straightlined_code": "a = '$35.89'\nanswer = sum(1 for c in a if c.isdigit())"
+    },
+    {
+        "code": "def f(L):\n    return L + [1 for i in L if i % 2 == 0]",
+        "input": "[1, 2, 4, 6]",
+        "output": "[1, 2, 4, 6, 1, 1, 1]",
+        "line_execution_counts": {
+            "1": 5
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_823",
+        "straightlined_code": "L = [1, 2, 4, 6]\nanswer = L + [1 for i in L if i % 2 == 0]"
+    },
+    {
+        "code": "def f(text):\n    return ''.join(c for c in reversed(text))",
+        "input": "'pqrst'",
+        "output": "'tsrqp'",
+        "line_execution_counts": {
+            "1": 7
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_826",
+        "straightlined_code": "text = 'pqrst'\nanswer = ''.join(c for c in reversed(text))"
+    },
+    {
+        "code": "def f(L):\n    return list(map(lambda x: x ** 2, L))",
+        "input": "[1, 2, 4, 6]",
+        "output": "[1, 4, 16, 36]",
+        "line_execution_counts": {
+            "1": 5
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_827",
+        "straightlined_code": "L = [1, 2, 4, 6]\nanswer = list(map(lambda x: x ** 2, L))"
+    },
+    {
+        "code": "def f(a):\n    return sum(1 for c in a if c.isdigit())",
+        "input": "'$35.89'",
+        "output": "4",
+        "line_execution_counts": {
+            "1": 8
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_832",
+        "straightlined_code": "a = '$35.89'\nanswer = sum(1 for c in a if c.isdigit())"
+    },
+    {
+        "code": "def f(d):\n    # return an array with values for all the given keys\n    return [d[k] for k in d.keys()]",
+        "input": "{1:1, 2:2, 3:3}",
+        "output": "[1, 2, 3]",
+        "line_execution_counts": {
+            "2": 4
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_839",
+        "straightlined_code": "d = {1:1, 2:2, 3:3}\n# answer = an array with values for all the given keys\nanswer = [d[k] for k in d.keys()]"
+    },
+    {
+        "code": "def f(s):\n    return \"\".join(c for c in s if c in \"aeiouAEIOU\")",
+        "input": "'bob'",
+        "output": "'o'",
+        "line_execution_counts": {
+            "1": 5
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_840",
+        "straightlined_code": "s = 'bob'\nanswer = \"\".join(c for c in s if c in \"aeiouAEIOU\")"
+    },
+    {
+        "code": "def f(d):\n    for ch in d:\n        if ch in 'aeiou':\n            return ''.join(ch)",
+        "input": "'a_A_b_B3 '",
+        "output": "'a'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_841",
+        "straightlined_code": "d = 'a_A_b_B3 '\nfor ch in d:\n    if ch in 'aeiou':\n        answer = ''.join(ch)"
+    },
+    {
+        "code": "def f(s):\n    # return number of vowels in a given string\n    return sum(c.lower() in 'aeiou' for c in s)",
+        "input": "\"hello\"",
+        "output": "2",
+        "line_execution_counts": {
+            "2": 7
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_844",
+        "straightlined_code": "s = \"hello\"\n# answer = number of vowels in a given string\nanswer = sum(c.lower() in 'aeiou' for c in s)"
+    },
+    {
+        "code": "def f(d):\n    # return an array with values for all the given keys\n    return [d[k] for k in d.keys()]",
+        "input": "{1:1, 2:2, 3:3}",
+        "output": "[1, 2, 3]",
+        "line_execution_counts": {
+            "2": 4
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_846",
+        "straightlined_code": "d = {1:1, 2:2, 3:3}\n# answer = an array with values for all the given keys\nanswer = [d[k] for k in d.keys()]"
+    },
+    {
+        "code": "def f(d):\n    # return all values\n    return [v for v in d.values()]",
+        "input": "{1:1, 2:2, 3:3}",
+        "output": "[1, 2, 3]",
+        "line_execution_counts": {
+            "2": 4
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_847",
+        "straightlined_code": "d = {1:1, 2:2, 3:3}\n# answer = all values\nanswer = [v for v in d.values()]"
+    },
+    {
+        "code": "def f(l):\n    return [v for v in l if v]",
+        "input": "[1, None, 'a', False]",
+        "output": "[1, 'a']",
+        "line_execution_counts": {
+            "1": 5
+        },
+        "ast_size": 15,
+        "error": null,
+        "id": "new_synth_848",
+        "straightlined_code": "l = [1, None, 'a', False]\nanswer = [v for v in l if v]"
+    },
+    {
+        "code": "def f(a):\n    for i in a:\n        if i != 0:\n            return 1\n    return 0",
+        "input": "[0,0,0]",
+        "output": "0",
+        "line_execution_counts": {
+            "1": 4,
+            "2": 3,
+            "4": 1
+        },
+        "ast_size": 19,
+        "error": null,
+        "id": "new_synth_849",
+        "straightlined_code": "a = [0,0,0]\nfor i in a:\n    if i != 0:\n        answer = 1\nanswer = 0"
+    },
+    {
+        "code": "def f(a):\n    # sum all numbers\n    n = 0\n    for i in a:\n        n += i\n    return n",
+        "input": "[1,2,3]",
+        "output": "6",
+        "line_execution_counts": {
+            "2": 1,
+            "3": 4,
+            "4": 3,
+            "5": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_851",
+        "straightlined_code": "a = [1,2,3]\n# sum all numbers\nn = 0\nfor i in a:\n    n += i\nanswer = n"
+    },
+    {
+        "code": "def f(s):\n    for c in s:\n        if c == '!':\n            return False\n    return True",
+        "input": "'!'",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 19,
+        "error": null,
+        "id": "new_synth_852",
+        "straightlined_code": "s = '!'\nfor c in s:\n    if c == '!':\n        answer = False\nanswer = True"
+    },
+    {
+        "code": "def f(L):\n    # return an array with all elements of L that are less than 5\n    return list(filter(lambda x: x < 5, L))",
+        "input": "[1, 2, 4, 6, 1]",
+        "output": "[1, 2, 4, 1]",
+        "line_execution_counts": {
+            "2": 6
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_855",
+        "straightlined_code": "L = [1, 2, 4, 6, 1]\n# answer = an array with all elements of L that are less than 5\nanswer = list(filter(lambda x: x < 5, L))"
+    },
+    {
+        "code": "def f(L):\n    return [x for x in L if x % 2 == 0]",
+        "input": "[1, 2, 4, 5]",
+        "output": "[2, 4]",
+        "line_execution_counts": {
+            "1": 5
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_856",
+        "straightlined_code": "L = [1, 2, 4, 5]\nanswer = [x for x in L if x % 2 == 0]"
+    },
+    {
+        "code": "def f(l):\n    return len([v for v in l if v > 1])",
+        "input": "[1, 2, 3, 4, 5, 6]",
+        "output": "5",
+        "line_execution_counts": {
+            "1": 7
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_857",
+        "straightlined_code": "l = [1, 2, 3, 4, 5, 6]\nanswer = len([v for v in l if v > 1])"
+    },
+    {
+        "code": "def f(d):\n    # check all keys exist\n    return all(k in d for k in d.keys())",
+        "input": "{1:1, 2:2, 3:3}",
+        "output": "True",
+        "line_execution_counts": {
+            "2": 5
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_858",
+        "straightlined_code": "d = {1:1, 2:2, 3:3}\n# check all keys exist\nanswer = all(k in d for k in d.keys())"
+    },
+    {
+        "code": "def f(commands):\n    d = {}\n    for c in commands:\n        d.update(c)\n    return d",
+        "input": "[{\"brown\": 2}, {\"blue\": 5}, {\"bright\": 4}]",
+        "output": "{'brown': 2, 'blue': 5, 'bright': 4}",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 4,
+            "3": 3,
+            "4": 1
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_859",
+        "straightlined_code": "commands = [{\"brown\": 2}, {\"blue\": 5}, {\"bright\": 4}]\nd = {}\nfor c in commands:\n    d.update(c)\nanswer = d"
+    },
+    {
+        "code": "def f(l):\n    return [v for v in l if v]",
+        "input": "[1, None, 'a', False]",
+        "output": "[1, 'a']",
+        "line_execution_counts": {
+            "1": 5
+        },
+        "ast_size": 15,
+        "error": null,
+        "id": "new_synth_860",
+        "straightlined_code": "l = [1, None, 'a', False]\nanswer = [v for v in l if v]"
+    },
+    {
+        "code": "def f(s, d):\n    s.clear()\n    s.update(d)\n    return s",
+        "input": "{\"a\": 1, \"b\": 2, \"c\": 3}, {\"d\": 4, \"e\": 5, \"f\": 6}",
+        "output": "{'d': 4, 'e': 5, 'f': 6}",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_861",
+        "straightlined_code": "s, d = {\"a\": 1, \"b\": 2, \"c\": 3}, {\"d\": 4, \"e\": 5, \"f\": 6}\ns.clear()\ns.update(d)\nanswer = s"
+    },
+    {
+        "code": "def f(x):\n    return sum([i%2 for i in range(x)])",
+        "input": "5",
+        "output": "2",
+        "line_execution_counts": {
+            "1": 6
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_862",
+        "straightlined_code": "x = 5\nanswer = sum([i%2 for i in range(x)])"
+    },
+    {
+        "code": "def f(text):\n    return sum(ord(ch) for ch in text)",
+        "input": "'hello'",
+        "output": "532",
+        "line_execution_counts": {
+            "1": 7
+        },
+        "ast_size": 19,
+        "error": null,
+        "id": "new_synth_863",
+        "straightlined_code": "text = 'hello'\nanswer = sum(ord(ch) for ch in text)"
+    },
+    {
+        "code": "def f(string):\n    return [ord(c) for c in string]",
+        "input": "'hello'",
+        "output": "[104, 101, 108, 108, 111]",
+        "line_execution_counts": {
+            "1": 6
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_864",
+        "straightlined_code": "string = 'hello'\nanswer = [ord(c) for c in string]"
+    },
+    {
+        "code": "def f(text):\n    return [s.capitalize() for s in text.split()]",
+        "input": "'the world and everything'",
+        "output": "['The', 'World', 'And', 'Everything']",
+        "line_execution_counts": {
+            "1": 5
+        },
+        "ast_size": 19,
+        "error": null,
+        "id": "new_synth_865",
+        "straightlined_code": "text = 'the world and everything'\nanswer = [s.capitalize() for s in text.split()]"
+    },
+    {
+        "code": "def f(t):\n    return [i[0] for i in t]",
+        "input": "[('1', '2', '3'), ('4', '5', '6'), ('7', '8', '9')]",
+        "output": "['1', '4', '7']",
+        "line_execution_counts": {
+            "1": 4
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_866",
+        "straightlined_code": "t = [('1', '2', '3'), ('4', '5', '6'), ('7', '8', '9')]\nanswer = [i[0] for i in t]"
+    },
+    {
+        "code": "def f(L):\n    for n in L:\n        if n > 2:\n            return True\n    return False",
+        "input": "[-1, 3, 7, -2]",
+        "output": "True",
+        "line_execution_counts": {
+            "1": 2,
+            "2": 2,
+            "3": 1
+        },
+        "ast_size": 19,
+        "error": null,
+        "id": "new_synth_867",
+        "straightlined_code": "L = [-1, 3, 7, -2]\nfor n in L:\n    if n > 2:\n        answer = True\nanswer = False"
+    },
+    {
+        "code": "def f(l):\n    return sum([v for v in l if v > 1])",
+        "input": "[1, 2, 3, 4, 5, 6]",
+        "output": "20",
+        "line_execution_counts": {
+            "1": 7
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_868",
+        "straightlined_code": "l = [1, 2, 3, 4, 5, 6]\nanswer = sum([v for v in l if v > 1])"
+    },
+    {
+        "code": "def f(t):\n    try:\n        return t[2:]\n    finally:\n        pass",
+        "input": "'a_A_b_B3 '",
+        "output": "'A_b_B3 '",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "4": 1
+        },
+        "ast_size": 13,
+        "error": null,
+        "id": "new_synth_869",
+        "straightlined_code": "t = 'a_A_b_B3 '\ntry:\n    answer = t[2:]\nfinally:\n    pass"
+    },
+    {
+        "code": "def f(d):\n    # return all keys of d\n    return [k for k in d.keys()]",
+        "input": "{1:1, 2:2, 3:3}",
+        "output": "[1, 2, 3]",
+        "line_execution_counts": {
+            "2": 4
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_870",
+        "straightlined_code": "d = {1:1, 2:2, 3:3}\n# answer = all keys of d\nanswer = [k for k in d.keys()]"
+    },
+    {
+        "code": "def f(t):\n    return [i[2] for i in t]",
+        "input": "[('1', '2', '3'), ('4', '5', '6'), ('7', '8', '9')]",
+        "output": "['3', '6', '9']",
+        "line_execution_counts": {
+            "1": 4
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_871",
+        "straightlined_code": "t = [('1', '2', '3'), ('4', '5', '6'), ('7', '8', '9')]\nanswer = [i[2] for i in t]"
+    },
+    {
+        "code": "def f(dic):\n    return sorted(dic.items(), key=lambda x: x[1])",
+        "input": "{'a': 3, 'c': 1, 'd': 5}",
+        "output": "[('c', 1), ('a', 3), ('d', 5)]",
+        "line_execution_counts": {
+            "1": 4
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_872",
+        "straightlined_code": "dic = {'a': 3, 'c': 1, 'd': 5}\nanswer = sorted(dic.items(), key=lambda x: x[1])"
+    },
+    {
+        "code": "def f(L):\n    return [x * 2 for x in L]",
+        "input": "[1, 2, 4, 5]",
+        "output": "[2, 4, 8, 10]",
+        "line_execution_counts": {
+            "1": 5
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_873",
+        "straightlined_code": "L = [1, 2, 4, 5]\nanswer = [x * 2 for x in L]"
+    },
+    {
+        "code": "def f(l):\n    return sorted([abs(i) for i in l if i > 0])",
+        "input": "[-2, -3, -6, 7, 10, 15, 0]",
+        "output": "[7, 10, 15]",
+        "line_execution_counts": {
+            "1": 8
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_875",
+        "straightlined_code": "l = [-2, -3, -6, 7, 10, 15, 0]\nanswer = sorted([abs(i) for i in l if i > 0])"
+    },
+    {
+        "code": "def f(l):\n    return len([v for v in l if v > 1])",
+        "input": "[1, 2, 3, 4, 5, 6]",
+        "output": "5",
+        "line_execution_counts": {
+            "1": 7
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_876",
+        "straightlined_code": "l = [1, 2, 3, 4, 5, 6]\nanswer = len([v for v in l if v > 1])"
+    },
+    {
+        "code": "def f(numbers):\n    # find the first even number in numbers\n    return [n for n in numbers if n % 2 == 0][0]",
+        "input": "[2, 1, 6, 4]",
+        "output": "2",
+        "line_execution_counts": {
+            "2": 5
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_877",
+        "straightlined_code": "numbers = [2, 1, 6, 4]\n# find the first even number in numbers\nanswer = [n for n in numbers if n % 2 == 0][0]"
+    },
+    {
+        "code": "def f(aDict):\n    return {v:k for k, v in aDict.items()}",
+        "input": "{1: 3.14, 2: 2.78}",
+        "output": "{3.14: 1, 2.78: 2}",
+        "line_execution_counts": {
+            "1": 3
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_878",
+        "straightlined_code": "aDict = {1: 3.14, 2: 2.78}\nanswer = {v:k for k, v in aDict.items()}"
+    },
+    {
+        "code": "def f(L):\n    return sum(1 for x in L if x == 1)",
+        "input": "[0,1,2,1]",
+        "output": "2",
+        "line_execution_counts": {
+            "1": 6
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_879",
+        "straightlined_code": "L = [0,1,2,1]\nanswer = sum(1 for x in L if x == 1)"
+    },
+    {
+        "code": "def f(aDict):\n    return {aValue: aKey for aKey, aValue in aDict.items()}",
+        "input": "{\"a\": 1, \"b\": 2, \"c\": 3}",
+        "output": "{1: 'a', 2: 'b', 3: 'c'}",
+        "line_execution_counts": {
+            "1": 4
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_880",
+        "straightlined_code": "aDict = {\"a\": 1, \"b\": 2, \"c\": 3}\nanswer = {aValue: aKey for aKey, aValue in aDict.items()}"
+    },
+    {
+        "code": "def f(d):\n    for ch in d:\n        if ch in 'aeiou':\n            return ''.join(ch)",
+        "input": "'a_A_b_B3 '",
+        "output": "'a'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_881",
+        "straightlined_code": "d = 'a_A_b_B3 '\nfor ch in d:\n    if ch in 'aeiou':\n        answer = ''.join(ch)"
+    },
+    {
+        "code": "def f(s, x):\n    return list(map(lambda y: x + y, s))",
+        "input": "'0 1 2', '0'",
+        "output": "['00', '0 ', '01', '0 ', '02']",
+        "line_execution_counts": {
+            "1": 6
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_882",
+        "straightlined_code": "s, x = '0 1 2', '0'\nanswer = list(map(lambda y: x + y, s))"
+    },
+    {
+        "code": "def f(p):\n    # check all values are between 0 and 10\n    return all(0 <= v < 10 for v in p.values())",
+        "input": "{'A' : 3, 'B' : 9, 'C' : 5}",
+        "output": "True",
+        "line_execution_counts": {
+            "2": 5
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_883",
+        "straightlined_code": "p = {'A' : 3, 'B' : 9, 'C' : 5}\n# check all values are between 0 and 10\nanswer = all(0 <= v < 10 for v in p.values())"
+    },
+    {
+        "code": "def f(L):\n    return list(filter(lambda x: not (x % 2), L))",
+        "input": "[3, 2, 8, 4, 6]",
+        "output": "[2, 8, 4, 6]",
+        "line_execution_counts": {
+            "1": 6
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_884",
+        "straightlined_code": "L = [3, 2, 8, 4, 6]\nanswer = list(filter(lambda x: not (x % 2), L))"
+    },
+    {
+        "code": "def f(l):\n    return [i[2] for i in l]",
+        "input": "[(1, 2, 'a'), (3, 4, 'b'), (5, 6, 'c')]",
+        "output": "['a', 'b', 'c']",
+        "line_execution_counts": {
+            "1": 4
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_886",
+        "straightlined_code": "l = [(1, 2, 'a'), (3, 4, 'b'), (5, 6, 'c')]\nanswer = [i[2] for i in l]"
+    },
+    {
+        "code": "def f(string):\n    return [ord(c) for c in string]",
+        "input": "'hello'",
+        "output": "[104, 101, 108, 108, 111]",
+        "line_execution_counts": {
+            "1": 6
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_887",
+        "straightlined_code": "string = 'hello'\nanswer = [ord(c) for c in string]"
+    },
+    {
+        "code": "def f(s):\n    # find all indices of s in [0, 1, 2, 3]\n    return [i for i in range(4) if s[i] == 'a']",
+        "input": "'aabb'",
+        "output": "[0, 1]",
+        "line_execution_counts": {
+            "2": 5
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_888",
+        "straightlined_code": "s = 'aabb'\n# find all indices of s in [0, 1, 2, 3]\nanswer = [i for i in range(4) if s[i] == 'a']"
+    },
+    {
+        "code": "def f(aDict):\n    aDict['one'] = 'one'\n    aDict['two'] = 'two'\n    return aDict",
+        "input": "{}",
+        "output": "{'one': 'one', 'two': 'two'}",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_889",
+        "straightlined_code": "aDict = {}\naDict['one'] = 'one'\naDict['two'] = 'two'\nanswer = aDict"
+    },
+    {
+        "code": "def f(lst):\n    # Return only the even numbers in the list\n    return [v for v in lst if v % 2 == 0]",
+        "input": "[1,2,3,4]",
+        "output": "[2, 4]",
+        "line_execution_counts": {
+            "2": 5
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_890",
+        "straightlined_code": "lst = [1,2,3,4]\n# Return only the even numbers in the list\nanswer = [v for v in lst if v % 2 == 0]"
+    },
+    {
+        "code": "def f(a):\n    return [i**2 for i in a]",
+        "input": "[1,2,3]",
+        "output": "[1, 4, 9]",
+        "line_execution_counts": {
+            "1": 4
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_891",
+        "straightlined_code": "a = [1,2,3]\nanswer = [i**2 for i in a]"
+    },
+    {
+        "code": "def f(L):\n    # return an array with all elements of L that are less than 5\n    return list(filter(lambda x: x < 5, L))",
+        "input": "[1, 2, 4, 6, 1]",
+        "output": "[1, 2, 4, 1]",
+        "line_execution_counts": {
+            "2": 6
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_892",
+        "straightlined_code": "L = [1, 2, 4, 6, 1]\n# answer = an array with all elements of L that are less than 5\nanswer = list(filter(lambda x: x < 5, L))"
+    },
+    {
+        "code": "def f(text):\n    for c in text:\n        if c == '!':\n            return False\n    return True",
+        "input": "'!'",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 19,
+        "error": null,
+        "id": "new_synth_893",
+        "straightlined_code": "text = '!'\nfor c in text:\n    if c == '!':\n        answer = False\nanswer = True"
+    },
+    {
+        "code": "def f(d):\n    # return a list of keys sorted by their corresponding value\n    return sorted(d.keys(), key=lambda k: d[k])",
+        "input": "{1: 1, 2: 2, 3: 3}",
+        "output": "[1, 2, 3]",
+        "line_execution_counts": {
+            "2": 4
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_894",
+        "straightlined_code": "d = {1: 1, 2: 2, 3: 3}\n# answer = a list of keys sorted by their corresponding value\nanswer = sorted(d.keys(), key=lambda k: d[k])"
+    },
+    {
+        "code": "def f(a):\n    return list(map(lambda i: i + 1, a))",
+        "input": "[1, 2, 3, 4]",
+        "output": "[2, 3, 4, 5]",
+        "line_execution_counts": {
+            "1": 5
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_895",
+        "straightlined_code": "a = [1, 2, 3, 4]\nanswer = list(map(lambda i: i + 1, a))"
+    },
+    {
+        "code": "def f(l):\n    return {x: x for x in l}",
+        "input": "[1, 1]",
+        "output": "{1: 1}",
+        "line_execution_counts": {
+            "1": 3
+        },
+        "ast_size": 15,
+        "error": null,
+        "id": "new_synth_896",
+        "straightlined_code": "l = [1, 1]\nanswer = {x: x for x in l}"
+    },
+    {
+        "code": "def f(d):\n    # return all values\n    return [v for v in d.values()]",
+        "input": "{1:1, 2:2, 3:3}",
+        "output": "[1, 2, 3]",
+        "line_execution_counts": {
+            "2": 4
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_898",
+        "straightlined_code": "d = {1:1, 2:2, 3:3}\n# answer = all values\nanswer = [v for v in d.values()]"
+    },
+    {
+        "code": "def f(L):\n    return [x + 1 for x in L]",
+        "input": "[1, 2, 3]",
+        "output": "[2, 3, 4]",
+        "line_execution_counts": {
+            "1": 4
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_899",
+        "straightlined_code": "L = [1, 2, 3]\nanswer = [x + 1 for x in L]"
+    },
+    {
+        "code": "def f(L):\n    L.append('c')\n    L.append('d')\n    return L",
+        "input": "['a', 'b']",
+        "output": "['a', 'b', 'c', 'd']",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_901",
+        "straightlined_code": "L = ['a', 'b']\nL.append('c')\nL.append('d')\nanswer = L"
+    },
+    {
+        "code": "def f(a):\n    return [i*2 for i in a]",
+        "input": "[1,2,3]",
+        "output": "[2, 4, 6]",
+        "line_execution_counts": {
+            "1": 4
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_903",
+        "straightlined_code": "a = [1,2,3]\nanswer = [i*2 for i in a]"
+    },
+    {
+        "code": "def f(n):\n    # find the first positive number in n\n    for i in n:\n        if i > 0:\n            return i\n    return None",
+        "input": "[1,2,3,4]",
+        "output": "1",
+        "line_execution_counts": {
+            "2": 1,
+            "3": 1,
+            "4": 1
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_904",
+        "straightlined_code": "n = [1,2,3,4]\n# find the first positive number in n\nfor i in n:\n    if i > 0:\n        answer = i\nanswer = None"
+    },
+    {
+        "code": "def f(a):\n    # sum all numbers\n    n = 0\n    for i in a:\n        n += i\n    return n",
+        "input": "[1,2,3]",
+        "output": "6",
+        "line_execution_counts": {
+            "2": 1,
+            "3": 4,
+            "4": 3,
+            "5": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_905",
+        "straightlined_code": "a = [1,2,3]\n# sum all numbers\nn = 0\nfor i in a:\n    n += i\nanswer = n"
+    },
+    {
+        "code": "def f(L):\n    return list(filter(lambda x: x > 10, L))",
+        "input": "[1, 10, 3, 4, 15]",
+        "output": "[15]",
+        "line_execution_counts": {
+            "1": 6
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_906",
+        "straightlined_code": "L = [1, 10, 3, 4, 15]\nanswer = list(filter(lambda x: x > 10, L))"
+    },
+    {
+        "code": "def f(L):\n    # return an array with all elements of L that are not 0\n    return list(filter(lambda x: x != 0, L))",
+        "input": "[1, 2, 4, 0, 1, 0, 3, 0]",
+        "output": "[1, 2, 4, 1, 3]",
+        "line_execution_counts": {
+            "2": 9
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_907",
+        "straightlined_code": "L = [1, 2, 4, 0, 1, 0, 3, 0]\n# answer = an array with all elements of L that are not 0\nanswer = list(filter(lambda x: x != 0, L))"
+    },
+    {
+        "code": "def f(l):\n    return list(filter(lambda x: x % 2 == 0, l))",
+        "input": "[1, 2, 3, 4, 5]",
+        "output": "[2, 4]",
+        "line_execution_counts": {
+            "1": 6
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_908",
+        "straightlined_code": "l = [1, 2, 3, 4, 5]\nanswer = list(filter(lambda x: x % 2 == 0, l))"
+    },
+    {
+        "code": "def f(n):\n    # return the first number that is not positive\n    for i in n:\n        if i <= 0:\n            return i\n    return None",
+        "input": "[-1,2,3,4]",
+        "output": "-1",
+        "line_execution_counts": {
+            "2": 1,
+            "3": 1,
+            "4": 1
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_909",
+        "straightlined_code": "n = [-1,2,3,4]\n# answer = the first number that is not positive\nfor i in n:\n    if i <= 0:\n        answer = i\nanswer = None"
+    },
+    {
+        "code": "def f(n):\n    # find the first positive number in n\n    for i in n:\n        if i > 0:\n            return i\n    return None",
+        "input": "[1,2,3,4]",
+        "output": "1",
+        "line_execution_counts": {
+            "2": 1,
+            "3": 1,
+            "4": 1
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_910",
+        "straightlined_code": "n = [1,2,3,4]\n# find the first positive number in n\nfor i in n:\n    if i > 0:\n        answer = i\nanswer = None"
+    },
+    {
+        "code": "def f(a, b):\n    # find a,b\n    for i in a:\n        if i == b:\n            return i\n    return None",
+        "input": "[1,2,3], 1",
+        "output": "1",
+        "line_execution_counts": {
+            "2": 1,
+            "3": 1,
+            "4": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_911",
+        "straightlined_code": "a, b = [1,2,3], 1\n# find a,b\nfor i in a:\n    if i == b:\n        answer = i\nanswer = None"
+    },
+    {
+        "code": "def f(L):\n    # return an array with all elements of L that are less than 5\n    return [x for x in L if x < 5]",
+        "input": "[1, 2, 4, 6, 1]",
+        "output": "[1, 2, 4, 1]",
+        "line_execution_counts": {
+            "2": 6
+        },
+        "ast_size": 18,
+        "error": null,
+        "id": "new_synth_913",
+        "straightlined_code": "L = [1, 2, 4, 6, 1]\n# answer = an array with all elements of L that are less than 5\nanswer = [x for x in L if x < 5]"
+    },
+    {
+        "code": "def f(L):\n    # remove all even numbers from L\n    return [x for x in L if x % 2 == 1]",
+        "input": "[1, 2, 4, 6]",
+        "output": "[1]",
+        "line_execution_counts": {
+            "2": 5
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_914",
+        "straightlined_code": "L = [1, 2, 4, 6]\n# remove all even numbers from L\nanswer = [x for x in L if x % 2 == 1]"
+    },
+    {
+        "code": "def f(L):\n    res = 0\n    for e in L:\n        res += e\n    return res",
+        "input": "[0,1,2]",
+        "output": "3",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 4,
+            "3": 3,
+            "4": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_915",
+        "straightlined_code": "L = [0,1,2]\nres = 0\nfor e in L:\n    res += e\nanswer = res"
+    },
+    {
+        "code": "def f(c):\n    if c == \"a\":\n        return 1\n    if c == \"b\":\n        return 2\n    return 0",
+        "input": "'x'",
+        "output": "0",
+        "line_execution_counts": {
+            "1": 1,
+            "3": 1,
+            "5": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_916",
+        "straightlined_code": "c = 'x'\nif c == \"a\":\n    answer = 1\nif c == \"b\":\n    answer = 2\nanswer = 0"
+    },
+    {
+        "code": "def f(s):\n    return sum(c in 'aeiouy' for c in s)",
+        "input": "'hello'",
+        "output": "2",
+        "line_execution_counts": {
+            "1": 7
+        },
+        "ast_size": 19,
+        "error": null,
+        "id": "new_synth_917",
+        "straightlined_code": "s = 'hello'\nanswer = sum(c in 'aeiouy' for c in s)"
+    },
+    {
+        "code": "def f(l):\n    # count the number of even numbers in l\n    return sum(1 for n in l if n % 2 == 0)",
+        "input": "[1, 2, 3, 4]",
+        "output": "2",
+        "line_execution_counts": {
+            "2": 6
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_918",
+        "straightlined_code": "l = [1, 2, 3, 4]\n# count the number of even numbers in l\nanswer = sum(1 for n in l if n % 2 == 0)"
+    },
+    {
+        "code": "def f(a, b):\n    return [x for x in a if x not in b]",
+        "input": "[1, 2, 3], [1, 2]",
+        "output": "[3]",
+        "line_execution_counts": {
+            "1": 4
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_919",
+        "straightlined_code": "a, b = [1, 2, 3], [1, 2]\nanswer = [x for x in a if x not in b]"
+    },
+    {
+        "code": "def f(d):\n    return [v + 1 for v in d.values() if v > 10]",
+        "input": "{1: 11, 2: 12}",
+        "output": "[12, 13]",
+        "line_execution_counts": {
+            "1": 3
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_920",
+        "straightlined_code": "d = {1: 11, 2: 12}\nanswer = [v + 1 for v in d.values() if v > 10]"
+    },
+    {
+        "code": "def f(text):\n    # return the first non-zero number in text\n    for i in text:\n        if i != 0:\n            return i\n    return None",
+        "input": "[0,0,0,1,2,3,4]",
+        "output": "1",
+        "line_execution_counts": {
+            "2": 4,
+            "3": 4,
+            "4": 1
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_921",
+        "straightlined_code": "text = [0,0,0,1,2,3,4]\n# answer = the first non-zero number in text\nfor i in text:\n    if i != 0:\n        answer = i\nanswer = None"
+    },
+    {
+        "code": "def f(n):\n    # find the first positive number in n\n    for i in n:\n        if i > 0:\n            return i\n    return None",
+        "input": "[-1, 0, -3]",
+        "output": "None",
+        "line_execution_counts": {
+            "2": 4,
+            "3": 3,
+            "5": 1
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_925",
+        "straightlined_code": "n = [-1, 0, -3]\n# find the first positive number in n\nfor i in n:\n    if i > 0:\n        answer = i\nanswer = None"
+    },
+    {
+        "code": "def f(L):\n    # sum the elements of L\n    x = 0\n    for i in L:\n        x += i\n    return x",
+        "input": "[1,2,3]",
+        "output": "6",
+        "line_execution_counts": {
+            "2": 1,
+            "3": 4,
+            "4": 3,
+            "5": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_926",
+        "straightlined_code": "L = [1,2,3]\n# sum the elements of L\nx = 0\nfor i in L:\n    x += i\nanswer = x"
+    },
+    {
+        "code": "def f(L):\n    return [x * 2 for x in L if x != 5]",
+        "input": "[1, 2, 5, 4, 5, 1]",
+        "output": "[2, 4, 8, 2]",
+        "line_execution_counts": {
+            "1": 7
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_928",
+        "straightlined_code": "L = [1, 2, 5, 4, 5, 1]\nanswer = [x * 2 for x in L if x != 5]"
+    },
+    {
+        "code": "def f(d):\n    return ''.join(d[i] for i in range(1, 4))",
+        "input": "{1: 'a', 2: 'b', 3: 'c'}",
+        "output": "'abc'",
+        "line_execution_counts": {
+            "1": 5
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_929",
+        "straightlined_code": "d = {1: 'a', 2: 'b', 3: 'c'}\nanswer = ''.join(d[i] for i in range(1, 4))"
+    },
+    {
+        "code": "def f(n):\n    return [c for c in str(n)]",
+        "input": "123",
+        "output": "['1', '2', '3']",
+        "line_execution_counts": {
+            "1": 4
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_930",
+        "straightlined_code": "n = 123\nanswer = [c for c in str(n)]"
+    },
+    {
+        "code": "def f(l):\n    return [i*i for i in l]",
+        "input": "[1,2,3,4,5]",
+        "output": "[1, 4, 9, 16, 25]",
+        "line_execution_counts": {
+            "1": 6
+        },
+        "ast_size": 17,
+        "error": null,
+        "id": "new_synth_932",
+        "straightlined_code": "l = [1,2,3,4,5]\nanswer = [i*i for i in l]"
+    },
+    {
+        "code": "def f(L):\n    L.append('END')\n    L.insert(0, 'BEGIN')\n    return L",
+        "input": "['a', 'b', 'c']",
+        "output": "['BEGIN', 'a', 'b', 'c', 'END']",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_938",
+        "straightlined_code": "L = ['a', 'b', 'c']\nL.append('END')\nL.insert(0, 'BEGIN')\nanswer = L"
+    },
+    {
+        "code": "def f(i):\n    # print an integer, i\n    for c in str(i):\n        print(c, end='')",
+        "input": "123",
+        "output": "None",
+        "line_execution_counts": {
+            "2": 4,
+            "3": 3
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_940",
+        "straightlined_code": "i = 123\n# print an integer, i\nfor c in str(i):\n    print(c, end='')"
+    },
+    {
+        "code": "def f(seq):\n    return list(filter(lambda x: x % 5 == 0, seq))",
+        "input": "[5, 10, 15, 20, 25]",
+        "output": "[5, 10, 15, 20, 25]",
+        "line_execution_counts": {
+            "1": 6
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_946",
+        "straightlined_code": "seq = [5, 10, 15, 20, 25]\nanswer = list(filter(lambda x: x % 5 == 0, seq))"
+    },
+    {
+        "code": "def f(seq):\n    return [x for x in seq if x % 3 != 0]",
+        "input": "[1, 3, 5, 6, 9, 12, 18, 21]",
+        "output": "[1, 5]",
+        "line_execution_counts": {
+            "1": 9
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_948",
+        "straightlined_code": "seq = [1, 3, 5, 6, 9, 12, 18, 21]\nanswer = [x for x in seq if x % 3 != 0]"
+    },
+    {
+        "code": "def f(seq):\n    return [num % 4 for num in seq]",
+        "input": "[2, 3, 4, 5, 6]",
+        "output": "[2, 3, 0, 1, 2]",
+        "line_execution_counts": {
+            "1": 6
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_949",
+        "straightlined_code": "seq = [2, 3, 4, 5, 6]\nanswer = [num % 4 for num in seq]"
+    },
+    {
+        "code": "def f(s):\n    return \"\".join(x for x in s if x in 'aeiou')",
+        "input": "'hello'",
+        "output": "'eo'",
+        "line_execution_counts": {
+            "1": 7
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_950",
+        "straightlined_code": "s = 'hello'\nanswer = \"\".join(x for x in s if x in 'aeiou')"
+    },
+    {
+        "code": "def f(s):\n    return [c for c in s if c.isspace()]",
+        "input": "'  \\n \\t \\r '",
+        "output": "[' ', ' ', '\\n', ' ', '\\t', ' ', '\\r', ' ']",
+        "line_execution_counts": {
+            "1": 9
+        },
+        "ast_size": 18,
+        "error": null,
+        "id": "new_synth_951",
+        "straightlined_code": "s = '  \\n \\t \\r '\nanswer = [c for c in s if c.isspace()]"
+    },
+    {
+        "code": "def f(L):\n    L = L[:]\n    L.reverse()\n    return L",
+        "input": "['a', 'b', 'c', 'd', 'e', 'f', 'g']",
+        "output": "['g', 'f', 'e', 'd', 'c', 'b', 'a']",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_953",
+        "straightlined_code": "L = ['a', 'b', 'c', 'd', 'e', 'f', 'g']\nL = L[:]\nL.reverse()\nanswer = L"
+    },
+    {
+        "code": "def f(L):\n    return [x*x for x in L]",
+        "input": "[1, 2, 3, 4]",
+        "output": "[1, 4, 9, 16]",
+        "line_execution_counts": {
+            "1": 5
+        },
+        "ast_size": 17,
+        "error": null,
+        "id": "new_synth_955",
+        "straightlined_code": "L = [1, 2, 3, 4]\nanswer = [x*x for x in L]"
+    },
+    {
+        "code": "def f(L):\n    return [x + 1 for x in L]",
+        "input": "[1, 2, 3]",
+        "output": "[2, 3, 4]",
+        "line_execution_counts": {
+            "1": 4
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_959",
+        "straightlined_code": "L = [1, 2, 3]\nanswer = [x + 1 for x in L]"
+    },
+    {
+        "code": "def f(s):\n    return ''.join([c for c in s if not c in \"aeiouAEIOU\"])",
+        "input": "'Hey!'",
+        "output": "'Hy!'",
+        "line_execution_counts": {
+            "1": 5
+        },
+        "ast_size": 24,
+        "error": null,
+        "id": "new_synth_961",
+        "straightlined_code": "s = 'Hey!'\nanswer = ''.join([c for c in s if not c in \"aeiouAEIOU\"])"
+    },
+    {
+        "code": "def f(money):\n    return [x.isascii() for x in money]",
+        "input": "'$%&123'",
+        "output": "[True, True, True, True, True, True]",
+        "line_execution_counts": {
+            "1": 7
+        },
+        "ast_size": 16,
+        "error": null,
+        "id": "new_synth_964",
+        "straightlined_code": "money = '$%&123'\nanswer = [x.isascii() for x in money]"
+    },
+    {
+        "code": "def f(x):\n    return {k: v for (k, v) in enumerate(x)}",
+        "input": "'19273'",
+        "output": "{0: '1', 1: '9', 2: '2', 3: '7', 4: '3'}",
+        "line_execution_counts": {
+            "1": 6
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_965",
+        "straightlined_code": "x = '19273'\nanswer = {k: v for (k, v) in enumerate(x)}"
+    },
+    {
+        "code": "def f(s):\n    return ''.join([c for c in s if c.islower()])",
+        "input": "'AbCdEfGH'",
+        "output": "'bdf'",
+        "line_execution_counts": {
+            "1": 9
+        },
+        "ast_size": 22,
+        "error": null,
+        "id": "new_synth_966",
+        "straightlined_code": "s = 'AbCdEfGH'\nanswer = ''.join([c for c in s if c.islower()])"
+    },
+    {
+        "code": "def f(nums):\n    return [n for n in nums if 4 <= n <= 11]",
+        "input": "[0, 5, 7, 12, 2, 8, 6]",
+        "output": "[5, 7, 8, 6]",
+        "line_execution_counts": {
+            "1": 8
+        },
+        "ast_size": 20,
+        "error": null,
+        "id": "new_synth_967",
+        "straightlined_code": "nums = [0, 5, 7, 12, 2, 8, 6]\nanswer = [n for n in nums if 4 <= n <= 11]"
+    },
+    {
+        "code": "def f(seq):\n    return list(map(lambda i: i*2, seq))",
+        "input": "[1, 2, 3, 4]",
+        "output": "[2, 4, 6, 8]",
+        "line_execution_counts": {
+            "1": 5
+        },
+        "ast_size": 21,
+        "error": null,
+        "id": "new_synth_968",
+        "straightlined_code": "seq = [1, 2, 3, 4]\nanswer = list(map(lambda i: i*2, seq))"
+    },
+    {
+        "code": "def f(seq):\n    return [x for x in seq if x not in [1,2,3,4]]",
+        "input": "[4,5,6]",
+        "output": "[5, 6]",
+        "line_execution_counts": {
+            "1": 4
+        },
+        "ast_size": 23,
+        "error": null,
+        "id": "new_synth_974",
+        "straightlined_code": "seq = [4,5,6]\nanswer = [x for x in seq if x not in [1,2,3,4]]"
+    }
+]

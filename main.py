@@ -71,7 +71,7 @@ def run(args):
             task = LogicalDeductionTask()
         case 'cruxeval':
             task = CRUXEvalTask()
-            experimentor_class = CRUXEvalExperimenter
+            # experimentor_class = CRUXEvalExperimenter
 
     match args.generator:
         case 'openai':
@@ -88,10 +88,15 @@ def run(args):
     for model_name in args.models:
         model_generator = generator(model_name, gen_kwargs, args.batch_size)
         experimentor = experimentor_class(task, model_generator, n_samples_per, force_no_cot=args.disable_cot)
-        if args.task == 'cruxeval':
-            experimentor.run()
-            model_generator.free_and_delete()
-            continue
+        if args.task == "cruxeval": 
+            modelname = os.path.basename(model_name)
+            if modelname in modelname_mappings:
+                modelname = modelname_mappings[modelname]
+            task.load_remaining_inputs(modelname)
+        # if args.task == 'cruxeval':
+        #     experimentor.run()
+        #     model_generator.free_and_delete()
+        #     continue
 
         keys = ["k", "N"]
         values = [args.k_vals, args.N_vals]

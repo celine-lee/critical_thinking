@@ -1,6 +1,8 @@
 import os
 import re
 import random
+import glob
+import json
 
 class Task:
     def __init__(self, name, answer_extraction_regex):
@@ -509,38 +511,52 @@ class CRUXEvalTask(Task):
         self.foldername = "cruxeval/outputs_straightlined"
         self.query_template = """You are given a snippet of Python code. Complete the assertion with the resulting value in `answer`.
 
-{fn_def}
+{straightlined_code}
 
 assert answer == ??
 """
         self.generation_instruction = "Provide your final answer following this template: [ANSWER]\nassert answer == YOUR ANSWER\n[/ANSWER]"
         self.reprompt_string = "[ANSWER]\nassert answer == "
 
-    def create_subfolder_name(self, force_no_cot):
-        subfolder = f"{self.foldername}{'_nocot' if force_no_cot else ''}"
+        self.all_examples = {}
+        self.tracker = {}
+
+    def load_remaining_inputs(self, modelname):
+
+        self.all_examples = {}
+        self.tracker = {}
+        
+        already_processed = {}
+        for kN_folder in glob.glob("cruxeval/outputs_straightlined/k*"):
+            parsed_experimentname = re.search(r"k(\d+)_N(\d+)", kN_folder)
+            if parsed_experimentname is None:
+                continue
+            k = int(parsed_experimentname.group(1))
+            N = int(parsed_experimentname.group(2))
+            filename = os.path.join(kN_folder, f"{modelname}_T0.0.json")
+            if os.path.exists(filename):
+                already_processed[(k, N)] = {ex["id"] for ex in json.load(open(filename))}
+
+        # Then load in the examples that haven't been processed yet; sort accordingly
+        for kN_file in glob.glob("cruxeval/synth_cruxeval_straightlined/k*.json"):
+            parsed_experimentname = re.search(r"k(\d+)_N(\d+)", kN_file)
+            if parsed_experimentname is None:
+                continue
+            k = int(parsed_experimentname.group(1))
+            N = int(parsed_experimentname.group(2))
+            self.all_examples[(k,N)] = [ex for ex in json.load(open(kN_file)) if ex["id"] not in already_processed[(k, N)]]
+            self.tracker[(k, N)] = 0
+
+    def create_subfolder_name(self, dfa_kwargs, force_no_cot):
+        subfolder = os.path.join(f"{self.foldername}{'_nocot' if force_no_cot else ''}", f"k{dfa_kwargs['k']}_N{dfa_kwargs['N']}")
         return subfolder
 
-    def generate_random(self, generator, kdN):
-        nesting_level = kdN['k']
-        num_symbols = kdN['d']
-        length = kdN['N']
-
-        prompts = []
-        true_answers = []
-        while len(prompts) < generator.max_batch_size:
-            dyck_word, true_answer = self.generate_random_dyck_example(nesting_level, length, num_symbols)
-
-            prompt = self.make_prompt(generator, dyck_word)
-            prompts.append(prompt)
-            true_answers.append(true_answer)
-        return prompts, true_answers
-
-    def make_prompt(self, generator, fn_def, input_str):
+    def make_prompt(self, generator, straightlined_code):
         if 'tokenizer' in dir(generator) and generator.tokenizer.chat_template:
             if "gemma" in generator.model_name:
                 messages = [{
                     "role": "user",
-                    "content": self.system_instruction + "\n\n" + self.query_template.format(fn_def=fn_def) + "\n" + self.generation_instruction
+                    "content": self.system_instruction + "\n\n" + self.query_template.format(straightlined_code=straightlined_code) + "\n" + self.generation_instruction
                 }]
                 prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
             else:
@@ -550,7 +566,7 @@ assert answer == ??
                 },
                 {
                     "role": "user",
-                    "content": self.query_template.format(fn_def=fn_def) + "\n" + self.generation_instruction
+                    "content": self.query_template.format(straightlined_code=straightlined_code) + "\n" + self.generation_instruction
                 }]
                 prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         else:
@@ -558,6 +574,26 @@ assert answer == ??
             prompt += self.query_template.format(fn_def=fn_def) + "\n"
             prompt += self.generation_instruction
         return prompt
+
+    def get_example(self, k, N):
+        k = int(k)
+        N = int(N)
+        if self.tracker[(k, N)] >= len(self.all_examples[(k, N)]): return None
+        next_ex = self.all_examples[(k, N)][self.tracker[(k, N)]]
+        self.tracker[(k, N)] += 1
+        return next_ex
+
+    def generate_random(self, generator, kN):
+        ast_size = kN["k"]
+        trace_len = kN["N"]
+        prompts = []
+        true_answers = []
+        while len(prompts) < generator.max_batch_size:
+            ex = self.get_example(ast_size, trace_len)
+            prompt = self.make_prompt(generator, ex["straightlined_code"])
+            prompts.append(prompt)
+            true_answers.append(ex["output"])
+        return prompts, true_answers
 
 
 class ArithmeticTask(NestedBoolTask):

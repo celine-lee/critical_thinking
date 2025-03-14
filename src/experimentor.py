@@ -32,12 +32,16 @@ class Experimenter:
         just_move_on_counter = 0
         added_tokens_gen = 0
         while len(results) < self.n_samples:
-            prompts, true_answers = self.task.generate_random(self.generator, dfa_param_vals)
+            inputs = self.task.generate_random(self.generator, dfa_param_vals)
+            if self.task.name == "cruxeval":
+                examples, prompts, true_answers = inputs
+            else:
+                prompts, true_answers = inputs
             if self.force_no_cot:
                 prompts = [prompt + self.task.reprompt_string for prompt in prompts]
             if len(prompts) == 0: break
             generations, generation_lengths, extracted_answers = self.generator.generate(prompts, self.task)
-            for prompt, model_generation, num_generated_tokens, pred_answer, true_answer in zip(prompts, generations, generation_lengths, extracted_answers, true_answers):
+            for ex_idx, (prompt, model_generation, num_generated_tokens, pred_answer, true_answer) in enumerate(zip(prompts, generations, generation_lengths, extracted_answers, true_answers)):
                 added_tokens_gen += num_generated_tokens if num_generated_tokens else 0
                 if pred_answer is None: 
                     just_move_on_counter += 1
@@ -46,7 +50,11 @@ class Experimenter:
                     is_correct = pred_answer.lower().strip() == true_answer.lower().strip()
                 else:
                     try:
-                        is_correct = eval(pred_answer) == true_answer
+                        evaluated_pred = eval(pred_answer)
+                        eval_true_answer = true_answer
+                        if self.task.name == "cruxeval": 
+                            eval_true_answer = eval(examples[ex_idx]["output"])
+                        is_correct = evaluated_pred == eval_true_answer
                     except:
                         just_move_on_counter += 1
                         continue
@@ -58,6 +66,7 @@ class Experimenter:
                         "pred_answer": pred_answer,
                         "true_answer": true_answer,
                         "correct": is_correct,
+                        "id": examples[ex_idx]["id"] if self.task.name == "cruxeval" else len(results)
                     }
                 )
                 
@@ -77,8 +86,8 @@ class CRUXEvalExperimenter(Experimenter):
     def __init__(self, task, generator, n_samples_per, force_no_cot=False):
         super(CRUXEvalExperimenter, self).__init__(task, generator, n_samples_per, force_no_cot)
 
-    def run(self):
-        subfolder = self.task.create_subfolder_name(self.force_no_cot)
+    def run(self, dfa_param_vals):
+        subfolder = self.task.create_subfolder_name(dfa_param_vals, self.force_no_cot)
         os.makedirs(subfolder, exist_ok=True)
         filename = f"{subfolder}/{self.filename}.json"
         print(filename)
