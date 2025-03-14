@@ -1,0 +1,1606 @@
+[
+    {
+        "code": "def f(nums):\n    output = []\n    for n in nums:\n        output.append((nums.count(n), n))\n    output.sort(reverse=True)\n    return output",
+        "input": "[1, 1, 3, 1, 3, 1]",
+        "output": "[(4, 1), (4, 1), (4, 1), (4, 1), (2, 3), (2, 3)]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 7,
+            "3": 6,
+            "4": 1,
+            "5": 1
+        },
+        "ast_size": 42,
+        "error": null,
+        "id": "sample_0",
+        "straightlined_code": "nums = [1, 1, 3, 1, 3, 1]\noutput = []\nfor n in nums:\n    output.append((nums.count(n), n))\noutput.sort(reverse=True)\nanswer = output"
+    },
+    {
+        "code": "def f(names):\n    count = len(names)\n    numberOfNames = 0\n    for i in names:\n        if i.isalpha():\n            numberOfNames += 1\n    return numberOfNames",
+        "input": "['sharron', 'Savannah', 'Mike Cherokee']",
+        "output": "2",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 4,
+            "4": 3,
+            "5": 2,
+            "6": 1
+        },
+        "ast_size": 35,
+        "error": null,
+        "id": "sample_13",
+        "straightlined_code": "names = ['sharron', 'Savannah', 'Mike Cherokee']\ncount = len(names)\nnumberOfNames = 0\nfor i in names:\n    if i.isalpha():\n        numberOfNames += 1\nanswer = numberOfNames"
+    },
+    {
+        "code": "def f(text):\n    result = ''\n    for i in range(len(text)-1, -1, -1):\n        result += text[i]\n    return result",
+        "input": "'was,'",
+        "output": "',saw'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 5,
+            "3": 4,
+            "4": 1
+        },
+        "ast_size": 41,
+        "error": null,
+        "id": "sample_20",
+        "straightlined_code": "text = 'was,'\nresult = ''\nfor i in range(len(text)-1, -1, -1):\n    result += text[i]\nanswer = result"
+    },
+    {
+        "code": "def f(string):\n    upper = 0\n    for c in string:\n        if c.isupper():\n            upper += 1\n    return upper * (2,1)[upper % 2]",
+        "input": "'PoIOarTvpoead'",
+        "output": "8",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 14,
+            "3": 13,
+            "4": 4,
+            "5": 1
+        },
+        "ast_size": 40,
+        "error": null,
+        "id": "sample_31",
+        "straightlined_code": "string = 'PoIOarTvpoead'\nupper = 0\nfor c in string:\n    if c.isupper():\n        upper += 1\nanswer = upper * (2,1)[upper % 2]"
+    },
+    {
+        "code": "def f(nums, odd1, odd2):\n    while odd1 in nums:\n        nums.remove(odd1)\n    while odd2 in nums:\n        nums.remove(odd2)\n    return nums",
+        "input": "[1, 2, 3, 7, 7, 6, 8, 4, 1, 2, 3, 5, 1, 3, 21, 1, 3], 3, 1",
+        "output": "[2, 7, 7, 6, 8, 4, 2, 5, 21]",
+        "line_execution_counts": {
+            "1": 5,
+            "2": 4,
+            "3": 5,
+            "4": 4,
+            "5": 1
+        },
+        "ast_size": 39,
+        "error": null,
+        "id": "sample_34",
+        "straightlined_code": "nums, odd1, odd2 = [1, 2, 3, 7, 7, 6, 8, 4, 1, 2, 3, 5, 1, 3, 21, 1, 3], 3, 1\nwhile odd1 in nums:\n    nums.remove(odd1)\nwhile odd2 in nums:\n    nums.remove(odd2)\nanswer = nums"
+    },
+    {
+        "code": "def f(pattern, items):\n    result = []\n    for text in items:\n        pos = text.rfind(pattern)\n        if pos >= 0:\n            result.append(pos)\n\n    return result",
+        "input": "\" B \", [\" bBb \", \" BaB \", \" bB\", \" bBbB \", \" bbb\"]",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 6,
+            "3": 5,
+            "4": 5,
+            "7": 1
+        },
+        "ast_size": 42,
+        "error": null,
+        "id": "sample_35",
+        "straightlined_code": "pattern, items = \" B \", [\" bBb \", \" BaB \", \" bB\", \" bBbB \", \" bbb\"]\nresult = []\nfor text in items:\n    pos = text.rfind(pattern)\n    if pos >= 0:\n        result.append(pos)\n\nanswer = result"
+    },
+    {
+        "code": "def f(array):\n    array_2 = []\n    for i in array:\n        if i>0:\n            array_2 += [i]\n    array_2.sort(reverse=True)\n    return array_2",
+        "input": "[4, 8, 17, 89, 43, 14]",
+        "output": "[89, 43, 17, 14, 8, 4]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 7,
+            "3": 6,
+            "4": 6,
+            "5": 1,
+            "6": 1
+        },
+        "ast_size": 39,
+        "error": null,
+        "id": "sample_55",
+        "straightlined_code": "array = [4, 8, 17, 89, 43, 14]\narray_2 = []\nfor i in array:\n    if i>0:\n        array_2 += [i]\narray_2.sort(reverse=True)\nanswer = array_2"
+    },
+    {
+        "code": "def f(text):\n    text = text.upper()\n    count_upper = 0\n    for char in text:\n        if char.isupper():\n            count_upper += 1\n        else:\n            return 'no'\n    return count_upper // 2",
+        "input": "'ax'",
+        "output": "1",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 3,
+            "4": 2,
+            "5": 2,
+            "8": 1
+        },
+        "ast_size": 40,
+        "error": null,
+        "id": "sample_57",
+        "straightlined_code": "text = 'ax'\ntext = text.upper()\ncount_upper = 0\nfor char in text:\n    if char.isupper():\n        count_upper += 1\n    else:\n        answer = 'no'\nanswer = count_upper // 2"
+    },
+    {
+        "code": "def f(nums):\n    count = len(nums)\n    for i in [i % 2 for i in range(count)]:\n        nums.append(nums[i])\n    return nums",
+        "input": "[-1, 0, 0, 1, 1]",
+        "output": "[-1, 0, 0, 1, 1, -1, 0, -1, 0, -1]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 11,
+            "3": 5,
+            "4": 1
+        },
+        "ast_size": 44,
+        "error": null,
+        "id": "sample_58",
+        "straightlined_code": "nums = [-1, 0, 0, 1, 1]\ncount = len(nums)\nfor i in [i % 2 for i in range(count)]:\n    nums.append(nums[i])\nanswer = nums"
+    },
+    {
+        "code": "def f(nums):\n    count = len(nums)\n    for i in range(0, count):\n        nums.insert(i, nums[i]*2)\n    return nums",
+        "input": "[2, 8, -2, 9, 3, 3]",
+        "output": "[4, 4, 4, 4, 4, 4, 2, 8, -2, 9, 3, 3]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 7,
+            "3": 6,
+            "4": 1
+        },
+        "ast_size": 41,
+        "error": null,
+        "id": "sample_106",
+        "straightlined_code": "nums = [2, 8, -2, 9, 3, 3]\ncount = len(nums)\nfor i in range(0, count):\n    nums.insert(i, nums[i]*2)\nanswer = nums"
+    },
+    {
+        "code": "def f(numbers):\n    for i in range(len(numbers)):\n        if numbers.count('3') > 1:\n            return i\n    return -1",
+        "input": "\"23157\"",
+        "output": "-1",
+        "line_execution_counts": {
+            "1": 6,
+            "2": 5,
+            "4": 1
+        },
+        "ast_size": 32,
+        "error": null,
+        "id": "sample_117",
+        "straightlined_code": "numbers = \"23157\"\nfor i in range(len(numbers)):\n    if numbers.count('3') > 1:\n        answer = i\nanswer = -1"
+    },
+    {
+        "code": "def f(text, chars):\n    num_applies = 2\n    extra_chars = ''\n    for i in range(num_applies):\n        extra_chars += chars\n        text = text.replace(extra_chars, '')\n    return text",
+        "input": "'zbzquiuqnmfkx', 'mk'",
+        "output": "'zbzquiuqnmfkx'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 3,
+            "4": 2,
+            "5": 2,
+            "6": 1
+        },
+        "ast_size": 41,
+        "error": null,
+        "id": "sample_118",
+        "straightlined_code": "text, chars = 'zbzquiuqnmfkx', 'mk'\nnum_applies = 2\nextra_chars = ''\nfor i in range(num_applies):\n    extra_chars += chars\n    text = text.replace(extra_chars, '')\nanswer = text"
+    },
+    {
+        "code": "def f(text, search_string):\n    indexes = []\n    while search_string in text:\n        indexes.append(text.rindex(search_string))\n        text = text[:text.rindex(search_string)]\n    return indexes",
+        "input": "'ONBPICJOHRHDJOSNCPNJ9ONTHBQCJ', 'J'",
+        "output": "[28, 19, 12, 6]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 5,
+            "3": 4,
+            "4": 4,
+            "5": 1
+        },
+        "ast_size": 48,
+        "error": null,
+        "id": "sample_129",
+        "straightlined_code": "text, search_string = 'ONBPICJOHRHDJOSNCPNJ9ONTHBQCJ', 'J'\nindexes = []\nwhile search_string in text:\n    indexes.append(text.rindex(search_string))\n    text = text[:text.rindex(search_string)]\nanswer = indexes"
+    },
+    {
+        "code": "def f(single_digit):\n    result = []\n    for c in range(1, 11):\n        if c != single_digit:\n            result.append(c)\n    return result",
+        "input": "5",
+        "output": "[1, 2, 3, 4, 6, 7, 8, 9, 10]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 11,
+            "3": 10,
+            "4": 9,
+            "5": 1
+        },
+        "ast_size": 35,
+        "error": null,
+        "id": "sample_146",
+        "straightlined_code": "single_digit = 5\nresult = []\nfor c in range(1, 11):\n    if c != single_digit:\n        result.append(c)\nanswer = result"
+    },
+    {
+        "code": "def f(numbers, index):\n    for n in numbers[index:]:\n        numbers.insert(index, n)\n        index += 1\n    return numbers[:index]",
+        "input": "[-2, 4, -4], 0",
+        "output": "[-2, 4, -4]",
+        "line_execution_counts": {
+            "1": 4,
+            "2": 3,
+            "3": 3,
+            "4": 1
+        },
+        "ast_size": 38,
+        "error": null,
+        "id": "sample_150",
+        "straightlined_code": "numbers, index = [-2, 4, -4], 0\nfor n in numbers[index:]:\n    numbers.insert(index, n)\n    index += 1\nanswer = numbers[:index]"
+    },
+    {
+        "code": "def f(st):\n    swapped = ''\n    for ch in reversed(st):\n        swapped += ch.swapcase()\n    return swapped",
+        "input": "'RTiGM'",
+        "output": "'mgItr'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 6,
+            "3": 5,
+            "4": 1
+        },
+        "ast_size": 28,
+        "error": null,
+        "id": "sample_159",
+        "straightlined_code": "st = 'RTiGM'\nswapped = ''\nfor ch in reversed(st):\n    swapped += ch.swapcase()\nanswer = swapped"
+    },
+    {
+        "code": "def f(list_x):\n    item_count = len(list_x)\n    new_list = []\n    for i in range(item_count):\n        new_list.append(list_x.pop())\n    return new_list",
+        "input": "[5, 8, 6, 8, 4]",
+        "output": "[4, 8, 6, 8, 5]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 6,
+            "4": 5,
+            "5": 1
+        },
+        "ast_size": 39,
+        "error": null,
+        "id": "sample_173",
+        "straightlined_code": "list_x = [5, 8, 6, 8, 4]\nitem_count = len(list_x)\nnew_list = []\nfor i in range(item_count):\n    new_list.append(list_x.pop())\nanswer = new_list"
+    },
+    {
+        "code": "def f(strings):\n    new_strings = []\n    for string in strings:\n        first_two = string[:2]\n        if first_two.startswith('a') or first_two.startswith('p'):\n            new_strings.append(first_two)\n\n    return new_strings",
+        "input": "[\"a\", \"b\", \"car\", \"d\"]",
+        "output": "['a']",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 5,
+            "3": 4,
+            "4": 4,
+            "5": 1,
+            "7": 1
+        },
+        "ast_size": 49,
+        "error": null,
+        "id": "sample_188",
+        "straightlined_code": "strings = [\"a\", \"b\", \"car\", \"d\"]\nnew_strings = []\nfor string in strings:\n    first_two = string[:2]\n    if first_two.startswith('a') or first_two.startswith('p'):\n        new_strings.append(first_two)\n\nanswer = new_strings"
+    },
+    {
+        "code": "def f(text, value):\n    length = len(text)\n    index = 0\n    while length > 0:\n        value = text[index] + value\n        length -= 1\n        index += 1\n    return value",
+        "input": "'jao mt', 'house'",
+        "output": "'tm oajhouse'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 7,
+            "4": 6,
+            "5": 6,
+            "6": 6,
+            "7": 1
+        },
+        "ast_size": 49,
+        "error": null,
+        "id": "sample_200",
+        "straightlined_code": "text, value = 'jao mt', 'house'\nlength = len(text)\nindex = 0\nwhile length > 0:\n    value = text[index] + value\n    length -= 1\n    index += 1\nanswer = value"
+    },
+    {
+        "code": "def f(array, list):\n    array.extend(list)\n    [e for e in array if e % 2 == 0]\n    return [e for e in array if e >= 10]",
+        "input": "[2, 15], [15, 1]",
+        "output": "[15, 15]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 5,
+            "3": 5
+        },
+        "ast_size": 44,
+        "error": null,
+        "id": "sample_202",
+        "straightlined_code": "array, list = [2, 15], [15, 1]\narray.extend(list)\n[e for e in array if e % 2 == 0]\nanswer = [e for e in array if e >= 10]"
+    },
+    {
+        "code": "def f(items):\n    result = []\n    for item in items:\n        for d in item:\n            if not d.isdigit():\n                result.append(d)\n    return result",
+        "input": "['123', 'cat', 'd dee']",
+        "output": "['c', 'a', 't', 'd', ' ', 'd', 'e', 'e']",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 4,
+            "3": 14,
+            "4": 11,
+            "5": 8,
+            "6": 1
+        },
+        "ast_size": 38,
+        "error": null,
+        "id": "sample_208",
+        "straightlined_code": "items = ['123', 'cat', 'd dee']\nresult = []\nfor item in items:\n    for d in item:\n        if not d.isdigit():\n            result.append(d)\nanswer = result"
+    },
+    {
+        "code": "def f(s):\n    count = 0\n    for c in s:\n        if s.rindex(c) != s.index(c):\n            count+=1\n    return count",
+        "input": "\"abca dea ead\"",
+        "output": "10",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 13,
+            "3": 12,
+            "4": 10,
+            "5": 1
+        },
+        "ast_size": 38,
+        "error": null,
+        "id": "sample_211",
+        "straightlined_code": "s = \"abca dea ead\"\ncount = 0\nfor c in s:\n    if s.rindex(c) != s.index(c):\n        count+=1\nanswer = count"
+    },
+    {
+        "code": "def f(nums):\n    for _ in range(len(nums) - 1):\n        nums.reverse()\n    return nums",
+        "input": "[1, -9, 7, 2, 6, -3, 3]",
+        "output": "[1, -9, 7, 2, 6, -3, 3]",
+        "line_execution_counts": {
+            "1": 7,
+            "2": 6,
+            "3": 1
+        },
+        "ast_size": 27,
+        "error": null,
+        "id": "sample_212",
+        "straightlined_code": "nums = [1, -9, 7, 2, 6, -3, 3]\nfor _ in range(len(nums) - 1):\n    nums.reverse()\nanswer = nums"
+    },
+    {
+        "code": "def f(letters):\n    count = 0\n    for l in letters:\n        if l.isdigit():\n            count += 1\n    return count",
+        "input": "\"dp ef1 gh2\"",
+        "output": "2",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 11,
+            "3": 10,
+            "4": 2,
+            "5": 1
+        },
+        "ast_size": 27,
+        "error": null,
+        "id": "sample_216",
+        "straightlined_code": "letters = \"dp ef1 gh2\"\ncount = 0\nfor l in letters:\n    if l.isdigit():\n        count += 1\nanswer = count"
+    },
+    {
+        "code": "def f(s1, s2):\n    for k in range(0, len(s2)+len(s1)):\n        s1 += s1[0]\n        if s1.find(s2) >= 0:\n            return True\n    return False",
+        "input": "\"Hello\", \")\"",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 7,
+            "2": 6,
+            "3": 6,
+            "5": 1
+        },
+        "ast_size": 48,
+        "error": null,
+        "id": "sample_219",
+        "straightlined_code": "s1, s2 = \"Hello\", \")\"\nfor k in range(0, len(s2)+len(s1)):\n    s1 += s1[0]\n    if s1.find(s2) >= 0:\n        answer = True\nanswer = False"
+    },
+    {
+        "code": "def f(ls, n):\n    answer = 0\n    for i in ls:\n        if i[0] == n:\n            answer = i\n    return answer",
+        "input": "[[1, 9, 4], [83, 0, 5], [9, 6, 100]], 1",
+        "output": "[1, 9, 4]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 4,
+            "3": 3,
+            "4": 1,
+            "5": 1
+        },
+        "ast_size": 32,
+        "error": null,
+        "id": "sample_238",
+        "straightlined_code": "ls, n = [[1, 9, 4], [83, 0, 5], [9, 6, 100]], 1\nanswer = 0\nfor i in ls:\n    if i[0] == n:\n        answer = i\nanswer = answer"
+    },
+    {
+        "code": "def f(alphabet, s):\n    a = [x for x in alphabet if x.upper() in s]\n    if s.upper() == s:\n        a.append('all_uppercased')\n    return a",
+        "input": "'abcdefghijklmnopqrstuvwxyz', \"uppercased # % ^ @ ! vz.\"",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 27,
+            "2": 1,
+            "4": 1
+        },
+        "ast_size": 45,
+        "error": null,
+        "id": "sample_245",
+        "straightlined_code": "alphabet, s = 'abcdefghijklmnopqrstuvwxyz', \"uppercased # % ^ @ ! vz.\"\na = [x for x in alphabet if x.upper() in s]\nif s.upper() == s:\n    a.append('all_uppercased')\nanswer = a"
+    },
+    {
+        "code": "def f(text):\n    count = len(text)\n    for i in range(-count+1, 0):\n        text = text + text[i]\n    return text",
+        "input": "'wlace A'",
+        "output": "'wlace Alc l  '",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 7,
+            "3": 6,
+            "4": 1
+        },
+        "ast_size": 42,
+        "error": null,
+        "id": "sample_250",
+        "straightlined_code": "text = 'wlace A'\ncount = len(text)\nfor i in range(-count+1, 0):\n    text = text + text[i]\nanswer = text"
+    },
+    {
+        "code": "def f(d, k):\n    new_d = {}\n    for key, val in d.items():\n        if key < k:\n            new_d[key] = val\n    return new_d",
+        "input": "{1: 2, 2: 4, 3: 3}, 3",
+        "output": "{1: 2, 2: 4}",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 4,
+            "3": 3,
+            "4": 2,
+            "5": 1
+        },
+        "ast_size": 40,
+        "error": null,
+        "id": "sample_265",
+        "straightlined_code": "d, k = {1: 2, 2: 4, 3: 3}, 3\nnew_d = {}\nfor key, val in d.items():\n    if key < k:\n        new_d[key] = val\nanswer = new_d"
+    },
+    {
+        "code": "def f(nums, target):\n    count = 0\n    for n1 in nums:\n        for n2 in nums:\n            count += (n1+n2==target)\n    return count",
+        "input": "[1, 2, 3], 4",
+        "output": "3",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 4,
+            "3": 12,
+            "4": 9,
+            "5": 1
+        },
+        "ast_size": 36,
+        "error": null,
+        "id": "sample_274",
+        "straightlined_code": "nums, target = [1, 2, 3], 4\ncount = 0\nfor n1 in nums:\n    for n2 in nums:\n        count += (n1+n2==target)\nanswer = count"
+    },
+    {
+        "code": "def f(array1, array2):\n    result = dict.fromkeys(array1)\n    for key in result:\n        result[key] = [el for el in array2 if key * 2 > el]\n    return result",
+        "input": "[0, 132], [5, 991, 32, 997]",
+        "output": "{0: [], 132: [5, 32]}",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 3,
+            "3": 10,
+            "4": 1
+        },
+        "ast_size": 47,
+        "error": null,
+        "id": "sample_278",
+        "straightlined_code": "array1, array2 = [0, 132], [5, 991, 32, 997]\nresult = dict.fromkeys(array1)\nfor key in result:\n    result[key] = [el for el in array2 if key * 2 > el]\nanswer = result"
+    },
+    {
+        "code": "def f(s1, s2):\n    position = 1\n    count = 0\n    while position > 0:\n        position = s1.find(s2, position)\n        count += 1\n        position += 1\n    return count",
+        "input": "'xinyyexyxx', 'xx'",
+        "output": "2",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 3,
+            "4": 2,
+            "5": 2,
+            "6": 2,
+            "7": 1
+        },
+        "ast_size": 44,
+        "error": null,
+        "id": "sample_282",
+        "straightlined_code": "s1, s2 = 'xinyyexyxx', 'xx'\nposition = 1\ncount = 0\nwhile position > 0:\n    position = s1.find(s2, position)\n    count += 1\n    position += 1\nanswer = count"
+    },
+    {
+        "code": "def f(text, prefix):\n    idx = 0\n    for letter in prefix:\n        if text[idx] != letter:\n            return None\n        idx += 1\n    return text[idx:]",
+        "input": "'bestest', 'bestest'",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 8,
+            "3": 7,
+            "5": 7,
+            "6": 1
+        },
+        "ast_size": 40,
+        "error": null,
+        "id": "sample_284",
+        "straightlined_code": "text, prefix = 'bestest', 'bestest'\nidx = 0\nfor letter in prefix:\n    if text[idx] != letter:\n        answer = None\n    idx += 1\nanswer = text[idx:]"
+    },
+    {
+        "code": "def f(text):\n    new_text = [c if c.isdigit() else '*' for c in text]\n    return ''.join(new_text)",
+        "input": "'5f83u23saa'",
+        "output": "'5*83*23***'",
+        "line_execution_counts": {
+            "1": 11,
+            "2": 1
+        },
+        "ast_size": 29,
+        "error": null,
+        "id": "sample_292",
+        "straightlined_code": "text = '5f83u23saa'\nnew_text = [c if c.isdigit() else '*' for c in text]\nanswer = ''.join(new_text)"
+    },
+    {
+        "code": "def f(nums):\n    count = len(nums)\n    for i in range(-count+1, 0):\n        nums.extend([nums[i], nums[i]])\n    return nums",
+        "input": "[0, 6, 2, -1, -2]",
+        "output": "[0, 6, 2, -1, -2, 6, 6, -2, -2, -2, -2, -2, -2]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 5,
+            "3": 4,
+            "4": 1
+        },
+        "ast_size": 49,
+        "error": null,
+        "id": "sample_301",
+        "straightlined_code": "nums = [0, 6, 2, -1, -2]\ncount = len(nums)\nfor i in range(-count+1, 0):\n    nums.extend([nums[i], nums[i]])\nanswer = nums"
+    },
+    {
+        "code": "def f(text):\n    rtext = list(text)\n    for i in range(1, len(rtext) - 1):\n        rtext.insert(i + 1, '|')\n    return ''.join(rtext)",
+        "input": "'pxcznyf'",
+        "output": "'px|||||cznyf'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 6,
+            "3": 5,
+            "4": 1
+        },
+        "ast_size": 46,
+        "error": null,
+        "id": "sample_307",
+        "straightlined_code": "text = 'pxcznyf'\nrtext = list(text)\nfor i in range(1, len(rtext) - 1):\n    rtext.insert(i + 1, '|')\nanswer = ''.join(rtext)"
+    },
+    {
+        "code": "def f(strings):\n    occurances = {}\n    for string in strings:\n        if string not in occurances:\n            occurances[string] = strings.count(string)\n    return occurances",
+        "input": "[\"La\", \"Q\", \"9\", \"La\", \"La\"]",
+        "output": "{'La': 3, 'Q': 1, '9': 1}",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 6,
+            "3": 5,
+            "4": 3,
+            "5": 1
+        },
+        "ast_size": 37,
+        "error": null,
+        "id": "sample_308",
+        "straightlined_code": "strings = [\"La\", \"Q\", \"9\", \"La\", \"La\"]\noccurances = {}\nfor string in strings:\n    if string not in occurances:\n        occurances[string] = strings.count(string)\nanswer = occurances"
+    },
+    {
+        "code": "def f(value, char):\n    total = 0\n    for c in value:\n        if c == char or c == char.lower():\n            total += 1\n    return total",
+        "input": "'234rtccde', 'e'",
+        "output": "1",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 10,
+            "3": 9,
+            "4": 1,
+            "5": 1
+        },
+        "ast_size": 40,
+        "error": null,
+        "id": "sample_318",
+        "straightlined_code": "value, char = '234rtccde', 'e'\ntotal = 0\nfor c in value:\n    if c == char or c == char.lower():\n        total += 1\nanswer = total"
+    },
+    {
+        "code": "def f(needle, haystack):\n    count = 0\n    while needle in haystack:\n        haystack = haystack.replace(needle, '', 1)\n        count += 1\n    return count",
+        "input": "'a', 'xxxaaxaaxx'",
+        "output": "4",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 5,
+            "3": 4,
+            "4": 4,
+            "5": 1
+        },
+        "ast_size": 36,
+        "error": null,
+        "id": "sample_319",
+        "straightlined_code": "needle, haystack = 'a', 'xxxaaxaaxx'\ncount = 0\nwhile needle in haystack:\n    haystack = haystack.replace(needle, '', 1)\n    count += 1\nanswer = count"
+    },
+    {
+        "code": "def f(text):\n    number = 0\n    for t in text:\n        if t.isnumeric():\n            number += 1\n    return number",
+        "input": "'Thisisastring'",
+        "output": "0",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 14,
+            "3": 13,
+            "5": 1
+        },
+        "ast_size": 27,
+        "error": null,
+        "id": "sample_326",
+        "straightlined_code": "text = 'Thisisastring'\nnumber = 0\nfor t in text:\n    if t.isnumeric():\n        number += 1\nanswer = number"
+    },
+    {
+        "code": "def f(text):\n    ans = []\n    for char in text:\n        if char.isdigit():\n            ans.append(char)\n        else:\n            ans.append(' ')\n    return ''.join(ans)",
+        "input": "'m4n2o'",
+        "output": "' 4 2 '",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 6,
+            "3": 5,
+            "6": 3,
+            "4": 2,
+            "7": 1
+        },
+        "ast_size": 42,
+        "error": null,
+        "id": "sample_330",
+        "straightlined_code": "text = 'm4n2o'\nans = []\nfor char in text:\n    if char.isdigit():\n        ans.append(char)\n    else:\n        ans.append(' ')\nanswer = ''.join(ans)"
+    },
+    {
+        "code": "def f(array, elem):\n    elem = str(elem)\n    d = 0\n    for i in array:\n        if str(i) == elem:\n            d += 1\n    return d",
+        "input": "[-1, 2, 1, -8, -8, 2], 2",
+        "output": "2",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 7,
+            "4": 6,
+            "5": 2,
+            "6": 1
+        },
+        "ast_size": 40,
+        "error": null,
+        "id": "sample_339",
+        "straightlined_code": "array, elem = [-1, 2, 1, -8, -8, 2], 2\nelem = str(elem)\nd = 0\nfor i in array:\n    if str(i) == elem:\n        d += 1\nanswer = d"
+    },
+    {
+        "code": "def f(s):\n    r = []\n    for i in range(len(s) - 1, 0 - 1, -1):\n        r += s[i]\n    return ''.join(r)",
+        "input": "'crew'",
+        "output": "'werc'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 5,
+            "3": 4,
+            "4": 1
+        },
+        "ast_size": 47,
+        "error": null,
+        "id": "sample_357",
+        "straightlined_code": "s = 'crew'\nr = []\nfor i in range(len(s) - 1, 0 - 1, -1):\n    r += s[i]\nanswer = ''.join(r)"
+    },
+    {
+        "code": "def f(lines):\n    for i in range(len(lines)):\n        lines[i] = lines[i].center(len(lines[-1]))\n    return lines",
+        "input": "['dZwbSR', 'wijHeq', 'qluVok', 'dxjxbF']",
+        "output": "['dZwbSR', 'wijHeq', 'qluVok', 'dxjxbF']",
+        "line_execution_counts": {
+            "1": 5,
+            "2": 4,
+            "3": 1
+        },
+        "ast_size": 44,
+        "error": null,
+        "id": "sample_359",
+        "straightlined_code": "lines = ['dZwbSR', 'wijHeq', 'qluVok', 'dxjxbF']\nfor i in range(len(lines)):\n    lines[i] = lines[i].center(len(lines[-1]))\nanswer = lines"
+    },
+    {
+        "code": "def f(nums, verdict):\n    res = [x for x in nums if x != 0]\n    result = [[x, verdict(x)] for x in res]\n    if result:\n        return result\n    return 'error - no numbers or all zeros!'",
+        "input": "[0, 3, 0, 1], lambda x: x < 2",
+        "output": "[[3, False], [1, True]]",
+        "line_execution_counts": {
+            "1": 5,
+            "2": 3,
+            "3": 1,
+            "4": 1
+        },
+        "ast_size": 47,
+        "error": null,
+        "id": "sample_364",
+        "straightlined_code": "nums, verdict = [0, 3, 0, 1], lambda x: x < 2\nres = [x for x in nums if x != 0]\nresult = [[x, verdict(x)] for x in res]\nif result:\n    answer = result\nanswer = 'error - no numbers or all zeros!'"
+    },
+    {
+        "code": "def f(string, numbers):\n    arr = []\n    for num in numbers:\n        arr.append(string.zfill(num))\n    return ' '.join(arr)",
+        "input": "'4327', [2, 8, 9, 2, 7, 1]",
+        "output": "'4327 00004327 000004327 4327 0004327 4327'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 7,
+            "3": 6,
+            "4": 1
+        },
+        "ast_size": 35,
+        "error": null,
+        "id": "sample_368",
+        "straightlined_code": "string, numbers = '4327', [2, 8, 9, 2, 7, 1]\narr = []\nfor num in numbers:\n    arr.append(string.zfill(num))\nanswer = ' '.join(arr)"
+    },
+    {
+        "code": "def f(nums):\n    for odd in nums[:]:\n        if odd % 2 != 0:\n            nums.remove(odd)\n    sum_ = 0\n    for num in nums:\n        sum_ += num\n    return sum_",
+        "input": "[11, 21, 0, 11]",
+        "output": "0",
+        "line_execution_counts": {
+            "1": 5,
+            "2": 4,
+            "3": 3,
+            "4": 1,
+            "5": 2,
+            "6": 1,
+            "7": 1
+        },
+        "ast_size": 47,
+        "error": null,
+        "id": "sample_371",
+        "straightlined_code": "nums = [11, 21, 0, 11]\nfor odd in nums[:]:\n    if odd % 2 != 0:\n        nums.remove(odd)\nsum_ = 0\nfor num in nums:\n    sum_ += num\nanswer = sum_"
+    },
+    {
+        "code": "def f(seq, v):\n    a = []\n    for i in seq:\n        if i.endswith(v):\n            a.append(i*2)\n    return a",
+        "input": "[ 'oH', 'ee', 'mb', 'deft', 'n', 'zz', 'f', 'abA' ], 'zz'",
+        "output": "['zzzz']",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 9,
+            "3": 8,
+            "4": 1,
+            "5": 1
+        },
+        "ast_size": 37,
+        "error": null,
+        "id": "sample_374",
+        "straightlined_code": "seq, v = [ 'oH', 'ee', 'mb', 'deft', 'n', 'zz', 'f', 'abA' ], 'zz'\na = []\nfor i in seq:\n    if i.endswith(v):\n        a.append(i*2)\nanswer = a"
+    },
+    {
+        "code": "def f(text):\n    for i in range(len(text)):\n        if text[0:i].startswith(\"two\"):\n            return text[i:]\n    return 'no'",
+        "input": "\"2two programmers\"",
+        "output": "'no'",
+        "line_execution_counts": {
+            "1": 17,
+            "2": 16,
+            "4": 1
+        },
+        "ast_size": 38,
+        "error": null,
+        "id": "sample_376",
+        "straightlined_code": "text = \"2two programmers\"\nfor i in range(len(text)):\n    if text[0:i].startswith(\"two\"):\n        answer = text[i:]\nanswer = 'no'"
+    },
+    {
+        "code": "def f(concat, di):\n    count = len(di)\n    for i in range(count):\n        if di[str(i)] in concat:\n            di.pop(str(i))\n    return \"Done!\"",
+        "input": "'mid', {'0':'q','1':'f','2':'w','3':'i'}",
+        "output": "'Done!'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 5,
+            "3": 4,
+            "4": 1,
+            "5": 1
+        },
+        "ast_size": 48,
+        "error": null,
+        "id": "sample_386",
+        "straightlined_code": "concat, di = 'mid', {'0':'q','1':'f','2':'w','3':'i'}\ncount = len(di)\nfor i in range(count):\n    if di[str(i)] in concat:\n        di.pop(str(i))\nanswer = \"Done!\""
+    },
+    {
+        "code": "def f(nums):\n    a = 0\n    for i in range(len(nums)):\n        nums.insert(i, nums[a])\n        a += 1\n    return nums",
+        "input": "[1, 3, -1, 1, -2, 6]",
+        "output": "[1, 1, 1, 1, 1, 1, 1, 3, -1, 1, -2, 6]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 7,
+            "3": 6,
+            "4": 6,
+            "5": 1
+        },
+        "ast_size": 41,
+        "error": null,
+        "id": "sample_410",
+        "straightlined_code": "nums = [1, 3, -1, 1, -2, 6]\na = 0\nfor i in range(len(nums)):\n    nums.insert(i, nums[a])\n    a += 1\nanswer = nums"
+    },
+    {
+        "code": "def f(d):\n    result = []\n    while len(d.keys()) > 0:\n        result.append(d.popitem())\n    return result",
+        "input": "{5: 1, 'abc': 2, 'defghi': 2, 87.29: 3}",
+        "output": "[(87.29, 3), ('defghi', 2), ('abc', 2), (5, 1)]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 5,
+            "3": 4,
+            "4": 1
+        },
+        "ast_size": 35,
+        "error": null,
+        "id": "sample_429",
+        "straightlined_code": "d = {5: 1, 'abc': 2, 'defghi': 2, 87.29: 3}\nresult = []\nwhile len(d.keys()) > 0:\n    result.append(d.popitem())\nanswer = result"
+    },
+    {
+        "code": "def f(tap_hierarchy):\n    hierarchy = {}\n    for gift in tap_hierarchy:\n        hierarchy = hierarchy.fromkeys(gift, None)\n    return hierarchy",
+        "input": "['john', 'doe', 'the', 'john', 'doe']",
+        "output": "{'d': None, 'o': None, 'e': None}",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 6,
+            "3": 5,
+            "4": 1
+        },
+        "ast_size": 27,
+        "error": null,
+        "id": "sample_437",
+        "straightlined_code": "tap_hierarchy = ['john', 'doe', 'the', 'john', 'doe']\nhierarchy = {}\nfor gift in tap_hierarchy:\n    hierarchy = hierarchy.fromkeys(gift, None)\nanswer = hierarchy"
+    },
+    {
+        "code": "def f(text):\n    for space in text:\n        if space == ' ':\n            text = text.lstrip()\n        else:\n            text = text.replace('cd', space)\n    return text",
+        "input": "\"lorem ipsum\"",
+        "output": "'lorem ipsum'",
+        "line_execution_counts": {
+            "1": 12,
+            "2": 11,
+            "5": 10,
+            "3": 1,
+            "6": 1
+        },
+        "ast_size": 37,
+        "error": null,
+        "id": "sample_443",
+        "straightlined_code": "text = \"lorem ipsum\"\nfor space in text:\n    if space == ' ':\n        text = text.lstrip()\n    else:\n        text = text.replace('cd', space)\nanswer = text"
+    },
+    {
+        "code": "def f(text):\n    counter = 0\n    for char in text:\n        if char.isalpha():\n            counter += 1\n    return counter",
+        "input": "'l000*',",
+        "output": "1",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 6,
+            "3": 5,
+            "4": 1,
+            "5": 1
+        },
+        "ast_size": 27,
+        "error": null,
+        "id": "sample_452",
+        "straightlined_code": "text = 'l000*',\ncounter = 0\nfor char in text:\n    if char.isalpha():\n        counter += 1\nanswer = counter"
+    },
+    {
+        "code": "def f(text):\n    uppers = 0\n    for c in text:\n        if c.isupper():\n            uppers += 1\n    return text.upper() if uppers >= 10 else text",
+        "input": "'?XyZ'",
+        "output": "'?XyZ'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 5,
+            "3": 4,
+            "4": 2,
+            "5": 1
+        },
+        "ast_size": 38,
+        "error": null,
+        "id": "sample_455",
+        "straightlined_code": "text = '?XyZ'\nuppers = 0\nfor c in text:\n    if c.isupper():\n        uppers += 1\nanswer = text.upper() if uppers >= 10 else text"
+    },
+    {
+        "code": "def f(dict):\n    result = dict.copy()\n    remove_keys = []\n    for k, v in dict.items():\n        if v in dict:\n            del result[k]\n    return result",
+        "input": "{-1: -1, 5: 5, 3: 6, -4: -4}",
+        "output": "{3: 6}",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 5,
+            "4": 4,
+            "5": 3,
+            "6": 1
+        },
+        "ast_size": 46,
+        "error": null,
+        "id": "sample_463",
+        "straightlined_code": "dict = {-1: -1, 5: 5, 3: 6, -4: -4}\nresult = dict.copy()\nremove_keys = []\nfor k, v in dict.items():\n    if v in dict:\n        del result[k]\nanswer = result"
+    },
+    {
+        "code": "def f(sb):\n    d = {}\n    for s in sb:\n        d[s] = d.get(s, 0) + 1\n    return d",
+        "input": "'meow meow'",
+        "output": "{'m': 2, 'e': 2, 'o': 2, 'w': 2, ' ': 1}",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 10,
+            "3": 9,
+            "4": 1
+        },
+        "ast_size": 34,
+        "error": null,
+        "id": "sample_478",
+        "straightlined_code": "sb = 'meow meow'\nd = {}\nfor s in sb:\n    d[s] = d.get(s, 0) + 1\nanswer = d"
+    },
+    {
+        "code": "def f(xs):\n    for i in range(-1, -len(xs)-1, -1):\n        xs.extend([xs[i], xs[i]])\n    return xs",
+        "input": "[4, 8, 8, 5]",
+        "output": "[4, 8, 8, 5, 5, 5, 5, 5, 5, 5, 5, 5]",
+        "line_execution_counts": {
+            "1": 5,
+            "2": 4,
+            "3": 1
+        },
+        "ast_size": 49,
+        "error": null,
+        "id": "sample_491",
+        "straightlined_code": "xs = [4, 8, 8, 5]\nfor i in range(-1, -len(xs)-1, -1):\n    xs.extend([xs[i], xs[i]])\nanswer = xs"
+    },
+    {
+        "code": "def f(string):\n    while string:\n        if string[-1].isalpha():\n            return string\n        string = string[:-1]\n    return string",
+        "input": "'--4/0-209'",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 10,
+            "2": 9,
+            "4": 9,
+            "5": 1
+        },
+        "ast_size": 35,
+        "error": null,
+        "id": "sample_505",
+        "straightlined_code": "string = '--4/0-209'\nwhile string:\n    if string[-1].isalpha():\n        answer = string\n    string = string[:-1]\nanswer = string"
+    },
+    {
+        "code": "def f(numbers):\n    floats = [n % 1 for n in numbers]\n    return floats if 1 in floats else []",
+        "input": "range(100, 120)",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 21,
+            "2": 1
+        },
+        "ast_size": 29,
+        "error": null,
+        "id": "sample_522",
+        "straightlined_code": "numbers = range(100, 120)\nfloats = [n % 1 for n in numbers]\nanswer = floats if 1 in floats else []"
+    },
+    {
+        "code": "def f(dict0):\n    new = dict0.copy()\n    for i in range(len(new)-1):\n        dict0[sorted(new)[i]] = i\n    return dict0",
+        "input": "{2: 5, 4: 1, 3: 5, 1: 3, 5: 1}",
+        "output": "{2: 1, 4: 3, 3: 2, 1: 0, 5: 1}",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 5,
+            "3": 4,
+            "4": 1
+        },
+        "ast_size": 45,
+        "error": null,
+        "id": "sample_524",
+        "straightlined_code": "dict0 = {2: 5, 4: 1, 3: 5, 1: 3, 5: 1}\nnew = dict0.copy()\nfor i in range(len(new)-1):\n    dict0[sorted(new)[i]] = i\nanswer = dict0"
+    },
+    {
+        "code": "def f(cat):\n    digits = 0\n    for char in cat:\n        if char.isdigit():\n            digits += 1\n    return digits",
+        "input": "'C24Bxxx982ab'",
+        "output": "5",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 13,
+            "3": 12,
+            "4": 5,
+            "5": 1
+        },
+        "ast_size": 27,
+        "error": null,
+        "id": "sample_536",
+        "straightlined_code": "cat = 'C24Bxxx982ab'\ndigits = 0\nfor char in cat:\n    if char.isdigit():\n        digits += 1\nanswer = digits"
+    },
+    {
+        "code": "def f(array):\n    result = []\n    index = 0\n    while index < len(array):\n        result.append(array.pop())\n        index += 2\n    return result",
+        "input": "[8, 8, -4, -9, 2, 8, -1, 8]",
+        "output": "[8, -1, 8]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 4,
+            "4": 3,
+            "5": 3,
+            "6": 1
+        },
+        "ast_size": 42,
+        "error": null,
+        "id": "sample_545",
+        "straightlined_code": "array = [8, 8, -4, -9, 2, 8, -1, 8]\nresult = []\nindex = 0\nwhile index < len(array):\n    result.append(array.pop())\n    index += 2\nanswer = result"
+    },
+    {
+        "code": "def f(data):\n    members = []\n    for item in data:\n        for member in data[item]:\n            if member not in members:\n                members.append(member)\n    return sorted(members)",
+        "input": "{'inf': ['a', 'b'], 'a': [\"inf\", \"c\"], 'd': [\"inf\"]}",
+        "output": "['a', 'b', 'c', 'inf']",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 4,
+            "3": 8,
+            "4": 5,
+            "5": 4,
+            "6": 1
+        },
+        "ast_size": 44,
+        "error": null,
+        "id": "sample_551",
+        "straightlined_code": "data = {'inf': ['a', 'b'], 'a': [\"inf\", \"c\"], 'd': [\"inf\"]}\nmembers = []\nfor item in data:\n    for member in data[item]:\n        if member not in members:\n            members.append(member)\nanswer = sorted(members)"
+    },
+    {
+        "code": "def f(text):\n    for i in range(len(text)):\n        if text[i] == ' ':\n            text = text.replace(' ', '\\t', 1)\n    return text.expandtabs(4)",
+        "input": "'\\n\\n\\t\\tz\\td\\ng\\n\\t\\t\\te'",
+        "output": "'\n\n        z   d\ng\n            e'",
+        "line_execution_counts": {
+            "1": 15,
+            "2": 14,
+            "4": 1
+        },
+        "ast_size": 43,
+        "error": null,
+        "id": "sample_556",
+        "straightlined_code": "text = '\\n\\n\\t\\tz\\td\\ng\\n\\t\\t\\te'\nfor i in range(len(text)):\n    if text[i] == ' ':\n        text = text.replace(' ', '\\t', 1)\nanswer = text.expandtabs(4)"
+    },
+    {
+        "code": "def f(txt):\n    coincidences = {}\n    for c in txt:\n        if c in coincidences:\n            coincidences[c] += 1\n        else:\n            coincidences[c] = 1\n    return sum(coincidences.values())",
+        "input": "\"11 1 1\"",
+        "output": "6",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 7,
+            "3": 6,
+            "6": 2,
+            "4": 4,
+            "7": 1
+        },
+        "ast_size": 46,
+        "error": null,
+        "id": "sample_569",
+        "straightlined_code": "txt = \"11 1 1\"\ncoincidences = {}\nfor c in txt:\n    if c in coincidences:\n        coincidences[c] += 1\n    else:\n        coincidences[c] = 1\nanswer = sum(coincidences.values())"
+    },
+    {
+        "code": "def f(obj):\n    for k, v in obj.items():\n        if v >= 0:\n            obj[k] = -v\n    return obj",
+        "input": "{'R': 0, 'T': 3, 'F': -6, 'K': 0}",
+        "output": "{'R': 0, 'T': -3, 'F': -6, 'K': 0}",
+        "line_execution_counts": {
+            "1": 5,
+            "2": 4,
+            "3": 3,
+            "4": 1
+        },
+        "ast_size": 36,
+        "error": null,
+        "id": "sample_578",
+        "straightlined_code": "obj = {'R': 0, 'T': 3, 'F': -6, 'K': 0}\nfor k, v in obj.items():\n    if v >= 0:\n        obj[k] = -v\nanswer = obj"
+    },
+    {
+        "code": "def f(k, j):\n    arr = []\n    for i in range(k):\n        arr.append(j)\n    return arr",
+        "input": "7, 5",
+        "output": "[5, 5, 5, 5, 5, 5, 5]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 8,
+            "3": 7,
+            "4": 1
+        },
+        "ast_size": 29,
+        "error": null,
+        "id": "sample_582",
+        "straightlined_code": "k, j = 7, 5\narr = []\nfor i in range(k):\n    arr.append(j)\nanswer = arr"
+    },
+    {
+        "code": "def f(text):\n    for i in range(10, 0, -1):\n        text = text.lstrip(str(i))\n    return text",
+        "input": "\"25000   $\"",
+        "output": "'5000   $'",
+        "line_execution_counts": {
+            "1": 11,
+            "2": 10,
+            "3": 1
+        },
+        "ast_size": 31,
+        "error": null,
+        "id": "sample_590",
+        "straightlined_code": "text = \"25000   $\"\nfor i in range(10, 0, -1):\n    text = text.lstrip(str(i))\nanswer = text"
+    },
+    {
+        "code": "def f(text):\n    valid_chars = ['-', '_', '+', '.', '/', ' ']\n    text = text.upper()\n    for char in text:\n        if char.isalnum() == False and char not in valid_chars:\n            return False\n    return True",
+        "input": "\"9.twCpTf.H7 HPeaQ^ C7I6U,C:YtW\"",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 18,
+            "4": 18,
+            "5": 1
+        },
+        "ast_size": 49,
+        "error": null,
+        "id": "sample_635",
+        "straightlined_code": "text = \"9.twCpTf.H7 HPeaQ^ C7I6U,C:YtW\"\nvalid_chars = ['-', '_', '+', '.', '/', ' ']\ntext = text.upper()\nfor char in text:\n    if char.isalnum() == False and char not in valid_chars:\n        answer = False\nanswer = True"
+    },
+    {
+        "code": "def f(d):\n    r = {}\n    while len(d) > 0:\n        r = {**r, **d}\n        del d[max(d.keys())]\n    return r",
+        "input": "{ 3: 'A3', 1: 'A1', 2: 'A2' }",
+        "output": "{3: 'A3', 1: 'A1', 2: 'A2'}",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 4,
+            "3": 3,
+            "4": 3,
+            "5": 1
+        },
+        "ast_size": 41,
+        "error": null,
+        "id": "sample_636",
+        "straightlined_code": "d = { 3: 'A3', 1: 'A1', 2: 'A2' }\nr = {}\nwhile len(d) > 0:\n    r = {**r, **d}\n    del d[max(d.keys())]\nanswer = r"
+    },
+    {
+        "code": "def f(text):\n    i = 0\n    while i < len(text) and text[i].isspace():\n        i+=1\n    if i == len(text):\n        return 'space'\n    return 'no'",
+        "input": "\"     \"",
+        "output": "'space'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 6,
+            "3": 5,
+            "4": 1,
+            "5": 1
+        },
+        "ast_size": 48,
+        "error": null,
+        "id": "sample_642",
+        "straightlined_code": "text = \"     \"\ni = 0\nwhile i < len(text) and text[i].isspace():\n    i+=1\nif i == len(text):\n    answer = 'space'\nanswer = 'no'"
+    },
+    {
+        "code": "def f(text, tabsize):\n    return '\\n'.join([\n    \tt.expandtabs(tabsize)\n        for t in text.split('\\n')\n    ])",
+        "input": "\"\\tf9\\n\\tldf9\\n\\tadf9!\\n\\tf9?\", 1",
+        "output": "' f9\n ldf9\n adf9!\n f9?'",
+        "line_execution_counts": {
+            "1": 6,
+            "3": 5,
+            "2": 4
+        },
+        "ast_size": 27,
+        "error": null,
+        "id": "sample_649",
+        "straightlined_code": "text, tabsize = \"\\tf9\\n\\tldf9\\n\\tadf9!\\n\\tf9?\", 1\nanswer = '\\n'.join([\n\tt.expandtabs(tabsize)\n    for t in text.split('\\n')\n])"
+    },
+    {
+        "code": "def f(text, letter):\n    t = text\n    for alph in text:\n        t = t.replace(alph, \"\")\n    return len(t.split(letter))",
+        "input": "\"c, c, c ,c, c\", \"c\"",
+        "output": "1",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 14,
+            "3": 13,
+            "4": 1
+        },
+        "ast_size": 37,
+        "error": null,
+        "id": "sample_653",
+        "straightlined_code": "text, letter = \"c, c, c ,c, c\", \"c\"\nt = text\nfor alph in text:\n    t = t.replace(alph, \"\")\nanswer = len(t.split(letter))"
+    },
+    {
+        "code": "def f(letters):\n    a = [] \n    for i in range(len(letters)):\n        if letters[i] in a:\n            return 'no'\n        a.append(letters[i]) \n    return 'yes'",
+        "input": "['b', 'i', 'r', 'o', 's', 'j', 'v', 'p']",
+        "output": "'yes'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 9,
+            "3": 8,
+            "5": 8,
+            "6": 1
+        },
+        "ast_size": 47,
+        "error": null,
+        "id": "sample_656",
+        "straightlined_code": "letters = ['b', 'i', 'r', 'o', 's', 'j', 'v', 'p']\na = [] \nfor i in range(len(letters)):\n    if letters[i] in a:\n        answer = 'no'\n    a.append(letters[i]) \nanswer = 'yes'"
+    },
+    {
+        "code": "def f(text):\n    for punct in '!.?,:;':\n        if text.count(punct) > 1:\n            return 'no'\n        if text.endswith(punct):\n            return 'no'\n    return text.title()",
+        "input": "\"djhasghasgdha\"",
+        "output": "'Djhasghasgdha'",
+        "line_execution_counts": {
+            "1": 7,
+            "2": 6,
+            "4": 6,
+            "6": 1
+        },
+        "ast_size": 37,
+        "error": null,
+        "id": "sample_657",
+        "straightlined_code": "text = \"djhasghasgdha\"\nfor punct in '!.?,:;':\n    if text.count(punct) > 1:\n        answer = 'no'\n    if text.endswith(punct):\n        answer = 'no'\nanswer = text.title()"
+    },
+    {
+        "code": "def f(d, get_ary):\n    result = []\n    for key in get_ary:\n        result.append(d.get(key))\n    return result",
+        "input": "{3: \"swims like a bull\"}, [3, 2, 'c', True, 5]",
+        "output": "['swims like a bull', None, None, None, None]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 6,
+            "3": 5,
+            "4": 1
+        },
+        "ast_size": 31,
+        "error": null,
+        "id": "sample_658",
+        "straightlined_code": "d, get_ary = {3: \"swims like a bull\"}, [3, 2, 'c', True, 5]\nresult = []\nfor key in get_ary:\n    result.append(d.get(key))\nanswer = result"
+    },
+    {
+        "code": "def f(chars):\n    s = \"\"\n    for ch in chars:\n        if chars.count(ch) % 2 == 0:\n            s += ch.upper()\n        else:\n            s += ch\n    return s",
+        "input": "\"acbced\"",
+        "output": "'aCbCed'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 7,
+            "3": 6,
+            "6": 4,
+            "4": 2,
+            "7": 1
+        },
+        "ast_size": 45,
+        "error": null,
+        "id": "sample_665",
+        "straightlined_code": "chars = \"acbced\"\ns = \"\"\nfor ch in chars:\n    if chars.count(ch) % 2 == 0:\n        s += ch.upper()\n    else:\n        s += ch\nanswer = s"
+    },
+    {
+        "code": "def f(nums):\n    l = []\n    for i in nums:\n        if i not in l:\n            l.append(i)\n    return l",
+        "input": "[3, 1, 9, 0, 2, 0, 8]",
+        "output": "[3, 1, 9, 0, 2, 8]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 8,
+            "3": 7,
+            "4": 6,
+            "5": 1
+        },
+        "ast_size": 32,
+        "error": null,
+        "id": "sample_688",
+        "straightlined_code": "nums = [3, 1, 9, 0, 2, 0, 8]\nl = []\nfor i in nums:\n    if i not in l:\n        l.append(i)\nanswer = l"
+    },
+    {
+        "code": "def f(text):\n    t = text\n    for i in text:\n        text = text.replace(i, '')\n    return str(len(text)) + t",
+        "input": "'ThisIsSoAtrocious'",
+        "output": "'0ThisIsSoAtrocious'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 18,
+            "3": 17,
+            "4": 1
+        },
+        "ast_size": 38,
+        "error": null,
+        "id": "sample_718",
+        "straightlined_code": "text = 'ThisIsSoAtrocious'\nt = text\nfor i in text:\n    text = text.replace(i, '')\nanswer = str(len(text)) + t"
+    },
+    {
+        "code": "def f(numbers, prefix):\n    return sorted(n[len(prefix):] if (len(n) > len(prefix) and n.startswith(prefix)) else n\n                  for n in numbers)",
+        "input": "['ix', 'dxh', 'snegi', 'wiubvu'], ''",
+        "output": "['dxh', 'ix', 'snegi', 'wiubvu']",
+        "line_execution_counts": {
+            "1": 11,
+            "2": 5
+        },
+        "ast_size": 49,
+        "error": null,
+        "id": "sample_727",
+        "straightlined_code": "numbers, prefix = ['ix', 'dxh', 'snegi', 'wiubvu'], ''\nanswer = sorted(n[len(prefix):] if (len(n) > len(prefix) and n.startswith(prefix)) else n\n              for n in numbers)"
+    },
+    {
+        "code": "def f(text):\n    m = 0\n    cnt = 0\n    for i in text.split():\n        if len(i) > m:\n            cnt += 1\n            m = len(i)\n    return cnt",
+        "input": "\"wys silak v5 e4fi rotbi fwj 78 wigf t8s lcl\"",
+        "output": "2",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 11,
+            "4": 10,
+            "5": 2,
+            "6": 2,
+            "7": 1
+        },
+        "ast_size": 46,
+        "error": null,
+        "id": "sample_730",
+        "straightlined_code": "text = \"wys silak v5 e4fi rotbi fwj 78 wigf t8s lcl\"\nm = 0\ncnt = 0\nfor i in text.split():\n    if len(i) > m:\n        cnt += 1\n        m = len(i)\nanswer = cnt"
+    },
+    {
+        "code": "def f(char_freq):\n    result = {}\n    for k, v in char_freq.copy().items():\n        result[k] = v // 2\n    return result",
+        "input": "{'u': 20, 'v': 5, 'b': 7, 'w': 3, 'x': 3}",
+        "output": "{'u': 10, 'v': 2, 'b': 3, 'w': 1, 'x': 1}",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 6,
+            "3": 5,
+            "4": 1
+        },
+        "ast_size": 38,
+        "error": null,
+        "id": "sample_732",
+        "straightlined_code": "char_freq = {'u': 20, 'v': 5, 'b': 7, 'w': 3, 'x': 3}\nresult = {}\nfor k, v in char_freq.copy().items():\n    result[k] = v // 2\nanswer = result"
+    },
+    {
+        "code": "def f(text, insert):\n    whitespaces = {'\\t', '\\r', '\\v', ' ', '\\f', '\\n'}\n    clean = ''\n    for char in text:\n        if char in whitespaces:\n            clean += insert\n        else:\n            clean += char\n    return clean",
+        "input": "'pi wa', 'chi'",
+        "output": "'pichiwa'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 6,
+            "4": 5,
+            "7": 4,
+            "5": 1,
+            "8": 1
+        },
+        "ast_size": 46,
+        "error": null,
+        "id": "sample_736",
+        "straightlined_code": "text, insert = 'pi wa', 'chi'\nwhitespaces = {'\\t', '\\r', '\\v', ' ', '\\f', '\\n'}\nclean = ''\nfor char in text:\n    if char in whitespaces:\n        clean += insert\n    else:\n        clean += char\nanswer = clean"
+    },
+    {
+        "code": "def f(nums):\n    counts = 0\n    for i in nums:\n        if str(i).isdecimal():\n            if counts == 0:\n                counts += 1\n    return counts",
+        "input": "[0, 6, 2, -1, -2]",
+        "output": "1",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 6,
+            "3": 5,
+            "4": 3,
+            "5": 1,
+            "6": 1
+        },
+        "ast_size": 36,
+        "error": null,
+        "id": "sample_737",
+        "straightlined_code": "nums = [0, 6, 2, -1, -2]\ncounts = 0\nfor i in nums:\n    if str(i).isdecimal():\n        if counts == 0:\n            counts += 1\nanswer = counts"
+    },
+    {
+        "code": "def f(char_map, text):\n    new_text = ''\n    for ch in text:\n        val = char_map.get(ch)\n        if val is None:\n            new_text += ch\n        else:\n            new_text += val\n    return new_text",
+        "input": "{}, 'hbd'",
+        "output": "'hbd'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 4,
+            "3": 3,
+            "4": 3,
+            "5": 3,
+            "8": 1
+        },
+        "ast_size": 45,
+        "error": null,
+        "id": "sample_750",
+        "straightlined_code": "char_map, text = {}, 'hbd'\nnew_text = ''\nfor ch in text:\n    val = char_map.get(ch)\n    if val is None:\n        new_text += ch\n    else:\n        new_text += val\nanswer = new_text"
+    },
+    {
+        "code": "def f(nums):\n    nums = ['{0:{fill}>{width}}'.format(val, **{'fill': '0', 'width': nums[0]}) for val in nums[1:]]\n    return [str(val) for val in nums]",
+        "input": "['1', '2', '2', '44', '0', '7', '20257']",
+        "output": "['2', '2', '44', '0', '7', '20257']",
+        "line_execution_counts": {
+            "1": 7,
+            "2": 7
+        },
+        "ast_size": 45,
+        "error": null,
+        "id": "sample_754",
+        "straightlined_code": "nums = ['1', '2', '2', '44', '0', '7', '20257']\nnums = ['{0:{fill}>{width}}'.format(val, **{'fill': '0', 'width': nums[0]}) for val in nums[1:]]\nanswer = [str(val) for val in nums]"
+    },
+    {
+        "code": "def f(d):\n    l = []\n    while len(d) > 0:\n        key = d.popitem()[0]\n        l.append(key)\n    return l;",
+        "input": "dict(f = 1, h = 2, j = 3, k = 4)",
+        "output": "['k', 'j', 'h', 'f']",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 5,
+            "3": 4,
+            "4": 4,
+            "5": 1
+        },
+        "ast_size": 40,
+        "error": null,
+        "id": "sample_760",
+        "straightlined_code": "d = dict(f = 1, h = 2, j = 3, k = 4)\nl = []\nwhile len(d) > 0:\n    key = d.popitem()[0]\n    l.append(key)\nanswer = l;"
+    },
+    {
+        "code": "def f(text):\n    text_list = [char for char in text]\n    for i, char in enumerate(text_list):\n        text_list[i] = char.swapcase()\n    return ''.join(text_list)",
+        "input": "'akA?riu'",
+        "output": "'AKa?RIU'",
+        "line_execution_counts": {
+            "1": 8,
+            "2": 8,
+            "3": 7,
+            "4": 1
+        },
+        "ast_size": 46,
+        "error": null,
+        "id": "sample_769",
+        "straightlined_code": "text = 'akA?riu'\ntext_list = [char for char in text]\nfor i, char in enumerate(text_list):\n    text_list[i] = char.swapcase()\nanswer = ''.join(text_list)"
+    },
+    {
+        "code": "def f(phrase):\n    result = ''\n    for i in phrase:\n        if not i.islower():\n            result += i\n    return result",
+        "input": "'serjgpoDFdbcA.'",
+        "output": "'DFA.'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 15,
+            "3": 14,
+            "4": 4,
+            "5": 1
+        },
+        "ast_size": 30,
+        "error": null,
+        "id": "sample_772",
+        "straightlined_code": "phrase = 'serjgpoDFdbcA.'\nresult = ''\nfor i in phrase:\n    if not i.islower():\n        result += i\nanswer = result"
+    },
+    {
+        "code": "def f(arr):\n    new_arr = []\n    for i in range(len(arr) - 1):\n        new_arr.append(arr[i] + arr[i + 1])\n    return new_arr",
+        "input": "[10, 20, 30, 40, 50]",
+        "output": "[30, 50, 70, 90]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 5,
+            "3": 4,
+            "4": 1
+        },
+        "ast_size": 49,
+        "error": null,
+        "id": "new_synth_812",
+        "straightlined_code": "arr = [10, 20, 30, 40, 50]\nnew_arr = []\nfor i in range(len(arr) - 1):\n    new_arr.append(arr[i] + arr[i + 1])\nanswer = new_arr"
+    },
+    {
+        "code": "def f(num):\n    while num > 1:\n        if num % 2 == 0:\n            num /= 2\n        else:\n            num *= 3\n            num += 1\n    return num",
+        "input": "10",
+        "output": "1.0",
+        "line_execution_counts": {
+            "1": 7,
+            "2": 6,
+            "3": 5,
+            "5": 1,
+            "6": 1,
+            "7": 1
+        },
+        "ast_size": 37,
+        "error": null,
+        "id": "new_synth_817",
+        "straightlined_code": "num = 10\nwhile num > 1:\n    if num % 2 == 0:\n        num /= 2\n    else:\n        num *= 3\n        num += 1\nanswer = num"
+    },
+    {
+        "code": "def f(a, b):\n    c = a\n    while b > 0:\n        b -= 1\n        c += a\n    return c",
+        "input": "2, 5",
+        "output": "12",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 6,
+            "3": 5,
+            "4": 5,
+            "5": 1
+        },
+        "ast_size": 30,
+        "error": null,
+        "id": "new_synth_828",
+        "straightlined_code": "a, b = 2, 5\nc = a\nwhile b > 0:\n    b -= 1\n    c += a\nanswer = c"
+    },
+    {
+        "code": "def f(arr, val):\n    index = 0\n    for i in range(len(arr)):\n        if val == arr[i]:\n            index = i\n    return index",
+        "input": "['a', 'b', 'c'], 'c'",
+        "output": "2",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 4,
+            "3": 3,
+            "4": 1,
+            "5": 1
+        },
+        "ast_size": 39,
+        "error": null,
+        "id": "new_synth_829",
+        "straightlined_code": "arr, val = ['a', 'b', 'c'], 'c'\nindex = 0\nfor i in range(len(arr)):\n    if val == arr[i]:\n        index = i\nanswer = index"
+    },
+    {
+        "code": "def f(lst):\n    new_lst = []\n    for ele in lst:\n        if ele != lst[0]:\n            new_lst.append(ele)\n    return new_lst",
+        "input": "[0, 1, 1, 1, 2, 3]",
+        "output": "[1, 1, 1, 2, 3]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 7,
+            "3": 6,
+            "4": 5,
+            "5": 1
+        },
+        "ast_size": 35,
+        "error": null,
+        "id": "new_synth_830",
+        "straightlined_code": "lst = [0, 1, 1, 1, 2, 3]\nnew_lst = []\nfor ele in lst:\n    if ele != lst[0]:\n        new_lst.append(ele)\nanswer = new_lst"
+    },
+    {
+        "code": "def f(a):\n    new_list = [ch.upper() for ch in a if ch in 'aeiou']\n    return ''.join(new_list)",
+        "input": "'a_A_b_B3 '",
+        "output": "'A'",
+        "line_execution_counts": {
+            "1": 10,
+            "2": 1
+        },
+        "ast_size": 30,
+        "error": null,
+        "id": "new_synth_831",
+        "straightlined_code": "a = 'a_A_b_B3 '\nnew_list = [ch.upper() for ch in a if ch in 'aeiou']\nanswer = ''.join(new_list)"
+    },
+    {
+        "code": "def f(arr):\n    new_arr = []\n    for e in arr:\n        if e.isnumeric():\n            new_arr.append(int(e))\n    return new_arr",
+        "input": "['3', '4', '5']",
+        "output": "[3, 4, 5]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 4,
+            "3": 3,
+            "4": 3,
+            "5": 1
+        },
+        "ast_size": 34,
+        "error": null,
+        "id": "new_synth_833",
+        "straightlined_code": "arr = ['3', '4', '5']\nnew_arr = []\nfor e in arr:\n    if e.isnumeric():\n        new_arr.append(int(e))\nanswer = new_arr"
+    },
+    {
+        "code": "def f(s):\n    s = s[::-1]\n    count = 0\n    for c in s:\n        if c.isalpha():\n            count += 1\n    return count",
+        "input": "'raruwa'",
+        "output": "6",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 7,
+            "4": 6,
+            "5": 6,
+            "6": 1
+        },
+        "ast_size": 38,
+        "error": null,
+        "id": "new_synth_834",
+        "straightlined_code": "s = 'raruwa'\ns = s[::-1]\ncount = 0\nfor c in s:\n    if c.isalpha():\n        count += 1\nanswer = count"
+    },
+    {
+        "code": "def f(s):\n    return ''.join(s[i:i+1] for i in range(len(s)) if s[i] not in ['_', '-'])",
+        "input": "'__Aa_-bB___'",
+        "output": "'AabB'",
+        "line_execution_counts": {
+            "1": 13
+        },
+        "ast_size": 45,
+        "error": null,
+        "id": "new_synth_835",
+        "straightlined_code": "s = '__Aa_-bB___'\nanswer = ''.join(s[i:i+1] for i in range(len(s)) if s[i] not in ['_', '-'])"
+    },
+    {
+        "code": "def f(text, n):\n    return ''.join(c.upper() if i%2 else c for i, c in enumerate(text))",
+        "input": "\"asdfghjk\", 10",
+        "output": "'aSdFgHjK'",
+        "line_execution_counts": {
+            "1": 10
+        },
+        "ast_size": 36,
+        "error": null,
+        "id": "new_synth_837",
+        "straightlined_code": "text, n = \"asdfghjk\", 10\nanswer = ''.join(c.upper() if i%2 else c for i, c in enumerate(text))"
+    },
+    {
+        "code": "def f(a, b):\n    if len(a) > len(b):\n        a, b = b, a\n    for ch in b:\n        if ch not in a:\n            return False\n    return True",
+        "input": "\"wxyz\", \"wxyzw\"",
+        "output": "True",
+        "line_execution_counts": {
+            "1": 1,
+            "3": 6,
+            "4": 5,
+            "6": 1
+        },
+        "ast_size": 47,
+        "error": null,
+        "id": "new_synth_838",
+        "straightlined_code": "a, b = \"wxyz\", \"wxyzw\"\nif len(a) > len(b):\n    a, b = b, a\nfor ch in b:\n    if ch not in a:\n        answer = False\nanswer = True"
+    },
+    {
+        "code": "def f(a):\n    c = len(a)\n    b = 0\n    for x in a:\n        if x not in 'aeiou':\n            b += 1\n    return b / c",
+        "input": "'$35.89'",
+        "output": "1.0",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1,
+            "3": 7,
+            "4": 6,
+            "5": 6,
+            "6": 1
+        },
+        "ast_size": 39,
+        "error": null,
+        "id": "new_synth_842",
+        "straightlined_code": "a = '$35.89'\nc = len(a)\nb = 0\nfor x in a:\n    if x not in 'aeiou':\n        b += 1\nanswer = b / c"
+    }
+]

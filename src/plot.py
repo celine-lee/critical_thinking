@@ -12,69 +12,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats as stats
 import matplotlib.colors as mcolors
-from matplotlib.colors import LinearSegmentedColormap
-from matplotlib.cm import get_cmap
 from scipy.optimize import curve_fit
-
-import seaborn as sns
-sns.set("talk")
-
-import sys
-import ipdb
-import traceback
-
-def debughook(etype, value, tb):
-    traceback.print_exception(etype, value, tb)
-    print()
-    ipdb.pm()  # post-mortem debugger
-
-sys.excepthook = debughook
-
-model_colors = {
-    "Llama-3.1-8B-Instruct": "tomato",
-    "Llama-3.3-70B-Instruct-Turbo": "yellow",
-    "Meta-Llama-3.1-405B-Instruct-Turbo": "bisque", 
-    "Qwen2.5-7B-Instruct": "greenyellow",
-    "Qwen2.5-32B-Instruct": "aquamarine",
-    "Ministral-8B-Instruct-2410": "orange",
-    "gemma-2-9b-it": "brown",
-    "DeepSeek-R1-Distill-Llama-8B": "red",
-    "DeepSeek-R1-Distill-Llama-70B": "gold",
-    "DeepSeek-R1-Distill-Qwen-7B": "seagreen",
-    "DeepSeek-R1-Distill-Qwen-32B": "lightseagreen",
-    "gpt-4o-mini": "cornflowerblue",
-    "gpt-4o": "blue",
-    "o3-mini": "purple",
-    "DeepSeek-R1": "black",
-    "DeepSeek-V3": "pink"
-}
-
-model_nicknames = {
-    "Llama-3.1-8B-Instruct": "Ll3.1-8B",
-    "Llama-3.3-70B-Instruct-Turbo": "Ll3.3-70BT",
-    "Meta-Llama-3.1-405B-Instruct-Turbo": "Ll3.1-405BT", 
-    "Qwen2.5-7B-Instruct": "Qw2.5-7B",
-    "Qwen2.5-32B-Instruct": "Qw2.5-32B",
-    "Ministral-8B-Instruct-2410": "Ministral-8B",
-    "gemma-2-9b-it": "Ge2-9B",
-    "DeepSeek-R1-Distill-Qwen-7B": "R1-Qw-7B",
-    "DeepSeek-R1-Distill-Qwen-32B": "R1-Qw-32B",
-    "DeepSeek-R1-Distill-Llama-8B": "R1-Ll-8B",
-    "DeepSeek-R1-Distill-Llama-70B": "R1-Ll-70B",
-    "gpt-4o-mini": "gpt4om",
-    "gpt-4o": "gpt4o",
-    "o3-mini": "o3-mini",
-    "DeepSeek-R1": "DSR1",
-    "DeepSeek-V3": "DSV3"
-}
-
-factor_to_description = {
-    "k": "k (DFA size)",
-    "N": "N (run length)",
-    "m": "m (mult factor)",
-    "l": "l (no. lines)",
-    "d": "d (depth)",
-}
+from plot_utils import *
 
 global compute_random
 global foldername_parser
@@ -96,7 +35,7 @@ def get_args():
     parser.add_argument("--m_vals", type=int, nargs='+') 
     parser.add_argument("--k_vals", type=int, nargs='+') 
     parser.add_argument("--N_vals", type=int, nargs='+')
-    parser.add_argument("--task", choices=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies'])
+    parser.add_argument("--task", choices=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'logical_deduction'])
 
     args = parser.parse_args()
     match args.task:
@@ -140,6 +79,11 @@ def get_args():
             foldername_parser = parse_kN
             dfa_factors_order = {"k": 0, "N": 1}
             output_folder = "web_of_lies/outputs"
+        case 'logical_deduction':
+            compute_random = lambda factor_vals: 1/factor_vals["k"]
+            foldername_parser = parse_kN
+            dfa_factors_order = {"k": 0, "N": 1}
+            output_folder = "logical_deduction/outputs"
 
     args.foldername = os.path.join(
         f"{output_folder}_graphs_{args.n_buckets}buckets"

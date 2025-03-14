@@ -1,0 +1,1182 @@
+[
+    {
+        "code": "def f(a):\n    if a == 0:\n        return [0]\n    result = []\n    while a > 0:\n        result.append(a%10)\n        a = a//10\n    result.reverse()\n    return int(''.join(str(i) for i in result))",
+        "input": "000",
+        "output": "[0]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 69,
+        "error": null,
+        "id": "sample_22",
+        "straightlined_code": "a = 000\nif a == 0:\n    answer = [0]\nresult = []\nwhile a > 0:\n    result.append(a%10)\n    a = a//10\nresult.reverse()\nanswer = int(''.join(str(i) for i in result))"
+    },
+    {
+        "code": "def f(names):\n    if names == []:\n        return \"\"\n    smallest = names[0]\n    for name in names[1:]:\n        if name < smallest:\n            smallest = name\n    names.remove(smallest)\n    return names.join(smallest)",
+        "input": "[]",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 58,
+        "error": null,
+        "id": "sample_48",
+        "straightlined_code": "names = []\nif names == []:\n    answer = \"\"\nsmallest = names[0]\nfor name in names[1:]:\n    if name < smallest:\n        smallest = name\nnames.remove(smallest)\nanswer = names.join(smallest)"
+    },
+    {
+        "code": "def f(first, second):\n    if len(first) < 10 or len(second) < 10:\n        return 'no'\n    for i in range(5):\n        if first[i] != second[i]:\n            return 'no'\n    first.extend(second)\n    return first",
+        "input": "[1, 2, 1], [1, 1, 2]",
+        "output": "'no'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 61,
+        "error": null,
+        "id": "sample_139",
+        "straightlined_code": "first, second = [1, 2, 1], [1, 1, 2]\nif len(first) < 10 or len(second) < 10:\n    answer = 'no'\nfor i in range(5):\n    if first[i] != second[i]:\n        answer = 'no'\nfirst.extend(second)\nanswer = first"
+    },
+    {
+        "code": "def f(out, mapping):\n    for key in mapping:\n        out.format_map(mapping)\n        if len(re.findall(r'{\\w}', out)) == 0:\n            break\n        mapping[key][1] = mapping[key][1][::-1]\n    return out",
+        "input": "\"{{{{}}}}\", {}",
+        "output": "'{{{{}}}}'",
+        "line_execution_counts": {
+            "1": 1,
+            "6": 1
+        },
+        "ast_size": 62,
+        "error": null,
+        "id": "sample_189",
+        "straightlined_code": "out, mapping = \"{{{{}}}}\", {}\nfor key in mapping:\n    out.format_map(mapping)\n    if len(re.findall(r'{\\w}', out)) == 0:\n        break\n    mapping[key][1] = mapping[key][1][::-1]\nanswer = out"
+    },
+    {
+        "code": "def f(mess, char):\n    while mess.find(char, mess.rindex(char) + 1) != -1:\n        mess = mess[:mess.rindex(char) + 1] + mess[mess.rindex(char) + 2:]\n    return mess",
+        "input": "'0aabbaa0b', 'a'",
+        "output": "'0aabbaa0b'",
+        "line_execution_counts": {
+            "1": 1,
+            "3": 1
+        },
+        "ast_size": 66,
+        "error": null,
+        "id": "sample_222",
+        "straightlined_code": "mess, char = '0aabbaa0b', 'a'\nwhile mess.find(char, mess.rindex(char) + 1) != -1:\n    mess = mess[:mess.rindex(char) + 1] + mess[mess.rindex(char) + 2:]\nanswer = mess"
+    },
+    {
+        "code": "def f(base, delta):\n    for j in range(len(delta)):\n        for i in range(len(base)):\n            if base[i] == delta[j][0]:\n                assert delta[j][1] != base[i]\n                base[i] = delta[j][1]\n    return base",
+        "input": "[\"gloss\", \"banana\", \"barn\", \"lawn\"], []",
+        "output": "['gloss', 'banana', 'barn', 'lawn']",
+        "line_execution_counts": {
+            "1": 1,
+            "6": 1
+        },
+        "ast_size": 82,
+        "error": null,
+        "id": "sample_263",
+        "straightlined_code": "base, delta = [\"gloss\", \"banana\", \"barn\", \"lawn\"], []\nfor j in range(len(delta)):\n    for i in range(len(base)):\n        if base[i] == delta[j][0]:\n            assert delta[j][1] != base[i]\n            base[i] = delta[j][1]\nanswer = base"
+    },
+    {
+        "code": "def f(text, n):\n    if len(text) <= 2:\n        return text\n    leading_chars = text[0] * (n - len(text) + 1)\n    return leading_chars + text[1:-1] + text[-1]",
+        "input": "'g', 15",
+        "output": "'g'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 62,
+        "error": null,
+        "id": "sample_360",
+        "straightlined_code": "text, n = 'g', 15\nif len(text) <= 2:\n    answer = text\nleading_chars = text[0] * (n - len(text) + 1)\nanswer = leading_chars + text[1:-1] + text[-1]"
+    },
+    {
+        "code": "def f(n, s):\n    if s.startswith(n):\n        pre, _ = s.split(n, 1)\n        return pre + n + s[len(n):]\n    return s",
+        "input": "'xqc', 'mRcwVqXsRDRb'",
+        "output": "'mRcwVqXsRDRb'",
+        "line_execution_counts": {
+            "1": 1,
+            "4": 1
+        },
+        "ast_size": 50,
+        "error": null,
+        "id": "sample_365",
+        "straightlined_code": "n, s = 'xqc', 'mRcwVqXsRDRb'\nif s.startswith(n):\n    pre, _ = s.split(n, 1)\n    answer = pre + n + s[len(n):]\nanswer = s"
+    },
+    {
+        "code": "def f(s, c1, c2):\n    if s == '':\n        return s\n    ls = s.split(c1)\n    for index, item in enumerate(ls):\n        if c1 in item:\n            ls[index] = item.replace(c1, c2, 1)\n    return c1.join(ls)",
+        "input": "'', 'mi', 'siast'",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 69,
+        "error": null,
+        "id": "sample_480",
+        "straightlined_code": "s, c1, c2 = '', 'mi', 'siast'\nif s == '':\n    answer = s\nls = s.split(c1)\nfor index, item in enumerate(ls):\n    if c1 in item:\n        ls[index] = item.replace(c1, c2, 1)\nanswer = c1.join(ls)"
+    },
+    {
+        "code": "def f(container, cron):\n    if not cron in container:\n        return container\n    pref = container[:container.index(cron)].copy()\n    suff = container[container.index(cron) + 1:].copy()\n    return pref + suff",
+        "input": "[], 2",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 63,
+        "error": null,
+        "id": "sample_663",
+        "straightlined_code": "container, cron = [], 2\nif not cron in container:\n    answer = container\npref = container[:container.index(cron)].copy()\nsuff = container[container.index(cron) + 1:].copy()\nanswer = pref + suff"
+    },
+    {
+        "code": "def f(text, n):\n    if n < 0 or len(text) <= n:\n        return text\n    result = text[0 : n]\n    i = len(result) - 1\n    while i >= 0:\n        if result[i] != text[i]:\n            break\n        i -= 1\n    return text[0 : i + 1]",
+        "input": "'bR', -1",
+        "output": "'bR'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 86,
+        "error": null,
+        "id": "sample_789",
+        "straightlined_code": "text, n = 'bR', -1\nif n < 0 or len(text) <= n:\n    answer = text\nresult = text[0 : n]\ni = len(result) - 1\nwhile i >= 0:\n    if result[i] != text[i]:\n        break\n    i -= 1\nanswer = text[0 : i + 1]"
+    },
+    {
+        "code": "def f(n):\n    n *= 4\n    return (n % 2) + (n % 4) + (n % 8) + (n % 16) + (n % 32) + (n % 64) + (n % 128) + (n % 256) + (n % 512) + (n % 1024)",
+        "input": "3",
+        "output": "88",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 78,
+        "error": null,
+        "id": "new_synth_960",
+        "straightlined_code": "n = 3\nn *= 4\nanswer = (n % 2) + (n % 4) + (n % 8) + (n % 16) + (n % 32) + (n % 64) + (n % 128) + (n % 256) + (n % 512) + (n % 1024)"
+    },
+    {
+        "code": "def f(x):\n    return x[1:2:1] + x[1:3:1] + x[1:4:1] + x[1:5:1] + x[1:6:1]",
+        "input": "'012345'",
+        "output": "'112123123412345'",
+        "line_execution_counts": {
+            "1": 1
+        },
+        "ast_size": 53,
+        "error": null,
+        "id": "new_synth_991",
+        "straightlined_code": "x = '012345'\nanswer = x[1:2:1] + x[1:3:1] + x[1:4:1] + x[1:5:1] + x[1:6:1]"
+    },
+    {
+        "code": "def f(a, b):\n    if len(a) == 0 and len(b) == 0:\n        return None\n    if len(a) == 0:\n        return b\n    if len(b) == 0:\n        return a\n    if a[0] < b[0]:\n        return [a[0]] + f(a[1:], b)\n    else:\n        return [b[0]] + f(a, b[1:])",
+        "input": "[], []",
+        "output": "None",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 105,
+        "error": null,
+        "id": "new_synth_1050",
+        "straightlined_code": "a, b = [], []\nif len(a) == 0 and len(b) == 0:\n    answer = None\nif len(a) == 0:\n    answer = b\nif len(b) == 0:\n    answer = a\nif a[0] < b[0]:\n    answer = [a[0]] + f(a[1:], b)\nelse:\n    answer = [b[0]] + f(a, b[1:])"
+    },
+    {
+        "code": "def f(s):\n    if s == '':\n        return s\n    ls = s.split(' ')\n    for index, item in enumerate(ls):\n        ls[index] = item[:-1]\n    return ' '.join(ls)",
+        "input": "''",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 56,
+        "error": null,
+        "id": "new_synth_1053",
+        "straightlined_code": "s = ''\nif s == '':\n    answer = s\nls = s.split(' ')\nfor index, item in enumerate(ls):\n    ls[index] = item[:-1]\nanswer = ' '.join(ls)"
+    },
+    {
+        "code": "def f(s):\n    if s == '':\n        return s\n    if len(s) == 1:\n        if s.isdigit():\n            return s\n        else:\n            return s + '1'\n    if s[0].isdigit():\n        return s[0] + f(s[1:])\n    else:\n        return s[0] + '0' + f(s[1:])",
+        "input": "''",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 83,
+        "error": null,
+        "id": "new_synth_1054",
+        "straightlined_code": "s = ''\nif s == '':\n    answer = s\nif len(s) == 1:\n    if s.isdigit():\n        answer = s\n    else:\n        answer = s + '1'\nif s[0].isdigit():\n    answer = s[0] + f(s[1:])\nelse:\n    answer = s[0] + '0' + f(s[1:])"
+    },
+    {
+        "code": "def f(x):\n    try:\n        return 0 if (x[2] + 2 * x[0] + x[1]) == x[0] + x[1] + x[2] else 1\n    except:\n        return -1",
+        "input": "[3, 7, 3]",
+        "output": "1",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 57,
+        "error": null,
+        "id": "new_synth_1055",
+        "straightlined_code": "x = [3, 7, 3]\ntry:\n    answer = 0 if (x[2] + 2 * x[0] + x[1]) == x[0] + x[1] + x[2] else 1\nexcept:\n    answer = -1"
+    },
+    {
+        "code": "def f(p):\n    for i in range(len(p) - 1):\n        if p[i] == '*':\n            for j in range(i + 1, len(p)):\n                if p[j] == '*':\n                    p[j] = ' '\n    return p",
+        "input": "[]",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "6": 1
+        },
+        "ast_size": 65,
+        "error": null,
+        "id": "new_synth_1056",
+        "straightlined_code": "p = []\nfor i in range(len(p) - 1):\n    if p[i] == '*':\n        for j in range(i + 1, len(p)):\n            if p[j] == '*':\n                p[j] = ' '\nanswer = p"
+    },
+    {
+        "code": "def f(s):\n    if len(s) == 0:\n        return True\n    if len(s) == 1:\n        return False\n    if s[0] == s[1]:\n        return f(s[1:])\n    else:\n        return False",
+        "input": "''",
+        "output": "True",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 51,
+        "error": null,
+        "id": "new_synth_1062",
+        "straightlined_code": "s = ''\nif len(s) == 0:\n    answer = True\nif len(s) == 1:\n    answer = False\nif s[0] == s[1]:\n    answer = f(s[1:])\nelse:\n    answer = False"
+    },
+    {
+        "code": "def f(s, t):\n    if not s.endswith(t):\n        return s + t\n    if len(s) % 2 == 0:\n        return f(s[:-len(t)], t) + t\n    return f(s[:-len(t)], t) + t + t",
+        "input": "'', 'z'",
+        "output": "'z'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 82,
+        "error": null,
+        "id": "new_synth_1068",
+        "straightlined_code": "s, t = '', 'z'\nif not s.endswith(t):\n    answer = s + t\nif len(s) % 2 == 0:\n    answer = f(s[:-len(t)], t) + t\nanswer = f(s[:-len(t)], t) + t + t"
+    },
+    {
+        "code": "def f(x):\n    if x == '':\n        return x\n    return f(x[:-1]) + '*' if x[-1].isdigit() else f(x[:-1]) + x[-1]",
+        "input": "''",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 59,
+        "error": null,
+        "id": "new_synth_1070",
+        "straightlined_code": "x = ''\nif x == '':\n    answer = x\nanswer = f(x[:-1]) + '*' if x[-1].isdigit() else f(x[:-1]) + x[-1]"
+    },
+    {
+        "code": "def f(c):\n    if len(c) < 4:\n        return True\n    if len(c) == 4:\n        return False if len(set(c)) < 3 else True\n    if len(c) == 5:\n        return True\n    if len(c) == 6:\n        return False\n    return True if len(c) == 7 else False",
+        "input": "[]",
+        "output": "True",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 73,
+        "error": null,
+        "id": "new_synth_1071",
+        "straightlined_code": "c = []\nif len(c) < 4:\n    answer = True\nif len(c) == 4:\n    answer = False if len(set(c)) < 3 else True\nif len(c) == 5:\n    answer = True\nif len(c) == 6:\n    answer = False\nanswer = True if len(c) == 7 else False"
+    },
+    {
+        "code": "def f(A, B):\n    if len(A) != len(B):\n        return A\n    for i in range(len(A)):\n        if A[i] != B[i]:\n            return A[i : i + 1]\n    return A",
+        "input": "'ab', 'b'",
+        "output": "'ab'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 63,
+        "error": null,
+        "id": "new_synth_1072",
+        "straightlined_code": "A, B = 'ab', 'b'\nif len(A) != len(B):\n    answer = A\nfor i in range(len(A)):\n    if A[i] != B[i]:\n        answer = A[i : i + 1]\nanswer = A"
+    },
+    {
+        "code": "def f(n):\n    if len(n) == 0:\n        return True\n    if len(n) == 1:\n        return False\n    if len(n) == 2:\n        return True\n    if len(n) == 3:\n        return False\n    if n[0] < n[1]:\n        return f(n[1:])\n    else:\n        return False",
+        "input": "''",
+        "output": "True",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 73,
+        "error": null,
+        "id": "new_synth_1075",
+        "straightlined_code": "n = ''\nif len(n) == 0:\n    answer = True\nif len(n) == 1:\n    answer = False\nif len(n) == 2:\n    answer = True\nif len(n) == 3:\n    answer = False\nif n[0] < n[1]:\n    answer = f(n[1:])\nelse:\n    answer = False"
+    },
+    {
+        "code": "def f(n, k):\n    if n % k == 0:\n        return (n//k - 1) * (n//k + 1) // 2\n    else:\n        return n // k * ((n//k) * k + 1) // 2",
+        "input": "11, 2",
+        "output": "27",
+        "line_execution_counts": {
+            "1": 1,
+            "4": 1
+        },
+        "ast_size": 64,
+        "error": null,
+        "id": "new_synth_1077",
+        "straightlined_code": "n, k = 11, 2\nif n % k == 0:\n    answer = (n//k - 1) * (n//k + 1) // 2\nelse:\n    answer = n // k * ((n//k) * k + 1) // 2"
+    },
+    {
+        "code": "def f(s):\n    if len(s) <= 1:\n        return s\n    m = len(s) // 2\n    return f(s[:m]) + f(s[m:])",
+        "input": "'a'",
+        "output": "'a'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 50,
+        "error": null,
+        "id": "new_synth_1080",
+        "straightlined_code": "s = 'a'\nif len(s) <= 1:\n    answer = s\nm = len(s) // 2\nanswer = f(s[:m]) + f(s[m:])"
+    },
+    {
+        "code": "def f(text, char):\n    while text.find(char, text.rindex(char) + 1) != -1:\n        text = text[:text.rindex(char) + 1] + text[text.rindex(char) + 2:]\n    return text",
+        "input": "'ababbaa', 'b'",
+        "output": "'ababbaa'",
+        "line_execution_counts": {
+            "1": 1,
+            "3": 1
+        },
+        "ast_size": 66,
+        "error": null,
+        "id": "new_synth_1083",
+        "straightlined_code": "text, char = 'ababbaa', 'b'\nwhile text.find(char, text.rindex(char) + 1) != -1:\n    text = text[:text.rindex(char) + 1] + text[text.rindex(char) + 2:]\nanswer = text"
+    },
+    {
+        "code": "def f(text, char):\n    while text.find(char, text.rindex(char) + 1) != -1:\n        text = text[:text.rindex(char) + 1] + text[text.rindex(char) + 2:]\n    return text",
+        "input": "'ababbaa', 'b'",
+        "output": "'ababbaa'",
+        "line_execution_counts": {
+            "1": 1,
+            "3": 1
+        },
+        "ast_size": 66,
+        "error": null,
+        "id": "new_synth_1084",
+        "straightlined_code": "text, char = 'ababbaa', 'b'\nwhile text.find(char, text.rindex(char) + 1) != -1:\n    text = text[:text.rindex(char) + 1] + text[text.rindex(char) + 2:]\nanswer = text"
+    },
+    {
+        "code": "def f(text, char):\n    while text.find(char, text.rindex(char) + 1) != -1:\n        text = text[:text.rindex(char) + 1] + text[text.rindex(char) + 2:]\n    return text",
+        "input": "'12313', '1'",
+        "output": "'12313'",
+        "line_execution_counts": {
+            "1": 1,
+            "3": 1
+        },
+        "ast_size": 66,
+        "error": null,
+        "id": "new_synth_1085",
+        "straightlined_code": "text, char = '12313', '1'\nwhile text.find(char, text.rindex(char) + 1) != -1:\n    text = text[:text.rindex(char) + 1] + text[text.rindex(char) + 2:]\nanswer = text"
+    },
+    {
+        "code": "def f(a, b, c):\n    if len(a) == 0:\n        return c\n    if len(b) == 0:\n        return c\n    if a[0] < b[0]:\n        return [a[0]] + f(a[1:], b, c)\n    else:\n        return [b[0]] + f(a, b[1:], c)",
+        "input": "[], [], []",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 89,
+        "error": null,
+        "id": "new_synth_1087",
+        "straightlined_code": "a, b, c = [], [], []\nif len(a) == 0:\n    answer = c\nif len(b) == 0:\n    answer = c\nif a[0] < b[0]:\n    answer = [a[0]] + f(a[1:], b, c)\nelse:\n    answer = [b[0]] + f(a, b[1:], c)"
+    },
+    {
+        "code": "def f(mess, char):\n    while mess.find(char, mess.rindex(char) + 1) != -1:\n        mess = mess[:mess.rindex(char) + 1] + mess[mess.rindex(char) + 2:]\n    return mess",
+        "input": "'aabbaabbaaba', 'b'",
+        "output": "'aabbaabbaaba'",
+        "line_execution_counts": {
+            "1": 1,
+            "3": 1
+        },
+        "ast_size": 66,
+        "error": null,
+        "id": "new_synth_1088",
+        "straightlined_code": "mess, char = 'aabbaabbaaba', 'b'\nwhile mess.find(char, mess.rindex(char) + 1) != -1:\n    mess = mess[:mess.rindex(char) + 1] + mess[mess.rindex(char) + 2:]\nanswer = mess"
+    },
+    {
+        "code": "def f(text, char):\n    while text.find(char, text.rindex(char) + 1) != -1:\n        text = text[:text.rindex(char) + 1] + text[text.rindex(char) + 2:]\n    return text",
+        "input": "'abcdefa', 'a'",
+        "output": "'abcdefa'",
+        "line_execution_counts": {
+            "1": 1,
+            "3": 1
+        },
+        "ast_size": 66,
+        "error": null,
+        "id": "new_synth_1089",
+        "straightlined_code": "text, char = 'abcdefa', 'a'\nwhile text.find(char, text.rindex(char) + 1) != -1:\n    text = text[:text.rindex(char) + 1] + text[text.rindex(char) + 2:]\nanswer = text"
+    },
+    {
+        "code": "def f(s, c):\n    if s == '':\n        return False\n    return f(s[1:], c) if s[0] == c else f(s[1:], c) if s[0] != c else True",
+        "input": "'', 'a'",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 57,
+        "error": null,
+        "id": "new_synth_1091",
+        "straightlined_code": "s, c = '', 'a'\nif s == '':\n    answer = False\nanswer = f(s[1:], c) if s[0] == c else f(s[1:], c) if s[0] != c else True"
+    },
+    {
+        "code": "def f(a, b):\n    if len(a) == 0 and len(b) == 0:\n        return None\n    if len(a) == 0:\n        return b\n    if len(b) == 0:\n        return a\n    if a[0] < b[0]:\n        return [a[0]] + f(a[1:], b)\n    else:\n        return [b[0]] + f(a, b[1:])",
+        "input": "[], []",
+        "output": "None",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 105,
+        "error": null,
+        "id": "new_synth_1092",
+        "straightlined_code": "a, b = [], []\nif len(a) == 0 and len(b) == 0:\n    answer = None\nif len(a) == 0:\n    answer = b\nif len(b) == 0:\n    answer = a\nif a[0] < b[0]:\n    answer = [a[0]] + f(a[1:], b)\nelse:\n    answer = [b[0]] + f(a, b[1:])"
+    },
+    {
+        "code": "def f(a, b):\n    if len(a) == 0 and len(b) == 0:\n        return None\n    if len(a) == 0:\n        return b\n    if len(b) == 0:\n        return a\n    if a[0] < b[0]:\n        return [a[0]] + f(a[1:], b)\n    else:\n        return [b[0]] + f(a, b[1:])",
+        "input": "[], []",
+        "output": "None",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 105,
+        "error": null,
+        "id": "new_synth_1093",
+        "straightlined_code": "a, b = [], []\nif len(a) == 0 and len(b) == 0:\n    answer = None\nif len(a) == 0:\n    answer = b\nif len(b) == 0:\n    answer = a\nif a[0] < b[0]:\n    answer = [a[0]] + f(a[1:], b)\nelse:\n    answer = [b[0]] + f(a, b[1:])"
+    },
+    {
+        "code": "def f(a, b):\n    if len(a) == 0:\n        return len(b)\n    elif len(b) == 0:\n        return len(a)\n    if a[0] == b[0]:\n        return f(a[1:], b[1:])\n    if a[0] < b[0]:\n        return 1 + f(a[1:], b)\n    else:\n        return 1 + f(a, b[1:])",
+        "input": "[], []",
+        "output": "0",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 107,
+        "error": null,
+        "id": "new_synth_1094",
+        "straightlined_code": "a, b = [], []\nif len(a) == 0:\n    answer = len(b)\nelif len(b) == 0:\n    answer = len(a)\nif a[0] == b[0]:\n    answer = f(a[1:], b[1:])\nif a[0] < b[0]:\n    answer = 1 + f(a[1:], b)\nelse:\n    answer = 1 + f(a, b[1:])"
+    },
+    {
+        "code": "def f(s, c1, c2):\n    if s == '':\n        return s\n    ls = s.split(c1)\n    for index, item in enumerate(ls):\n        if c2 in item:\n            ls[index] = item.replace(c2, '', 1)\n    return c1.join(ls)",
+        "input": "'', 'y', 'l'",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 68,
+        "error": null,
+        "id": "new_synth_1095",
+        "straightlined_code": "s, c1, c2 = '', 'y', 'l'\nif s == '':\n    answer = s\nls = s.split(c1)\nfor index, item in enumerate(ls):\n    if c2 in item:\n        ls[index] = item.replace(c2, '', 1)\nanswer = c1.join(ls)"
+    },
+    {
+        "code": "def f(s, c1, c2):\n    if s == '':\n        return s\n    ls = s.split(c1)\n    for index, item in enumerate(ls):\n        ls[index] = item.replace(c1, c2, 1)\n    return c1.join(ls)",
+        "input": "'', 'mi', 'siast'",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 62,
+        "error": null,
+        "id": "new_synth_1096",
+        "straightlined_code": "s, c1, c2 = '', 'mi', 'siast'\nif s == '':\n    answer = s\nls = s.split(c1)\nfor index, item in enumerate(ls):\n    ls[index] = item.replace(c1, c2, 1)\nanswer = c1.join(ls)"
+    },
+    {
+        "code": "def f(s, c1, c2):\n    if s == '':\n        return s\n    ls = s.split(c1)\n    for index, item in enumerate(ls):\n        if c2 in item:\n            ls[index] = item.replace(c2, c1, 1)\n    return c1.join(ls)",
+        "input": "'', 'mi', 'siast'",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 69,
+        "error": null,
+        "id": "new_synth_1097",
+        "straightlined_code": "s, c1, c2 = '', 'mi', 'siast'\nif s == '':\n    answer = s\nls = s.split(c1)\nfor index, item in enumerate(ls):\n    if c2 in item:\n        ls[index] = item.replace(c2, c1, 1)\nanswer = c1.join(ls)"
+    },
+    {
+        "code": "def f(a, b):\n    if len(a) == 0:\n        return b\n    if len(b) == 0:\n        return a\n    if a[0] < b[0]:\n        return [a[0]] + f(a[1:], b)\n    else:\n        return [b[0]] + f(a, b[1:])",
+        "input": "[], []",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 84,
+        "error": null,
+        "id": "new_synth_1098",
+        "straightlined_code": "a, b = [], []\nif len(a) == 0:\n    answer = b\nif len(b) == 0:\n    answer = a\nif a[0] < b[0]:\n    answer = [a[0]] + f(a[1:], b)\nelse:\n    answer = [b[0]] + f(a, b[1:])"
+    },
+    {
+        "code": "def f(l):\n    if len(l) < 2:\n        return l\n    if l[0] < l[1]:\n        return [l[0]] + f(l[1:])\n    else:\n        return f([l[0]] + l[2:])",
+        "input": "[]",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 67,
+        "error": null,
+        "id": "new_synth_1101",
+        "straightlined_code": "l = []\nif len(l) < 2:\n    answer = l\nif l[0] < l[1]:\n    answer = [l[0]] + f(l[1:])\nelse:\n    answer = f([l[0]] + l[2:])"
+    },
+    {
+        "code": "def f(a, b):\n    if len(a) == 0:\n        return b\n    elif len(b) == 0:\n        return a\n    else:\n        if a[0] > b[0]:\n            return [a[0]] + f(a[1:], b)\n        else:\n            return [b[0]] + f(a, b[1:])",
+        "input": "[], []",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 84,
+        "error": null,
+        "id": "new_synth_1102",
+        "straightlined_code": "a, b = [], []\nif len(a) == 0:\n    answer = b\nelif len(b) == 0:\n    answer = a\nelse:\n    if a[0] > b[0]:\n        answer = [a[0]] + f(a[1:], b)\n    else:\n        answer = [b[0]] + f(a, b[1:])"
+    },
+    {
+        "code": "def f(s):\n    if len(s) == 0 or len(s) == 1:\n        return s\n    else:\n        for i in range(1, len(s), 2):\n            if s[i] == '*' and s[i-1] == '*':\n                s[i] = ' '\n        return f(s[:-1]) + s[-1:]",
+        "input": "\"\"",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 93,
+        "error": null,
+        "id": "new_synth_1103",
+        "straightlined_code": "s = \"\"\nif len(s) == 0 or len(s) == 1:\n    answer = s\nelse:\n    for i in range(1, len(s), 2):\n        if s[i] == '*' and s[i-1] == '*':\n            s[i] = ' '\n    answer = f(s[:-1]) + s[-1:]"
+    },
+    {
+        "code": "def f(ls):\n    if ls == []:\n        return ''\n    sml = ls[0]\n    for i in range(len(ls)):\n        if ls[i] < sml:\n            sml = ls[i]\n    return f(ls[1:]) + sml",
+        "input": "[]",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 66,
+        "error": null,
+        "id": "new_synth_1104",
+        "straightlined_code": "ls = []\nif ls == []:\n    answer = ''\nsml = ls[0]\nfor i in range(len(ls)):\n    if ls[i] < sml:\n        sml = ls[i]\nanswer = f(ls[1:]) + sml"
+    },
+    {
+        "code": "def f(seq):\n    if seq == '':\n        return seq\n    elif seq[0] == seq[1]:\n        return f(seq[2:])\n    else:\n        return seq[0] + f(seq[1:])",
+        "input": "''",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 53,
+        "error": null,
+        "id": "new_synth_1105",
+        "straightlined_code": "seq = ''\nif seq == '':\n    answer = seq\nelif seq[0] == seq[1]:\n    answer = f(seq[2:])\nelse:\n    answer = seq[0] + f(seq[1:])"
+    },
+    {
+        "code": "def f(x, y):\n    return x[y-1:y+1:1] + x[y-1:y+1:1] + x[y-1:y+1:1] + x[y-1:y+1:1]",
+        "input": "'12345', 4",
+        "output": "'45454545'",
+        "line_execution_counts": {
+            "1": 1
+        },
+        "ast_size": 76,
+        "error": null,
+        "id": "new_synth_1106",
+        "straightlined_code": "x, y = '12345', 4\nanswer = x[y-1:y+1:1] + x[y-1:y+1:1] + x[y-1:y+1:1] + x[y-1:y+1:1]"
+    },
+    {
+        "code": "def f(a, n):\n    if n < 0 or len(a) <= n:\n        return a\n    else:\n        return f(a[:n], n // 2) + a[n] + f(a[n + 1:], n // 2)",
+        "input": "[], 0",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 69,
+        "error": null,
+        "id": "new_synth_1107",
+        "straightlined_code": "a, n = [], 0\nif n < 0 or len(a) <= n:\n    answer = a\nelse:\n    answer = f(a[:n], n // 2) + a[n] + f(a[n + 1:], n // 2)"
+    },
+    {
+        "code": "def f(mess, char):\n    while mess.find(char, mess.rindex(char) + 1) != -1:\n        mess = mess[:mess.rindex(char) + 1] + mess[mess.rindex(char) + 2:]\n    return mess",
+        "input": "'aabbaabbaaba', 'b'",
+        "output": "'aabbaabbaaba'",
+        "line_execution_counts": {
+            "1": 1,
+            "3": 1
+        },
+        "ast_size": 66,
+        "error": null,
+        "id": "new_synth_1108",
+        "straightlined_code": "mess, char = 'aabbaabbaaba', 'b'\nwhile mess.find(char, mess.rindex(char) + 1) != -1:\n    mess = mess[:mess.rindex(char) + 1] + mess[mess.rindex(char) + 2:]\nanswer = mess"
+    },
+    {
+        "code": "def f(text, char):\n    while text.find(char, text.rindex(char) + 1) != -1:\n        text = text[:text.rindex(char) + 1] + text[text.rindex(char) + 2:]\n    return text",
+        "input": "'ababbaa', 'b'",
+        "output": "'ababbaa'",
+        "line_execution_counts": {
+            "1": 1,
+            "3": 1
+        },
+        "ast_size": 66,
+        "error": null,
+        "id": "new_synth_1109",
+        "straightlined_code": "text, char = 'ababbaa', 'b'\nwhile text.find(char, text.rindex(char) + 1) != -1:\n    text = text[:text.rindex(char) + 1] + text[text.rindex(char) + 2:]\nanswer = text"
+    },
+    {
+        "code": "def f(x, y):\n    if len(x) <= 0 or len(y) <= 0:\n        return False\n    return x[0] == y[0] and f(x[1:], y[1:])",
+        "input": "'', ''",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 56,
+        "error": null,
+        "id": "new_synth_1111",
+        "straightlined_code": "x, y = '', ''\nif len(x) <= 0 or len(y) <= 0:\n    answer = False\nanswer = x[0] == y[0] and f(x[1:], y[1:])"
+    },
+    {
+        "code": "def f(L, k):\n    if L == []:\n        return []\n    else:\n        if L[0] <= k:\n            return [L[0]] + f(L[1:], k)\n        else:\n            return f(L[1:], k)",
+        "input": "[], 3",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 58,
+        "error": null,
+        "id": "new_synth_1112",
+        "straightlined_code": "L, k = [], 3\nif L == []:\n    answer = []\nelse:\n    if L[0] <= k:\n        answer = [L[0]] + f(L[1:], k)\n    else:\n        answer = f(L[1:], k)"
+    },
+    {
+        "code": "def f(first, second):\n    if len(first) < 10 or len(second) < 10:\n        return 'no'\n    for i in range(5):\n        if first[i] != second[i]:\n            return 'no'\n    first.extend(second)\n    return first",
+        "input": "[1, 2, 1], [1, 1, 2]",
+        "output": "'no'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 61,
+        "error": null,
+        "id": "new_synth_1113",
+        "straightlined_code": "first, second = [1, 2, 1], [1, 1, 2]\nif len(first) < 10 or len(second) < 10:\n    answer = 'no'\nfor i in range(5):\n    if first[i] != second[i]:\n        answer = 'no'\nfirst.extend(second)\nanswer = first"
+    },
+    {
+        "code": "def f(n):\n    if n == 0:\n        return 'z'\n    else:\n        s = f(n - 1)\n        return s[0] + ''.join(s[:n - 1] + s[n - 1 + 1:])",
+        "input": "0",
+        "output": "'z'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 60,
+        "error": null,
+        "id": "new_synth_1114",
+        "straightlined_code": "n = 0\nif n == 0:\n    answer = 'z'\nelse:\n    s = f(n - 1)\n    answer = s[0] + ''.join(s[:n - 1] + s[n - 1 + 1:])"
+    },
+    {
+        "code": "def f(s):\n    if s == '':\n        return '()'\n    elif s.isdigit():\n        return s\n    else:\n        return f(s[1:]) + '(' + s[0] + f(s[1:]) + ')'",
+        "input": "''",
+        "output": "'()'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 55,
+        "error": null,
+        "id": "new_synth_1115",
+        "straightlined_code": "s = ''\nif s == '':\n    answer = '()'\nelif s.isdigit():\n    answer = s\nelse:\n    answer = f(s[1:]) + '(' + s[0] + f(s[1:]) + ')'"
+    },
+    {
+        "code": "def f(A):\n    if len(A) <= 1:\n        return A\n    A = A[:]\n    for i in range(len(A)):\n        if i % 2 == 0:\n            A[i] = A[i].upper()\n        else:\n            A[i] = A[i].lower()\n    return A",
+        "input": "''",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 79,
+        "error": null,
+        "id": "new_synth_1116",
+        "straightlined_code": "A = ''\nif len(A) <= 1:\n    answer = A\nA = A[:]\nfor i in range(len(A)):\n    if i % 2 == 0:\n        A[i] = A[i].upper()\n    else:\n        A[i] = A[i].lower()\nanswer = A"
+    },
+    {
+        "code": "def f(a, b):\n    if len(a) == 0 and len(b) == 0:\n        return None\n    if len(a) == 0:\n        return b\n    if len(b) == 0:\n        return a\n    if a[0] < b[0]:\n        return [a[0]] + f(a[1:], b)\n    else:\n        return [b[0]] + f(a, b[1:])",
+        "input": "[], []",
+        "output": "None",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 105,
+        "error": null,
+        "id": "new_synth_1117",
+        "straightlined_code": "a, b = [], []\nif len(a) == 0 and len(b) == 0:\n    answer = None\nif len(a) == 0:\n    answer = b\nif len(b) == 0:\n    answer = a\nif a[0] < b[0]:\n    answer = [a[0]] + f(a[1:], b)\nelse:\n    answer = [b[0]] + f(a, b[1:])"
+    },
+    {
+        "code": "def f(t):\n    if len(t) < 2:\n        return []\n    else:\n        if t[0] < t[1]:\n            return [t[0]] + f(t[1:])\n        else:\n            return [t[1]] + f(t[:1] + t[2:])",
+        "input": "[]",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 75,
+        "error": null,
+        "id": "new_synth_1118",
+        "straightlined_code": "t = []\nif len(t) < 2:\n    answer = []\nelse:\n    if t[0] < t[1]:\n        answer = [t[0]] + f(t[1:])\n    else:\n        answer = [t[1]] + f(t[:1] + t[2:])"
+    },
+    {
+        "code": "def f(x, y):\n    if len(x) <= 0 or len(y) <= 0:\n        return False\n    return x[0] == y[0] and f(x[1:], y[1:])",
+        "input": "'', ''",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 56,
+        "error": null,
+        "id": "new_synth_1119",
+        "straightlined_code": "x, y = '', ''\nif len(x) <= 0 or len(y) <= 0:\n    answer = False\nanswer = x[0] == y[0] and f(x[1:], y[1:])"
+    },
+    {
+        "code": "def f(x, y):\n    if len(x) <= 0 or len(y) <= 0:\n        return False\n    elif x[0] == y[0]:\n        return f(x[1:], y[1:])\n    else:\n        return False",
+        "input": "'', ''",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 57,
+        "error": null,
+        "id": "new_synth_1120",
+        "straightlined_code": "x, y = '', ''\nif len(x) <= 0 or len(y) <= 0:\n    answer = False\nelif x[0] == y[0]:\n    answer = f(x[1:], y[1:])\nelse:\n    answer = False"
+    },
+    {
+        "code": "def f(s, c):\n    if len(s) == 0:\n        return False\n    return f(s[1:], c) if s[0] == c else f(s[1:], c) if s[0] != c else True",
+        "input": "'', 'a'",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 60,
+        "error": null,
+        "id": "new_synth_1121",
+        "straightlined_code": "s, c = '', 'a'\nif len(s) == 0:\n    answer = False\nanswer = f(s[1:], c) if s[0] == c else f(s[1:], c) if s[0] != c else True"
+    },
+    {
+        "code": "def f(l):\n    if len(l) <= 1:\n        return l\n    if l[0] <= l[1]:\n        return [l[0]] + f(l[1:])\n    else:\n        return f([l[1]] + l[2:])",
+        "input": "[]",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 67,
+        "error": null,
+        "id": "new_synth_1122",
+        "straightlined_code": "l = []\nif len(l) <= 1:\n    answer = l\nif l[0] <= l[1]:\n    answer = [l[0]] + f(l[1:])\nelse:\n    answer = f([l[1]] + l[2:])"
+    },
+    {
+        "code": "def f(x):\n    if len(x) <= 1:\n        return x\n    elif len(x) > 2 and x[0] == x[2]:\n        return f(x[1:-1]) + x[0]\n    else:\n        return f(x[1:]) + x[0]",
+        "input": "[]",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 76,
+        "error": null,
+        "id": "new_synth_1123",
+        "straightlined_code": "x = []\nif len(x) <= 1:\n    answer = x\nelif len(x) > 2 and x[0] == x[2]:\n    answer = f(x[1:-1]) + x[0]\nelse:\n    answer = f(x[1:]) + x[0]"
+    },
+    {
+        "code": "def f(s):\n    if len(s) == 0:\n        return 1\n    if len(s) == 1:\n        return 2\n    return f(s[1:]) + f(s[:len(s) - 1])",
+        "input": "''",
+        "output": "1",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 54,
+        "error": null,
+        "id": "new_synth_1124",
+        "straightlined_code": "s = ''\nif len(s) == 0:\n    answer = 1\nif len(s) == 1:\n    answer = 2\nanswer = f(s[1:]) + f(s[:len(s) - 1])"
+    },
+    {
+        "code": "def f(a, n):\n    if a == '':\n        return a\n    else:\n        if n == 0:\n            return a[0]\n        elif n == 1:\n            return a[-1]\n        else:\n            return a[len(a) // 2]",
+        "input": "'', 0",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 53,
+        "error": null,
+        "id": "new_synth_1125",
+        "straightlined_code": "a, n = '', 0\nif a == '':\n    answer = a\nelse:\n    if n == 0:\n        answer = a[0]\n    elif n == 1:\n        answer = a[-1]\n    else:\n        answer = a[len(a) // 2]"
+    },
+    {
+        "code": "def f(s, c1, c2):\n    if s == '':\n        return s\n    ls = s.split(c1)\n    for index, item in enumerate(ls):\n        ls[index] = item.replace(c1, c2, 1)\n    return c1.join(ls)",
+        "input": "'', 'mi', 'siast'",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 62,
+        "error": null,
+        "id": "new_synth_1126",
+        "straightlined_code": "s, c1, c2 = '', 'mi', 'siast'\nif s == '':\n    answer = s\nls = s.split(c1)\nfor index, item in enumerate(ls):\n    ls[index] = item.replace(c1, c2, 1)\nanswer = c1.join(ls)"
+    },
+    {
+        "code": "def f(seq):\n    if len(seq) <= 2:\n        return seq\n    else:\n        lh = seq[:len(seq) // 2]\n        rh = seq[len(seq) // 2:]\n        return f(lh) + f(rh)",
+        "input": "''",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 61,
+        "error": null,
+        "id": "new_synth_1127",
+        "straightlined_code": "seq = ''\nif len(seq) <= 2:\n    answer = seq\nelse:\n    lh = seq[:len(seq) // 2]\n    rh = seq[len(seq) // 2:]\n    answer = f(lh) + f(rh)"
+    },
+    {
+        "code": "def f(n):\n    if len(n) == 0:\n        return True\n    if len(n) == 1:\n        return False\n    if len(n) == 2:\n        return True\n    if len(n) == 3:\n        return False\n    if n[0] < n[1]:\n        return f(n[1:])\n    else:\n        return False",
+        "input": "''",
+        "output": "True",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 73,
+        "error": null,
+        "id": "new_synth_1128",
+        "straightlined_code": "n = ''\nif len(n) == 0:\n    answer = True\nif len(n) == 1:\n    answer = False\nif len(n) == 2:\n    answer = True\nif len(n) == 3:\n    answer = False\nif n[0] < n[1]:\n    answer = f(n[1:])\nelse:\n    answer = False"
+    },
+    {
+        "code": "def f(x, y):\n    if len(x) <= 0 or len(y) <= 0:\n        return False\n    elif x[0] == y[0]:\n        return f(x[1:], y[1:])\n    else:\n        return False",
+        "input": "'', ''",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 57,
+        "error": null,
+        "id": "new_synth_1129",
+        "straightlined_code": "x, y = '', ''\nif len(x) <= 0 or len(y) <= 0:\n    answer = False\nelif x[0] == y[0]:\n    answer = f(x[1:], y[1:])\nelse:\n    answer = False"
+    },
+    {
+        "code": "def f(a,b):\n    if len(a) == 0:\n        return b\n    elif len(b) == 0:\n        return a\n    else:\n        return f(a[1:], b[1:]) + [a[0]] + [b[0]]",
+        "input": "[], []",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 63,
+        "error": null,
+        "id": "new_synth_1130",
+        "straightlined_code": "a, b = [], []\nif len(a) == 0:\n    answer = b\nelif len(b) == 0:\n    answer = a\nelse:\n    answer = f(a[1:], b[1:]) + [a[0]] + [b[0]]"
+    },
+    {
+        "code": "def f(a, b):\n    if len(a) == 0:\n        return b\n    if len(b) == 0:\n        return a\n    if a[0] < b[0]:\n        return [a[0]] + f(a[1:], b)\n    else:\n        return [b[0]] + f(a, b[1:])",
+        "input": "[], []",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 84,
+        "error": null,
+        "id": "new_synth_1131",
+        "straightlined_code": "a, b = [], []\nif len(a) == 0:\n    answer = b\nif len(b) == 0:\n    answer = a\nif a[0] < b[0]:\n    answer = [a[0]] + f(a[1:], b)\nelse:\n    answer = [b[0]] + f(a, b[1:])"
+    },
+    {
+        "code": "def f(a, b):\n    if len(a) == 0 and len(b) == 0:\n        return None\n    if len(a) == 0:\n        return b\n    if len(b) == 0:\n        return a\n    if a[0] < b[0]:\n        return [a[0]] + f(a[1:], b)\n    else:\n        return [b[0]] + f(a, b[1:])",
+        "input": "[], []",
+        "output": "None",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 105,
+        "error": null,
+        "id": "new_synth_1132",
+        "straightlined_code": "a, b = [], []\nif len(a) == 0 and len(b) == 0:\n    answer = None\nif len(a) == 0:\n    answer = b\nif len(b) == 0:\n    answer = a\nif a[0] < b[0]:\n    answer = [a[0]] + f(a[1:], b)\nelse:\n    answer = [b[0]] + f(a, b[1:])"
+    },
+    {
+        "code": "def f(a, b):\n    return None if len(a) == 0 and len(b) == 0 else (a if a[0] < b[0] else b) + f(a[1:], b[1:])",
+        "input": "[], []",
+        "output": "None",
+        "line_execution_counts": {
+            "1": 1
+        },
+        "ast_size": 60,
+        "error": null,
+        "id": "new_synth_1133",
+        "straightlined_code": "a, b = [], []\nanswer = None if len(a) == 0 and len(b) == 0 else (a if a[0] < b[0] else b) + f(a[1:], b[1:])"
+    },
+    {
+        "code": "def f(arr):\n    if len(arr) <= 1:\n        return arr\n    else:\n        half = len(arr) // 2\n        left = f(arr[:half])\n        right = f(arr[half:])\n        return merge(left, right)",
+        "input": "[]",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 61,
+        "error": null,
+        "id": "new_synth_1134",
+        "straightlined_code": "arr = []\nif len(arr) <= 1:\n    answer = arr\nelse:\n    half = len(arr) // 2\n    left = f(arr[:half])\n    right = f(arr[half:])\n    answer = merge(left, right)"
+    },
+    {
+        "code": "def f(a, b):\n    if len(a) == 0:\n        return True\n    if len(b) == 0:\n        return True\n    if len(b) == 1:\n        return False\n    return f(a, b[1:])",
+        "input": "'', ''",
+        "output": "True",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 50,
+        "error": null,
+        "id": "new_synth_1135",
+        "straightlined_code": "a, b = '', ''\nif len(a) == 0:\n    answer = True\nif len(b) == 0:\n    answer = True\nif len(b) == 1:\n    answer = False\nanswer = f(a, b[1:])"
+    },
+    {
+        "code": "def f(s, i):\n    if i == len(s) - 1:\n        return s[i] in 'aeiou'\n    if s[i] in 'aeiou':\n        return True\n    return f(s, i + 1)",
+        "input": "'a', 0",
+        "output": "True",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 51,
+        "error": null,
+        "id": "new_synth_1136",
+        "straightlined_code": "s, i = 'a', 0\nif i == len(s) - 1:\n    answer = s[i] in 'aeiou'\nif s[i] in 'aeiou':\n    answer = True\nanswer = f(s, i + 1)"
+    },
+    {
+        "code": "def f(x, y):\n    if len(x) <= 0 and len(y) <= 0:\n        return True\n    elif len(x) == 0:\n        return False\n    elif len(y) == 0:\n        return False\n    elif x[0] == y[0]:\n        return f(x[1:], y[1:])\n    else:\n        return False",
+        "input": "'', ''",
+        "output": "True",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 79,
+        "error": null,
+        "id": "new_synth_1137",
+        "straightlined_code": "x, y = '', ''\nif len(x) <= 0 and len(y) <= 0:\n    answer = True\nelif len(x) == 0:\n    answer = False\nelif len(y) == 0:\n    answer = False\nelif x[0] == y[0]:\n    answer = f(x[1:], y[1:])\nelse:\n    answer = False"
+    },
+    {
+        "code": "def f(a):\n    if len(a) == 0:\n        return False\n    if a[0] != '(':\n        return False\n    if len(a) == 1:\n        return True\n    elif len(a) == 2:\n        return False\n    if a[1] == ')':\n        return f(a[2:])\n    else:\n        return False",
+        "input": "''",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 69,
+        "error": null,
+        "id": "new_synth_1139",
+        "straightlined_code": "a = ''\nif len(a) == 0:\n    answer = False\nif a[0] != '(':\n    answer = False\nif len(a) == 1:\n    answer = True\nelif len(a) == 2:\n    answer = False\nif a[1] == ')':\n    answer = f(a[2:])\nelse:\n    answer = False"
+    },
+    {
+        "code": "def f(a, b):\n    if a == '':\n        return 0\n    if b == '':\n        return 0\n    if a[0] < b[0]:\n        return 1 + f(a[1:], b[1:])\n    else:\n        return 1 + f(a[1:], b[:-1])",
+        "input": "'', ''",
+        "output": "0",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 74,
+        "error": null,
+        "id": "new_synth_1140",
+        "straightlined_code": "a, b = '', ''\nif a == '':\n    answer = 0\nif b == '':\n    answer = 0\nif a[0] < b[0]:\n    answer = 1 + f(a[1:], b[1:])\nelse:\n    answer = 1 + f(a[1:], b[:-1])"
+    },
+    {
+        "code": "def f(x, i):\n    if i == len(x):\n        return x\n    if i == 0:\n        return [x[i]] + f(x[i + 1:], i + 1)\n    return [x[i]] + f(x[:i] + x[i + 1:], i + 1)",
+        "input": "[], 0",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 91,
+        "error": null,
+        "id": "new_synth_1141",
+        "straightlined_code": "x, i = [], 0\nif i == len(x):\n    answer = x\nif i == 0:\n    answer = [x[i]] + f(x[i + 1:], i + 1)\nanswer = [x[i]] + f(x[:i] + x[i + 1:], i + 1)"
+    },
+    {
+        "code": "def f(s, c):\n    if s == '':\n        return True\n    return f(s[1:], c) if s[0] == c else f(s[1:], c) if s[0] != c else False",
+        "input": "'', 'a'",
+        "output": "True",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 57,
+        "error": null,
+        "id": "new_synth_1142",
+        "straightlined_code": "s, c = '', 'a'\nif s == '':\n    answer = True\nanswer = f(s[1:], c) if s[0] == c else f(s[1:], c) if s[0] != c else False"
+    },
+    {
+        "code": "def f(a, b):\n    if len(a) == 0 and len(b) == 0:\n        return None\n    if len(a) == 0:\n        return b\n    if len(b) == 0:\n        return a\n    if a[0] < b[0]:\n        return [a[0]] + f(a[1:], b)\n    else:\n        return [b[0]] + f(a, b[1:])",
+        "input": "[], []",
+        "output": "None",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 105,
+        "error": null,
+        "id": "new_synth_1143",
+        "straightlined_code": "a, b = [], []\nif len(a) == 0 and len(b) == 0:\n    answer = None\nif len(a) == 0:\n    answer = b\nif len(b) == 0:\n    answer = a\nif a[0] < b[0]:\n    answer = [a[0]] + f(a[1:], b)\nelse:\n    answer = [b[0]] + f(a, b[1:])"
+    },
+    {
+        "code": "def f(a):\n    if len(a) == 0:\n        return False\n    if len(a) == 1:\n        return True\n    if a[0] == a[1]:\n        return f(a[1:])\n    elif a[0] > a[1]:\n        return False\n    else:\n        return f(a[1:])",
+        "input": "''",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 74,
+        "error": null,
+        "id": "new_synth_1144",
+        "straightlined_code": "a = ''\nif len(a) == 0:\n    answer = False\nif len(a) == 1:\n    answer = True\nif a[0] == a[1]:\n    answer = f(a[1:])\nelif a[0] > a[1]:\n    answer = False\nelse:\n    answer = f(a[1:])"
+    },
+    {
+        "code": "def f(a, c):\n    if len(a) == 0:\n        return False\n    if len(a) == 1 and a[0] == c:\n        return True\n    if a[0] == c:\n        return True\n    return f(a[1:], c)",
+        "input": "'', 'a'",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 62,
+        "error": null,
+        "id": "new_synth_1145",
+        "straightlined_code": "a, c = '', 'a'\nif len(a) == 0:\n    answer = False\nif len(a) == 1 and a[0] == c:\n    answer = True\nif a[0] == c:\n    answer = True\nanswer = f(a[1:], c)"
+    },
+    {
+        "code": "def f(c, n):\n    if c == 'i':\n        return 1\n    if c == 'o':\n        return 0\n    if c == 'd':\n        return n * 2\n    if c == 'p':\n        return n + 1\n    if c == 'm':\n        return n - 1",
+        "input": "'i', 1",
+        "output": "1",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 57,
+        "error": null,
+        "id": "new_synth_1146",
+        "straightlined_code": "c, n = 'i', 1\nif c == 'i':\n    answer = 1\nif c == 'o':\n    answer = 0\nif c == 'd':\n    answer = n * 2\nif c == 'p':\n    answer = n + 1\nif c == 'm':\n    answer = n - 1"
+    },
+    {
+        "code": "def f(text):\n    if text == \"\":\n        return \"\"\n    elif text.find(' ') == -1:\n        return text[::-1]\n    else:\n        return f(text[text.find(' ')+1:]) + ' ' + f(text[:text.find(' ')])",
+        "input": "''",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 70,
+        "error": null,
+        "id": "new_synth_1147",
+        "straightlined_code": "text = ''\nif text == \"\":\n    answer = \"\"\nelif text.find(' ') == -1:\n    answer = text[::-1]\nelse:\n    answer = f(text[text.find(' ')+1:]) + ' ' + f(text[:text.find(' ')])"
+    },
+    {
+        "code": "def f(a,b):\n    if len(a) == 0:\n        return b\n    elif len(b) == 0:\n        return a\n    else:\n        return f(a[1:], b[1:]) + [a[0]] + [b[0]]",
+        "input": "[], []",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 63,
+        "error": null,
+        "id": "new_synth_1148",
+        "straightlined_code": "a, b = [], []\nif len(a) == 0:\n    answer = b\nelif len(b) == 0:\n    answer = a\nelse:\n    answer = f(a[1:], b[1:]) + [a[0]] + [b[0]]"
+    },
+    {
+        "code": "def f(a,b):\n    if len(a) == 0:\n        return b\n    elif len(b) == 0:\n        return a\n    else:\n        return f(a[1:], b[1:]) + [a[0]] + [b[0]]",
+        "input": "[], []",
+        "output": "[]",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 63,
+        "error": null,
+        "id": "new_synth_1149",
+        "straightlined_code": "a, b = [], []\nif len(a) == 0:\n    answer = b\nelif len(b) == 0:\n    answer = a\nelse:\n    answer = f(a[1:], b[1:]) + [a[0]] + [b[0]]"
+    },
+    {
+        "code": "def f(s):\n    if s == '':\n        return False\n    if s[0] == ' ':\n        return f(s[1:])\n    if s[0] == 'a':\n        return True\n    if s[0] == 'e':\n        return True\n    if s[0] == 'i':\n        return True\n    if s[0] == 'o':\n        return True\n    if s[0] == 'u':\n        return True\n    return False",
+        "input": "''",
+        "output": "False",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 88,
+        "error": null,
+        "id": "new_synth_1150",
+        "straightlined_code": "s = ''\nif s == '':\n    answer = False\nif s[0] == ' ':\n    answer = f(s[1:])\nif s[0] == 'a':\n    answer = True\nif s[0] == 'e':\n    answer = True\nif s[0] == 'i':\n    answer = True\nif s[0] == 'o':\n    answer = True\nif s[0] == 'u':\n    answer = True\nanswer = False"
+    },
+    {
+        "code": "def f(s, i, sep):\n    if len(s) == 0:\n        return None\n    if i == len(s) - 1:\n        if s[i] == sep:\n            return [s[i]]\n        return None\n    if s[i] == sep:\n        return [s[i]] + f(s, i + 1, sep)\n    return None",
+        "input": "\"\", 0, ' '",
+        "output": "None",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 88,
+        "error": null,
+        "id": "new_synth_1152",
+        "straightlined_code": "s, i, sep = \"\", 0, ' '\nif len(s) == 0:\n    answer = None\nif i == len(s) - 1:\n    if s[i] == sep:\n        answer = [s[i]]\n    answer = None\nif s[i] == sep:\n    answer = [s[i]] + f(s, i + 1, sep)\nanswer = None"
+    },
+    {
+        "code": "def f(x):\n    if len(x) == 0:\n        return x\n    if x[0] == '*':\n        return f(x[1:])\n    if len(x[0]) == 1:\n        return f(x[0] + f(x[1:]))\n    return x[0] + f(x[1:])",
+        "input": "''",
+        "output": "''",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 84,
+        "error": null,
+        "id": "new_synth_1153",
+        "straightlined_code": "x = ''\nif len(x) == 0:\n    answer = x\nif x[0] == '*':\n    answer = f(x[1:])\nif len(x[0]) == 1:\n    answer = f(x[0] + f(x[1:]))\nanswer = x[0] + f(x[1:])"
+    },
+    {
+        "code": "def f(l):\n    if len(l) == 0:\n        return '0'\n    s = '0'\n    for i in range(len(l)):\n        if l[i] > s:\n            s = l[i]\n    return s + f(l[1:])",
+        "input": "''",
+        "output": "'0'",
+        "line_execution_counts": {
+            "1": 1,
+            "2": 1
+        },
+        "ast_size": 64,
+        "error": null,
+        "id": "new_synth_1154",
+        "straightlined_code": "l = ''\nif len(l) == 0:\n    answer = '0'\ns = '0'\nfor i in range(len(l)):\n    if l[i] > s:\n        s = l[i]\nanswer = s + f(l[1:])"
+    }
+]
