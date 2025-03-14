@@ -121,12 +121,89 @@ def get_task_info(task):
             output_folder = "logical_deduction/outputs"
         case 'cruxeval':
             compute_random = lambda factor_vals: 0.
-            foldername_parser = parse_klN
-            dfa_factors_order = {"k": 0, "l": 1, "N": 2}
+            foldername_parser = parse_kN
+            dfa_factors_order = {"k": 0, "N": 1}
             output_folder = "cruxeval/outputs_straightlined"
     return compute_random, foldername_parser, dfa_factors_order, output_folder
 
-def calculate_buckets(sub_df, n_buckets, bucket_by="No gen toks", bucket_name="Length Bucket", y_axis="Correct?", groupby_key="Model"):
+# def calculate_buckets(sub_df, n_buckets, bucket_by="No gen toks", bucket_name="Length Bucket", y_axis="Correct?", groupby_key="Model"):
+#     if len(sub_df) == 0:
+#         return None, None
+
+#     unique_lengths = sub_df[bucket_by].unique()
+
+#     if len(unique_lengths) == 1:
+#         # Assign everything to a single bucket
+#         sub_df[bucket_name] = f"({unique_lengths[0]}, {unique_lengths[0]})"
+#         bucket_avg = (
+#             sub_df.groupby([groupby_key, bucket_name], observed=True)[y_axis]
+#             .mean()
+#             .reset_index()
+#         )
+#         bucket_avg[bucket_name + " Center"] = unique_lengths[0]  # Single center
+#         bucket_avg[y_axis] = bucket_avg[y_axis].astype(float)
+#     else:
+#         # Normal binning process
+#         if len(unique_lengths) < n_buckets:
+#             sub_df.loc[:, bucket_name] = pd.qcut(
+#                 sub_df[bucket_by], q=len(unique_lengths) + 1, duplicates="drop"
+#             )
+#         else:
+#             unique_vals, counts = np.unique(sub_df[bucket_by], return_counts=True)
+#             total_count = len(sub_df)
+#             cumulative_counts = np.cumsum(counts)
+
+#             boundaries = [unique_vals[0]]
+#             target_size = total_count / n_buckets
+
+#             for b in range(1, n_buckets):
+#                 cutoff = b * target_size
+#                 idx = np.searchsorted(cumulative_counts, cutoff, side="left")
+
+#                 if idx >= len(unique_vals):
+#                     idx = len(unique_vals) - 1
+
+#                 while idx < len(unique_vals) and unique_vals[idx] <= boundaries[-1]:
+#                     idx += 1
+
+#                 if idx >= len(unique_vals):
+#                     break
+
+#                 boundaries.append(unique_vals[idx])
+
+#             if boundaries[-1] < unique_vals[-1]:
+#                 boundaries.append(unique_vals[-1])
+
+#             boundaries = np.unique(boundaries)
+
+#             sub_df.loc[:, bucket_name] = pd.cut(
+#                 sub_df[bucket_by], bins=boundaries, include_lowest=True, duplicates="drop"
+#             )
+
+#         bucket_avg = (
+#             sub_df.groupby([groupby_key, bucket_name], observed=True)[y_axis]
+#             .mean()
+#             .reset_index()
+#         )
+
+#         bucket_avg[bucket_name + " Center"] = bucket_avg[bucket_name].apply(
+#             lambda x: (x.left + x.right) / 2 if pd.notna(x) else np.nan
+#         ).astype(float)
+
+#         bucket_avg[y_axis] = bucket_avg[y_axis].astype(float)
+
+#     # Group the original sub_df by the same keys and compute std and count.
+#     grouped = sub_df.groupby([groupby_key, bucket_name], observed=True)[y_axis]
+#     bucket_sem = grouped.std() / np.sqrt(grouped.count())
+#     bucket_sem = bucket_sem.reset_index().rename(columns={y_axis: "sem"})
+#     bucket_avg = bucket_avg.merge(bucket_sem, on=[groupby_key, bucket_name], how="left")
+#     bucket_avg["ci95"] = bucket_avg["sem"] * 1.96
+
+#     sub_df = sub_df.merge(bucket_avg, on=[groupby_key, bucket_name], suffixes=('', '_mean'))
+
+#     return bucket_avg, sub_df
+
+def calculate_buckets(sub_df, n_buckets, bucket_by="No gen toks", bucket_name="Length Bucket", y_axis="Correct?", groupby_key="Model", get_precision_metrics=False):
     if len(sub_df) == 0:
         return None, None
 
@@ -199,10 +276,16 @@ def calculate_buckets(sub_df, n_buckets, bucket_by="No gen toks", bucket_name="L
     bucket_avg = bucket_avg.merge(bucket_sem, on=[groupby_key, bucket_name], how="left")
     bucket_avg["ci95"] = bucket_avg["sem"] * 1.96
 
+    if get_precision_metrics:
+        # Compute precision and recall
+        precision_recall = calculate_precision_recall(sub_df, bucket_name)
+
+        # Merge precision-recall data
+        bucket_avg = bucket_avg.merge(precision_recall, on=bucket_name, how="left")
+
     sub_df = sub_df.merge(bucket_avg, on=[groupby_key, bucket_name], suffixes=('', '_mean'))
 
     return bucket_avg, sub_df
-
 
 def parse_kdN(experiment_file):
     parsed_experimentname = re.search(r"k(\d+)_d(\d+)_N(\d+)", experiment_file)

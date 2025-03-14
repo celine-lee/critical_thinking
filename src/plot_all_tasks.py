@@ -84,10 +84,7 @@ def load_data(args, kwargs, filter_stddev_count=1):
     all_df = None
     for task in args.tasks:
         compute_random, foldername_parser, dfa_factors_order, output_folder = get_task_info(task)
-        if task == "cruxeval": 
-            task_df = load_cruxeval_data(output_folder)
-        else:
-            task_df = load_task_data(task, compute_random, foldername_parser, list(dfa_factors_order.keys()) + ["Model"], output_folder)
+        task_df = load_task_data(task, compute_random, foldername_parser, list(dfa_factors_order.keys()) + ["Model"], output_folder)
         if all_df is not None:
             all_df = pd.concat([all_df, task_df])
         else: all_df = task_df
@@ -589,6 +586,6 @@ if __name__ == "__main__":
     #     plot_correctness_by_ttoks_model_pairs(df, model_pair, plot_kwargs, True)
     #     plot_correctness_by_ttoks_model_pairs(df, model_pair, plot_kwargs, False)
     
-    for task in args.tasks:
-        df_task = df[df["task"] == task]
-        fig1_per_task(task, df_task, plot_kwargs)
+    # for task in args.tasks:
+    #     df_task = df[df["task"] == task]
+    #     fig1_per_task(task, df_task, plot_kwargs)
