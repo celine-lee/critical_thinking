@@ -918,7 +918,6 @@ def plot_ptt_by_factor(factor_to_peak_ttoks, isolated_factor, kwargs):
 
     return {f"Corr(ptts, {isolated_factor})": corrs}
 
-
 from tabulate import tabulate
 def ptt_table(factor_model_corrs, output_folder):
     # factors_to_peak_ttoks is a dict of isolated_factor string to its values and peak ttoks. 
@@ -1132,8 +1131,8 @@ if __name__ == "__main__":
     plot_correctness_by_ttoks_per_kN(df, plot_kwargs)
     plot_correctness_by_ttoks_all_kN(df, plot_kwargs)
     plot_normalized_correctness_by_ttoks(df, plot_kwargs)
-    plot_correctness_by_ttoks_avg_by_k(df, False, False, plot_kwargs)
-    plot_correctness_by_ttoks_avg_by_k(df, True, True, plot_kwargs)
+    # plot_correctness_by_ttoks_avg_by_k(df, False, False, plot_kwargs)
+    # plot_correctness_by_ttoks_avg_by_k(df, True, True, plot_kwargs)
     plot_correctness_by_ttoks_avg_by_k(df, False, True, plot_kwargs)
     plt.clf()
 
