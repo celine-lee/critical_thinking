@@ -148,8 +148,9 @@ def plot_correctness_by_ttoks(df, kwargs):
         line_color, dot_color = "gray", "gray"
         dotsize = 3
 
-        plt.plot(task_model_df["No gen toks"], task_model_df["Correct?"], color=line_color, marker=",")
-        plt.scatter(peak_x, peak_y_normalized, color=dot_color, zorder=dotsize, label=label)
+        plt.plot(task_model_df["No gen toks"], task_model_df["Correct?"], color=line_color, marker=",", alpha=0.3)
+        plt.scatter(peak_x, peak_y_normalized, color=dot_color, zorder=dotsize, label=label,  alpha=0.3)
+
     max_x = 0
     for (task, modelname) in kwargs["to_highlight"]:
         group = df[(df["task"] == task) * (df["Model"] == modelname)]
@@ -514,7 +515,6 @@ def plot_fig1_on_ax(ax, task, df, kwargs, include_raw=False, clamp_upper=3):
     ax.grid(True, linestyle="--", alpha=0.6)
     ax.set_title(task)
 
-
 def fig1_all_tasks(tasks, df, kwargs, include_raw=False, clamp_upper=3, n_cols=2):
     """
     Create one figure with a grid of subplots, one for each task in tasks.
@@ -572,19 +572,17 @@ if __name__ == "__main__":
 
     fig1_all_tasks(args.tasks, df, plot_kwargs, include_raw=False, clamp_upper=3, n_cols=2)
 
-
-    # plot_correctness_by_ttoks(df, plot_kwargs)
-    # model_pairs = [
-    #     ("Llama-3.1-8B-Instruct", "DeepSeek-R1-Distill-Llama-8B", ["even_odd"]),
-    #     ("Llama-3.3-70B-Instruct-Turbo", "DeepSeek-R1-Distill-Llama-70B", ["arith"]),
-    #     ("Qwen2.5-7B-Instruct", "DeepSeek-R1-Distill-Qwen-7B", ["array_idx"]),
-    #     ("Qwen2.5-32B-Instruct", "DeepSeek-R1-Distill-Qwen-32B", ["even_odd"]),
-    #     ("gpt-4o", "o3-mini", ["bool"]),
-    #     ("DeepSeek-R1", "DeepSeek-V3", ["shuffled_objects"])
-    # ]
-    # for model_pair in model_pairs:
-    #     plot_correctness_by_ttoks_model_pairs(df, model_pair, plot_kwargs, True)
-    #     plot_correctness_by_ttoks_model_pairs(df, model_pair, plot_kwargs, False)
+    plot_correctness_by_ttoks(df, plot_kwargs)
+    model_pairs = [
+        ("Llama-3.1-8B-Instruct", "DeepSeek-R1-Distill-Llama-8B", ["even_odd"]),
+        ("Llama-3.3-70B-Instruct-Turbo", "DeepSeek-R1-Distill-Llama-70B", ["arith"]),
+        ("Qwen2.5-7B-Instruct", "DeepSeek-R1-Distill-Qwen-7B", ["array_idx"]),
+        ("Qwen2.5-32B-Instruct", "DeepSeek-R1-Distill-Qwen-32B", ["even_odd"]),
+        ("gpt-4o", "o3-mini", ["bool"]),
+        ("DeepSeek-R1", "DeepSeek-V3", ["shuffled_objects"])
+    ]
+    for model_pair in model_pairs:
+        plot_correctness_by_ttoks_model_pairs(df, model_pair, plot_kwargs, normalize=False)
     
     # for task in args.tasks:
     #     df_task = df[df["task"] == task]
