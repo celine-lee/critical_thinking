@@ -588,12 +588,15 @@ assert answer == ??
         trace_len = kN["N"]
         prompts = []
         true_answers = []
+        examples = []
         while len(prompts) < generator.max_batch_size:
             ex = self.get_example(ast_size, trace_len)
+            if ex is None: break
+            examples.append(ex)
             prompt = self.make_prompt(generator, ex["straightlined_code"])
             prompts.append(prompt)
             true_answers.append(ex["output"])
-        return prompts, true_answers
+        return examples, prompts, true_answers
 
 
 class ArithmeticTask(NestedBoolTask):
