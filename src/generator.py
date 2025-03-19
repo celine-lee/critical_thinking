@@ -295,7 +295,7 @@ class VLLMGenerator(Generator):
         return True
 
     def load_model(self):
-        max_model_len = 32768
+        max_model_len = None # 32768
         max_num_seqs = 1
         quantization_config = {
             "dtype": torch.bfloat16,
@@ -303,7 +303,17 @@ class VLLMGenerator(Generator):
             "quantization": "bitsandbytes",
             "load_format": "bitsandbytes"
         }
-        self.llm = LLM(model=self.model_name, max_num_seqs=max_num_seqs, max_model_len=max_model_len, **quantization_config)
+        try:
+            self.llm = LLM(model=self.model_name, max_num_seqs=max_num_seqs, max_model_len=max_model_len, **quantization_config)
+        except:
+            try:
+                self.llm = LLM(model=self.model_name, max_num_seqs=max_num_seqs, max_model_len=97584, **quantization_config)
+            except:
+                try:
+                    self.llm = LLM(model=self.model_name, max_num_seqs=max_num_seqs, max_model_len=32768, **quantization_config)
+                except: exit(1)
+
+
         print(torch.cuda.memory_allocated() / 1e9, "GB allocated")
         print(torch.cuda.memory_reserved() / 1e9, "GB reserved")
     

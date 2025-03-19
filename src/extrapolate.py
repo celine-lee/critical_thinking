@@ -2,10 +2,10 @@ import numpy as np
 import scipy.stats as stats
 from tabulate import tabulate
 import pandas as pd
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import os
 
 from plot import load_data, model_nicknames
-from task import *
-from generator import *
 from experimentor import modelname_mappings
 from plot_utils import *
 
@@ -25,7 +25,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--models", nargs='+')
     parser.add_argument("--n_buckets", type=int, default=5)
-    parser.add_argument("--tasks", nargs="+", default=['dyck', 'array_idx', 'cruxeval', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies'])
+    parser.add_argument("--tasks", nargs="+", default=['dyck', 'array_idx', 'cruxeval', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'logical_deduction'])
     args = parser.parse_args()
     return args
 
@@ -171,12 +171,60 @@ def linear_interpolate(df, new_k, new_N, kwargs):
     return predictions
 
 
+def process_kn_pair(new_k_val, new_N_val, df, kwargs):
+    """
+    Process a single (k, N) pair:
+    - Interpolates predictions.
+    - Computes old & new accuracy.
+    - Computes delta.
+    Returns a list of table rows for this (k, N).
+    """
+    df_without_new_k_and_N = df[~((df["k"] == new_k_val) & (df["N"] == new_N_val))]
+    predictions = linear_interpolate(df_without_new_k_and_N, new_k_val, new_N_val, kwargs)
+    
+    table_data = []
+    for modelname, (pred_Lstar_low, pred_Lstar_high, tol, coeffs_low, coeffs_high) in predictions.items():
+        low_bound = int(pred_Lstar_low - tol)
+        high_bound = int(pred_Lstar_high + tol)
+
+        # Get the data for the new (k, N) for this model.
+        df_model_new = df[(df["k"] == new_k_val) & (df["N"] == new_N_val) & (df["Model"] == modelname)]
+        if df_model_new.empty:
+            continue
+
+        old_acc = df_model_new["Correct?"].mean()
+
+        # Compute new accuracy
+        new_acc_df = df_model_new[(df_model_new["No gen toks"] >= low_bound) & 
+                                  (df_model_new["No gen toks"] <= high_bound)]
+        if new_acc_df.empty:
+            continue
+        new_acc = new_acc_df["Correct?"].mean()
+
+        if np.isnan(new_acc) or np.isnan(old_acc):
+            continue
+
+        delta = 100 * (new_acc - old_acc)
+        row = [
+            model_nicknames[modelname],
+            f"{coeffs_low[0].item():.1f} + {coeffs_low[1].item():.1f}*k + {coeffs_low[2].item():.1f}*N",
+            f"{coeffs_high[0].item():.1f} + {coeffs_high[1].item():.1f}*k + {coeffs_high[2].item():.1f}*N",
+            f"({int(pred_Lstar_low)}, {int(pred_Lstar_high)}]",
+            f"{int(tol)}",
+            f"{old_acc:.3f}",
+            f"{new_acc:.3f}",
+            f"{'+' if delta >= 0 else ''}{delta:.1f}"
+        ]
+        table_data.append(row)
+
+    return table_data
+
 if __name__ == "__main__":
     args = get_args()
 
     all_models = [modelname_mappings[os.path.basename(modelname)] if os.path.basename(modelname) in modelname_mappings else os.path.basename(modelname) for modelname in args.models]
 
-    modelname_to_average_delta = {}
+    modelname_to_deltas = {}
     for task in args.tasks:
         compute_random, foldername_parser, dfa_factors_order, output_folder = get_task_info(task)
 
@@ -191,7 +239,8 @@ if __name__ == "__main__":
         dfa_config_info = {
             "Model": all_models,
         }
-        for dfa_key in dfa_factors_order.keys(): dfa_config_info[dfa_key] = None
+        for dfa_key in dfa_factors_order.keys():
+            dfa_config_info[dfa_key] = None
 
         df = load_data(
             output_folder,
@@ -201,84 +250,56 @@ if __name__ == "__main__":
             filter_stddev_count=0
         )
 
-        # get average delta per model across all heldout (k, N)
+        # Get average delta per model across all held-out (k, N)
         kN_table_data = []
-        for new_k_val in df["k"].unique():
-            for new_N_val in df["N"].unique():
+        with ThreadPoolExecutor() as executor:
+            futures = {
+                executor.submit(process_kn_pair, new_k, new_N, df, kwargs): (new_k, new_N)
+                for new_k in df["k"].unique() for new_N in df["N"].unique()
+            }
+            for future in as_completed(futures):
+                kN_table_data.extend(future.result())
 
-                # Exclude rows corresponding to the new (k, N) pair from the data used for interpolation.
-                df_without_new_k_and_L = df[~((df["k"] == new_k_val) & (df["N"] == new_N_val))]
-
-                predictions = linear_interpolate(df_without_new_k_and_L, new_k_val, new_N_val, kwargs)
-                table_data = []
-                for modelname, (pred_Lstar_low, pred_Lstar_high, tol, coeffs_low, coeffs_high) in predictions.items():
-                    # For new_acc, filter rows to those with token count in [pred_Lstar - tol, pred_Lstar + tol]
-                    low_bound = int(pred_Lstar_low - tol)
-                    high_bound = int(pred_Lstar_high + tol)
-
-                    # Get the data for the new (k, N) for this model.
-                    df_model_new = df[(df["k"] == new_k_val) & (df["N"] == new_N_val) & (df["Model"] == modelname)]
-                    if df_model_new.empty:
-                        # print(f"No data for model {modelname} at new_k and new_N.")
-                        continue
-
-                    # Get average of df_model_new["Correct?"]
-                    old_acc = df_model_new["Correct?"].mean()
-                    # For new_acc, filter rows to those with token count in [pred_Lstar - tol, pred_Lstar + tol]
-                    new_acc_df = df_model_new[(df_model_new["No gen toks"] >= low_bound) & 
-                                            (df_model_new["No gen toks"] <= high_bound)]
-                    if new_acc_df.empty:
-                        continue
-                    else:
-                        new_acc = new_acc_df["Correct?"].mean()
-
-                    if np.isnan(new_acc) or np.isnan(old_acc):
-                        continue
-                    else:
-                        delta = f"{'+' if 100*(new_acc-old_acc) >= 0 else ''}{100*(new_acc-old_acc):.1f}"
-                    row = [
-                        model_nicknames[modelname],
-                        f"{coeffs_low[0].item():.1f} + {coeffs_low[1].item():.1f}*k + {coeffs_low[2].item():.1f}*N",
-                        f"{coeffs_high[0].item():.1f} + {coeffs_high[1].item():.1f}*k + {coeffs_high[2].item():.1f}*N",
-                        f"({int(pred_Lstar_low)}, {int(pred_Lstar_high)}]",
-                        f"{int(tol)}",
-                        f"{old_acc:.3f}",
-                        f"{new_acc:.3f}",
-                        delta
-                    ]
-                    table_data.append(row)
-                table_data = sorted(table_data, key=lambda row:float(row[-1]))
-
-                kN_table_data.extend(table_data)
-                # headers = ["Model", "Pred low", "Pred high", "Pred L*", "Tol", "Old Acc", "New Acc", "Delta (%)"]
-                # print(f"Task: {task}. Pred for k={new_k_val}, N={new_N_val}")
-                # print(tabulate(table_data, headers=headers, tablefmt="pretty"))
-
-        averaged_table_data = {} # average kN_table_data 
+        # Compute averages and standard deviations for each model
+        averaged_table_data = {}
         for row in kN_table_data:
-            if row[0] not in averaged_table_data: averaged_table_data[row[0]] = []
-            averaged_table_data[row[0]].append(float(row[-1]))
+            modelname = row[0]
+            old_acc = float(row[-3])
+            new_acc = float(row[-2])
+            delta_value = float(row[-1])
+            if modelname not in averaged_table_data:
+                averaged_table_data[modelname] = []
+            averaged_table_data[modelname].append((old_acc, new_acc, delta_value))
 
+        # Compute mean and stddev per model for this task
         averaged_table = []
-        for modelname, deltas in averaged_table_data.items():
-            average_delta_task_model = sum(deltas)/len(deltas)
-            averaged_table.append([modelname, f"{average_delta_task_model:.2f}"])
-            if modelname not in modelname_to_average_delta: modelname_to_average_delta[modelname] = []
-            modelname_to_average_delta[modelname].append(average_delta_task_model)
+        for modelname, acc_info in averaged_table_data.items():
+            old_acc = np.mean([info[0] for info in acc_info])
+            new_acc = np.mean([info[1] for info in acc_info])
+            deltas = [info[2] for info in acc_info]
+            average_delta_task_model = np.mean(deltas)
+            stddev = np.std(deltas, ddof=1) if len(deltas) > 1 else 0.0  # Use sample stddev
+            averaged_table.append([modelname, f"{old_acc:.2f}", f"{new_acc:2f}", f"{average_delta_task_model:.2f}", f"{stddev/np.sqrt(len(deltas)):.2f}"])
+            
+            if modelname not in modelname_to_deltas:
+                modelname_to_deltas[modelname] = []
+            modelname_to_deltas[modelname].extend(deltas)
 
-        averaged_table = sorted(averaged_table, key=lambda row:float(row[-1]))
-        headers = ["Model", "Delta (%)"]
+        averaged_table = sorted(averaged_table, key=lambda row: float(row[3]))  # Sort by average delta
+        headers = ["Model", "Old Acc", "New Acc", "Delta (%)", "SE"]
         print(f"\n----\nTask: {task}")
         print(tabulate(averaged_table, headers=headers, tablefmt="pretty"))
         print("----\n")
-    
-    averaged_model_table = []
-    for modelname, averaged_deltas in modelname_to_average_delta.items():
-        averaged_averaged_deltas = sum(averaged_deltas) / len(averaged_deltas)
-        averaged_model_table.append([modelname, f"{averaged_averaged_deltas:.2f}"])
 
-    averaged_model_table = sorted(averaged_model_table, key=lambda row:float(row[-1]))
-    headers = ["Model", "Delta (%)"]
+    # Compute averages and stddev across all tasks
+    averaged_model_table = []
+    for modelname, deltas in modelname_to_deltas.items():
+        averaged_deltas = np.mean(deltas)
+        stddev = np.std(deltas, ddof=1) if len(deltas) > 1 else 0.0  # Sample stddev
+        averaged_model_table.append([modelname, f"{averaged_deltas:.2f}", f"{stddev/np.sqrt(len(deltas)):.2f}"])
+
+    averaged_model_table = sorted(averaged_model_table, key=lambda row: float(row[1]))  # Sort by avg delta
+    headers = ["Model", "Delta (%)", "SE"]
     print("Averaged across all (task, k, N)")
     print(tabulate(averaged_model_table, headers=headers, tablefmt="pretty"))
     print("----\n")

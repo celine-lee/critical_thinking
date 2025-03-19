@@ -33,7 +33,7 @@ class Experimenter:
         added_tokens_gen = 0
         while len(results) < self.n_samples:
             inputs = self.task.generate_random(self.generator, dfa_param_vals)
-            if self.task.name == "cruxeval":
+            if "cruxeval" in self.task.name:
                 examples, prompts, true_answers = inputs
             else:
                 prompts, true_answers = inputs

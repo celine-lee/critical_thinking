@@ -1064,6 +1064,7 @@ if __name__ == "__main__":
         "num_gens": args.num_gens,
         "foldername": args.foldername,
         "only_meta": args.only_meta,
+        "compute_random": compute_random,
     }
 
     factor_names = ["k", "N"]
