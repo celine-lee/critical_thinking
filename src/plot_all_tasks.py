@@ -2,25 +2,29 @@ import json
 import re
 import os
 import shutil
+import random
 import pandas as pd
 import glob
 import argparse
 import math
 import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib
 from scipy import stats
 from matplotlib import colors as mcolors
+import matplotlib.lines as mlines
 
 from plot_utils import *
+
+
 
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--n_buckets", type=int, default=4)
     parser.add_argument("--models", nargs='+')
     parser.add_argument("--delete_old", action="store_true")
-    parser.add_argument("--tasks", nargs='+', default=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'cruxeval', 'logical_deduction'])
-    parser.add_argument("--select_tasks", nargs='+', default=['array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies'])
+    parser.add_argument("--all_tasks", nargs='+', default=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'cruxeval', 'logical_deduction'])
+    parser.add_argument("--f1_tasks", nargs='+', default=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'cruxeval', 'logical_deduction'])
+    parser.add_argument("--f2_tasks", nargs='+', default=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'logical_deduction'])
 
     args = parser.parse_args()
     args.foldername = os.path.join(
@@ -85,7 +89,7 @@ def load_task_data(taskname, compute_random, foldername_parser, dfa_factors, out
 
 def load_data(args, kwargs, filter_stddev_count=1):
     all_df = None
-    for task in args.tasks:
+    for task in args.all_tasks:
         compute_random, foldername_parser, dfa_factors_order, output_folder = get_task_info(task)
         task_df = load_task_data(task, compute_random, foldername_parser, list(dfa_factors_order.keys()) + ["Model"], output_folder)
         if all_df is not None:
@@ -291,7 +295,7 @@ def plot_correctness_by_ttoks_model_pairs(df, models_and_tasks, kwargs, normaliz
     plt.savefig(os.path.join(kwargs['foldername'], plot_filename), bbox_inches="tight")
     plt.clf()
 
-def plot_fig1_on_ax(ax, task, df, kwargs, include_raw, clamp_upper):
+def plot_fig1_on_ax(ax, task, df, kwargs, include_raw, clamp_upper, y_normalization):
     """
     Plot the fig1 curve for a single task onto a given axis (ax),
     with customized x-axis ticks: the tick at 0 (the normalized peak) is labeled 'L*',
@@ -327,30 +331,20 @@ def plot_fig1_on_ax(ax, task, df, kwargs, include_raw, clamp_upper):
                 # Avoid zero division by nudging bucket_min_x
                 bucket_min_x -= 1
 
-            # For this group, compute the normalized value for raw x = 0.
-            # norm_zero = (0 - peak_x) / (peak_x - bucket_min_x)
-            # normalized_zero_values.append(norm_zero)
-
             # Scaling: leftmost bucket center -> -1, peak -> 0.
             # Then clamp any values above clamp_upper.
             def scale_point(point):
                 scaled_val = (point - peak_x) / (peak_x - bucket_min_x)
-                return min(scaled_val, clamp_upper)
+                if scaled_val <= clamp_upper: return scaled_val
+                return None
 
             bucket_sorted = bucket_avg.sort_values("Toks Bucket Center")
             curve_x = [scale_point(row["Toks Bucket Center"]) for _, row in bucket_sorted.iterrows()]
-            curve_y = [row["Correct?"] for _, row in bucket_sorted.iterrows()]
+            curve_x = [point for point in curve_x if point is not None]
+            curve_y = [row["Correct?"] for _, row in bucket_sorted.iterrows()][:len(curve_x)]
             curves_list.append((np.array(curve_x), np.array(curve_y)))
         curves_by_model[model_name] = curves_list
 
-    # Set up color maps. (Make sure models_in_order and rl_models_in_order
-    # are defined in your environment or passed via kwargs.)
-    cmap_blues = matplotlib.colormaps.get_cmap("Blues")
-    model_colors = {model: cmap_blues(i / (len(models_in_order) - 1)) 
-                    for i, model in enumerate(models_in_order)}
-    cmap_oranges = matplotlib.colormaps.get_cmap("Oranges")
-    rl_model_colors = {model: cmap_oranges(i / (len(rl_models_in_order) - 1)) 
-                       for i, model in enumerate(rl_models_in_order)}
 
     # Optionally plot raw curves (for debugging)
     for model_name, curve_list in curves_by_model.items():
@@ -390,9 +384,10 @@ def plot_fig1_on_ax(ax, task, df, kwargs, include_raw, clamp_upper):
 
         interpolated_curves = np.array(interpolated_curves)
         mean_curve = interpolated_curves.mean(axis=0)
+        mean_curve = y_normalization(mean_curve)
 
-        if model_name in model_colors:
-            ax.plot(common_grid, mean_curve, color=model_colors[model_name], marker=",")
+        if model_name in nonrl_model_colors:
+            ax.plot(common_grid, mean_curve, color=nonrl_model_colors[model_name], marker=",")
         elif model_name in rl_model_colors:
             ax.plot(common_grid, mean_curve, color=rl_model_colors[model_name], marker=",")
 
@@ -401,23 +396,14 @@ def plot_fig1_on_ax(ax, task, df, kwargs, include_raw, clamp_upper):
     ax.grid(True, linestyle="--", alpha=0.6)
     
     # Customize x-axis ticks:
-    # Replace the tick at 0 (the normalized peak) with label 'L*'
-    # and add one other tick at the average normalized value for raw x=0 labeled '0'
-    # if normalized_zero_values:
-    #     avg_norm_zero = np.mean(normalized_zero_values)
-    #     # Order the ticks from left to right.
-    #     ticks = [avg_norm_zero, 0]
-    #     labels = ["0", "L*"]
-    #     ax.set_xticks(ticks)
-    #     ax.set_xticklabels(labels)
     ticks = [-1.2, 0]
     labels = ["0", "L*"]
     ax.set_xticks(ticks)
     ax.set_xticklabels(labels)
     
-    ax.set_title(task)
+    ax.set_title(task_full_names[task])
 
-def fig1_all_tasks(tasks, df, kwargs, include_raw, clamp_upper, n_cols):
+def fig1_all_tasks(tasks, df, kwargs, include_raw, clamp_upper, n_cols, y_normalization=lambda x: x, suffix=''):
     """
     Create one figure with a grid of subplots, one for each task in tasks.
     """
@@ -433,20 +419,20 @@ def fig1_all_tasks(tasks, df, kwargs, include_raw, clamp_upper, n_cols):
     
     for i, task in enumerate(tasks):
         ax = axes[i]
-        plot_fig1_on_ax(ax, task, df, kwargs, include_raw=include_raw, clamp_upper=clamp_upper)
+        plot_fig1_on_ax(ax, task, df, kwargs, include_raw=include_raw, clamp_upper=clamp_upper, y_normalization=y_normalization)
     
     # Remove any extra subplots if the grid has more slots than tasks.
     for j in range(i + 1, len(axes)):
         fig.delaxes(axes[j])
     
     plt.tight_layout()
-    out_filename = os.path.join(kwargs["foldername"], "fig1_all_tasks.png")
+    out_filename = os.path.join(kwargs["foldername"], f"fig1{suffix}.png")
     plt.savefig(out_filename, bbox_inches="tight")
     plt.clf()
 
-def fig2(select_tasks, df, kwargs):
+def fig2(select_tasks, df, kwargs, fig_suffix, plot_confidence=False):
     # Create a single figure with 2 subplots, side by side
-    fig, axes = plt.subplots(1, 2, figsize=(6, 6))
+    fig, axes = plt.subplots(1, 2, figsize=(8, 12))
     
     # We store correlations in a dict so we can print them after plotting
     all_correlations = {}
@@ -574,48 +560,218 @@ def fig2(select_tasks, df, kwargs):
             if len(binned_x) == 0:
                 continue
 
-            base_color = model_colors.get(model, "blue")
+            if model in nonrl_model_colors:
+                base_color = nonrl_model_colors.get(model, "blue")
+            if model in rl_model_colors:
+                base_color = rl_model_colors.get(model, "blue")
             rgba_color = mcolors.to_rgba(base_color, alpha=0.9)
 
-            # Scatter the binned points
-            # ax.scatter(binned_x, binned_y, color=rgba_color, label=label_text)
-            # Connect them with a line (optional)
             ax.plot(binned_x, binned_y, color=rgba_color, alpha=0.7)
-            # Confidence intervals with fill_between
-            # if len(binned_x) > 1:
-            #     ax.fill_between(binned_x, ci_lower, ci_upper, color=rgba_color, alpha=0.1)
+            # Confidence intervals with fill_between. 
+            if plot_confidence and len(binned_x) > 1:
+                ax.fill_between(binned_x, ci_lower, ci_upper, color=rgba_color, alpha=0.1)
 
         # Store the correlations so we can print them after
         all_correlations[factor] = corrs
 
         # Final formatting for this subplot
         ax.set_aspect(1)
-        ax.set_ylim(-0.25, 1.25)
-        # ax.set_ylim(-1.6, 2.6)
-        ax.set_xlim(-0.15, 1.15)
-        ax.set_xlabel(f"Normalized {factor}")
-        if factor == "k": ax.set_ylabel("Normalized L*")
-        # ax.set_title(f"Factor = {factor}")
-        # ax.legend(loc='upper left', bbox_to_anchor=(1, 1))
-
+        ax.set_xlim(-0.05, 1.05)
+        ax.set_ylim(-0.15, 1.15)
+        if factor == "k":
+            ax.set_xlabel("k (DFA size)")
+        elif factor == "N":
+            ax.set_xlabel("N (run length)")
+            ax.set_yticklabels(['', '']) 
+        if factor == "k": ax.set_ylabel("L* (optimal length)")
     # Tight layout for the entire figure
     fig.tight_layout()
 
     # Save once, containing both subplots
-    out_filename = os.path.join(kwargs["foldername"], "fig2_by_model.png")
+    out_filename = os.path.join(kwargs["foldername"], f"fig2{fig_suffix}.png")
     fig.savefig(out_filename, bbox_inches="tight")
     plt.close(fig)
-    # Print correlations for each factor
-    for model in df["Model"].unique():
-        corrs = all_correlations.get(factor, {})
-        if model in all_correlations['k'] and model in all_correlations['N']:
-            print(f"{model} k:{all_correlations['k'][model]:.3f} N:{all_correlations['N'][model]:.3f}")
-        elif model in all_correlations['k']:
-            print(f"{model} k:{all_correlations['k'][model]:.3f} N:None")
-        elif model in all_correlations['N']:
-            print(f"{model} k:None N:{all_correlations['N'][model]:.3f}")
-        else: 
-            print(f"No data for {model}")
+    
+    # Generate LaTeX table string
+    latex_lines = [
+        r"\begin{tabular}{lcc}",
+        r"  \toprule",
+        r"  Model & $\rho(L^*,N)$ & $\rho(L^*,k)$ \\",
+        r"  \midrule"
+    ]
+
+    # Add rows
+    models_sorted = sorted(set(all_correlations['k'].keys()) | set(all_correlations['N'].keys()))
+    for model in models_sorted:
+        corr_N = all_correlations['N'].get(model, None)
+        corr_k = all_correlations['k'].get(model, None)
+        corr_N_str = f"${corr_N:.2f}$" if corr_N is not None else "N/A"
+        corr_k_str = f"${corr_k:.2f}$" if corr_k is not None else "N/A"
+        latex_lines.append(f"  {model_nicknames[model]} & {corr_N_str} & {corr_k_str} \\\\")
+
+    # Finish table
+    latex_lines.append(r"  \bottomrule")
+    latex_lines.append(r"\end{tabular}")
+
+    # Print the LaTeX table
+    latex_table = "\n".join(latex_lines)
+    print(fig_suffix)
+    print(latex_table)
+
+def fig3(tasks, df, kwargs, fig_suffix):
+    if not os.path.exists("extrapolated.json"):
+        return
+
+    # Load your aggregated results: 
+    # { "ModelName": { "taskA": ([old_accs], [new_accs], [deltas]), ... } }
+    modelname_to_task_to_row = json.load(open("extrapolated.json"))
+
+    fig, ax = plt.subplots(figsize=(8, 6))
+
+    ordered_model_list = all_models_size_ordered
+    # Create a dictionary for quick index lookup
+    model_to_jitter_index = {m: i for i, m in enumerate(ordered_model_list)}
+
+    # 2) Helper to compute a stable log‐scale jitter
+    def jitter_log_x(size, model, base_offset_multiplier=0.02):
+        """
+        Shifts 'size' in log10 space based on:
+         - The model's index in the ordered_model_list
+        """
+        # If model not in the dictionary, place it at the end
+        idx = model_to_jitter_index.get(model, len(ordered_model_list))
+        total_count = len(ordered_model_list)
+
+        # Base offset in log space: spread models from negative to positive
+        # around 0. Larger magnitude for first/last in the list.
+        base_offset = base_offset_multiplier * (idx - total_count/2)
+
+        # Convert to log space
+        log_size = np.log10(size)
+        jittered_log_size = log_size + base_offset
+        return 10 ** jittered_log_size
+
+    # 3) Helper to draw a vertical "error region" around the new accuracy
+    def fill_vertical_error(ax, x_center, y_center, y_err, color, alpha=0.3, fraction=0.02):
+        """
+        Draws a vertical rectangle centered at (x_center, y_center) 
+        spanning y_center ± y_err, with a small horizontal width in log space.
+        
+        fraction controls the half‐width in log space (e.g., 0.02 => ±0.01 in log10).
+        """
+        # Half‐width in log space
+        log_x = np.log10(x_center)
+        half_log_width = fraction / 2.0
+
+        x_left = 10 ** (log_x - half_log_width)
+        x_right = 10 ** (log_x + half_log_width)
+
+        y_low = y_center - y_err
+        y_high = y_center + y_err
+
+        ax.fill_between(
+            [x_left, x_right],
+            y_low,   # lower y-bound
+            y_high,  # upper y-bound
+            color=color,
+            alpha=alpha
+        )
+
+    # We’ll keep track of which models we actually plot, to build a custom legend.
+    plotted_models = set()
+
+    # 4) Aggregate across tasks for each model
+    for model, task_metrics in modelname_to_task_to_row.items():
+        # Combine old_accs, new_accs, and deltas from all tasks
+        all_old_accs = []
+        all_new_accs = []
+        all_deltas = []
+        for (old_list, new_list, delta_list) in task_metrics.values():
+            all_old_accs.extend(old_list)
+            all_new_accs.extend(new_list)
+            all_deltas.extend(delta_list)
+
+        if not all_old_accs or not all_new_accs:
+            continue
+
+        # Means (×100 => percentages) 
+        old_acc = np.mean(all_old_accs) * 100
+        new_acc = np.mean(all_new_accs) * 100
+
+        # Delta's SE (has already been *100)
+        delta_se = np.std(all_deltas, ddof=1) / np.sqrt(len(all_deltas)) if len(all_deltas) > 1 else 0.0
+
+        # Determine color
+        if model in nonrl_model_colors:
+            color = nonrl_model_colors[model]
+        elif model in rl_model_colors:
+            color = rl_model_colors[model]
+        else:
+            color = "black"
+
+        # Extract approximate size
+        size_match = re.search(r'(\d+)[bB]', model)
+        if size_match is None:
+            # fallback
+            size = 685 if "DeepSeek" in model else 200
+        else:
+            size = int(size_match.group(1))
+
+        # Apply log-scale jitter
+        x_val = jitter_log_x(size, model)
+
+        # Plot old (circle) and new (square)
+        ax.scatter(x_val, old_acc, color=color, marker="o", s=30)
+        ax.scatter(x_val, new_acc, color=color, marker="s", s=30)
+
+        # Arrow from old to new
+        ax.annotate(
+            "",
+            xy=(x_val, new_acc),
+            xytext=(x_val, old_acc),
+            arrowprops=dict(arrowstyle="->", color=color, lw=1.5)
+        )
+
+        # Shaded region for new_acc ± delta_se
+        fill_vertical_error(ax, x_val, new_acc, delta_se, color=color, alpha=0.3, fraction=0.05)
+
+        plotted_models.add(model)
+
+    # --- 5) Format axes ---
+    ax.set_xscale("log")
+    ax.set_xlabel("Model size")
+    ax.set_ylabel("Accuracy (%)")
+    ax.grid(True, linestyle="--", alpha=0.6)
+
+    # If you want to remove the x-axis tick labels but keep the ticks:
+    #   ax.set_xlabel("")
+    #   ax.set_xticklabels([])
+
+    # --- 6) Build a 2-column legend in the same order as your color dicts ---
+    def get_legend_order(m):
+        # Return the index if present in ordered_model_list, else a large number
+        return ordered_model_list.index(m) if m in ordered_model_list else 999999
+
+    legend_handles = []
+    import matplotlib.lines as mlines
+    for m in sorted(plotted_models, key=get_legend_order):
+        if m in nonrl_model_colors:
+            c = nonrl_model_colors[m]
+        elif m in rl_model_colors:
+            c = rl_model_colors[m]
+        else:
+            c = "black"
+        lbl = model_nicknames.get(m, m)
+        h = mlines.Line2D([], [], color=c, marker='s', linestyle='None', label=lbl)
+        legend_handles.append(h)
+
+    ax.legend(handles=legend_handles, loc="best", fontsize="small", frameon=True, ncol=2)
+
+    fig.tight_layout()
+    out_filename = os.path.join(kwargs["foldername"], f"fig3{fig_suffix}.png")
+    fig.savefig(out_filename, bbox_inches="tight")
+    plt.close(fig)
+ 
 
 # python src/plot_all_tasks.py --models ${ALL_MODELS_PLOTTING}
 if __name__ == "__main__":
@@ -644,8 +800,27 @@ if __name__ == "__main__":
         plot_kwargs,
     )
 
-    fig1_all_tasks(args.tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3)
-    fig2(args.tasks, df, plot_kwargs)
+    def relative_to_start(y_curve):
+        original_val = y_curve[0]
+        norm_y = [(y_val-original_val)/original_val for y_val in y_curve]
+        return norm_y
+    def relative_to_max(y_curve):
+        max_val = y_curve.max()
+        norm_y = [1. - (max_val - y_val)/max_val for y_val in y_curve]
+        return norm_y
+    def normalize(y_curve):
+        max_val = y_curve.max()
+        min_val = y_curve.min()
+        norm_y = [(y_val - min_val)/(max_val - min_val) for y_val in y_curve]
+        return norm_y
+        
+    # fig1_all_tasks(args.f1_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix='_9')
+    # fig1_all_tasks(args.all_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix="_all")
+    
+    fig2(args.f2_tasks, df, plot_kwargs, '_select')
+    fig2(args.all_tasks, df, plot_kwargs, '_all')
+    
+    fig3(args.all_tasks, df, plot_kwargs, "")
 
     # plot_correctness_by_ttoks(df, plot_kwargs)
     # model_pairs = [

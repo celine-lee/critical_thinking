@@ -2,7 +2,40 @@ import re
 import pandas as pd
 import numpy as np
 import seaborn as sns
+import matplotlib
 sns.set("talk")
+
+task_full_names = {
+    'arith': "Multi-Step Arithmetic",
+    'array_idx': "Index Tracking",
+    'dyck': "Dyck-$D$",
+    'navigate': "Navigate",
+    'even_odd': "Even/Odd Tracking",
+    'cruxeval': "CRUXEval",
+    'bool': "Nested Boolean Expression",
+    'web_of_lies': "Web of Lies",
+    'shuffled_objects': "Shuffled Objects",
+    'logical_deduction': "Logical Deduction",
+}
+
+all_models_size_ordered = [
+    "Qwen2.5-7B-Instruct",
+    "DeepSeek-R1-Distill-Qwen-7B",
+    "Ministral-8B-Instruct-2410",
+    "Llama-3.1-8B-Instruct",
+    "DeepSeek-R1-Distill-Llama-8B",
+    "gemma-2-9b-it",
+    "Qwen2.5-32B-Instruct",
+    "DeepSeek-R1-Distill-Qwen-32B",
+    "Llama-3.3-70B-Instruct-Turbo",
+    "DeepSeek-R1-Distill-Llama-70B",
+    "Meta-Llama-3.1-405B-Instruct-Turbo",
+    "gpt-4o-mini",
+    "o3-mini",
+    "DeepSeek-V3",
+    "gpt-4o",
+    "DeepSeek-R1",
+]
 
 models_in_order = [
     "Qwen2.5-7B-Instruct",
@@ -25,6 +58,24 @@ rl_models_in_order = [
     "DeepSeek-R1",
     "o3-mini",
 ]
+
+# Set up color maps. (Make sure models_in_order and rl_models_in_order
+# are defined in your environment or passed via kwargs.)
+cmap_blues = matplotlib.colormaps.get_cmap("Blues")
+cmap_oranges = matplotlib.colormaps.get_cmap("Oranges")
+nonrl_model_colors = {}
+n_nonrl = len(models_in_order)
+for i, model in enumerate(models_in_order):
+    # fraction in [0.2 to 1.0]
+    fraction = 0.2 + 0.8 * (i / (n_nonrl - 1))
+    nonrl_model_colors[model] = cmap_blues(fraction)
+
+rl_model_colors = {}
+n_rl = len(rl_models_in_order)
+for i, model in enumerate(rl_models_in_order):
+    # fraction in [0.2:
+    fraction = 0.2 + 0.8 * (i / (n_rl - 1))
+    rl_model_colors[model] = cmap_oranges(fraction)
 
 model_colors = {
     "Llama-3.1-8B-Instruct": "tomato",
