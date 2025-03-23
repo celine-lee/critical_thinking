@@ -7,4 +7,4 @@ export EVEN_ODD_TASK_FLAGS="--task even_odd --m_vals 1 5 9 17 --k_vals 5 9 17 --
 export NAVIGATE_TASK_FLAGS="--task navigate --d_vals 1 2 3 --k_vals 10 30 100 --N_vals 5 10 15 20"
 export SHUFFLE_TASK_FLAGS="--task shuffled_objects --k_vals 3 5 7 --N_vals 3 5 7 9"
 export WEB_OF_LIES_TASK_FLAGS="--task web_of_lies --k_vals 0 --N_vals 3 5 7 9"
-export LOGICAL_DEDUCTION_TASK_FLAGS="--task logical_deduction --k_vals 7 9 12 --N_vals 2 4 6"
+export LOGICAL_DEDUCTION_FLAGS="--task logical_deduction --k_vals 7 9 12 --N_vals 2 4 6"
