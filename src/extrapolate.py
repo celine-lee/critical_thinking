@@ -325,10 +325,10 @@ if __name__ == "__main__":
         delta_se = np.std(all_deltas, ddof=1) / np.sqrt(len(all_deltas)) 
         
         row = [
-            modelname,
-            f"{old_mean:.2f}\\% ($\\pm{old_se:.2f}$)",
-            f"{new_mean:.2f}\\% ($\\pm{new_se:.2f}$)",
-            f"{delta_mean:+.2f}\\% ($\\pm{delta_se:.2f}$)"
+            model_nicknames[modelname],
+            f"{old_mean:.1f}\\%",
+            f"{new_mean:.1f}\\%",
+            f"{delta_mean:+.1f}\\% ($\\pm{delta_se:.1f}$)"
         ]
         averaged_model_table.append(row)
 
@@ -342,9 +342,8 @@ if __name__ == "__main__":
     latex_lines.append(r"\begin{table}[h]")
     latex_lines.append(r"    \centering")
     latex_lines.append(r"    \begin{adjustbox}{max width=\textwidth}")
-    latex_lines.append(r"    \begin{tabular}{lccc}")
+    latex_lines.append(r"    \begin{tabular}{l >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}")
     latex_lines.append(r"    \toprule")
-    # latex_lines.append(r"    Model & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) \\")
     latex_lines.append(r"    Model & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) \\")
     latex_lines.append(r"    \midrule")
     for row in averaged_table:
