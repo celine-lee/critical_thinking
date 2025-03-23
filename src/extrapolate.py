@@ -4,6 +4,7 @@ from tabulate import tabulate
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import os
+import json
 
 from plot import load_data, model_nicknames
 from experimentor import modelname_mappings
@@ -206,7 +207,7 @@ def process_kn_pair(new_k_val, new_N_val, df, kwargs):
 
         delta = 100 * (new_acc - old_acc)
         row = [
-            model_nicknames[modelname],
+            modelname,
             f"{coeffs_low[0].item():.1f} + {coeffs_low[1].item():.1f}*k + {coeffs_low[2].item():.1f}*N",
             f"{coeffs_high[0].item():.1f} + {coeffs_high[1].item():.1f}*k + {coeffs_high[2].item():.1f}*N",
             f"({int(pred_Lstar_low)}, {int(pred_Lstar_high)}]",
@@ -224,7 +225,7 @@ if __name__ == "__main__":
 
     all_models = [modelname_mappings[os.path.basename(modelname)] if os.path.basename(modelname) in modelname_mappings else os.path.basename(modelname) for modelname in args.models]
 
-    modelname_to_deltas = {}
+    modelname_to_task_to_row = {}
     for task in args.tasks:
         compute_random, foldername_parser, dfa_factors_order, output_folder = get_task_info(task)
 
@@ -274,18 +275,31 @@ if __name__ == "__main__":
         # Compute mean and stddev per model for this task
         averaged_table = []
         for modelname, acc_info in averaged_table_data.items():
-            old_acc = np.mean([info[0] for info in acc_info])
-            new_acc = np.mean([info[1] for info in acc_info])
+            old_accs = [info[0] for info in acc_info]
+            new_accs = [info[1] for info in acc_info]
             deltas = [info[2] for info in acc_info]
-            average_delta_task_model = np.mean(deltas)
-            stddev = np.std(deltas, ddof=1) if len(deltas) > 1 else 0.0  # Use sample stddev
-            averaged_table.append([modelname, f"{old_acc:.2f}", f"{new_acc:2f}", f"{average_delta_task_model:.2f}", f"{stddev/np.sqrt(len(deltas)):.2f}"])
-            
-            if modelname not in modelname_to_deltas:
-                modelname_to_deltas[modelname] = []
-            modelname_to_deltas[modelname].extend(deltas)
+            n = len(acc_info)
 
-        averaged_table = sorted(averaged_table, key=lambda row: float(row[3]))  # Sort by average delta
+            old_mean = np.mean(old_accs) * 100
+            new_mean = np.mean(new_accs) * 100
+            delta_mean = np.mean(deltas)
+
+            old_se = np.std(old_accs, ddof=1) / np.sqrt(n) * 100 if n > 1 else 0.0
+            new_se = np.std(new_accs, ddof=1) / np.sqrt(n) * 100 if n > 1 else 0.0
+            delta_se = np.std(deltas, ddof=1) / np.sqrt(n) if n > 1 else 0.0
+            
+            row = [
+                modelname,
+                f"{old_mean:.2f}\\% ($\\pm{old_se:.2f}$)",
+                f"{new_mean:.2f}\\% ($\\pm{new_se:.2f}$)",
+                f"{delta_mean:+.2f}\\% ($\\pm{delta_se:.2f}$)"
+            ]
+            averaged_table.append(row)
+
+            if modelname not in modelname_to_task_to_row:
+                modelname_to_task_to_row[modelname] = {}
+            modelname_to_task_to_row[modelname][task] = (old_accs, new_accs, deltas)
+
         headers = ["Model", "Old Acc", "New Acc", "Delta (%)", "SE"]
         print(f"\n----\nTask: {task}")
         print(tabulate(averaged_table, headers=headers, tablefmt="pretty"))
@@ -293,13 +307,116 @@ if __name__ == "__main__":
 
     # Compute averages and stddev across all tasks
     averaged_model_table = []
-    for modelname, deltas in modelname_to_deltas.items():
-        averaged_deltas = np.mean(deltas)
-        stddev = np.std(deltas, ddof=1) if len(deltas) > 1 else 0.0  # Sample stddev
-        averaged_model_table.append([modelname, f"{averaged_deltas:.2f}", f"{stddev/np.sqrt(len(deltas)):.2f}"])
+    for modelname, task_info in modelname_to_task_to_row.items():
+        all_deltas = []
+        all_old_accs = []
+        all_new_accs = []
+        for task_name, (old_accs, new_accs, deltas) in task_info.items():
+            all_deltas.extend(deltas)
+            all_old_accs.extend(old_accs)
+            all_new_accs.extend(new_accs)
 
-    averaged_model_table = sorted(averaged_model_table, key=lambda row: float(row[1]))  # Sort by avg delta
-    headers = ["Model", "Delta (%)", "SE"]
-    print("Averaged across all (task, k, N)")
-    print(tabulate(averaged_model_table, headers=headers, tablefmt="pretty"))
-    print("----\n")
+        old_mean = np.mean(all_old_accs) * 100
+        new_mean = np.mean(all_new_accs) * 100
+        delta_mean = np.mean(all_deltas)
+
+        old_se = np.std(all_old_accs, ddof=1) / np.sqrt(len(all_old_accs)) * 100 
+        new_se = np.std(all_new_accs, ddof=1) / np.sqrt(len(all_new_accs)) * 100 
+        delta_se = np.std(all_deltas, ddof=1) / np.sqrt(len(all_deltas)) 
+        
+        row = [
+            modelname,
+            f"{old_mean:.2f}\\% ($\\pm{old_se:.2f}$)",
+            f"{new_mean:.2f}\\% ($\\pm{new_se:.2f}$)",
+            f"{delta_mean:+.2f}\\% ($\\pm{delta_se:.2f}$)"
+        ]
+        averaged_model_table.append(row)
+
+    headers = ["Model", "Old acc.", "New acc.", "$\\Delta A$ (SE)"]
+    print("Final Summary Table (text):")
+    print(tabulate(averaged_table, headers=headers, tablefmt="pretty"))
+    print("\n----\n")
+
+    # Now, produce the LaTeX code for the final summary table:
+    latex_lines = []
+    latex_lines.append(r"\begin{table}[h]")
+    latex_lines.append(r"    \centering")
+    latex_lines.append(r"    \begin{adjustbox}{max width=\textwidth}")
+    latex_lines.append(r"    \begin{tabular}{lccc}")
+    latex_lines.append(r"    \toprule")
+    # latex_lines.append(r"    Model & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) \\")
+    latex_lines.append(r"    Model & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) \\")
+    latex_lines.append(r"    \midrule")
+    for row in averaged_table:
+        # row is [Model, $A_\text{old}$, $A_\text{new}$, Delta (SE)]
+        latex_lines.append(f"    {row[0]} & {row[1]} & {row[2]} & {row[3]} \\\\")
+    latex_lines.append(r"    \bottomrule")
+    latex_lines.append(r"    \end{tabular}")
+    latex_lines.append(r"    \end{adjustbox}")
+    latex_lines.append(r"    \caption{Constraining by extrapolated predicted optimal thinking length range improves accuracy.}")
+    latex_lines.append(r"    \label{tab:extrapolate_final_summary}")
+    latex_lines.append(r"\end{table}")
+
+    final_latex = "\n".join(latex_lines)
+    print("Final Summary Table (LaTeX):")
+    print(final_latex)
+
+    # Now, produce the LaTeX code for the per-task summary table:
+    latex_lines = []
+    latex_lines.append(r"\begin{table}[h]")
+    latex_lines.append(r"    \centering")
+    latex_lines.append(r"    \begin{adjustbox}{max width=\textwidth}")
+    latex_lines.append(r"    \begin{tabular}{l >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm} | >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm} | >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}}")
+    latex_lines.append(r"    \toprule")
+    latex_lines.append(r"    Model & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) \\")
+    task_rows = [
+        ['arith', 'array_idx', 'dyck'], 
+        ['navigate', 'even_odd', 'cruxeval'], 
+        ['shuffled_objects', 'bool', 'web_of_lies'],
+        ['logical_deduction']
+        ]
+    for task_row in task_rows:
+        latex_lines.append(r"    \midrule")
+        latex_lines.append(r"         & \multicolumn{3}{c}{\textbf{" + r"}} & \multicolumn{3}{c}{\textbf{".join([task_full_names[task_nickname] for task_nickname in task_row]) + r"}} \\")
+        for modelname, task_info in modelname_to_task_to_row.items():
+            model_tasks_line = [model_nicknames[modelname]]
+            for taskname in task_row:
+                if taskname not in modelname_to_task_to_row[modelname]: 
+                    model_tasks_line.extend([
+                        "--",
+                        "--",
+                        "--",
+                    ])
+                    continue
+                old_accs = modelname_to_task_to_row[modelname][taskname][0]
+                new_accs = modelname_to_task_to_row[modelname][taskname][1]
+                deltas = modelname_to_task_to_row[modelname][taskname][2]
+
+                old_mean = np.mean(old_accs) * 100
+                new_mean = np.mean(new_accs) * 100
+                delta_mean = np.mean(deltas)
+
+                old_se = np.std(old_accs, ddof=1) / np.sqrt(len(old_accs)) * 100
+                new_se = np.std(new_accs, ddof=1) / np.sqrt(len(new_accs)) * 100
+                delta_se = np.std(deltas, ddof=1) / np.sqrt(len(deltas))
+
+                model_tasks_line.extend([
+                    f"${old_mean:.1f}$",
+                    f"${new_mean:.1f}$",
+                    f"${delta_mean:+.1f}$ ($\\pm{delta_se:.1f}$)"
+                ])
+            model_tasks_line = " & ".join(model_tasks_line) + r"\\"
+            latex_lines.append(model_tasks_line)
+    latex_lines.append(r"    \bottomrule")
+    latex_lines.append(r"    \end{tabular}")
+    latex_lines.append(r"    \end{adjustbox}")
+    latex_lines.append(r"    \caption{Per-task improvement by constraining to $L^*$.}")
+    latex_lines.append(r"    \label{tab:tasks_performance}")
+    latex_lines.append(r"\end{table}")
+    final_latex = "\n".join(latex_lines)
+    print("Per-Task Summary Table (LaTeX):")
+    print(final_latex)
+
+    out_filename = "extrapolated.json"
+    with open(out_filename, 'w') as wf:
+        json.dump(modelname_to_task_to_row, wf, indent=4)
