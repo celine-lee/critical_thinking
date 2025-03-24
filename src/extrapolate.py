@@ -25,6 +25,7 @@ import argparse
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--models", nargs='+')
+    parser.add_argument("--only_N", action='store_true')
     parser.add_argument("--n_buckets", type=int, default=5)
     parser.add_argument("--tasks", nargs="+", default=['dyck', 'array_idx', 'cruxeval', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'logical_deduction'])
     args = parser.parse_args()
@@ -72,7 +73,7 @@ def collect_k_N_Lstar_for_model(model_df, kwargs):
 
     return k_N_Lstar
 
-def linear_interpolate(df, new_k, new_N, kwargs):
+def linear_interpolate(df, new_k, new_N, kwargs, only_N):
     """
     For each model in the dataframe, bucket the data by (k, N) using calculate_buckets,
     then for each bucketed group, determine:
@@ -145,7 +146,10 @@ def linear_interpolate(df, new_k, new_N, kwargs):
         
         # Build the design matrix for linear regression.
         # Our model is: L* = a + b * k + c * N
-        A = np.column_stack((np.ones(len(k_vals)), k_vals, N_vals))
+        if only_N:
+            A = np.column_stack((np.ones(len(N_vals)), np.zeros_like(k_vals), N_vals))
+        else:
+            A = np.column_stack((np.ones(len(k_vals)), k_vals, N_vals))
         
         # Compute the least squares solutions for L* low and L* high.
         coeffs_low, _, _, _ = np.linalg.lstsq(A, Lstar_low_vals, rcond=None)
@@ -172,7 +176,7 @@ def linear_interpolate(df, new_k, new_N, kwargs):
     return predictions
 
 
-def process_kn_pair(new_k_val, new_N_val, df, kwargs):
+def process_kn_pair(new_k_val, new_N_val, df, kwargs, only_N=False):
     """
     Process a single (k, N) pair:
     - Interpolates predictions.
@@ -181,7 +185,7 @@ def process_kn_pair(new_k_val, new_N_val, df, kwargs):
     Returns a list of table rows for this (k, N).
     """
     df_without_new_k_and_N = df[~((df["k"] == new_k_val) & (df["N"] == new_N_val))]
-    predictions = linear_interpolate(df_without_new_k_and_N, new_k_val, new_N_val, kwargs)
+    predictions = linear_interpolate(df_without_new_k_and_N, new_k_val, new_N_val, kwargs, only_N)
     
     table_data = []
     for modelname, (pred_Lstar_low, pred_Lstar_high, tol, coeffs_low, coeffs_high) in predictions.items():
@@ -255,7 +259,7 @@ if __name__ == "__main__":
         kN_table_data = []
         with ThreadPoolExecutor() as executor:
             futures = {
-                executor.submit(process_kn_pair, new_k, new_N, df, kwargs): (new_k, new_N)
+                executor.submit(process_kn_pair, new_k, new_N, df, kwargs, args.only_N): (new_k, new_N)
                 for new_k in df["k"].unique() for new_N in df["N"].unique()
             }
             for future in as_completed(futures):
@@ -289,10 +293,10 @@ if __name__ == "__main__":
             delta_se = np.std(deltas, ddof=1) / np.sqrt(n) if n > 1 else 0.0
             
             row = [
-                modelname,
-                f"{old_mean:.2f}\\% ($\\pm{old_se:.2f}$)",
-                f"{new_mean:.2f}\\% ($\\pm{new_se:.2f}$)",
-                f"{delta_mean:+.2f}\\% ($\\pm{delta_se:.2f}$)"
+                model_nicknames[modelname],
+                f"{old_mean:.1f}\\%",
+                f"{new_mean:.1f}\\%",
+                f"{delta_mean:+.1f}\\% ($\\pm{delta_se:.1f}$)"
             ]
             averaged_table.append(row)
 
@@ -311,7 +315,7 @@ if __name__ == "__main__":
         all_deltas = []
         all_old_accs = []
         all_new_accs = []
-        for task_name, (old_accs, new_accs, deltas) in task_info.items():
+        for _, (old_accs, new_accs, deltas) in task_info.items():
             all_deltas.extend(deltas)
             all_old_accs.extend(old_accs)
             all_new_accs.extend(new_accs)
@@ -342,7 +346,7 @@ if __name__ == "__main__":
     latex_lines.append(r"\begin{table}[h]")
     latex_lines.append(r"    \centering")
     latex_lines.append(r"    \begin{adjustbox}{max width=\textwidth}")
-    latex_lines.append(r"    \begin{tabular}{l >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}")
+    latex_lines.append(r"    \begin{tabular}{l >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}}")
     latex_lines.append(r"    \toprule")
     latex_lines.append(r"    Model & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) \\")
     latex_lines.append(r"    \midrule")
@@ -416,6 +420,6 @@ if __name__ == "__main__":
     print("Per-Task Summary Table (LaTeX):")
     print(final_latex)
 
-    out_filename = "extrapolated.json"
+    out_filename = f"extrapolated{'_onlyN' if args.only_N else ''}.json"
     with open(out_filename, 'w') as wf:
         json.dump(modelname_to_task_to_row, wf, indent=4)

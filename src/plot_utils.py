@@ -30,10 +30,10 @@ all_models_size_ordered = [
     "Llama-3.3-70B-Instruct-Turbo",
     "DeepSeek-R1-Distill-Llama-70B",
     "Meta-Llama-3.1-405B-Instruct-Turbo",
-    "gpt-4o-mini",
+    # "gpt-4o-mini",
     "o3-mini",
-    "DeepSeek-V3",
     "gpt-4o",
+    "DeepSeek-V3",
     "DeepSeek-R1",
 ]
 
@@ -67,14 +67,14 @@ nonrl_model_colors = {}
 n_nonrl = len(models_in_order)
 for i, model in enumerate(models_in_order):
     # fraction in [0.2 to 1.0]
-    fraction = 0.2 + 0.8 * (i / (n_nonrl - 1))
+    fraction = 0.4 + 0.8 * (i / (n_nonrl - 1))
     nonrl_model_colors[model] = cmap_blues(fraction)
 
 rl_model_colors = {}
 n_rl = len(rl_models_in_order)
 for i, model in enumerate(rl_models_in_order):
     # fraction in [0.2:
-    fraction = 0.2 + 0.8 * (i / (n_rl - 1))
+    fraction = 0.4 + 0.8 * (i / (n_rl - 1))
     rl_model_colors[model] = cmap_oranges(fraction)
 
 model_colors = {
@@ -171,7 +171,7 @@ def get_task_info(task):
             dfa_factors_order = {"k": 0, "N": 1}
             output_folder = "logical_deduction/outputs"
         case 'cruxeval':
-            compute_random = lambda factor_vals: 0.
+            compute_random = lambda factor_vals: 0.5
             foldername_parser = parse_kN
             dfa_factors_order = {"k": 0, "N": 1}
             output_folder = "cruxeval/outputs_straightlined"
