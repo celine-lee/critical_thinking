@@ -13,5 +13,5 @@ for MODEL in $ALL_MODELS; do
     python main.py $CRUXEVAL_TASK_FLAGS --models $MODEL --generator vllm  --n_samples_per 80
     python main.py $SHUFFLE_TASK_FLAGS --models $MODEL --generator vllm  --n_samples_per 80
     python main.py $WEB_OF_LIES_TASK_FLAGS --models $MODEL --generator vllm  --n_samples_per 80
-    python main.py $LOGICAL_DEDUCTION_TASK_FLAGS --models $MODEL --generator vllm  --n_samples_per 80
+    python main.py $LOGICAL_DEDUCTION_FLAGS --models $MODEL --generator vllm  --n_samples_per 80
 done

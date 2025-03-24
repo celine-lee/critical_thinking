@@ -21,6 +21,7 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--n_buckets", type=int, default=4)
     parser.add_argument("--models", nargs='+')
+    parser.add_argument("--f2_models", nargs='+')
     parser.add_argument("--delete_old", action="store_true")
     parser.add_argument("--all_tasks", nargs='+', default=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'cruxeval', 'logical_deduction'])
     parser.add_argument("--f1_tasks", nargs='+', default=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'cruxeval', 'logical_deduction'])
@@ -87,10 +88,11 @@ def load_task_data(taskname, compute_random, foldername_parser, dfa_factors, out
         
     return df
 
-def load_data(args, kwargs, filter_stddev_count=1):
+def load_data(args, kwargs, filter_stddev_count=1, include_all=False):
     all_df = None
     for task in args.all_tasks:
         compute_random, foldername_parser, dfa_factors_order, output_folder = get_task_info(task)
+        if include_all: compute_random = lambda x: -100.
         task_df = load_task_data(task, compute_random, foldername_parser, list(dfa_factors_order.keys()) + ["Model"], output_folder)
         if all_df is not None:
             all_df = pd.concat([all_df, task_df])
@@ -430,7 +432,8 @@ def fig1_all_tasks(tasks, df, kwargs, include_raw, clamp_upper, n_cols, y_normal
     plt.savefig(out_filename, bbox_inches="tight")
     plt.clf()
 
-def fig2(select_tasks, df, kwargs, fig_suffix, plot_confidence=False):
+def fig2(select_tasks, select_models, df, kwargs, fig_suffix, plot_confidence=False):
+
     # Create a single figure with 2 subplots, side by side
     fig, axes = plt.subplots(1, 2, figsize=(8, 12))
     
@@ -448,6 +451,7 @@ def fig2(select_tasks, df, kwargs, fig_suffix, plot_confidence=False):
         for (model, task, fv), group in df.groupby(["Model", "task", factor]):
             if task not in select_tasks:
                 continue
+            if model not in select_models: continue
 
             bucket_avg, _ = calculate_buckets(
                 group,
@@ -511,6 +515,7 @@ def fig2(select_tasks, df, kwargs, fig_suffix, plot_confidence=False):
                 corr, _ = stats.pearsonr(norm_x, norm_y)
             else:
                 corr = float("nan")
+                continue
             corrs[model] = corr
             label_text = f"{model_nicknames[model]} (r={corr:.2f})"
 
@@ -591,7 +596,11 @@ def fig2(select_tasks, df, kwargs, fig_suffix, plot_confidence=False):
     out_filename = os.path.join(kwargs["foldername"], f"fig2{fig_suffix}.png")
     fig.savefig(out_filename, bbox_inches="tight")
     plt.close(fig)
-    
+
+    def get_order(m):
+        # Return the index if present in ordered_model_list, else a large number
+        return all_models_size_ordered.index(m) if m in all_models_size_ordered else 999999
+
     # Generate LaTeX table string
     latex_lines = [
         r"\begin{tabular}{lcc}",
@@ -601,7 +610,7 @@ def fig2(select_tasks, df, kwargs, fig_suffix, plot_confidence=False):
     ]
 
     # Add rows
-    models_sorted = sorted(set(all_correlations['k'].keys()) | set(all_correlations['N'].keys()))
+    models_sorted = sorted(set(all_correlations['k'].keys()) | set(all_correlations['N'].keys()), key=get_order)
     for model in models_sorted:
         corr_N = all_correlations['N'].get(model, None)
         corr_k = all_correlations['k'].get(model, None)
@@ -628,9 +637,8 @@ def fig3(tasks, df, kwargs, fig_suffix):
 
     fig, ax = plt.subplots(figsize=(8, 6))
 
-    ordered_model_list = all_models_size_ordered
     # Create a dictionary for quick index lookup
-    model_to_jitter_index = {m: i for i, m in enumerate(ordered_model_list)}
+    model_to_jitter_index = {m: i for i, m in enumerate(all_models_size_ordered)}
 
     # 2) Helper to compute a stable log‐scale jitter
     def jitter_log_x(size, model, base_offset_multiplier=0.02):
@@ -639,8 +647,8 @@ def fig3(tasks, df, kwargs, fig_suffix):
          - The model's index in the ordered_model_list
         """
         # If model not in the dictionary, place it at the end
-        idx = model_to_jitter_index.get(model, len(ordered_model_list))
-        total_count = len(ordered_model_list)
+        idx = model_to_jitter_index.get(model, len(all_models_size_ordered))
+        total_count = len(all_models_size_ordered)
 
         # Base offset in log space: spread models from negative to positive
         # around 0. Larger magnitude for first/last in the list.
@@ -674,7 +682,8 @@ def fig3(tasks, df, kwargs, fig_suffix):
             y_low,   # lower y-bound
             y_high,  # upper y-bound
             color=color,
-            alpha=alpha
+            alpha=alpha,
+            linewidth=0
         )
 
     # We’ll keep track of which models we actually plot, to build a custom legend.
@@ -721,8 +730,8 @@ def fig3(tasks, df, kwargs, fig_suffix):
         x_val = jitter_log_x(size, model)
 
         # Plot old (circle) and new (square)
-        ax.scatter(x_val, old_acc, color=color, marker="o", s=30)
-        ax.scatter(x_val, new_acc, color=color, marker="s", s=30)
+        ax.scatter(x_val, old_acc, color=color, marker="o", s=10)
+        ax.scatter(x_val, new_acc, color=color, marker="o", s=10)
 
         # Arrow from old to new
         ax.annotate(
@@ -748,12 +757,28 @@ def fig3(tasks, df, kwargs, fig_suffix):
     #   ax.set_xticklabels([])
 
     # --- 6) Build a 2-column legend in the same order as your color dicts ---
+    nonrl_first_order = [
+        "Ministral-8B-Instruct-2410",
+        "Qwen2.5-7B-Instruct",
+        "Llama-3.1-8B-Instruct",
+        "Qwen2.5-32B-Instruct",
+        "Llama-3.3-70B-Instruct-Turbo",
+        "gpt-4o",
+        "DeepSeek-V3",
+        "Meta-Llama-3.1-405B-Instruct-Turbo",
+        "gemma-2-9b-it",
+        "DeepSeek-R1-Distill-Qwen-7B",
+        "DeepSeek-R1-Distill-Llama-8B",
+        "DeepSeek-R1-Distill-Qwen-32B",
+        "DeepSeek-R1-Distill-Llama-70B",
+        "o3-mini",
+        "DeepSeek-R1",
+    ]
     def get_legend_order(m):
         # Return the index if present in ordered_model_list, else a large number
-        return ordered_model_list.index(m) if m in ordered_model_list else 999999
+        return nonrl_first_order.index(m) if m in nonrl_first_order else 999999
 
     legend_handles = []
-    import matplotlib.lines as mlines
     for m in sorted(plotted_models, key=get_legend_order):
         if m in nonrl_model_colors:
             c = nonrl_model_colors[m]
@@ -771,7 +796,133 @@ def fig3(tasks, df, kwargs, fig_suffix):
     out_filename = os.path.join(kwargs["foldername"], f"fig3{fig_suffix}.png")
     fig.savefig(out_filename, bbox_inches="tight")
     plt.close(fig)
- 
+
+def generation_lengths(df, kwargs):
+    # Separate data by model size
+    model_data = {
+        model_name: df[df["Model"] == model_name].sort_values(by="No gen toks")
+        # model_name: df[df["Model"].str.contains(model_name)].sort_values(by="No gen toks")
+        for model_name in all_models_size_ordered
+    }
+
+    # Prepare the figure
+    plt.figure(figsize=(12, 6))
+
+    tick_positions = []
+    labels = []
+    plotted_something = False
+
+    # Iterate over models and optionally by_factor
+    for i, (model, model_df) in enumerate(model_data.items(), start=1):
+        # Extract data for the model
+        data = model_df["No gen toks"].tolist()
+        if not data:
+            continue
+
+        # Define position for the boxplot
+        position = [i]
+        tick_positions.append(i)
+        labels.append(model_nicknames[model])
+        if model in nonrl_model_colors:
+            plot_color = nonrl_model_colors[model]
+        elif model in rl_model_colors:
+            plot_color = rl_model_colors[model]
+
+        # Plot the boxplot
+        plt.boxplot(
+            [data],
+            positions=position,
+            widths=0.5,
+            patch_artist=True,
+            boxprops=dict(facecolor=plot_color, color=plot_color),
+            medianprops=dict(color="black"),
+            showfliers=False,
+        )
+
+    # Set x-axis labels
+    plt.xticks(ticks=tick_positions, labels=labels, rotation=45, ha="right")
+    plt.ylabel("Generation Length")
+
+    # Save the plot
+    plt.tight_layout()  # Adjust layout to avoid overlap
+    plt.savefig(
+        os.path.join(kwargs['foldername'], "genlength_boxplot.png"),
+        bbox_inches="tight"
+    )
+    plt.clf()
+
+def scatter_len_to_acc(df, kwargs):
+    # Prepare the figure
+    plt.figure(figsize=(10, 6))
+
+    # Loop over models in the prescribed order
+    plotted_models = set()
+    for model in all_models_size_ordered:
+        model_df = df[df["Model"] == model]
+        if model_df.empty:
+            continue
+        
+        # Compute average generation length and average accuracy
+        avg_gen_length = model_df["No gen toks"].mean()
+        avg_acc = model_df["Correct?"].mean() * 100  # Convert fraction to percentage
+        
+        # Select color based on model type
+        if model in nonrl_model_colors:
+            color = nonrl_model_colors[model]
+        elif model in rl_model_colors:
+            color = rl_model_colors[model]
+        else:
+            color = "black"
+        plotted_models.add(model)
+        # Plot the scatter point
+        plt.scatter(avg_gen_length, avg_acc, color=color, s=80, label=model_nicknames[model])
+    # Set axis labels and title
+    plt.xlabel("Average Generation Length")
+    plt.ylabel("Average Accuracy (%)")
+    plt.grid(True, linestyle="--", alpha=0.6)
+    
+    # Create a legend with unique entries
+    nonrl_first_order = [
+        "Ministral-8B-Instruct-2410",
+        "Qwen2.5-7B-Instruct",
+        "Llama-3.1-8B-Instruct",
+        "Qwen2.5-32B-Instruct",
+        "Llama-3.3-70B-Instruct-Turbo",
+        "gpt-4o",
+        "DeepSeek-V3",
+        "Meta-Llama-3.1-405B-Instruct-Turbo",
+        "gemma-2-9b-it",
+        "DeepSeek-R1-Distill-Qwen-7B",
+        "DeepSeek-R1-Distill-Llama-8B",
+        "DeepSeek-R1-Distill-Qwen-32B",
+        "DeepSeek-R1-Distill-Llama-70B",
+        "o3-mini",
+        "DeepSeek-R1",
+    ]
+    def get_legend_order(m):
+        # Return the index if present in ordered_model_list, else a large number
+        return nonrl_first_order.index(m) if m in nonrl_first_order else 999999
+
+    legend_handles = []
+    for m in sorted(plotted_models, key=get_legend_order):
+        if m in nonrl_model_colors:
+            c = nonrl_model_colors[m]
+        elif m in rl_model_colors:
+            c = rl_model_colors[m]
+        else:
+            c = "black"
+        lbl = model_nicknames.get(m, m)
+        h = mlines.Line2D([], [], color=c, marker='s', linestyle='None', label=lbl)
+        legend_handles.append(h)
+
+    plt.legend(handles=legend_handles, loc="best", fontsize="small", frameon=True, ncol=2)
+
+    # Save the plot
+    plt.tight_layout()  # Adjust layout to avoid overlap
+    out_filename = os.path.join(kwargs['foldername'], "genlength_accuracy.png")
+    plt.savefig(out_filename, bbox_inches="tight")
+    plt.clf()
+
 
 # python src/plot_all_tasks.py --models ${ALL_MODELS_PLOTTING}
 if __name__ == "__main__":
@@ -795,32 +946,40 @@ if __name__ == "__main__":
         "to_highlight": to_highlight
     }
 
-    df = load_data(
-        args,
-        plot_kwargs,
-    )
+    # df = load_data(
+    #     args,
+    #     plot_kwargs,
+    # )
 
-    def relative_to_start(y_curve):
-        original_val = y_curve[0]
-        norm_y = [(y_val-original_val)/original_val for y_val in y_curve]
-        return norm_y
-    def relative_to_max(y_curve):
-        max_val = y_curve.max()
-        norm_y = [1. - (max_val - y_val)/max_val for y_val in y_curve]
-        return norm_y
-    def normalize(y_curve):
-        max_val = y_curve.max()
-        min_val = y_curve.min()
-        norm_y = [(y_val - min_val)/(max_val - min_val) for y_val in y_curve]
-        return norm_y
+    # def relative_to_start(y_curve):
+    #     original_val = y_curve[0]
+    #     norm_y = [(y_val-original_val)/original_val for y_val in y_curve]
+    #     return norm_y
+    # def relative_to_max(y_curve):
+    #     max_val = y_curve.max()
+    #     norm_y = [1. - (max_val - y_val)/max_val for y_val in y_curve]
+    #     return norm_y
+    # def normalize(y_curve):
+    #     max_val = y_curve.max()
+    #     min_val = y_curve.min()
+    #     norm_y = [(y_val - min_val)/(max_val - min_val) for y_val in y_curve]
+    #     return norm_y
         
     # fig1_all_tasks(args.f1_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix='_9')
     # fig1_all_tasks(args.all_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix="_all")
     
-    fig2(args.f2_tasks, df, plot_kwargs, '_select')
-    fig2(args.all_tasks, df, plot_kwargs, '_all')
+    # fig2(args.all_tasks, args.models, df, plot_kwargs, '_all')
     
-    fig3(args.all_tasks, df, plot_kwargs, "")
+    # fig3(args.all_tasks, df, plot_kwargs, "")
+
+    nonfiltered_df = load_data(
+        args,
+        plot_kwargs,
+        filter_stddev_count=0,
+        include_all=True,
+    )
+    # generation_lengths(nonfiltered_df, plot_kwargs)
+    scatter_len_to_acc(nonfiltered_df, plot_kwargs)
 
     # plot_correctness_by_ttoks(df, plot_kwargs)
     # model_pairs = [
