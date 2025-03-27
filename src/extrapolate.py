@@ -338,23 +338,20 @@ if __name__ == "__main__":
 
     # Compute averages and stddev across all tasks
     averaged_model_table = []
+    all_r2s = []
     for modelname, task_info in modelname_to_task_to_row.items():
         all_deltas = []
         all_old_accs = []
         all_new_accs = []
-        all_r2_lows = []
-        all_r2_high = []
         for _, (old_accs, new_accs, deltas, r2_lows, r2_highs) in task_info.items():
             all_deltas.extend(deltas)
             all_old_accs.extend(old_accs)
             all_new_accs.extend(new_accs)
-            all_r2_lows.extend(r2_lows)
-            all_r2_high.extend(r2_highs)
+            all_r2s.extend(r2_lows + r2_highs)
 
         old_mean = np.mean(all_old_accs) * 100
         new_mean = np.mean(all_new_accs) * 100
         delta_mean = np.mean(all_deltas)
-        r2_mean = np.mean(all_r2_lows + all_r2_high)
 
         old_se = np.std(all_old_accs, ddof=1) / np.sqrt(len(all_old_accs)) * 100 
         new_se = np.std(all_new_accs, ddof=1) / np.sqrt(len(all_new_accs)) * 100 
@@ -362,30 +359,32 @@ if __name__ == "__main__":
         
         row = [
             model_nicknames[modelname],
-            f"{old_mean:.1f}\\%",
-            f"{new_mean:.1f}\\%",
-            f"{delta_mean:+.1f}\\% ($\\pm{delta_se:.1f}$)",
-            f"{r2_mean:.1f}"
+            f"{old_mean:.1f}",
+            f"{new_mean:.1f}",
+            f"{delta_mean:+.1f} ($\\pm{delta_se:.1f}$)",
+            # f"{r2_mean:.1f}"
         ]
         averaged_model_table.append(row)
 
-    headers = ["Model", "Old acc.", "New acc.", "$\\Delta A$ (SE)", "R2"]
+    headers = ["Model", "Old acc.", "New acc.", "$\\Delta A$ (SE)"]
     print("Final Summary Table (text):")
     print(tabulate(averaged_model_table, headers=headers, tablefmt="pretty"))
     print("\n----\n")
+    r2_mean = np.mean(all_r2s)
+    print("Average R2:", r2_mean)
 
     # Now, produce the LaTeX code for the final summary table:
     latex_lines = []
     latex_lines.append(r"\begin{table}[h]")
     latex_lines.append(r"    \centering")
     latex_lines.append(r"    \begin{adjustbox}{max width=\textwidth}")
-    latex_lines.append(r"    \begin{tabular}{l >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{0.2cm}}")
+    latex_lines.append(r"    \begin{tabular}{l >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}}")
     latex_lines.append(r"    \toprule")
-    latex_lines.append(r"    Model & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) & $R^2$ \\")
+    latex_lines.append(r"    Model & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) \\")
     latex_lines.append(r"    \midrule")
     for row in averaged_model_table:
         # row is [Model, $A_\text{old}$, $A_\text{new}$, Delta (SE)]
-        latex_lines.append(f"    {row[0]} & {row[1]} & {row[2]} & {row[3]} & {row[4]} \\\\")
+        latex_lines.append(f"    {row[0]} & {row[1]} & {row[2]} & {row[3]} \\\\")
     latex_lines.append(r"    \bottomrule")
     latex_lines.append(r"    \end{tabular}")
     latex_lines.append(r"    \end{adjustbox}")
@@ -402,9 +401,9 @@ if __name__ == "__main__":
     latex_lines.append(r"\begin{table}[h]")
     latex_lines.append(r"    \centering")
     latex_lines.append(r"    \begin{adjustbox}{max width=\textwidth}")
-    latex_lines.append(r"    \begin{tabular}{l >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{0.6cm} | >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{0.6cm} | >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{0.6cm}}")
+    latex_lines.append(r"    \begin{tabular}{l >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm} | >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm} | >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}}")
     latex_lines.append(r"    \toprule")
-    latex_lines.append(r"    Model & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) & $R^2$ & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) & $R^2$ & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) & $R^2$ \\")
+    latex_lines.append(r"    Model & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE)  & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE)  & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE)  \\")
     task_rows = [
         ['arith', 'array_idx', 'dyck'], 
         ['navigate', 'even_odd', 'cruxeval'], 
@@ -413,13 +412,12 @@ if __name__ == "__main__":
         ]
     for task_row in task_rows:
         latex_lines.append(r"    \midrule")
-        latex_lines.append(r"         & \multicolumn{4}{c}{\textbf{" + r"}} & \multicolumn{4}{c}{\textbf{".join([task_full_names[task_nickname] for task_nickname in task_row]) + r"}} \\")
+        latex_lines.append(r"         & \multicolumn{3}{c}{\textbf{" + r"}} & \multicolumn{3}{c}{\textbf{".join([task_full_names[task_nickname] for task_nickname in task_row]) + r"}} \\")
         for modelname, task_info in modelname_to_task_to_row.items():
             model_tasks_line = [model_nicknames[modelname]]
             for taskname in task_row:
                 if taskname not in modelname_to_task_to_row[modelname]: 
                     model_tasks_line.extend([
-                        "--",
                         "--",
                         "--",
                         "--",
@@ -444,7 +442,6 @@ if __name__ == "__main__":
                     f"${old_mean:.1f}$",
                     f"${new_mean:.1f}$",
                     f"${delta_mean:+.1f}$ ($\\pm{delta_se:.1f}$)",
-                    f"{r2_mean:.1f}"
                 ])
             model_tasks_line = " & ".join(model_tasks_line) + r"\\"
             latex_lines.append(model_tasks_line)

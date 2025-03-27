@@ -98,8 +98,8 @@ model_colors = {
 
 model_nicknames = {
     "Llama-3.1-8B-Instruct": "Ll3.1-8B",
-    "Llama-3.3-70B-Instruct-Turbo": "Ll3.3-70BT",
-    "Meta-Llama-3.1-405B-Instruct-Turbo": "Ll3.1-405BT", 
+    "Llama-3.3-70B-Instruct-Turbo": "Ll3.3-70B",
+    "Meta-Llama-3.1-405B-Instruct-Turbo": "Ll3.1-405B", 
     "Qwen2.5-7B-Instruct": "Qw2.5-7B",
     "Qwen2.5-32B-Instruct": "Qw2.5-32B",
     "Ministral-8B-Instruct-2410": "Ministral-8B",

@@ -646,12 +646,12 @@ def fig2(select_tasks, select_models, df, kwargs, fig_suffix, plot_confidence=Fa
             ax.set_xlabel("Number of States")
             ax.set_ylabel("")
             ax.set_yticklabels([])
-            ax.set_xticklabels([])
+            # ax.set_xticklabels([])
         elif factor == "N":
             ax.set_xlabel("Run length")
             ax.set_ylabel("L* (optimal length)")
-            ax.set_yticklabels([])
-            ax.set_xticklabels([])
+            # ax.set_yticklabels([])
+            # ax.set_xticklabels([])
 
     # Tight layout for the entire figure
     fig.tight_layout()
@@ -675,13 +675,21 @@ def fig2(select_tasks, select_models, df, kwargs, fig_suffix, plot_confidence=Fa
 
     # Add rows
     models_sorted = sorted(set(all_correlations['k'].keys()) | set(all_correlations['N'].keys()), key=get_order)
+    avg_corr_N = []
+    avg_corr_k = []
     for model in models_sorted:
         corr_N = all_correlations['N'].get(model, None)
         corr_k = all_correlations['k'].get(model, None)
+        if corr_N is not None: avg_corr_N.append(corr_N)
+        if corr_k is not None: avg_corr_k.append(corr_k)
         corr_N_str = f"${corr_N:.2f}$" if corr_N is not None else "N/A"
         corr_k_str = f"${corr_k:.2f}$" if corr_k is not None else "N/A"
         latex_lines.append(f"  {model_nicknames[model]} & {corr_N_str} & {corr_k_str} \\\\")
 
+    avg_corr_k = sum(avg_corr_k) / len(avg_corr_k)
+    avg_corr_N = sum(avg_corr_N) / len(avg_corr_N)
+    latex_lines.append(r"  \midrule")
+    latex_lines.append(f"  Average & ${avg_corr_N:.2f}$ & ${avg_corr_k:.2f}$ \\\\")
     # Finish table
     latex_lines.append(r"  \bottomrule")
     latex_lines.append(r"\end{tabular}")
@@ -691,7 +699,7 @@ def fig2(select_tasks, select_models, df, kwargs, fig_suffix, plot_confidence=Fa
     print(fig_suffix)
     print(latex_table)
 
-def plot_fig2_on_ax(axes, task, df, kwargs):
+def plot_fig2_on_ax(axes, task, df, kwargs, less_info=False):
     """
     For a given task, plot two smoothed curves (with error shading)
     for the correlations of L* with factor "k" and factor "N"
@@ -804,12 +812,13 @@ def plot_fig2_on_ax(axes, task, df, kwargs):
             axes[ax_idx].set_xlabel("Number of States")
             axes[ax_idx].set_ylabel("")
             axes[ax_idx].set_yticklabels([])
-            axes[ax_idx].set_xticklabels([])
+            # axes[ax_idx].set_xticklabels([])
         elif factor == "N":
             axes[ax_idx].set_xlabel("Run length")
-            axes[ax_idx].set_ylabel("L* (optimal length)")
-            axes[ax_idx].set_yticklabels([])
-            axes[ax_idx].set_xticklabels([])
+            if not less_info:
+                axes[ax_idx].set_ylabel("L* (optimal length)")
+            # axes[ax_idx].set_yticklabels([])
+            # axes[ax_idx].set_xticklabels([])
         axes[ax_idx].grid(True, linestyle="--", alpha=0.6)
 
     return corrs
@@ -827,7 +836,7 @@ def fig2_per_task(tasks, df, kwargs, n_cols=2):
     fig, axes = plt.subplots(
         n_rows, n_cols * 2,
         figsize=(n_cols * 6, n_rows * 4),
-        gridspec_kw={'wspace': 0.2, 'hspace': 0.35}
+        gridspec_kw={'wspace': 0.5, 'hspace': 0.6}
     )
 
     if n_rows == 1:
@@ -835,10 +844,11 @@ def fig2_per_task(tasks, df, kwargs, n_cols=2):
     else:
         axes = axes.flatten()
 
+    task_corrs = {}
     # Plot each task on two adjacent axes
     for i, task in enumerate(tasks):
         task_axes = axes[i*2 : i*2+2]
-        plot_fig2_on_ax(task_axes, task, df, kwargs)
+        task_corrs[task] = plot_fig2_on_ax(task_axes, task, df, kwargs, less_info=i % 2 == 1)
 
     # Remove extra subplots if grid > tasks
     total_axes = len(axes)
@@ -854,8 +864,6 @@ def fig2_per_task(tasks, df, kwargs, n_cols=2):
     # Now place the task titles above each pair
     for i, task in enumerate(tasks):
         task_axes = axes[i*2 : i*2+2]
-        if not task_axes:
-            continue
 
         pos0 = task_axes[0].get_position()
         pos1 = task_axes[1].get_position()
@@ -866,9 +874,9 @@ def fig2_per_task(tasks, df, kwargs, n_cols=2):
         # Place text above that
         fig.text(
             x_center, 
-            y_top + 0.02,  # increase offset if needed
+            y_top + 0.01,  # increase offset if needed
             task_full_names.get(task, task),
-            ha='center', va='bottom', fontsize=12
+            ha='center', va='bottom', fontsize=20
         )
 
     out_filename = os.path.join(kwargs["foldername"], "fig2_per_task.png")
@@ -920,7 +928,6 @@ def fig2_per_task(tasks, df, kwargs, n_cols=2):
     latex_table = "\n".join(latex_lines)
     print("fig2 per task")
     print(latex_table)
-
 
 def fig3(tasks, df, kwargs, fig_suffix):
     if not os.path.exists("extrapolated.json"):
@@ -1096,7 +1103,6 @@ def generation_lengths(df, kwargs):
     # Separate data by model size
     model_data = {
         model_name: df[df["Model"] == model_name].sort_values(by="No gen toks")
-        # model_name: df[df["Model"].str.contains(model_name)].sort_values(by="No gen toks")
         for model_name in all_models_size_ordered
     }
 
@@ -1109,6 +1115,32 @@ def generation_lengths(df, kwargs):
 
     # Iterate over models and optionally by_factor
     for i, (model, model_df) in enumerate(model_data.items(), start=1):
+
+        # get average L^* across tasks and task configurations.
+        Lstars = []
+        for task in model_df["task"].unique():
+            df_model_task = model_df[model_df["task"] == task]
+            for (k_val, n_val), group_kN in df_model_task.groupby(["k", "N"]):
+                if group_kN.empty:
+                    continue
+
+                bucket_avg, _ = calculate_buckets(
+                    group_kN, 
+                    n_buckets=kwargs["n_buckets"], 
+                    bucket_by="No gen toks", 
+                    bucket_name="Toks Bucket",
+                    y_axis="Correct?", 
+                    groupby_key="Model", 
+                )
+                if bucket_avg is None or len(bucket_avg) == 0:
+                    continue
+
+                # Find the peak and leftmost bucket centers
+                idx_peak = bucket_avg["Correct?"].idxmax()
+                peak_x = bucket_avg.loc[idx_peak, "Toks Bucket Center"]
+                Lstars.append(peak_x)
+        avg_Lstar = sum(Lstars) / len(Lstars)
+
         # Extract data for the model
         data = model_df["No gen toks"].tolist()
         if not data:
@@ -1132,6 +1164,17 @@ def generation_lengths(df, kwargs):
             boxprops=dict(facecolor=plot_color, color=plot_color),
             medianprops=dict(color="black"),
             showfliers=False,
+        )
+
+        # Place average Lstar
+        plt.scatter(
+            i, 
+            avg_Lstar, 
+            color='white', 
+            edgecolors="black", 
+            marker="D", 
+            s=100, 
+            zorder=3
         )
 
     # Set x-axis labels
@@ -1260,9 +1303,9 @@ if __name__ == "__main__":
     #     return norm_y
         
     # fig1_all_tasks(args.f1_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix='_9')
-    fig1_all_tasks(args.all_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix="_all")
+    # fig1_all_tasks(args.all_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix="_all")
     
-    # fig2(args.all_tasks, args.models, df, plot_kwargs, '_all')
+    fig2(args.all_tasks, args.models, df, plot_kwargs, '_all')
     # fig2_per_task(args.all_tasks, df, plot_kwargs)
     
     # fig3(args.all_tasks, df, plot_kwargs, "")
