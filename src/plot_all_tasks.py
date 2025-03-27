@@ -23,7 +23,7 @@ def get_args():
     parser.add_argument("--models", nargs='+')
     parser.add_argument("--f2_models", nargs='+')
     parser.add_argument("--delete_old", action="store_true")
-    parser.add_argument("--all_tasks", nargs='+', default=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'cruxeval', 'logical_deduction'])
+    parser.add_argument("--all_tasks", nargs='+', default=['array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'dyck', 'cruxeval', 'logical_deduction'])
     parser.add_argument("--f1_tasks", nargs='+', default=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'cruxeval', 'logical_deduction'])
     parser.add_argument("--f2_tasks", nargs='+', default=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'logical_deduction'])
 
@@ -303,11 +303,13 @@ def plot_fig1_on_ax(ax, task, df, kwargs, include_raw, clamp_upper, y_normalizat
     with customized x-axis ticks: the tick at 0 (the normalized peak) is labeled 'L*',
     and one additional tick, at the average normalized value corresponding to raw 0 across all curves, is labeled '0'.
     """
+    model_to_task_to_Lstar = {}
     # Build normalized curves per (Model, k, N)
     curves_by_model = {}
     # normalized_zero_values = []  # to store each curve's normalized value for raw x = 0
     df_task = df[df["task"] == task]
     for model_name in df_task["Model"].unique():
+        model_to_task_to_Lstar[model_name] = {}
         model_subdf = df_task[df_task["Model"] == model_name]
         curves_list = []
         for (k_val, n_val), group_kN in model_subdf.groupby(["k", "N"]):
@@ -328,6 +330,7 @@ def plot_fig1_on_ax(ax, task, df, kwargs, include_raw, clamp_upper, y_normalizat
             # Find the peak and leftmost bucket centers
             idx_peak = bucket_avg["Correct?"].idxmax()
             peak_x = bucket_avg.loc[idx_peak, "Toks Bucket Center"]
+            model_to_task_to_Lstar[model_name][(k_val, n_val)] = peak_x
             bucket_min_x = bucket_avg["Toks Bucket Center"].min()
             if peak_x == bucket_min_x:
                 # Avoid zero division by nudging bucket_min_x
@@ -405,6 +408,8 @@ def plot_fig1_on_ax(ax, task, df, kwargs, include_raw, clamp_upper, y_normalizat
     
     ax.set_title(task_full_names[task])
 
+    return model_to_task_to_Lstar
+
 def fig1_all_tasks(tasks, df, kwargs, include_raw, clamp_upper, n_cols, y_normalization=lambda x: x, suffix=''):
     """
     Create one figure with a grid of subplots, one for each task in tasks.
@@ -419,10 +424,13 @@ def fig1_all_tasks(tasks, df, kwargs, include_raw, clamp_upper, n_cols, y_normal
     else:
         axes = axes.flatten()
     
+    all_model_to_task_to_Lstar = {}
     for i, task in enumerate(tasks):
         ax = axes[i]
-        plot_fig1_on_ax(ax, task, df, kwargs, include_raw=include_raw, clamp_upper=clamp_upper, y_normalization=y_normalization)
-    
+        model_to_task_to_Lstar = plot_fig1_on_ax(ax, task, df, kwargs, include_raw=include_raw, clamp_upper=clamp_upper, y_normalization=y_normalization)
+        for model, task_to_Lstar in model_to_task_to_Lstar.items():
+            if model not in all_model_to_task_to_Lstar: all_model_to_task_to_Lstar[model] = {}
+            all_model_to_task_to_Lstar[model][task] = task_to_Lstar
     # Remove any extra subplots if the grid has more slots than tasks.
     for j in range(i + 1, len(axes)):
         fig.delaxes(axes[j])
@@ -431,6 +439,57 @@ def fig1_all_tasks(tasks, df, kwargs, include_raw, clamp_upper, n_cols, y_normal
     out_filename = os.path.join(kwargs["foldername"], f"fig1{suffix}.png")
     plt.savefig(out_filename, bbox_inches="tight")
     plt.clf()
+
+    # make latex table from task_to_model_to_taskwise_Lstars: rows are models, columns are tasks.
+    # cells are min and max L*s for the diff k, N configs.. displayed as [low, ... high]
+    # Now, produce the LaTeX code for the final summary table:
+    latex_lines = []
+    latex_lines.append(r"\begin{table}[h]")
+    latex_lines.append(r"    \centering")
+    latex_lines.append(r"    \begin{adjustbox}{max width=\textwidth}")
+    latex_lines.append(r"    \begin{tabular}{l " + ''.join([r">{\centering\arraybackslash}p{1.7cm}" for _ in range(5)]) + "}")
+    latex_lines.append(r"    \toprule")
+    latex_lines.append(r"    \textbf{Model} & " + " & ".join([f"\\textbf{{{task_full_names[name]}}}" for name in tasks[:5]]) + r"\\")
+    latex_lines[-1].replace("Nested Boolean Expression", "Bool Expr")
+    latex_lines.append(r"    \midrule")
+    
+    for model, task_Lstars in all_model_to_task_to_Lstar.items():
+        latex_line = f"    {model_nicknames[model]} "
+        for task in tasks[:5]:
+            if task not in task_Lstars: 
+                latex_line += " &  -- "
+                continue
+            low = min(task_Lstars[task].values())
+            high = max(task_Lstars[task].values())
+            latex_line += f" & $[{int(low)},..{int(high)}]$"
+        latex_line += r"   \\"
+        latex_lines.append(latex_line)
+    latex_lines.append(r"    \midrule")
+    latex_lines.append(r"    \textbf{Model} & " + " & ".join([f"\\textbf{{{task_full_names[name]}}}" for name in tasks[5:]]) + r"\\")
+    latex_lines.append(r"    \midrule")
+    
+    for model, task_Lstars in all_model_to_task_to_Lstar.items():
+        latex_line = f"    {model_nicknames[model]} "
+        for task in tasks[5:]:
+            if task not in task_Lstars: 
+                latex_line += " &  -- "
+                continue
+            low = min(task_Lstars[task].values())
+            high = max(task_Lstars[task].values())
+            latex_line += f" & $[{int(low)},..{int(high)}]$"
+        latex_line += r"   \\"
+        latex_lines.append(latex_line)
+
+    latex_lines.append(r"    \bottomrule")
+    latex_lines.append(r"    \end{tabular}")
+    latex_lines.append(r"    \end{adjustbox}")
+    latex_lines.append(r"    \caption{$L^*$ varies by task and model.}")
+    latex_lines.append(r"    \label{tab:f1}")
+    latex_lines.append(r"\end{table}")
+
+    final_latex = "\n".join(latex_lines)
+    print("L* table (LaTeX):")
+    print(final_latex)
 
 def fig2(select_tasks, select_models, df, kwargs, fig_suffix, plot_confidence=False):
 
@@ -441,7 +500,7 @@ def fig2(select_tasks, select_models, df, kwargs, fig_suffix, plot_confidence=Fa
     all_correlations = {}
     
     # Iterate over factors and corresponding subplot indices
-    for i, factor in enumerate(["k", "N"]):
+    for i, factor in enumerate(["N", "k"]):
         ax = axes[i]  # the subplot for this factor
         #------------------------------------------------
         # Step 1) Collect raw data: model -> { task -> [(fv, L*), ...] }
@@ -584,11 +643,16 @@ def fig2(select_tasks, select_models, df, kwargs, fig_suffix, plot_confidence=Fa
         ax.set_xlim(-0.05, 1.05)
         ax.set_ylim(-0.15, 1.15)
         if factor == "k":
-            ax.set_xlabel("k (DFA size)")
+            ax.set_xlabel("Number of States")
+            ax.set_ylabel("")
+            ax.set_yticklabels([])
+            ax.set_xticklabels([])
         elif factor == "N":
-            ax.set_xlabel("N (run length)")
-            ax.set_yticklabels(['', '']) 
-        if factor == "k": ax.set_ylabel("L* (optimal length)")
+            ax.set_xlabel("Run length")
+            ax.set_ylabel("L* (optimal length)")
+            ax.set_yticklabels([])
+            ax.set_xticklabels([])
+
     # Tight layout for the entire figure
     fig.tight_layout()
 
@@ -605,7 +669,7 @@ def fig2(select_tasks, select_models, df, kwargs, fig_suffix, plot_confidence=Fa
     latex_lines = [
         r"\begin{tabular}{lcc}",
         r"  \toprule",
-        r"  Model & $\rho(L^*,N)$ & $\rho(L^*,k)$ \\",
+        r"  Model & Corr$(L^*,N)$ & Corr$(L^*,k)$ \\",
         r"  \midrule"
     ]
 
@@ -627,6 +691,237 @@ def fig2(select_tasks, select_models, df, kwargs, fig_suffix, plot_confidence=Fa
     print(fig_suffix)
     print(latex_table)
 
+def plot_fig2_on_ax(axes, task, df, kwargs):
+    """
+    For a given task, plot two smoothed curves (with error shading)
+    for the correlations of L* with factor "k" and factor "N"
+    on the two axes provided in 'axes' (axes[0] for "k", axes[1] for "N").
+    """
+    corrs = {}
+    for ax_idx, factor in enumerate(["N", "k"]):
+        corrs[factor] = {}
+        # --- Step 1: Collect raw (fv, L*) data for this task and factor ---
+        raw_data = {}
+        for (model, t, fv), group in df.groupby(["Model", "task", factor]):
+            if t != task:
+                continue
+            bucket_avg, _ = calculate_buckets(
+                group,
+                n_buckets=kwargs["n_buckets"],
+                bucket_by="No gen toks",
+                bucket_name="Toks Bucket",
+                y_axis="Correct?",
+                groupby_key="Model"
+            )
+            if bucket_avg is None or bucket_avg.empty:
+                continue
+            idx_peak = bucket_avg["Correct?"].idxmax()
+            Lstar = bucket_avg.loc[idx_peak, "Toks Bucket Center"]
+            raw_data.setdefault(model, []).append((fv, Lstar))
+        
+        # --- Step 2: Normalize data per model ---
+        normalized_data = {}
+        for model, fv_Lstar_list in raw_data.items():
+            if not fv_Lstar_list:
+                continue
+            fvs = [fv for (fv, _) in fv_Lstar_list]
+            Lstars = [L for (_, L) in fv_Lstar_list]
+            task_min_fv = min(fvs)
+            task_max_fv = max(fvs)
+            task_range_fv = max(task_max_fv - task_min_fv, 1e-12)
+            Lstar_min = min(Lstars)
+            Lstar_max = max(Lstars)
+            Lstar_range = max(Lstar_max - Lstar_min, 1e-12)
+            norm_points = []
+            for (fv, L) in fv_Lstar_list:
+                norm_fv = (fv - task_min_fv) / task_range_fv
+                norm_L = (L - Lstar_min) / Lstar_range
+                norm_points.append((norm_fv, norm_L))
+            normalized_data[model] = norm_points
+
+        # --- Step 3: For each model, bin (smooth) + compute CI and correlation ---
+        for model, norm_points in normalized_data.items():
+            if len(norm_points) < 2:
+                continue
+            norm_points = sorted(norm_points, key=lambda p: p[0])
+            norm_x = [p[0] for p in norm_points]
+            norm_y = [p[1] for p in norm_points]
+            if len(norm_x) > 1:
+                corr, _ = stats.pearsonr(norm_x, norm_y)
+                corrs[factor][model] = corr
+            else:
+                corr = float("nan")
+            n_bins = 8
+            min_x_val = norm_x[0]
+            max_x_val = norm_x[-1]
+            if max_x_val == min_x_val:
+                continue
+            bin_edges = np.linspace(min_x_val, max_x_val, n_bins + 1)
+            binned_x, binned_y = [], []
+            ci_lower, ci_upper = [], []
+            for j in range(n_bins):
+                left = bin_edges[j]
+                right = bin_edges[j+1]
+                bin_vals = [norm_y[k] for k in range(len(norm_x))
+                            if norm_x[k] >= left and (norm_x[k] < right or (j == n_bins - 1 and norm_x[k] <= right))]
+                bin_xs = [norm_x[k] for k in range(len(norm_x))
+                          if norm_x[k] >= left and (norm_x[k] < right or (j == n_bins - 1 and norm_x[k] <= right))]
+                if not bin_vals:
+                    continue
+                mean_x = np.mean(bin_xs)
+                mean_y = np.mean(bin_vals)
+                n = len(bin_vals)
+                if n > 1:
+                    se = stats.sem(bin_vals)
+                    margin = se * stats.t.ppf(0.975, n - 1)
+                else:
+                    margin = 0.0
+                binned_x.append(mean_x)
+                binned_y.append(mean_y)
+                ci_lower.append(mean_y - margin)
+                ci_upper.append(mean_y + margin)
+            if len(binned_x) == 0:
+                continue
+
+            # --- Step 4: Plot the smoothed curve and CI shading ---
+            if model in nonrl_model_colors:
+                base_color = nonrl_model_colors.get(model, "blue")
+            elif model in rl_model_colors:
+                base_color = rl_model_colors.get(model, "blue")
+            else:
+                base_color = "blue"
+            rgba_color = mcolors.to_rgba(base_color, alpha=0.9)
+            # Use a solid line for "k" and dashed for "N"
+            axes[ax_idx].plot(binned_x, binned_y, color=rgba_color,
+                    label=f"{model_nicknames[model]} (r={corr:.2f})")
+            axes[ax_idx].fill_between(binned_x, ci_lower, ci_upper, color=rgba_color, alpha=0.2)
+        
+        # --- Step 5: Format the current axis ---
+        axes[ax_idx].set_aspect(1)
+        axes[ax_idx].set_xlim(-0.05, 1.05)
+        axes[ax_idx].set_ylim(-0.15, 1.15)
+        if factor == "k":
+            axes[ax_idx].set_xlabel("Number of States")
+            axes[ax_idx].set_ylabel("")
+            axes[ax_idx].set_yticklabels([])
+            axes[ax_idx].set_xticklabels([])
+        elif factor == "N":
+            axes[ax_idx].set_xlabel("Run length")
+            axes[ax_idx].set_ylabel("L* (optimal length)")
+            axes[ax_idx].set_yticklabels([])
+            axes[ax_idx].set_xticklabels([])
+        axes[ax_idx].grid(True, linestyle="--", alpha=0.6)
+
+    return corrs
+
+def fig2_per_task(tasks, df, kwargs, n_cols=2):
+    """
+    Create one figure with a grid of subplots—each task occupies two adjacent axes 
+    (one for k and one for N). A common title is placed above the pair.
+    """
+
+    n_tasks = len(tasks)
+    n_rows = math.ceil(n_tasks / n_cols)
+    
+    # Increase hspace to give more vertical room between rows
+    fig, axes = plt.subplots(
+        n_rows, n_cols * 2,
+        figsize=(n_cols * 6, n_rows * 4),
+        gridspec_kw={'wspace': 0.2, 'hspace': 0.35}
+    )
+
+    if n_rows == 1:
+        axes = axes.reshape(-1)
+    else:
+        axes = axes.flatten()
+
+    # Plot each task on two adjacent axes
+    for i, task in enumerate(tasks):
+        task_axes = axes[i*2 : i*2+2]
+        plot_fig2_on_ax(task_axes, task, df, kwargs)
+
+    # Remove extra subplots if grid > tasks
+    total_axes = len(axes)
+    used_axes = n_tasks * 2
+    for j in range(used_axes, total_axes):
+        fig.delaxes(axes[j])
+
+    # Step 1: do a preliminary tight_layout to set positions
+    plt.tight_layout(pad=2)
+    # Step 2: force a draw so positions are finalized
+    fig.canvas.draw()
+
+    # Now place the task titles above each pair
+    for i, task in enumerate(tasks):
+        task_axes = axes[i*2 : i*2+2]
+        if not task_axes:
+            continue
+
+        pos0 = task_axes[0].get_position()
+        pos1 = task_axes[1].get_position()
+        # Horizontal center = midpoint of left axis's left edge & right axis's right edge
+        x_center = (pos0.x0 + pos1.x1) / 2
+        # Vertical top = whichever top is higher
+        y_top = max(pos0.y1, pos1.y1)
+        # Place text above that
+        fig.text(
+            x_center, 
+            y_top + 0.02,  # increase offset if needed
+            task_full_names.get(task, task),
+            ha='center', va='bottom', fontsize=12
+        )
+
+    out_filename = os.path.join(kwargs["foldername"], "fig2_per_task.png")
+    plt.savefig(out_filename, bbox_inches="tight")
+    plt.clf()
+
+
+    
+    def get_order(m):
+        # Return the index if present in ordered_model_list, else a large number
+        return all_models_size_ordered.index(m) if m in all_models_size_ordered else 999999
+
+    # Generate LaTeX table string
+    latex_lines = [
+        r"\begin{table}[h]",
+        r"    \centering",
+        r"    \begin{adjustbox}{max width=\textwidth}",
+        r"\begin{tabular}{l >{\centering\arraybackslash}p{1cm}>{\centering\arraybackslash}p{1cm}>{\centering\arraybackslash}p{1cm}>{\centering\arraybackslash}p{1cm}>{\centering\arraybackslash}p{1cm}>{\centering\arraybackslash}p{1cm}}",
+        r"  \toprule",
+        r"  Model & $\rho(L^*,N)$ & $\rho(L^*,k)$ & $\rho(L^*,N)$ & $\rho(L^*,k)$ & $\rho(L^*,N)$ & $\rho(L^*,k)$ \\",
+    ]
+
+    # Add rows
+    models_sorted = sorted(df["Model"].unique(), key=get_order)
+    task_rows = [tasks[i*3:i*3+3] for i in range(1 + len(tasks)//3)]
+    for task_row in task_rows:
+        latex_lines.append(r"    \midrule")
+        latex_lines.append(r"   & \multicolumn{2}{c}{\textbf{" + r"}} & \multicolumn{2}{c}{\textbf{".join(task_row) + r"}} \\")
+        for modelname in models_sorted:
+            model_tasks_line = [model_nicknames[modelname]]
+            for taskname in task_row:
+                task_info = task_corrs[taskname]
+                corr_N = task_info['N'].get(modelname, None)
+                corr_k = task_info['k'].get(modelname, None)
+                corr_N_str = f"${corr_N:.2f}$" if corr_N is not None else "--"
+                corr_k_str = f"${corr_k:.2f}$" if corr_k is not None else "--"
+                model_tasks_line.extend([corr_N_str, corr_k_str])
+            model_tasks_line = " & ".join(model_tasks_line) + r"\\"
+            latex_lines.append(model_tasks_line)
+
+    # Finish table
+    latex_lines.append(r"  \bottomrule")
+    latex_lines.append(r"\end{tabular}")
+    latex_lines.append(r"    \end{adjustbox}")
+    latex_lines.append(r"    \caption{Per-task improvement by constraining to $L^*$.}")
+    latex_lines.append(r"    \label{tab:tasks_performance}")
+    latex_lines.append(r"\end{table}")
+    # Print the LaTeX table
+    latex_table = "\n".join(latex_lines)
+    print("fig2 per task")
+    print(latex_table)
+
+
 def fig3(tasks, df, kwargs, fig_suffix):
     if not os.path.exists("extrapolated.json"):
         return
@@ -635,7 +930,7 @@ def fig3(tasks, df, kwargs, fig_suffix):
     # { "ModelName": { "taskA": ([old_accs], [new_accs], [deltas]), ... } }
     modelname_to_task_to_row = json.load(open("extrapolated.json"))
 
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(6.5, 6.5))
 
     # Create a dictionary for quick index lookup
     model_to_jitter_index = {m: i for i, m in enumerate(all_models_size_ordered)}
@@ -695,7 +990,7 @@ def fig3(tasks, df, kwargs, fig_suffix):
         all_old_accs = []
         all_new_accs = []
         all_deltas = []
-        for (old_list, new_list, delta_list) in task_metrics.values():
+        for (old_list, new_list, delta_list, _, _) in task_metrics.values():
             all_old_accs.extend(old_list)
             all_new_accs.extend(new_list)
             all_deltas.extend(delta_list)
@@ -730,8 +1025,8 @@ def fig3(tasks, df, kwargs, fig_suffix):
         x_val = jitter_log_x(size, model)
 
         # Plot old (circle) and new (square)
-        ax.scatter(x_val, old_acc, color=color, marker="o", s=10)
-        ax.scatter(x_val, new_acc, color=color, marker="o", s=10)
+        ax.scatter(x_val, old_acc, color=color, marker="o", s=20)
+        ax.scatter(x_val, new_acc, color=color, marker="o", s=20)
 
         # Arrow from old to new
         ax.annotate(
@@ -742,7 +1037,7 @@ def fig3(tasks, df, kwargs, fig_suffix):
         )
 
         # Shaded region for new_acc ± delta_se
-        fill_vertical_error(ax, x_val, new_acc, delta_se, color=color, alpha=0.3, fraction=0.05)
+        # fill_vertical_error(ax, x_val, new_acc, delta_se, color=color, alpha=0.3, fraction=0.05)
 
         plotted_models.add(model)
 
@@ -923,14 +1218,13 @@ def scatter_len_to_acc(df, kwargs):
     plt.savefig(out_filename, bbox_inches="tight")
     plt.clf()
 
-
 # python src/plot_all_tasks.py --models ${ALL_MODELS_PLOTTING}
 if __name__ == "__main__":
     args = get_args()
 
     if args.delete_old and os.path.exists(args.foldername):
         shutil.rmtree(args.foldername)
-    os.makedirs(args.foldername, exist_ok=True)
+    os.makedirs(args.foldername, exist_ok=True)                       
 
     to_highlight = [
         ("even_odd", "DeepSeek-R1-Distill-Qwen-32B"), 
@@ -946,10 +1240,10 @@ if __name__ == "__main__":
         "to_highlight": to_highlight
     }
 
-    # df = load_data(
-    #     args,
-    #     plot_kwargs,
-    # )
+    df = load_data(
+        args,
+        plot_kwargs,
+    )
 
     # def relative_to_start(y_curve):
     #     original_val = y_curve[0]
@@ -966,20 +1260,21 @@ if __name__ == "__main__":
     #     return norm_y
         
     # fig1_all_tasks(args.f1_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix='_9')
-    # fig1_all_tasks(args.all_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix="_all")
+    fig1_all_tasks(args.all_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix="_all")
     
     # fig2(args.all_tasks, args.models, df, plot_kwargs, '_all')
+    # fig2_per_task(args.all_tasks, df, plot_kwargs)
     
     # fig3(args.all_tasks, df, plot_kwargs, "")
 
-    nonfiltered_df = load_data(
-        args,
-        plot_kwargs,
-        filter_stddev_count=0,
-        include_all=True,
-    )
+    # nonfiltered_df = load_data(
+    #     args,
+    #     plot_kwargs,
+    #     filter_stddev_count=0,
+    #     include_all=True,
+    # )
     # generation_lengths(nonfiltered_df, plot_kwargs)
-    scatter_len_to_acc(nonfiltered_df, plot_kwargs)
+    # scatter_len_to_acc(nonfiltered_df, plot_kwargs)
 
     # plot_correctness_by_ttoks(df, plot_kwargs)
     # model_pairs = [
