@@ -649,7 +649,7 @@ def fig2(select_tasks, select_models, df, kwargs, fig_suffix, plot_confidence=Fa
             # ax.set_xticklabels([])
         elif factor == "N":
             ax.set_xlabel("Run length")
-            ax.set_ylabel("L* (optimal length)")
+            ax.set_ylabel("L* (critical length)")
             # ax.set_yticklabels([])
             # ax.set_xticklabels([])
 
@@ -816,7 +816,7 @@ def plot_fig2_on_ax(axes, task, df, kwargs, less_info=False):
         elif factor == "N":
             axes[ax_idx].set_xlabel("Run length")
             if not less_info:
-                axes[ax_idx].set_ylabel("L* (optimal length)")
+                axes[ax_idx].set_ylabel("L* (critical length)")
             # axes[ax_idx].set_yticklabels([])
             # axes[ax_idx].set_xticklabels([])
         axes[ax_idx].grid(True, linestyle="--", alpha=0.6)
@@ -1306,7 +1306,7 @@ if __name__ == "__main__":
     # fig1_all_tasks(args.all_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix="_all")
     
     fig2(args.all_tasks, args.models, df, plot_kwargs, '_all')
-    # fig2_per_task(args.all_tasks, df, plot_kwargs)
+    fig2_per_task(args.all_tasks, df, plot_kwargs)
     
     # fig3(args.all_tasks, df, plot_kwargs, "")
 
