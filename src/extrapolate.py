@@ -73,13 +73,56 @@ def collect_k_N_Lstar_for_model(model_df, kwargs):
 
     return k_N_Lstar
 
-def linear_interpolate(df, new_k, new_N, kwargs, only_N):
+def get_model_k_N_Lstar(model_df):
+    models_k_N_Lstar = []  # holds tuples of (k, N, L*_low, L*_high)
+        
+    # Group by (k, N) for the current model.
+    for (k_val, N_val), group in model_df.groupby(["k", "N"]):
+        bucket_avg, _ = calculate_buckets(group, kwargs["n_buckets"])
+        if bucket_avg is None or len(bucket_avg) == 0:
+            continue
+
+        # Ensure buckets are sorted by the x-axis value.
+        bucket_avg = bucket_avg.sort_values("Length Bucket Center")
+        # Determine the peak "Correct?" value.
+        peak_val = bucket_avg["Correct?"].max()
+        # Select only the buckets where the performance equals the peak.
+        peak_buckets = bucket_avg[bucket_avg["Correct?"] == peak_val]
+        if peak_buckets.empty:
+            continue
+        # L* low: first (lowest) Length Bucket where peak occurs.
+        # L* high: last (highest) Length Bucket where peak occurs.
+        Lstar_bucket = peak_buckets["Length Bucket"].iloc[0]
+
+        # Handle cases where the bucket isn't an interval
+        if isinstance(Lstar_bucket, str):
+            # Attempt to parse interval from string
+            Lstar_parsed = re.search(r'\((\d+),\s*(\d+)\)', Lstar_bucket)
+            if Lstar_parsed:
+                Lstar_low = int(Lstar_parsed.group(1))
+                Lstar_high = int(Lstar_parsed.group(2))
+            else:
+                print(f"Warning: Could not parse bucket interval from string '{Lstar_bucket}' for model {modelname}, (k={k_val}, N={N_val}). Skipping.")
+                continue
+        elif isinstance(Lstar_bucket, tuple) and len(Lstar_bucket) == 2:
+            # If stored as a tuple (low, high)
+            Lstar_low, Lstar_high = Lstar_bucket
+        elif hasattr(Lstar_bucket, "left") and hasattr(Lstar_bucket, "right"):
+            # If it's a proper interval object (e.g., pd.Interval)
+            Lstar_low = Lstar_bucket.left
+            Lstar_high = Lstar_bucket.right
+        else:
+            print(f"Warning: Unexpected bucket format '{Lstar_bucket}' for model {modelname}, (k={k_val}, N={N_val}). Skipping.")
+            continue
+        models_k_N_Lstar.append((k_val, N_val, Lstar_low, Lstar_high))
+        
+    if len(models_k_N_Lstar) == 0:
+        print(f"No (k, N, L*) data found for model {modelname}.")
+        
+    return models_k_N_Lstar
+
+def linear_interpolate(modelnames, models_to_k_N_Lstar, new_k, new_N, kwargs, only_N):
     """
-    For each model in the dataframe, bucket the data by (k, N) using calculate_buckets,
-    then for each bucketed group, determine:
-      - L* low: the first (lowest x-axis value) at which the peak "Correct?" performance is observed.
-      - L* high: the last (highest x-axis value) at which the peak performance is observed.
-    
     A linear least-squares fit is performed separately for L* low and L* high as:
         L* = a + b * k + c * N
     to obtain predictions for the new (k, N) values.
@@ -90,59 +133,13 @@ def linear_interpolate(df, new_k, new_N, kwargs, only_N):
         where tol is computed as the average of the standard deviations of the residuals from the two fits.
     """
     predictions = {}
-    for modelname in df["Model"].unique():
-        model_df = df[df["Model"] == modelname]
-        models_k_N_Lstar = []  # holds tuples of (k, N, L*_low, L*_high)
-        
-        # Group by (k, N) for the current model.
-        for (k_val, N_val), group in model_df.groupby(["k", "N"]):
-            bucket_avg, _ = calculate_buckets(group, kwargs["n_buckets"])
-            if bucket_avg is None or len(bucket_avg) == 0:
-                continue
-
-            # Ensure buckets are sorted by the x-axis value.
-            bucket_avg = bucket_avg.sort_values("Length Bucket Center")
-            # Determine the peak "Correct?" value.
-            peak_val = bucket_avg["Correct?"].max()
-            # Select only the buckets where the performance equals the peak.
-            peak_buckets = bucket_avg[bucket_avg["Correct?"] == peak_val]
-            if peak_buckets.empty:
-                continue
-            # L* low: first (lowest) Length Bucket where peak occurs.
-            # L* high: last (highest) Length Bucket where peak occurs.
-            Lstar_bucket = peak_buckets["Length Bucket"].iloc[0]
-
-            # Handle cases where the bucket isn't an interval
-            if isinstance(Lstar_bucket, str):
-                # Attempt to parse interval from string
-                Lstar_parsed = re.search(r'\((\d+),\s*(\d+)\)', Lstar_bucket)
-                if Lstar_parsed:
-                    Lstar_low = int(Lstar_parsed.group(1))
-                    Lstar_high = int(Lstar_parsed.group(2))
-                else:
-                    print(f"Warning: Could not parse bucket interval from string '{Lstar_bucket}' for model {modelname}, (k={k_val}, N={N_val}). Skipping.")
-                    continue
-            elif isinstance(Lstar_bucket, tuple) and len(Lstar_bucket) == 2:
-                # If stored as a tuple (low, high)
-                Lstar_low, Lstar_high = Lstar_bucket
-            elif hasattr(Lstar_bucket, "left") and hasattr(Lstar_bucket, "right"):
-                # If it's a proper interval object (e.g., pd.Interval)
-                Lstar_low = Lstar_bucket.left
-                Lstar_high = Lstar_bucket.right
-            else:
-                print(f"Warning: Unexpected bucket format '{Lstar_bucket}' for model {modelname}, (k={k_val}, N={N_val}). Skipping.")
-                continue
-            models_k_N_Lstar.append((k_val, N_val, Lstar_low, Lstar_high))
-            
-        if len(models_k_N_Lstar) == 0:
-            print(f"No (k, N, L*) data found for model {modelname}.")
-            continue
-        
+    for modelname in modelnames: 
+        models_k_N_Lstar = models_to_k_N_Lstar[modelname]
         # Extract k, N, and L* values from the collected tuples.
-        k_vals = np.array([item[0] for item in models_k_N_Lstar])
-        N_vals = np.array([item[1] for item in models_k_N_Lstar])
-        Lstar_low_vals = np.array([item[2] for item in models_k_N_Lstar])
-        Lstar_high_vals = np.array([item[3] for item in models_k_N_Lstar])
+        k_vals = np.array([item[0] for item in models_k_N_Lstar if (item[0], item[1]) != (new_k, new_N)])
+        N_vals = np.array([item[1] for item in models_k_N_Lstar if (item[0], item[1]) != (new_k, new_N)])
+        Lstar_low_vals = np.array([item[2] for item in models_k_N_Lstar if (item[0], item[1]) != (new_k, new_N)])
+        Lstar_high_vals = np.array([item[3] for item in models_k_N_Lstar if (item[0], item[1]) != (new_k, new_N)])
         
         # Build the design matrix for linear regression.
         # Our model is: L* = a + b * k + c * N
@@ -171,12 +168,21 @@ def linear_interpolate(df, new_k, new_N, kwargs, only_N):
         pred_low = coeffs_low[0] + coeffs_low[1] * new_k + coeffs_low[2] * new_N
         pred_high = coeffs_high[0] + coeffs_high[1] * new_k + coeffs_high[2] * new_N
 
-        predictions[modelname] = (pred_low, pred_high, tol, coeffs_low, coeffs_high)
+        # Compute R^2 for low and high
+        ss_res_low = np.sum(residuals_low ** 2)
+        ss_tot_low = np.sum((Lstar_low_vals - np.mean(Lstar_low_vals)) ** 2)
+        r2_low = 1 - ss_res_low / ss_tot_low if ss_tot_low > 0 else np.nan
+
+        ss_res_high = np.sum(residuals_high ** 2)
+        ss_tot_high = np.sum((Lstar_high_vals - np.mean(Lstar_high_vals)) ** 2)
+        r2_high = 1 - ss_res_high / ss_tot_high if ss_tot_high > 0 else np.nan
+
+        predictions[modelname] = (pred_low, pred_high, tol, coeffs_low, coeffs_high, r2_low, r2_high)
 
     return predictions
 
 
-def process_kn_pair(new_k_val, new_N_val, df, kwargs, only_N=False):
+def process_kn_pair(new_k_val, new_N_val, df, models_to_k_N_Lstar, kwargs, only_N=False):
     """
     Process a single (k, N) pair:
     - Interpolates predictions.
@@ -184,11 +190,17 @@ def process_kn_pair(new_k_val, new_N_val, df, kwargs, only_N=False):
     - Computes delta.
     Returns a list of table rows for this (k, N).
     """
-    df_without_new_k_and_N = df[~((df["k"] == new_k_val) & (df["N"] == new_N_val))]
-    predictions = linear_interpolate(df_without_new_k_and_N, new_k_val, new_N_val, kwargs, only_N)
+    predictions = linear_interpolate(df["Model"].unique(), models_to_k_N_Lstar, new_k_val, new_N_val, kwargs, only_N)
     
     table_data = []
-    for modelname, (pred_Lstar_low, pred_Lstar_high, tol, coeffs_low, coeffs_high) in predictions.items():
+    for modelname, (pred_Lstar_low, pred_Lstar_high, tol, coeffs_low, coeffs_high, r2_low, r2_high) in predictions.items():
+        actual_Lstar_low, actual_Lstar_high = None, None
+        for (k, N, Lstar_low, Lstar_high) in models_to_k_N_Lstar[modelname]:
+            if k == new_k_val and N == new_N_val:
+                actual_Lstar_low, actual_Lstar_high = Lstar_low, Lstar_high
+                break
+        if actual_Lstar_low is None: continue
+
         low_bound = int(pred_Lstar_low - tol)
         high_bound = int(pred_Lstar_high + tol)
 
@@ -215,6 +227,7 @@ def process_kn_pair(new_k_val, new_N_val, df, kwargs, only_N=False):
             f"{coeffs_low[0].item():.1f} + {coeffs_low[1].item():.1f}*k + {coeffs_low[2].item():.1f}*N",
             f"{coeffs_high[0].item():.1f} + {coeffs_high[1].item():.1f}*k + {coeffs_high[2].item():.1f}*N",
             f"({int(pred_Lstar_low)}, {int(pred_Lstar_high)}]",
+            f"({r2_low:.1f}, {r2_high:.1f})",
             f"{int(tol)}",
             f"{old_acc:.3f}",
             f"{new_acc:.3f}",
@@ -256,10 +269,15 @@ if __name__ == "__main__":
         )
 
         # Get average delta per model across all held-out (k, N)
+        models_to_k_N_Lstar = {}
+        for modelname in df["Model"].unique(): 
+            model_df = df[df["Model"] == modelname]
+            models_to_k_N_Lstar[modelname] = get_model_k_N_Lstar(model_df)
+
         kN_table_data = []
         with ThreadPoolExecutor() as executor:
             futures = {
-                executor.submit(process_kn_pair, new_k, new_N, df, kwargs, args.only_N): (new_k, new_N)
+                executor.submit(process_kn_pair, new_k, new_N, df, models_to_k_N_Lstar, kwargs, args.only_N): (new_k, new_N)
                 for new_k in df["k"].unique() for new_N in df["N"].unique()
             }
             for future in as_completed(futures):
@@ -269,12 +287,16 @@ if __name__ == "__main__":
         averaged_table_data = {}
         for row in kN_table_data:
             modelname = row[0]
+            r2 = re.search(r'\((\d+\.\d), (\d+\.\d)\)', row[4])
+            r2_low = float(r2.group(1))
+            r2_high = float(r2.group(2))
+            
             old_acc = float(row[-3])
             new_acc = float(row[-2])
             delta_value = float(row[-1])
             if modelname not in averaged_table_data:
                 averaged_table_data[modelname] = []
-            averaged_table_data[modelname].append((old_acc, new_acc, delta_value))
+            averaged_table_data[modelname].append((old_acc, new_acc, delta_value, r2_low, r2_high))
 
         # Compute mean and stddev per model for this task
         averaged_table = []
@@ -282,10 +304,18 @@ if __name__ == "__main__":
             old_accs = [info[0] for info in acc_info]
             new_accs = [info[1] for info in acc_info]
             deltas = [info[2] for info in acc_info]
+            r2_lows = [info[3] for info in acc_info]
+            r2_highs = [info[4] for info in acc_info]
+
+            if modelname not in modelname_to_task_to_row:
+                modelname_to_task_to_row[modelname] = {}
+            modelname_to_task_to_row[modelname][task] = (old_accs, new_accs, deltas, r2_lows, r2_highs)
+
             n = len(acc_info)
 
             old_mean = np.mean(old_accs) * 100
             new_mean = np.mean(new_accs) * 100
+            r2_mean = np.mean(r2_lows + r2_highs)
             delta_mean = np.mean(deltas)
 
             old_se = np.std(old_accs, ddof=1) / np.sqrt(n) * 100 if n > 1 else 0.0
@@ -294,17 +324,14 @@ if __name__ == "__main__":
             
             row = [
                 model_nicknames[modelname],
-                f"{old_mean:.1f}\\%",
-                f"{new_mean:.1f}\\%",
-                f"{delta_mean:+.1f}\\% ($\\pm{delta_se:.1f}$)"
+                f"{old_mean:.1f}",
+                f"{new_mean:.1f}",
+                f"{delta_mean:+.1f} ($\\pm{delta_se:.1f}$)",
+                f"{r2_mean:.1f}"
             ]
             averaged_table.append(row)
 
-            if modelname not in modelname_to_task_to_row:
-                modelname_to_task_to_row[modelname] = {}
-            modelname_to_task_to_row[modelname][task] = (old_accs, new_accs, deltas)
-
-        headers = ["Model", "Old Acc", "New Acc", "Delta (%)", "SE"]
+        headers = ["Model", "Old Acc", "New Acc", "Delta (SE)", "R2"]
         print(f"\n----\nTask: {task}")
         print(tabulate(averaged_table, headers=headers, tablefmt="pretty"))
         print("----\n")
@@ -315,14 +342,19 @@ if __name__ == "__main__":
         all_deltas = []
         all_old_accs = []
         all_new_accs = []
-        for _, (old_accs, new_accs, deltas) in task_info.items():
+        all_r2_lows = []
+        all_r2_high = []
+        for _, (old_accs, new_accs, deltas, r2_lows, r2_highs) in task_info.items():
             all_deltas.extend(deltas)
             all_old_accs.extend(old_accs)
             all_new_accs.extend(new_accs)
+            all_r2_lows.extend(r2_lows)
+            all_r2_high.extend(r2_highs)
 
         old_mean = np.mean(all_old_accs) * 100
         new_mean = np.mean(all_new_accs) * 100
         delta_mean = np.mean(all_deltas)
+        r2_mean = np.mean(all_r2_lows + all_r2_high)
 
         old_se = np.std(all_old_accs, ddof=1) / np.sqrt(len(all_old_accs)) * 100 
         new_se = np.std(all_new_accs, ddof=1) / np.sqrt(len(all_new_accs)) * 100 
@@ -332,13 +364,14 @@ if __name__ == "__main__":
             model_nicknames[modelname],
             f"{old_mean:.1f}\\%",
             f"{new_mean:.1f}\\%",
-            f"{delta_mean:+.1f}\\% ($\\pm{delta_se:.1f}$)"
+            f"{delta_mean:+.1f}\\% ($\\pm{delta_se:.1f}$)",
+            f"{r2_mean:.1f}"
         ]
         averaged_model_table.append(row)
 
-    headers = ["Model", "Old acc.", "New acc.", "$\\Delta A$ (SE)"]
+    headers = ["Model", "Old acc.", "New acc.", "$\\Delta A$ (SE)", "R2"]
     print("Final Summary Table (text):")
-    print(tabulate(averaged_table, headers=headers, tablefmt="pretty"))
+    print(tabulate(averaged_model_table, headers=headers, tablefmt="pretty"))
     print("\n----\n")
 
     # Now, produce the LaTeX code for the final summary table:
@@ -346,13 +379,13 @@ if __name__ == "__main__":
     latex_lines.append(r"\begin{table}[h]")
     latex_lines.append(r"    \centering")
     latex_lines.append(r"    \begin{adjustbox}{max width=\textwidth}")
-    latex_lines.append(r"    \begin{tabular}{l >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}}")
+    latex_lines.append(r"    \begin{tabular}{l >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{0.2cm}}")
     latex_lines.append(r"    \toprule")
-    latex_lines.append(r"    Model & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) \\")
+    latex_lines.append(r"    Model & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) & $R^2$ \\")
     latex_lines.append(r"    \midrule")
-    for row in averaged_table:
+    for row in averaged_model_table:
         # row is [Model, $A_\text{old}$, $A_\text{new}$, Delta (SE)]
-        latex_lines.append(f"    {row[0]} & {row[1]} & {row[2]} & {row[3]} \\\\")
+        latex_lines.append(f"    {row[0]} & {row[1]} & {row[2]} & {row[3]} & {row[4]} \\\\")
     latex_lines.append(r"    \bottomrule")
     latex_lines.append(r"    \end{tabular}")
     latex_lines.append(r"    \end{adjustbox}")
@@ -369,9 +402,9 @@ if __name__ == "__main__":
     latex_lines.append(r"\begin{table}[h]")
     latex_lines.append(r"    \centering")
     latex_lines.append(r"    \begin{adjustbox}{max width=\textwidth}")
-    latex_lines.append(r"    \begin{tabular}{l >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm} | >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm} | >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}}")
+    latex_lines.append(r"    \begin{tabular}{l >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{0.6cm} | >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{0.6cm} | >{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{0.6cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{0.6cm}}")
     latex_lines.append(r"    \toprule")
-    latex_lines.append(r"    Model & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) \\")
+    latex_lines.append(r"    Model & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) & $R^2$ & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) & $R^2$ & $A_\text{old}$ & $A_\text{new}$ & $\Delta A$ (SE) & $R^2$ \\")
     task_rows = [
         ['arith', 'array_idx', 'dyck'], 
         ['navigate', 'even_odd', 'cruxeval'], 
@@ -380,7 +413,7 @@ if __name__ == "__main__":
         ]
     for task_row in task_rows:
         latex_lines.append(r"    \midrule")
-        latex_lines.append(r"         & \multicolumn{3}{c}{\textbf{" + r"}} & \multicolumn{3}{c}{\textbf{".join([task_full_names[task_nickname] for task_nickname in task_row]) + r"}} \\")
+        latex_lines.append(r"         & \multicolumn{4}{c}{\textbf{" + r"}} & \multicolumn{4}{c}{\textbf{".join([task_full_names[task_nickname] for task_nickname in task_row]) + r"}} \\")
         for modelname, task_info in modelname_to_task_to_row.items():
             model_tasks_line = [model_nicknames[modelname]]
             for taskname in task_row:
@@ -389,15 +422,19 @@ if __name__ == "__main__":
                         "--",
                         "--",
                         "--",
+                        "--",
                     ])
                     continue
                 old_accs = modelname_to_task_to_row[modelname][taskname][0]
                 new_accs = modelname_to_task_to_row[modelname][taskname][1]
                 deltas = modelname_to_task_to_row[modelname][taskname][2]
+                r2_lows = modelname_to_task_to_row[modelname][taskname][3]
+                r2_highs = modelname_to_task_to_row[modelname][taskname][4]
 
                 old_mean = np.mean(old_accs) * 100
                 new_mean = np.mean(new_accs) * 100
                 delta_mean = np.mean(deltas)
+                r2_mean = np.mean(r2_lows + r2_highs)
 
                 old_se = np.std(old_accs, ddof=1) / np.sqrt(len(old_accs)) * 100
                 new_se = np.std(new_accs, ddof=1) / np.sqrt(len(new_accs)) * 100
@@ -406,7 +443,8 @@ if __name__ == "__main__":
                 model_tasks_line.extend([
                     f"${old_mean:.1f}$",
                     f"${new_mean:.1f}$",
-                    f"${delta_mean:+.1f}$ ($\\pm{delta_se:.1f}$)"
+                    f"${delta_mean:+.1f}$ ($\\pm{delta_se:.1f}$)",
+                    f"{r2_mean:.1f}"
                 ])
             model_tasks_line = " & ".join(model_tasks_line) + r"\\"
             latex_lines.append(model_tasks_line)

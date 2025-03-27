@@ -45,7 +45,7 @@ models_in_order = [
     "Qwen2.5-32B-Instruct",
     "Llama-3.3-70B-Instruct-Turbo",
     "Meta-Llama-3.1-405B-Instruct-Turbo",
-    "gpt-4o-mini",
+    # "gpt-4o-mini",
     "DeepSeek-V3",
     "gpt-4o",
 ]
