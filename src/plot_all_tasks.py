@@ -217,7 +217,7 @@ def plot_correctness_by_ttoks(df, kwargs):
     plt.grid(True, linestyle="--", alpha=0.6)
     plt.tight_layout()
     
-    plot_filename = "corr_vs_len.png"
+    plot_filename = "corr_vs_len.pdf"
     os.makedirs(os.path.join(kwargs['foldername']), exist_ok=True)
     plt.savefig(os.path.join(kwargs['foldername'], plot_filename), bbox_inches="tight")
     plt.clf()
@@ -292,12 +292,12 @@ def plot_correctness_by_ttoks_model_pairs(df, models_and_tasks, kwargs, normaliz
     plt.grid(True, linestyle="--", alpha=0.6)
     plt.tight_layout()
     
-    plot_filename = f"{model_nicknames[models[0]]}_{model_nicknames[models[1]]}{'_norm' if normalize else ''}.png"
+    plot_filename = f"{model_nicknames[models[0]]}_{model_nicknames[models[1]]}{'_norm' if normalize else ''}.pdf"
     os.makedirs(os.path.join(kwargs['foldername']), exist_ok=True)
     plt.savefig(os.path.join(kwargs['foldername'], plot_filename), bbox_inches="tight")
     plt.clf()
 
-def plot_fig1_on_ax(ax, task, df, kwargs, include_raw, clamp_upper, y_normalization):
+def plot_fig1_on_ax(ax, task, df, kwargs, include_raw, clamp_upper, y_normalization, ylabel=None, xlabel=None):
     """
     Plot the fig1 curve for a single task onto a given axis (ax),
     with customized x-axis ticks: the tick at 0 (the normalized peak) is labeled 'L*',
@@ -399,6 +399,8 @@ def plot_fig1_on_ax(ax, task, df, kwargs, include_raw, clamp_upper, y_normalizat
     # Set axis limits and grid
     ax.set_xlim(left=-1.2, right=1.2)
     ax.grid(True, linestyle="--", alpha=0.6)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
     
     # Customize x-axis ticks:
     ticks = [-1.2, 0]
@@ -427,7 +429,9 @@ def fig1_all_tasks(tasks, df, kwargs, include_raw, clamp_upper, n_cols, y_normal
     all_model_to_task_to_Lstar = {}
     for i, task in enumerate(tasks):
         ax = axes[i]
-        model_to_task_to_Lstar = plot_fig1_on_ax(ax, task, df, kwargs, include_raw=include_raw, clamp_upper=clamp_upper, y_normalization=y_normalization)
+        ylabel = "Accuracy" if i % 3 == 0 else None
+        xlabel = "Sequence length (normalized)" if i >= 6 else None
+        model_to_task_to_Lstar = plot_fig1_on_ax(ax, task, df, kwargs, include_raw=include_raw, clamp_upper=clamp_upper, y_normalization=y_normalization, xlabel=xlabel, ylabel=ylabel)
         for model, task_to_Lstar in model_to_task_to_Lstar.items():
             if model not in all_model_to_task_to_Lstar: all_model_to_task_to_Lstar[model] = {}
             all_model_to_task_to_Lstar[model][task] = task_to_Lstar
@@ -436,7 +440,7 @@ def fig1_all_tasks(tasks, df, kwargs, include_raw, clamp_upper, n_cols, y_normal
         fig.delaxes(axes[j])
     
     plt.tight_layout()
-    out_filename = os.path.join(kwargs["foldername"], f"fig1{suffix}.png")
+    out_filename = os.path.join(kwargs["foldername"], f"fig1{suffix}.pdf")
     plt.savefig(out_filename, bbox_inches="tight")
     plt.clf()
 
@@ -657,7 +661,7 @@ def fig2(select_tasks, select_models, df, kwargs, fig_suffix, plot_confidence=Fa
     fig.tight_layout()
 
     # Save once, containing both subplots
-    out_filename = os.path.join(kwargs["foldername"], f"fig2{fig_suffix}.png")
+    out_filename = os.path.join(kwargs["foldername"], f"fig2{fig_suffix}.pdf")
     fig.savefig(out_filename, bbox_inches="tight")
     plt.close(fig)
 
@@ -879,7 +883,7 @@ def fig2_per_task(tasks, df, kwargs, n_cols=2):
             ha='center', va='bottom', fontsize=20
         )
 
-    out_filename = os.path.join(kwargs["foldername"], "fig2_per_task.png")
+    out_filename = os.path.join(kwargs["foldername"], "fig2_per_task.pdf")
     plt.savefig(out_filename, bbox_inches="tight")
     plt.clf()
 
@@ -1095,7 +1099,7 @@ def fig3(tasks, df, kwargs, fig_suffix):
     ax.legend(handles=legend_handles, loc="best", fontsize="small", frameon=True, ncol=2)
 
     fig.tight_layout()
-    out_filename = os.path.join(kwargs["foldername"], f"fig3{fig_suffix}.png")
+    out_filename = os.path.join(kwargs["foldername"], f"fig3{fig_suffix}.pdf")
     fig.savefig(out_filename, bbox_inches="tight")
     plt.close(fig)
 
@@ -1174,17 +1178,30 @@ def generation_lengths(df, kwargs):
             edgecolors="black", 
             marker="D", 
             s=100, 
-            zorder=3
+            zorder=3,
         )
 
     # Set x-axis labels
     plt.xticks(ticks=tick_positions, labels=labels, rotation=45, ha="right")
     plt.ylabel("Generation Length")
+    # Create a proxy artist for the diamond marker.
+    critical_length_marker = mlines.Line2D(
+        [0], [0], 
+        marker='D', 
+        color='w', 
+        markerfacecolor='white', 
+        markeredgecolor='black', 
+        markersize=10, 
+        label='Critical Length (L*)'
+    )
+
+    # Add the legend using the proxy artist.
+    plt.legend(handles=[critical_length_marker])
 
     # Save the plot
     plt.tight_layout()  # Adjust layout to avoid overlap
     plt.savefig(
-        os.path.join(kwargs['foldername'], "genlength_boxplot.png"),
+        os.path.join(kwargs['foldername'], "genlength_boxplot.pdf"),
         bbox_inches="tight"
     )
     plt.clf()
@@ -1257,7 +1274,7 @@ def scatter_len_to_acc(df, kwargs):
 
     # Save the plot
     plt.tight_layout()  # Adjust layout to avoid overlap
-    out_filename = os.path.join(kwargs['foldername'], "genlength_accuracy.png")
+    out_filename = os.path.join(kwargs['foldername'], "genlength_accuracy.pdf")
     plt.savefig(out_filename, bbox_inches="tight")
     plt.clf()
 
@@ -1283,10 +1300,10 @@ if __name__ == "__main__":
         "to_highlight": to_highlight
     }
 
-    df = load_data(
-        args,
-        plot_kwargs,
-    )
+    # df = load_data(
+    #     args,
+    #     plot_kwargs,
+    # )
 
     # def relative_to_start(y_curve):
     #     original_val = y_curve[0]
@@ -1305,19 +1322,19 @@ if __name__ == "__main__":
     # fig1_all_tasks(args.f1_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix='_9')
     # fig1_all_tasks(args.all_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix="_all")
     
-    fig2(args.all_tasks, args.models, df, plot_kwargs, '_all')
-    fig2_per_task(args.all_tasks, df, plot_kwargs)
+    # fig2(args.all_tasks, args.models, df, plot_kwargs, '_all')
+    # fig2_per_task(args.all_tasks, df, plot_kwargs)
     
     # fig3(args.all_tasks, df, plot_kwargs, "")
 
-    # nonfiltered_df = load_data(
-    #     args,
-    #     plot_kwargs,
-    #     filter_stddev_count=0,
-    #     include_all=True,
-    # )
+    nonfiltered_df = load_data(
+        args,
+        plot_kwargs,
+        filter_stddev_count=0,
+        include_all=True,
+    )
     # generation_lengths(nonfiltered_df, plot_kwargs)
-    # scatter_len_to_acc(nonfiltered_df, plot_kwargs)
+    scatter_len_to_acc(nonfiltered_df, plot_kwargs)
 
     # plot_correctness_by_ttoks(df, plot_kwargs)
     # model_pairs = [
