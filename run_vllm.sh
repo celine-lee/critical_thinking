@@ -2,8 +2,9 @@ source .models_env
 source .env
 source .tasks_env
 
+export ALL_VLLM_MODELS="${VLLM_MODELS} ${VLLM_MODELS_DISTR1_MODELS}"
 # Loop over each model
-for MODEL in $ALL_MODELS; do
+for MODEL in ALL_VLLM_MODELS; do
     python main.py $ARITH_TASK_FLAGS --models $MODEL --generator vllm  --n_samples_per 80
     python main.py $EVEN_ODD_TASK_FLAGS --models $MODEL --generator vllm  --n_samples_per 80
     python main.py $ARRAY_IDX_TASK_FLAGS --models $MODEL --generator vllm  --n_samples_per 80
