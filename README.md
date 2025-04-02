@@ -5,24 +5,30 @@ Large language models (LLMs) often benefit from verbalized reasoning at inferenc
 
 
 We first show that across different tasks and models of different sizes and training paradigms, there exists an optimal amount of reasoning tokens such that the probability of producing a correct solution is maximized. 
-
-<img src="https://github.com/celine-lee/critical_thinking/blob/main/images/fig1_9.jpg" width="60%">
-
+<div align="center">
+  <img src="https://github.com/celine-lee/critical_thinking/blob/main/images/fig1_9.jpg" width="70%">
+</div>
 We then investigate which properties of complexity govern this critical length: we find that task instances with longer corresponding underlying DFA runs (i.e. demand greater latent state-tracking requirements) correlate with longer reasoning lengths, but, surprisingly, that DFA size (i.e. state-space complexity) does not. 
 
-<img src="https://github.com/celine-lee/critical_thinking/blob/main/images/run_length_vs_states.jpg" width="50%"> <img src="https://github.com/celine-lee/critical_thinking/blob/main/images/fig2_all.jpg" width="50%">
+<div align="center">
+  <img src="https://github.com/celine-lee/critical_thinking/blob/main/images/run_length_vs_states.jpg" width="50%"> <img src="https://github.com/celine-lee/critical_thinking/blob/main/images/fig2_all.jpg" width="50%">
+</div>
 
 We then demonstrate an implication of these findings: being able to predict the optimal number of reasoning tokens for new problems and filtering out non-optimal length answers results in consistent accuracy improvements.
 
-<img src="https://github.com/celine-lee/critical_thinking/blob/main/images/fig3.jpg" width="60%">
+<div align="center">
+  <img src="https://github.com/celine-lee/critical_thinking/blob/main/images/fig3.jpg" width="60%">
+</div>
 
 ```
 <todo put arxiv reference here>
 ```
 
+
+## This repository includes all code for experiments.
 Create `.env` file with `OPENAI_API_KEY`, `TOGETHER_API_KEY`.
 
-## Generate samples
+### Generate samples
 
 ```
 . run_vllm.sh
@@ -30,13 +36,13 @@ Create `.env` file with `OPENAI_API_KEY`, `TOGETHER_API_KEY`.
 . run_openai.sh
 ```
 
-## Extrapolation experiments
+### Extrapolation experiments
 ```
 . extrapolate.sh
 ```
 
 
-## Make plots
+### Make plots
 ```
 . plot_all.sh
 ```
