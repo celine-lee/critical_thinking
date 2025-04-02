@@ -1,7 +1,7 @@
 # Critical Thinking
 
 
-Large language models often benefit from verbalized reasoning, but it remains unclear which aspects of task difficulty are addressed by these extra reasoning tokens. To investigate this question, we formalize a framework using DFAs-- through the formalism of DFAs, we can characterize task complexity through measurable properties such as run length (number of reasoning steps required) and state-space size (decision complexity). 
+LLMs often benefit from verbalized reasoning, but it remains unclear which aspects of task difficulty are addressed by these extra reasoning tokens. To investigate this question, we formalize a framework using DFAs-- DFAs offer a formalism though which we can characterize task complexity with measurable properties such as run length (number of reasoning steps required) and state-space size (decision complexity). 
 
 We find the following:
 
