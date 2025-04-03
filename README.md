@@ -23,7 +23,15 @@ We find the following:
 </div>
 
 ```
-<todo put arxiv reference here>
+@misc{lee2025criticalthinkingkindscomplexity,
+      title={Critical Thinking: Which Kinds of Complexity Govern Optimal Reasoning Length?}, 
+      author={Celine Lee and Alexander M. Rush and Keyon Vafa},
+      year={2025},
+      eprint={2504.01935},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2504.01935}, 
+}
 ```
 
 
