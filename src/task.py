@@ -1014,3 +1014,95 @@ The following sentences each describe a set of {num_objects} objects arranged in
             prompt += self.query_template.format(num_objects=num2words(num_objects), intro=intro_str, sequence=sequence_str, final_question=final_question_str) + "\n"
             prompt += self.generation_instruction
         return prompt
+
+
+class GSM8kEvalTask(Task):
+    def __init__(self):
+        super(GSM8kEvalTask, self).__init__("gsm8k", r'Answer\s*:\s*(.+)')
+        self.foldername = "gsm8k/outputs"
+
+        self.query_template = """Answer the following mathematics question:
+        
+{question}"""
+        self.generation_instruction = "Provide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]"
+        self.reprompt_string = "[ANSWER]\nAnswer: "
+
+        self.all_examples = {}
+        self.tracker = {}
+
+    def load_remaining_inputs(self, modelname):
+
+        self.all_examples = {}
+        self.tracker = {}
+        
+        already_processed = {}
+        for kN_folder in glob.glob("gsm8k/outputs/k*"):
+            parsed_experimentname = re.search(r"k(\d+)_N(\d+)", kN_folder)
+            if parsed_experimentname is None:
+                continue
+            k = int(parsed_experimentname.group(1))
+            N = int(parsed_experimentname.group(2))
+            filename = os.path.join(kN_folder, f"{modelname}_T0.0.json")
+            if os.path.exists(filename):
+                already_processed[(k, N)] = {ex["id"] for ex in json.load(open(filename))}
+
+        # Then load in the examples that haven't been processed yet; sort accordingly
+        for kN_file in glob.glob("gsm8k/examples/k*.json"):
+            parsed_experimentname = re.search(r"k(\d+)_N(\d+)", kN_file)
+            if parsed_experimentname is None:
+                continue
+            k = int(parsed_experimentname.group(1))
+            N = int(parsed_experimentname.group(2))
+            self.all_examples[(k,N)] = [ex for ex in json.load(open(kN_file)) if ex["id"] not in already_processed[(k, N)]]
+            self.tracker[(k, N)] = 0
+
+    def create_subfolder_name(self, dfa_kwargs):
+        subfolder = os.path.join(f"{self.foldername}", f"k{dfa_kwargs['k']}_N{dfa_kwargs['N']}")
+        return subfolder
+
+    def make_prompt(self, generator, question):
+        if 'tokenizer' in dir(generator) and generator.tokenizer.chat_template:
+            if "gemma" in generator.model_name:
+                messages = [{
+                    "role": "user",
+                    "content": self.system_instruction + "\n\n" + self.query_template.format(question=question) + "\n" + self.generation_instruction
+                }]
+                prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            else:
+                messages = [{
+                    "role": "system",
+                    "content": self.system_instruction
+                },
+                {
+                    "role": "user",
+                    "content": self.query_template.format(question=question) + "\n" + self.generation_instruction
+                }]
+                prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        else:
+            prompt = self.system_instruction + "\n\n"
+            prompt += self.query_template.format(question=question) + "\n"
+            prompt += self.generation_instruction
+        return prompt
+
+    def get_example(self, k, N):
+        k = int(k)
+        N = int(N)
+        if self.tracker[(k, N)] >= len(self.all_examples[(k, N)]): return None
+        next_ex = self.all_examples[(k, N)][self.tracker[(k, N)]]
+        self.tracker[(k, N)] += 1
+        return next_ex
+
+    def generate_random(self, generator, kN):
+        num_values_navigated = kN["k"]
+        num_operation_steps = kN["N"]
+        prompts = []
+        true_answers = []
+        examples = []
+        while len(prompts) < generator.max_batch_size:
+            ex = self.get_example(num_values_navigated, num_operation_steps)
+            if ex is None: break
+            examples.append(ex)
+            prompt = self.make_prompt(generator, ex["question"])
+            prompts.append(prompt)
+            true_answers.append(ex["answer"])
+        return examples, prompts, true_answers
