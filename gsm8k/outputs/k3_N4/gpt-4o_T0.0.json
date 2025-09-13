@@ -1,0 +1,83 @@
+[
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nBryan works as a social media account manager. He does marketing posts, advertisement posts, and customer outreach posts. His client has him spend four hours on customer outreach posts and half that time on advertisement posts each day. Bryan works eight hours a day. How much time in hours each day does he spend on marketing posts?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To find out how much time Bryan spends on marketing posts each day, we need to first determine how much time he spends on the other tasks.\n\n1. Bryan spends 4 hours on customer outreach posts each day.\n2. He spends half of that time on advertisement posts, which is \\( \\frac{1}{2} \\times 4 = 2 \\) hours.\n\nNow, we add the time spent on customer outreach and advertisement posts:\n\n\\[ 4 \\text{ hours (customer outreach)} + 2 \\text{ hours (advertisement)} = 6 \\text{ hours} \\]\n\nBryan works a total of 8 hours each day. Therefore, the time he spends on marketing posts is:\n\n\\[ 8 \\text{ hours (total work)} - 6 \\text{ hours (other tasks)} = 2 \\text{ hours} \\]\n\nSo, Bryan spends 2 hours each day on marketing posts.\n\n[ANSWER]\nAnswer: 2\n",
+        "generated_tokens": 201,
+        "pred_answer": "2",
+        "true_answer": "2",
+        "correct": true,
+        "id": "gsm8k_train_422"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nSamantha, Aira, and Joe received 6 rubber bands each after they divided their bands equally.  If Samantha had 5 more bands than Aira and Aira had 1 fewer band than Joe, how many rubber bands did Aira have?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To solve this problem, we need to set up equations based on the information given.\n\nLet's denote:\n- \\( S \\) as the number of rubber bands Samantha had initially.\n- \\( A \\) as the number of rubber bands Aira had initially.\n- \\( J \\) as the number of rubber bands Joe had initially.\n\nFrom the problem, we have the following information:\n1. After dividing their bands equally, each received 6 rubber bands.\n2. Samantha had 5 more bands than Aira: \\( S = A + 5 \\).\n3. Aira had 1 fewer band than Joe: \\( A = J - 1 \\).\n\nSince they divided their bands equally and each received 6 bands, the total number of bands they had initially is \\( 3 \\times 6 = 18 \\).\n\nNow, we can set up the equation for the total number of bands:\n\\[ S + A + J = 18 \\]\n\nSubstitute the expressions for \\( S \\) and \\( J \\) in terms of \\( A \\):\n\\[ (A + 5) + A + (A + 1) = 18 \\]\n\nSimplify the equation:\n\\[ 3A + 6 = 18 \\]\n\nSubtract 6 from both sides:\n\\[ 3A = 12 \\]\n\nDivide by 3:\n\\[ A = 4 \\]\n\nSo, Aira had 4 rubber bands initially.\n\nTherefore, the final answer is:\n\n[ANSWER]\nAnswer: 4\n",
+        "generated_tokens": 309,
+        "pred_answer": "4",
+        "true_answer": "4",
+        "correct": true,
+        "id": "gsm8k_train_5209"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nThere are 3 consecutive odd integers that have a sum of -147. What is the largest number?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To solve the problem, let's define the three consecutive odd integers. We can represent them as:\n\n- The first integer: \\( x \\)\n- The second integer: \\( x + 2 \\)\n- The third integer: \\( x + 4 \\)\n\nAccording to the problem, the sum of these three integers is -147. Therefore, we can set up the following equation:\n\n\\[ x + (x + 2) + (x + 4) = -147 \\]\n\nSimplify the equation:\n\n\\[ 3x + 6 = -147 \\]\n\nSubtract 6 from both sides:\n\n\\[ 3x = -153 \\]\n\nDivide both sides by 3:\n\n\\[ x = -51 \\]\n\nNow that we have the value of \\( x \\), we can find the three consecutive odd integers:\n\n- The first integer: \\( x = -51 \\)\n- The second integer: \\( x + 2 = -49 \\)\n- The third integer: \\( x + 4 = -47 \\)\n\nThe largest of these integers is -47.\n\nTherefore, the largest number is:\n\n[ANSWER]\nAnswer: -47\n",
+        "generated_tokens": 234,
+        "pred_answer": "-47",
+        "true_answer": "-47",
+        "correct": true,
+        "id": "gsm8k_train_5844"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nIf the number of dogs in the neighborhood was originally half the number of cats in the neighborhood before twenty new dogs were born, and now there are twice as many dogs as cats, how many cats were in the neighborhood, to begin with, if there are 20 cats now?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "Let's solve the problem step by step.\n\nLet \\( C \\) be the original number of cats in the neighborhood. We know that there are currently 20 cats, so:\n\n\\[ C = 20 \\]\n\nLet \\( D \\) be the original number of dogs in the neighborhood. According to the problem, the number of dogs was originally half the number of cats:\n\n\\[ D = \\frac{C}{2} \\]\n\nAfter twenty new dogs were born, the number of dogs became:\n\n\\[ D + 20 \\]\n\nNow, there are twice as many dogs as cats:\n\n\\[ D + 20 = 2C \\]\n\nSubstitute \\( C = 20 \\) into the equation:\n\n\\[ D + 20 = 2 \\times 20 \\]\n\\[ D + 20 = 40 \\]\n\nSolve for \\( D \\):\n\n\\[ D = 40 - 20 \\]\n\\[ D = 20 \\]\n\nSince \\( D = \\frac{C}{2} \\), we have:\n\n\\[ 20 = \\frac{C}{2} \\]\n\nSolve for \\( C \\):\n\n\\[ C = 20 \\times 2 \\]\n\\[ C = 40 \\]\n\nTherefore, the original number of cats in the neighborhood was 40.\n\n[ANSWER]\nAnswer: 40\n",
+        "generated_tokens": 266,
+        "pred_answer": "40",
+        "true_answer": "40",
+        "correct": true,
+        "id": "gsm8k_train_7305"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nToday is my birthday and I'm three times older than I was six years ago. What is my age?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "Let's solve the problem step by step.\n\nLet \\( x \\) be your current age.\n\nAccording to the problem, you are three times older than you were six years ago. Six years ago, your age was \\( x - 6 \\).\n\nThe equation based on the problem statement is:\n\\[ x = 3(x - 6) \\]\n\nNow, solve for \\( x \\):\n\n1. Distribute the 3 on the right side:\n   \\[ x = 3x - 18 \\]\n\n2. Subtract \\( 3x \\) from both sides to get:\n   \\[ x - 3x = -18 \\]\n\n3. Simplify the left side:\n   \\[ -2x = -18 \\]\n\n4. Divide both sides by -2:\n   \\[ x = 9 \\]\n\nSo, your current age is 9.\n\n[ANSWER]\nAnswer: 9\n",
+        "generated_tokens": 189,
+        "pred_answer": "9",
+        "true_answer": "9",
+        "correct": true,
+        "id": "gsm8k_train_7390"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nDale is selling butterscotch candies to raise money for his club at school. He doesn't have the candies yet and is instead just taking orders. He started off with 100 total that he ordered and wanted to sell, but he ended up selling 150 butterscotch candies. Then he ordered 100 more. How many does Dale still need to sell to sell all of his candy?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To solve this problem, we need to determine how many butterscotch candies Dale still needs to sell.\n\n1. Dale initially ordered 100 candies.\n2. He sold 150 candies, which means he sold 50 more than he initially had.\n3. To fulfill the orders, he ordered 100 more candies.\n\nNow, let's calculate how many candies Dale has in total after ordering more:\n\n- Initial order: 100 candies\n- Additional order: 100 candies\n- Total candies ordered: 100 + 100 = 200 candies\n\nDale has sold 150 candies so far. Therefore, the number of candies he still needs to sell to sell all of his candy is:\n\n- Total candies ordered: 200\n- Candies sold: 150\n- Candies still to sell: 200 - 150 = 50\n\nSo, Dale still needs to sell 50 candies.\n\n[ANSWER]\nAnswer: 50\n",
+        "generated_tokens": 194,
+        "pred_answer": "50",
+        "true_answer": "50",
+        "correct": true,
+        "id": "gsm8k_test_809"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nRichard, Jerry, and Robert are going to share 60 cherries. If Robert has 30 cherries, and has 10 more than Richard, how many more cherries does Robert have than Jerry?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To solve this problem, we need to determine how many cherries each person has and then find the difference between the number of cherries Robert and Jerry have.\n\n1. We know Robert has 30 cherries.\n2. Robert has 10 more cherries than Richard. Therefore, Richard has:\n   \\[\n   \\text{Richard's cherries} = \\text{Robert's cherries} - 10 = 30 - 10 = 20\n   \\]\n3. The total number of cherries is 60. Therefore, Jerry has:\n   \\[\n   \\text{Jerry's cherries} = 60 - (\\text{Robert's cherries} + \\text{Richard's cherries}) = 60 - (30 + 20) = 60 - 50 = 10\n   \\]\n4. Now, we find how many more cherries Robert has than Jerry:\n   \\[\n   \\text{Difference} = \\text{Robert's cherries} - \\text{Jerry's cherries} = 30 - 10 = 20\n   \\]\n\nSo, Robert has 20 more cherries than Jerry.\n\n[ANSWER]\nAnswer: 20\n",
+        "generated_tokens": 235,
+        "pred_answer": "20",
+        "true_answer": "20",
+        "correct": true,
+        "id": "gsm8k_test_975"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nLast month, you borrowed $100 from your friend. If you promise to pay her today, how much will you give to your friend if both of you agreed to return the money with a 10% increase?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To calculate the amount you need to pay back, you need to add a 10% increase to the original amount borrowed. \n\nThe original amount borrowed is $100. A 10% increase on $100 is calculated as follows:\n\n10% of $100 = 0.10 \u00d7 $100 = $10\n\nTherefore, the total amount to pay back is:\n\n$100 + $10 = $110\n\nSo, you will give your friend $110.\n\n[ANSWER]\nAnswer: $110\n",
+        "generated_tokens": 104,
+        "pred_answer": "110",
+        "true_answer": "110",
+        "correct": true,
+        "id": "gsm8k_train_4643"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nSteve puts $100 into the bank. Each year he earns 10% interest on the money in the account. How much money will be in the bank after 2 years?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To calculate the amount of money in the bank after 2 years with an annual interest rate of 10%, we can use the formula for compound interest:\n\n\\[ A = P(1 + r)^n \\]\n\nwhere:\n- \\( A \\) is the amount of money accumulated after n years, including interest.\n- \\( P \\) is the principal amount (the initial amount of money).\n- \\( r \\) is the annual interest rate (decimal).\n- \\( n \\) is the number of years the money is invested for.\n\nIn this case:\n- \\( P = 100 \\) (the initial amount Steve puts into the bank),\n- \\( r = 0.10 \\) (10% interest rate),\n- \\( n = 2 \\) (the number of years).\n\nPlug these values into the formula:\n\n\\[ A = 100(1 + 0.10)^2 \\]\n\\[ A = 100(1.10)^2 \\]\n\\[ A = 100 \\times 1.21 \\]\n\\[ A = 121 \\]\n\nSo, the amount of money in the bank after 2 years is $121.\n\n[ANSWER]\nAnswer: $121\n",
+        "generated_tokens": 244,
+        "pred_answer": "121",
+        "true_answer": "121",
+        "correct": true,
+        "id": "gsm8k_train_6087"
+    }
+]
