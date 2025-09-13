@@ -27,7 +27,7 @@ def get_args():
     parser.add_argument("--models", nargs='+')
     parser.add_argument("--only_N", action='store_true')
     parser.add_argument("--n_buckets", type=int, default=5)
-    parser.add_argument("--tasks", nargs="+", default=['dyck', 'array_idx', 'cruxeval', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'logical_deduction'])
+    parser.add_argument("--tasks", nargs="+", default=['dyck', 'array_idx', 'cruxeval', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'logical_deduction', 'gsm8k'])
     args = parser.parse_args()
     return args
 
@@ -408,7 +408,7 @@ if __name__ == "__main__":
         ['arith', 'array_idx', 'dyck'], 
         ['navigate', 'even_odd', 'cruxeval'], 
         ['shuffled_objects', 'bool', 'web_of_lies'],
-        ['logical_deduction']
+        ['logical_deduction', 'gsm8k']
         ]
     for task_row in task_rows:
         latex_lines.append(r"    \midrule")
