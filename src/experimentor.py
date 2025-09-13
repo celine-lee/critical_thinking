@@ -50,6 +50,9 @@ class Experimenter:
                     is_correct = pred_answer.lower().strip() == true_answer.lower().strip()
                 else:
                     try:
+                        if self.task.name == "gsm8k":
+                            pred_answer = pred_answer.replace(",", "")
+                            pred_answer = pred_answer.replace("$", "")
                         evaluated_pred = eval(pred_answer)
                         eval_true_answer = true_answer
                         if self.task.name == "cruxeval": 

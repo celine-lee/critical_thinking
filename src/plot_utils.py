@@ -16,6 +16,7 @@ task_full_names = {
     'web_of_lies': "Web of Lies",
     'shuffled_objects': "Shuffled Objects",
     'logical_deduction': "Logical Deduction",
+    'gsm8k': "GSM8k",
 }
 
 all_models_size_ordered = [
@@ -175,6 +176,11 @@ def get_task_info(task):
             foldername_parser = parse_kN
             dfa_factors_order = {"k": 0, "N": 1}
             output_folder = "cruxeval/outputs_straightlined"
+        case 'gsm8k':
+            compute_random = lambda factor_vals: 0.5
+            foldername_parser = parse_kN
+            dfa_factors_order = {"k": 0, "N": 1}
+            output_folder = "gsm8k/outputs"
     return compute_random, foldername_parser, dfa_factors_order, output_folder
 
 def calculate_buckets(sub_df, n_buckets, bucket_by="No gen toks", bucket_name="Length Bucket", y_axis="Correct?", groupby_key="Model", get_precision_metrics=False):

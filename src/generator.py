@@ -229,7 +229,6 @@ class OpenAIGenerator(Generator):
                 response = self.call_model([{"role": "user", "content": prompt}])
                 responses.append(response)
             except Exception as exc: 
-                # DeepSeek API often returns null https://github.com/deepseek-ai/DeepSeek-V3/issues/599
                 responses.append(None)
         for i, response in enumerate(responses):
             if response is None: continue
@@ -389,6 +388,8 @@ class TogetherGenerator(OpenAIGenerator):
     def __init__(self, model_name, gen_kwargs, max_batch_size):
         super().__init__(model_name, gen_kwargs, max_batch_size)
         self.client = Together()
+        if "Llama-70B-fre" in model_name:
+            self.sampling_args["max_completion_tokens"] = 7500
 
     def call_model(self, messages):
         response = self.client.chat.completions.create(
