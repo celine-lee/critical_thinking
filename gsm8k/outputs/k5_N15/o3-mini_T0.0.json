@@ -1,0 +1,11 @@
+[
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nFelicia is baking a cake. She needs 2 cups of flour, a cup of white sugar, a 1/4 cup of brown sugar, and a 1/2 cup of oil. Her only measuring scoop is 1/4 cup. How many times does she fill it to complete the measurements?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 15\n",
+        "generated_tokens": 217,
+        "pred_answer": "15",
+        "true_answer": "15",
+        "correct": true,
+        "id": "gsm8k_train_2153"
+    }
+]
