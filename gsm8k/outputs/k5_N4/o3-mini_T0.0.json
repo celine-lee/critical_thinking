@@ -205,5 +205,86 @@
         "true_answer": "18",
         "correct": true,
         "id": "gsm8k_train_240"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nParker is 4 inches shorter than Daisy. Daisy is 8 inches taller than Reese. If Reese is 60 inches tall, what is the average height for the three of them?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 64\n",
+        "generated_tokens": 152,
+        "pred_answer": "64",
+        "true_answer": "64",
+        "correct": true,
+        "id": "gsm8k_train_306"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nThe selling price of a bicycle that had sold for $220 last year was increased by 15%. What is the new price?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $253\n",
+        "generated_tokens": 152,
+        "pred_answer": "253",
+        "true_answer": "253",
+        "correct": true,
+        "id": "gsm8k_train_316"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nJay & Gloria were hosting a 4th of July party at their house.  Jay invited 22 people and Gloria invited 36.  They wanted to buy small American flags for everyone.  The craft store was having a sale on small flags, 5 flags for $1.00.  If they wanted all of their guests to have a flag and they also wanted 1 flag each, how much would they spend at the craft store?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $12\n",
+        "generated_tokens": 346,
+        "pred_answer": "12",
+        "true_answer": "12",
+        "correct": true,
+        "id": "gsm8k_train_323"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nDorothy earns $60000 a year from her work. She needs to pay 18% of this amount in taxes. How much money will she have left after she pays the taxes?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 49200\n",
+        "generated_tokens": 89,
+        "pred_answer": "49200",
+        "true_answer": "49200",
+        "correct": true,
+        "id": "gsm8k_train_332"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nFor a school fundraiser, Chandler needs to sell 12 rolls of wrapping paper. So far, he has sold 3 rolls to his grandmother, 4 rolls to his uncle, and 3 rolls to a neighbor. How many more rolls of wrapping paper does Chandler need to sell?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 2\n",
+        "generated_tokens": 216,
+        "pred_answer": "2",
+        "true_answer": "2",
+        "correct": true,
+        "id": "gsm8k_train_350"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nBert's golden retriever has grown tremendously since it was a puppy.  At 7 weeks old, the puppy weighed 6 pounds, but doubled in weight by week 9.  It doubled in weight again at 3 months old, and doubled again at 5 months old.  Finally, the dog reached its final adult weight by adding another 30 pounds by the time it was one year old.  What is the dog's full adult weight, in pounds?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 78\n",
+        "generated_tokens": 152,
+        "pred_answer": "78",
+        "true_answer": "78",
+        "correct": true,
+        "id": "gsm8k_train_415"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nKen had fifty pencils, and he wanted to share some of them with his two friends, Manny and Nilo. Ken gave ten pencils to Manny and ten more pencils to Nilo than he gave to Manny. He kept the rest of the pencils. How many pencils did Ken keep?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 20\n",
+        "generated_tokens": 89,
+        "pred_answer": "20",
+        "true_answer": "20",
+        "correct": true,
+        "id": "gsm8k_train_418"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nTanya went to the grocery store to buy some fruit.  She bought 6 pears, 4 Granny Smith apples, 2 pineapples, and a small basket of plums, which were all placed in a single paper bag.  Unfortunately, the bag that the fruit had been placed in had developed a hole.  Therefore, as Tanya walked home, half of the fruit fell out of the bag.  When she later counted the fruit left in the bag, there were only 9 pieces remaining.  How many plums did she buy?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 6\n",
+        "generated_tokens": 89,
+        "pred_answer": "6",
+        "true_answer": "6",
+        "correct": true,
+        "id": "gsm8k_train_430"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nCori is 3 years old today.  In 5 years, she will be one-third the age of her aunt.  How old is her aunt today?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 19\n",
+        "generated_tokens": 216,
+        "pred_answer": "19",
+        "true_answer": "19",
+        "correct": true,
+        "id": "gsm8k_train_440"
     }
 ]
