@@ -192,6 +192,8 @@ class OpenAIGenerator(Generator):
             # temperature and top_p top_n not supported in reasoning models
             del self.sampling_args["temperature"]
             del self.sampling_args["top_p"]
+        if "gpt-4o" in model_name:
+            self.sampling_args['max_completion_tokens'] = 16384
 
     def update_sampling_args_bounds(self, low_bound, high_bound):
         print("OpenAIGenerator cannot update min number of tokens")
@@ -266,8 +268,11 @@ class DeepseekGenerator(OpenAIGenerator):
         )
         return response
 
-from vllm import LLM, SamplingParams
-from vllm.distributed.parallel_state import destroy_model_parallel
+try:
+    from vllm import LLM, SamplingParams
+    from vllm.distributed.parallel_state import destroy_model_parallel
+except:
+    print("not installing vllm")
 
 class VLLMGenerator(Generator):
     def __init__(self, model_name, gen_kwargs, max_batch_size):
@@ -375,8 +380,11 @@ class VLLMGenerator(Generator):
         # gc.collect()
         # torch.cuda.empty_cache()
         # torch.distributed.destroy_process_group()
-
-from together import Together
+        
+try:
+    from together import Together
+except:
+    print("not installing together")
 class TogetherGenerator(OpenAIGenerator):
     def __init__(self, model_name, gen_kwargs, max_batch_size):
         super().__init__(model_name, gen_kwargs, max_batch_size)

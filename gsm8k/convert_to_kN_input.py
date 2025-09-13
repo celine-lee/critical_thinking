@@ -24,7 +24,7 @@ def process_split(split_name, dataset):
     print(f"Processing '{split_name}' split...")
     for i, ex in enumerate(dataset[split_name]):
         answer_text = ex['answer']
-        final_answer = re.search(r'####\s*([\d\.]+)', answer_text).group(1).strip()
+        final_answer = re.search(r'####\s*([-\d\.]+)', answer_text).group(1).strip()
         
         # Find all calculations enclosed in <<...>>
         expressions = re.findall(r'<<(.+?)>>', answer_text)
@@ -75,10 +75,14 @@ def process_split(split_name, dataset):
             bucketed_examples[bucket_key].append(ex)
 
     # Write bucketed examples to separate JSON files
-    output_dir = f"gsm8k/examples/{split_name}"
+    output_dir = f"{os.path.dirname(os.path.abspath(__file__))}/examples"
     os.makedirs(output_dir, exist_ok=True)
     for (mid_k, mid_N), examples in bucketed_examples.items():
         filename = os.path.join(output_dir, f"k{mid_k}_N{mid_N}.json")
+        if os.path.exists(filename):
+            old_examples = json.load(open(filename))
+            old_examples = [old_ex for old_ex in old_examples if old_ex['id'] not in [ex['id'] for ex in examples]]
+            examples = old_examples + examples
         with open(filename, "w") as f:
             json.dump(examples, f, indent=4)
 

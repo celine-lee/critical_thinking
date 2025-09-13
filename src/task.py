@@ -526,7 +526,7 @@ assert answer == ??
         self.all_examples = {}
         self.tracker = {}
         
-        already_processed = {}
+        already_processed = defaultdict(set)
         for kN_folder in glob.glob("cruxeval/outputs_straightlined/k*"):
             parsed_experimentname = re.search(r"k(\d+)_N(\d+)", kN_folder)
             if parsed_experimentname is None:
@@ -544,7 +544,7 @@ assert answer == ??
                 continue
             k = int(parsed_experimentname.group(1))
             N = int(parsed_experimentname.group(2))
-            self.all_examples[(k,N)] = [ex for ex in json.load(open(kN_file)) if ex["id"] not in already_processed[(k, N)]]
+            self.all_examples[(k,N)] = [ex for ex in json.load(open(kN_file)) if ex["id"] not in already_processed.get((k, N), set())]
             self.tracker[(k, N)] = 0
 
     def create_subfolder_name(self, dfa_kwargs, force_no_cot):
@@ -1053,10 +1053,11 @@ class GSM8kEvalTask(Task):
                 continue
             k = int(parsed_experimentname.group(1))
             N = int(parsed_experimentname.group(2))
-            self.all_examples[(k,N)] = [ex for ex in json.load(open(kN_file)) if ex["id"] not in already_processed[(k, N)]]
+            self.all_examples[(k,N)] = [ex for ex in json.load(open(kN_file)) if ex["id"] not in already_processed.get((k, N), set())]
             self.tracker[(k, N)] = 0
 
-    def create_subfolder_name(self, dfa_kwargs):
+    def create_subfolder_name(self, dfa_kwargs, force_no_cot):
+        assert not force_no_cot
         subfolder = os.path.join(f"{self.foldername}", f"k{dfa_kwargs['k']}_N{dfa_kwargs['N']}")
         return subfolder
 
@@ -1087,6 +1088,7 @@ class GSM8kEvalTask(Task):
     def get_example(self, k, N):
         k = int(k)
         N = int(N)
+        if (k, N) not in self.all_examples: return None
         if self.tracker[(k, N)] >= len(self.all_examples[(k, N)]): return None
         next_ex = self.all_examples[(k, N)][self.tracker[(k, N)]]
         self.tracker[(k, N)] += 1

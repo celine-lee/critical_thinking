@@ -33,7 +33,7 @@ def get_args():
     parser.add_argument("--models", nargs='+')
     parser.add_argument("--disable_cot", action="store_true")
     parser.add_argument("--generator", choices=['hf', 'openai', 'deepseek', 'vllm', 'together'])
-    parser.add_argument("--task", choices=['dyck', 'array_idx', 'cruxeval', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'logical_deduction'])
+    parser.add_argument("--task", choices=['dyck', 'array_idx', 'cruxeval', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'logical_deduction', 'gsm8k'])
     args = parser.parse_args()
     return args
 
@@ -71,7 +71,8 @@ def run(args):
             task = LogicalDeductionTask()
         case 'cruxeval':
             task = CRUXEvalTask()
-            # experimentor_class = CRUXEvalExperimenter
+        case 'gsm8k':
+            task = GSM8kEvalTask()
 
     match args.generator:
         case 'openai':
@@ -88,7 +89,7 @@ def run(args):
     for model_name in args.models:
         model_generator = generator(model_name, gen_kwargs, args.batch_size)
         experimentor = experimentor_class(task, model_generator, n_samples_per, force_no_cot=args.disable_cot)
-        if args.task == "cruxeval": 
+        if args.task in {"cruxeval", "gsm8k"}: 
             modelname = os.path.basename(model_name)
             if modelname in modelname_mappings:
                 modelname = modelname_mappings[modelname]
