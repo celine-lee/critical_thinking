@@ -1,1 +1,20 @@
-[]
+[
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nHow many right triangles with a height of 2 inches and a width of two inches could fit inside a square with 2-inch sides?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 2\n",
+        "generated_tokens": 280,
+        "pred_answer": "2",
+        "true_answer": "2",
+        "correct": true,
+        "id": "gsm8k_train_2131"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nBrad's car broke down on an isolated road.  At the time, Brad was traveling with Jim and Marcus.  So, the three decided to push the car back into town, which was 10 miles away.  For the first three miles, Brad steered as Jim and Marcus pushed at a speed of 6 miles per hour.  Then, for the next 3 miles, Jim steered, as Brad and Marcus pushed at a speed of 3 miles per hour.  For the last four miles, Marcus steered as Brad and Jim pushed at a speed of 8 miles per hour.  How long did it take, in hours, to push the car back to town?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 2\n",
+        "generated_tokens": 216,
+        "pred_answer": "2",
+        "true_answer": "2",
+        "correct": true,
+        "id": "gsm8k_train_3323"
+    }
+]

@@ -1,1 +1,83 @@
-[]
+[
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nBryan works as a social media account manager. He does marketing posts, advertisement posts, and customer outreach posts. His client has him spend four hours on customer outreach posts and half that time on advertisement posts each day. Bryan works eight hours a day. How much time in hours each day does he spend on marketing posts?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 2\n",
+        "generated_tokens": 152,
+        "pred_answer": "2",
+        "true_answer": "2",
+        "correct": true,
+        "id": "gsm8k_train_422"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nLast month, you borrowed $100 from your friend. If you promise to pay her today, how much will you give to your friend if both of you agreed to return the money with a 10% increase?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $110\n",
+        "generated_tokens": 88,
+        "pred_answer": "110",
+        "true_answer": "110",
+        "correct": true,
+        "id": "gsm8k_train_4643"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nSamantha, Aira, and Joe received 6 rubber bands each after they divided their bands equally.  If Samantha had 5 more bands than Aira and Aira had 1 fewer band than Joe, how many rubber bands did Aira have?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "Let's denote the number of rubber bands Aira originally had as A. According to the problem, Samantha had 5 more bands than Aira, so Samantha had A + 5 rubber bands. Additionally, Aira had 1 fewer band than Joe, which means Joe had A + 1 rubber bands.\n\nWhen they combined their rubber bands, they divided them equally, and each of the three received 6 bands. This gives a total of 3 \u00d7 6 = 18 rubber bands.\n\nThe sum of the individual amounts is:\n\u2003\u2003(Aira) A + (Samantha) (A + 5) + (Joe) (A + 1) = 3A + 6\n\nSetting the total equal to 18, we have:\n\u2003\u20033A + 6 = 18\n\nSubtract 6 from both sides:\n\u2003\u20033A = 12\n\nDivide by 3:\n\u2003\u2003A = 4\n\nThus, Aira originally had 4 rubber bands.\n\n[ANSWER]\nAnswer: 4\n",
+        "generated_tokens": 1380,
+        "pred_answer": "4",
+        "true_answer": "4",
+        "correct": true,
+        "id": "gsm8k_train_5209"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nThere are 3 consecutive odd integers that have a sum of -147. What is the largest number?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: -47\n",
+        "generated_tokens": 88,
+        "pred_answer": "-47",
+        "true_answer": "-47",
+        "correct": true,
+        "id": "gsm8k_train_5844"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nSteve puts $100 into the bank. Each year he earns 10% interest on the money in the account. How much money will be in the bank after 2 years?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $121\n",
+        "generated_tokens": 218,
+        "pred_answer": "121",
+        "true_answer": "121",
+        "correct": true,
+        "id": "gsm8k_train_6087"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nIf the number of dogs in the neighborhood was originally half the number of cats in the neighborhood before twenty new dogs were born, and now there are twice as many dogs as cats, how many cats were in the neighborhood, to begin with, if there are 20 cats now?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "Let's let C\u2080 be the original number of cats and D\u2080 be the original number of dogs. The problem states that originally the number of dogs was half the number of cats, so:\n\n\u2003\u2003D\u2080 = \u00bd \u00b7 C\u2080\n\nThen, twenty new dogs were born, so the new number of dogs is:\n\n\u2003\u2003D_new = D\u2080 + 20\n\nAt this point (with cats apparently unchanged) there are twice as many dogs as cats. We are told that there are 20 cats now, so:\n\n\u2003\u2003D_new = 2 \u00d7 20\n\u2003\u2003D_new = 40\n\nSubstitute D_new = D\u2080 + 20 with D\u2080 = \u00bdC\u2080:\n\n\u2003\u2003(\u00bdC\u2080) + 20 = 40\n\nSubtract 20 from both sides:\n\n\u2003\u2003\u00bdC\u2080 = 20\n\nMultiply both sides by 2:\n\n\u2003\u2003C\u2080 = 40\n\nThus, there were originally 40 cats in the neighborhood.\n\n[ANSWER]\nAnswer: 40\n",
+        "generated_tokens": 749,
+        "pred_answer": "40",
+        "true_answer": "40",
+        "correct": true,
+        "id": "gsm8k_train_7305"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nToday is my birthday and I'm three times older than I was six years ago. What is my age?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 9\n",
+        "generated_tokens": 152,
+        "pred_answer": "9",
+        "true_answer": "9",
+        "correct": true,
+        "id": "gsm8k_train_7390"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nDale is selling butterscotch candies to raise money for his club at school. He doesn't have the candies yet and is instead just taking orders. He started off with 100 total that he ordered and wanted to sell, but he ended up selling 150 butterscotch candies. Then he ordered 100 more. How many does Dale still need to sell to sell all of his candy?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 50\n",
+        "generated_tokens": 1561,
+        "pred_answer": "50",
+        "true_answer": "50",
+        "correct": true,
+        "id": "gsm8k_test_809"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nRichard, Jerry, and Robert are going to share 60 cherries. If Robert has 30 cherries, and has 10 more than Richard, how many more cherries does Robert have than Jerry?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 20\n",
+        "generated_tokens": 153,
+        "pred_answer": "20",
+        "true_answer": "20",
+        "correct": true,
+        "id": "gsm8k_test_975"
+    }
+]

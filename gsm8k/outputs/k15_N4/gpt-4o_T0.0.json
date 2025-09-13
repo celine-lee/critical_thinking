@@ -1,1 +1,29 @@
-[]
+[
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nA farmer harvested 250 potatoes. He bundled them in twenty-five's and sold each bundle for $1.90. He also harvested 320 carrots and bundled them in twenty's and sold each bundle for $2. If the farmer sold all his harvested crops, how much did he get in all?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To find out how much the farmer earned in total, we need to calculate the earnings from the potatoes and the carrots separately, and then add them together.\n\n**Potatoes:**\n- The farmer harvested 250 potatoes.\n- He bundled them in groups of 25.\n- Number of bundles = 250 / 25 = 10 bundles.\n- Each bundle is sold for $1.90.\n- Total earnings from potatoes = 10 bundles \u00d7 $1.90 per bundle = $19.00.\n\n**Carrots:**\n- The farmer harvested 320 carrots.\n- He bundled them in groups of 20.\n- Number of bundles = 320 / 20 = 16 bundles.\n- Each bundle is sold for $2.00.\n- Total earnings from carrots = 16 bundles \u00d7 $2.00 per bundle = $32.00.\n\n**Total Earnings:**\n- Total earnings = Earnings from potatoes + Earnings from carrots = $19.00 + $32.00 = $51.00.\n\nTherefore, the farmer earned a total of $51.00 from selling all his harvested crops.\n\n[ANSWER]\nAnswer: $51.00\n",
+        "generated_tokens": 237,
+        "pred_answer": "51.00",
+        "true_answer": "51",
+        "correct": true,
+        "id": "gsm8k_train_1744"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nDaniel works for a sports stadium filling water bottles for athletes. He filled 254 water bottles this season. The football team had 11 players that wanted 6 bottles each. The soccer team had him fill 53 bottles. The lacrosse team needed 12 more bottles than the football team. Each team coach during the season also wanted two bottles apiece. How many bottles did he fill for the rugby team during the final game he worked this season?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To find out how many bottles Daniel filled for the rugby team, we need to calculate the total number of bottles filled for the other teams and subtract that from the total number of bottles he filled this season.\n\n1. **Football Team:**\n   - 11 players each wanted 6 bottles: \\(11 \\times 6 = 66\\) bottles.\n   - The football team coach wanted 2 bottles: \\(66 + 2 = 68\\) bottles.\n\n2. **Soccer Team:**\n   - The soccer team needed 53 bottles.\n   - The soccer team coach wanted 2 bottles: \\(53 + 2 = 55\\) bottles.\n\n3. **Lacrosse Team:**\n   - The lacrosse team needed 12 more bottles than the football team: \\(68 + 12 = 80\\) bottles.\n   - The lacrosse team coach wanted 2 bottles: \\(80 + 2 = 82\\) bottles.\n\nNow, add up all the bottles filled for these teams:\n\n- Football team: 68 bottles\n- Soccer team: 55 bottles\n- Lacrosse team: 82 bottles\n\nTotal bottles for these teams: \\(68 + 55 + 82 = 205\\) bottles.\n\nDaniel filled a total of 254 bottles this season. Therefore, the number of bottles he filled for the rugby team is:\n\n\\[254 - 205 = 49\\]\n\nSo, the number of bottles Daniel filled for the rugby team is 49.\n\n[ANSWER]\nAnswer: 49\n",
+        "generated_tokens": 317,
+        "pred_answer": "49",
+        "true_answer": "49",
+        "correct": true,
+        "id": "gsm8k_train_4448"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nBrittany uses 1/4 ounce of shampoo to wash her hair every other day. She buys shampoo in 14-ounce bottles. How many bottles does she need to get her through a leap year?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To determine how many bottles of shampoo Brittany needs for a leap year, we need to calculate the total amount of shampoo she uses in that year.\n\n1. A leap year has 366 days.\n2. Brittany washes her hair every other day, so she washes her hair \\( \\frac{366}{2} = 183 \\) times in a leap year.\n3. She uses \\( \\frac{1}{4} \\) ounce of shampoo each time she washes her hair.\n4. Therefore, the total amount of shampoo she uses in a leap year is:\n   \\[\n   183 \\times \\frac{1}{4} = \\frac{183}{4} = 45.75 \\text{ ounces}\n   \\]\n5. Each bottle contains 14 ounces of shampoo.\n6. To find out how many bottles she needs, divide the total amount of shampoo by the amount in each bottle:\n   \\[\n   \\frac{45.75}{14} \\approx 3.267857\n   \\]\n7. Since Brittany cannot purchase a fraction of a bottle, she needs to round up to the nearest whole number. Therefore, she needs 4 bottles.\n\nThus, the number of bottles Brittany needs is:\n\n[ANSWER]\nAnswer: 4\n",
+        "generated_tokens": 261,
+        "pred_answer": "4",
+        "true_answer": "4",
+        "correct": true,
+        "id": "gsm8k_train_4593"
+    }
+]

@@ -1,1 +1,74 @@
-[]
+[
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nThere is very little car traffic on Happy Street. During the week, most cars pass it on Tuesday - 25. On Monday, 20% less than on Tuesday, and on Wednesday, 2 more cars than on Monday. On Thursday and Friday, it is about 10 cars each day. On the weekend, traffic drops to 5 cars per day. How many cars travel down Happy Street from Monday through Sunday?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To find the total number of cars that travel down Happy Street from Monday through Sunday, we need to calculate the number of cars for each day and then sum them up.\n\n1. **Tuesday**: 25 cars\n\n2. **Monday**: 20% less than Tuesday\n   - 20% of 25 is \\(0.2 \\times 25 = 5\\).\n   - Therefore, on Monday, there are \\(25 - 5 = 20\\) cars.\n\n3. **Wednesday**: 2 more cars than Monday\n   - On Wednesday, there are \\(20 + 2 = 22\\) cars.\n\n4. **Thursday**: 10 cars\n\n5. **Friday**: 10 cars\n\n6. **Saturday**: 5 cars\n\n7. **Sunday**: 5 cars\n\nNow, add the number of cars for each day:\n\n\\[\n20 \\, (\\text{Monday}) + 25 \\, (\\text{Tuesday}) + 22 \\, (\\text{Wednesday}) + 10 \\, (\\text{Thursday}) + 10 \\, (\\text{Friday}) + 5 \\, (\\text{Saturday}) + 5 \\, (\\text{Sunday}) = 97\n\\]\n\nSo, the total number of cars that travel down Happy Street from Monday through Sunday is 97.\n\n[ANSWER]\nAnswer: 97\n",
+        "generated_tokens": 290,
+        "pred_answer": "97",
+        "true_answer": "97",
+        "correct": true,
+        "id": "gsm8k_train_107"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nA plumber is trying to decide which of three different jobs he should take to make the most money.  The first job involves fixing three toilets and three sinks at an apartment complex.  The second involves two toilets and five sinks at a different apartment complex.  The third involves fixing one toilet, two showers and three sinks at a third apartment complex.  If the plumber charges $30 to fix a sink, $40 to fix a shower and $50 to fix a toilet, what is the most money the plumber can earn if he can only choose one of these three jobs?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To determine which job the plumber should take to earn the most money, we need to calculate the total earnings for each job based on the given rates:\n\n1. **First Job:**\n   - Fixing 3 toilets: \\(3 \\times 50 = 150\\) dollars\n   - Fixing 3 sinks: \\(3 \\times 30 = 90\\) dollars\n   - Total for the first job: \\(150 + 90 = 240\\) dollars\n\n2. **Second Job:**\n   - Fixing 2 toilets: \\(2 \\times 50 = 100\\) dollars\n   - Fixing 5 sinks: \\(5 \\times 30 = 150\\) dollars\n   - Total for the second job: \\(100 + 150 = 250\\) dollars\n\n3. **Third Job:**\n   - Fixing 1 toilet: \\(1 \\times 50 = 50\\) dollars\n   - Fixing 2 showers: \\(2 \\times 40 = 80\\) dollars\n   - Fixing 3 sinks: \\(3 \\times 30 = 90\\) dollars\n   - Total for the third job: \\(50 + 80 + 90 = 220\\) dollars\n\nComparing the totals:\n- First job: 240 dollars\n- Second job: 250 dollars\n- Third job: 220 dollars\n\nThe second job offers the highest earnings.\n\n[ANSWER]\nAnswer: 250\n",
+        "generated_tokens": 309,
+        "pred_answer": "250",
+        "true_answer": "250",
+        "correct": true,
+        "id": "gsm8k_train_774"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nA company has 1000 employees. There will be three rounds of layoffs. For each round of layoff, 10% of the remaining employees will be laid off. How many employees will be laid off in total?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To solve this problem, we need to calculate the number of employees laid off in each round and then sum these numbers.\n\n1. **First Round:**\n   - Initial number of employees = 1000\n   - 10% of 1000 = 0.10 * 1000 = 100 employees are laid off.\n   - Remaining employees = 1000 - 100 = 900\n\n2. **Second Round:**\n   - Initial number of employees for this round = 900\n   - 10% of 900 = 0.10 * 900 = 90 employees are laid off.\n   - Remaining employees = 900 - 90 = 810\n\n3. **Third Round:**\n   - Initial number of employees for this round = 810\n   - 10% of 810 = 0.10 * 810 = 81 employees are laid off.\n   - Remaining employees = 810 - 81 = 729\n\nNow, we sum the number of employees laid off in each round:\n\n- Total employees laid off = 100 (first round) + 90 (second round) + 81 (third round) = 271\n\nTherefore, the total number of employees laid off after all three rounds is 271.\n\n[ANSWER]\nAnswer: 271\n",
+        "generated_tokens": 271,
+        "pred_answer": "271",
+        "true_answer": "271",
+        "correct": true,
+        "id": "gsm8k_train_2508"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nMilo's parents tell him that he can win cash rewards for good grades. He will get $5 times the average grade he gets. He gets three 2s, four 3s, a 4, and a 5. How much cash does he get?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To find out how much cash Milo gets, we first need to calculate the average grade he receives.\n\nMilo's grades are:\n- Three 2s\n- Four 3s\n- One 4\n- One 5\n\nFirst, calculate the total sum of all the grades:\n\\[ \n(3 \\times 2) + (4 \\times 3) + (1 \\times 4) + (1 \\times 5) = 6 + 12 + 4 + 5 = 27 \n\\]\n\nNext, calculate the total number of grades:\n\\[ \n3 + 4 + 1 + 1 = 9 \n\\]\n\nNow, calculate the average grade:\n\\[ \n\\text{Average grade} = \\frac{\\text{Total sum of grades}}{\\text{Total number of grades}} = \\frac{27}{9} = 3 \n\\]\n\nMilo gets $5 times the average grade:\n\\[ \n5 \\times 3 = 15 \n\\]\n\nTherefore, the cash reward Milo receives is $15.\n\n[ANSWER]\nAnswer: 15\n",
+        "generated_tokens": 230,
+        "pred_answer": "15",
+        "true_answer": "15",
+        "correct": true,
+        "id": "gsm8k_train_3138"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nA fruit basket consists of 4 bananas, 3 apples, 24 strawberries, 2 avocados, and a bunch of grapes. One banana costs $1. An apple costs $2. 12 strawberries cost $4. An avocado costs $3, and half a bunch of grapes costs $2. What is the total cost of the fruit basket?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To find the total cost of the fruit basket, we need to calculate the cost of each type of fruit and then sum them up.\n\n1. **Bananas**: There are 4 bananas, and each banana costs $1.\n   \\[\n   \\text{Cost of bananas} = 4 \\times 1 = 4\n   \\]\n\n2. **Apples**: There are 3 apples, and each apple costs $2.\n   \\[\n   \\text{Cost of apples} = 3 \\times 2 = 6\n   \\]\n\n3. **Strawberries**: There are 24 strawberries, and 12 strawberries cost $4.\n   \\[\n   \\text{Cost of strawberries} = \\left(\\frac{24}{12}\\right) \\times 4 = 2 \\times 4 = 8\n   \\]\n\n4. **Avocados**: There are 2 avocados, and each avocado costs $3.\n   \\[\n   \\text{Cost of avocados} = 2 \\times 3 = 6\n   \\]\n\n5. **Grapes**: There is 1 bunch of grapes, and half a bunch costs $2.\n   \\[\n   \\text{Cost of grapes} = 2 \\times 2 = 4\n   \\]\n\nNow, add up all the costs:\n\\[\n\\text{Total cost} = 4 + 6 + 8 + 6 + 4 = 28\n\\]\n\nTherefore, the total cost of the fruit basket is $28.\n\n[ANSWER]\nAnswer: 28\n",
+        "generated_tokens": 337,
+        "pred_answer": "28",
+        "true_answer": "28",
+        "correct": true,
+        "id": "gsm8k_train_4517"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nRonald is rolling a die and won't stop rolling until the average of all his rolls is a 3. He rolls a 1, a 3, a 2, a 4, a 3, a 5, a 3, a 4, a 4 and a 2. What does he need to roll on the next roll to be able to stop?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To solve this problem, we need to find the number that Ronald should roll next so that the average of all his rolls equals 3.\n\nFirst, let's calculate the sum of the rolls he has already made:\n\n1 + 3 + 2 + 4 + 3 + 5 + 3 + 4 + 4 + 2 = 31\n\nHe has rolled the die 10 times so far.\n\nLet \\( x \\) be the number he needs to roll next. After this roll, the total number of rolls will be 11, and the sum of all rolls will be \\( 31 + x \\).\n\nThe average of all rolls should be 3, so we set up the equation for the average:\n\n\\[\n\\frac{31 + x}{11} = 3\n\\]\n\nTo find \\( x \\), multiply both sides by 11:\n\n\\[\n31 + x = 33\n\\]\n\nSubtract 31 from both sides:\n\n\\[\nx = 2\n\\]\n\nTherefore, Ronald needs to roll a 2 on his next roll to achieve an average of 3.\n\n[ANSWER]\nAnswer: 2\n",
+        "generated_tokens": 237,
+        "pred_answer": "2",
+        "true_answer": "2",
+        "correct": true,
+        "id": "gsm8k_train_6083"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nFour days' temperatures were recorded for Wayupnorth, Canada. The temperatures were: -36 degrees Fahrenheit, +13 degrees Fahrenheit, -15 degrees Fahrenheit, and -10 degrees Fahrenheit. What was the average number of degrees (Fahrenheit) in Wayupnorth, Canada on the 4 days recorded?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To find the average temperature over the four days, you need to add up all the temperatures and then divide by the number of days.\n\nThe temperatures are: -36, +13, -15, and -10 degrees Fahrenheit.\n\nFirst, add the temperatures together:\n\n-36 + 13 + (-15) + (-10) = -36 + 13 - 15 - 10\n\nCalculate step by step:\n\n-36 + 13 = -23\n\n-23 - 15 = -38\n\n-38 - 10 = -48\n\nNow, divide the total by the number of days (4):\n\n-48 \u00f7 4 = -12\n\nSo, the average temperature over the four days is -12 degrees Fahrenheit.\n\n[ANSWER]\nAnswer: -12\n",
+        "generated_tokens": 160,
+        "pred_answer": "-12",
+        "true_answer": "-12",
+        "correct": true,
+        "id": "gsm8k_train_6189"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nJoey needs to take a new prescription. The first day he needs to take one pill. Each day he must take two more pills than the previous day. How many pills will he take in a week?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To find out how many pills Joey will take in a week, we need to calculate the total number of pills he takes each day and then sum them up for the week.\n\n- On the first day, Joey takes 1 pill.\n- On the second day, he takes 1 + 2 = 3 pills.\n- On the third day, he takes 3 + 2 = 5 pills.\n- On the fourth day, he takes 5 + 2 = 7 pills.\n- On the fifth day, he takes 7 + 2 = 9 pills.\n- On the sixth day, he takes 9 + 2 = 11 pills.\n- On the seventh day, he takes 11 + 2 = 13 pills.\n\nNow, we sum up the pills taken each day:\n\n1 + 3 + 5 + 7 + 9 + 11 + 13 = 49\n\nTherefore, Joey will take a total of 49 pills in a week.\n\n[ANSWER]\nAnswer: 49\n",
+        "generated_tokens": 215,
+        "pred_answer": "49",
+        "true_answer": "49",
+        "correct": true,
+        "id": "gsm8k_train_6778"
+    }
+]
