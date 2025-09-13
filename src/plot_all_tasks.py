@@ -2,7 +2,14 @@ import json
 import re
 import os
 import shutil
-import random
+# import random
+# from matplotlib.lines import Line2D
+from matplotlib.collections import LineCollection
+from matplotlib.patches import Rectangle
+
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize, LinearSegmentedColormap
+
 import pandas as pd
 import glob
 import argparse
@@ -21,11 +28,9 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--n_buckets", type=int, default=4)
     parser.add_argument("--models", nargs='+')
-    parser.add_argument("--f2_models", nargs='+')
     parser.add_argument("--delete_old", action="store_true")
     parser.add_argument("--all_tasks", nargs='+', default=['array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'dyck', 'cruxeval', 'logical_deduction'])
     parser.add_argument("--f1_tasks", nargs='+', default=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'cruxeval', 'logical_deduction'])
-    parser.add_argument("--f2_tasks", nargs='+', default=['dyck', 'array_idx', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'logical_deduction'])
 
     args = parser.parse_args()
     args.foldername = os.path.join(
@@ -88,10 +93,12 @@ def load_task_data(taskname, compute_random, foldername_parser, dfa_factors, out
         
     return df
 
-def load_data(args, kwargs, filter_stddev_count=1, include_all=False):
+
+def load_data(args, kwargs, filter_stddev_count=1, include_all=False, nocot=False):
     all_df = None
     for task in args.all_tasks:
         compute_random, foldername_parser, dfa_factors_order, output_folder = get_task_info(task)
+        if nocot: output_folder = output_folder.rstrip() + "_nocot"
         if include_all: compute_random = lambda x: -100.
         task_df = load_task_data(task, compute_random, foldername_parser, list(dfa_factors_order.keys()) + ["Model"], output_folder)
         if all_df is not None:
@@ -296,6 +303,176 @@ def plot_correctness_by_ttoks_model_pairs(df, models_and_tasks, kwargs, normaliz
     os.makedirs(os.path.join(kwargs['foldername']), exist_ok=True)
     plt.savefig(os.path.join(kwargs['foldername'], plot_filename), bbox_inches="tight")
     plt.clf()
+import os
+import math
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize, LinearSegmentedColormap
+import pandas as pd
+
+def plot_fig1_on_ax_gray_avg(ax, task, df, kwargs, include_raw, clamp_upper, y_normalization, ylabel=None, xlabel=None):
+    """
+    Plot every model’s mean curve in gray, then compute & plot the average
+    across all models in red. X‐domain is first normalized per‐model as before,
+    and we only average over the intersection of all per‐model domains.
+    """
+    # 1) Gather each model’s mean‐curve on its own grid
+    all_min_x = []
+    all_max_x = []
+    model_grids = []
+    model_means = []
+    
+    df_task = df[df["task"] == task]
+    for model_name in df_task["Model"].unique():
+        # Build per‐(k,N) curves
+        curves_list = []
+        model_subdf = df_task[df_task["Model"] == model_name]
+        for (k_val, n_val), group_kN in model_subdf.groupby(["k", "N"]):
+            if group_kN.empty:
+                continue
+
+            bucket_avg, _ = calculate_buckets(
+                group_kN,
+                n_buckets=kwargs["n_buckets"],
+                bucket_by="No gen toks",
+                bucket_name="Toks Bucket",
+                y_axis="Correct?",
+                groupby_key="Model",
+            )
+            if bucket_avg is None or bucket_avg.empty:
+                continue
+
+            idx_peak = bucket_avg["Correct?"].idxmax()
+            peak_x = bucket_avg.loc[idx_peak, "Toks Bucket Center"]
+            bucket_min_x = bucket_avg["Toks Bucket Center"].min()
+            if peak_x == bucket_min_x:
+                bucket_min_x -= 1
+
+            def scale_point(point):
+                scaled = (point - peak_x) / (peak_x - bucket_min_x)
+                return scaled if (scaled <= clamp_upper) else None
+
+            bucket_sorted = bucket_avg.sort_values("Toks Bucket Center")
+            xs = [scale_point(row["Toks Bucket Center"]) for _, row in bucket_sorted.iterrows()]
+            xs = [x for x in xs if x is not None]
+            ys = [row["Correct?"] for _, row in bucket_sorted.iterrows()][: len(xs)]
+            
+            if len(xs) >= 2:
+                curves_list.append((np.array(xs), np.array(ys)))
+
+        if not curves_list:
+            continue
+
+        # Determine this model’s interpolation grid
+        all_x = np.concatenate([c[0] for c in curves_list])
+        min_x = all_x.min()
+        max_x = all_x.max() if all_x.max() > min_x else min_x + 1e-3
+        all_min_x.append(min_x)
+        all_max_x.append(max_x)
+
+        grid = np.linspace(min_x, max_x, 100)
+        # Interpolate each curve onto that grid, then average
+        interpolated = []
+        for (xs, ys) in curves_list:
+            sort_idx = np.argsort(xs)
+            xs_s = xs[sort_idx]
+            ys_s = ys[sort_idx]
+            interp_y = np.interp(grid, xs_s, ys_s, left=np.nan, right=np.nan)
+            interpolated.append(interp_y)
+        interpolated = np.vstack(interpolated)  # shape = (num_curves, 100)
+        mean_curve = np.nanmean(interpolated, axis=0)
+        mean_curve = y_normalization(mean_curve)
+
+        # Store this model’s grid & mean
+        model_grids.append(grid)
+        model_means.append(mean_curve)
+
+        # Plot the model’s mean in gray
+        ax.plot(grid, mean_curve, color="gray", alpha=0.6)
+
+    # 2) If we have at least one model, compute the intersection domain
+    if model_grids:
+        intersection_min = max(all_min_x)
+        intersection_max = min(all_max_x)
+        if intersection_max > intersection_min:
+            common_grid = np.linspace(intersection_min, intersection_max, 100)
+            reinterp_curves = []
+            for grid_i, mean_i in zip(model_grids, model_means):
+                # interpolate each model’s mean onto common_grid
+                y_on_common = np.interp(common_grid, grid_i, mean_i, left=np.nan, right=np.nan)
+                reinterp_curves.append(y_on_common)
+            reinterp_curves = np.vstack(reinterp_curves)
+            overall_mean = np.nanmean(reinterp_curves, axis=0)
+            # Plot the overall average in red, with a bit more thickness
+            ax.plot(common_grid, overall_mean, color="red", linewidth=2.5, label="Overall Avg")
+
+    # 3) Set limits, grid, labels, and ticks
+    ax.set_xlim(-1.2, 1.2)
+    ax.grid(True, linestyle="--", alpha=0.6)
+    if ylabel:
+        ax.set_ylabel(ylabel)
+    if xlabel:
+        ax.set_xlabel(xlabel)
+
+    # X‐ticks at -1.2 and 0, labeled “0” and “L*”
+    ax.set_xticks([-1.2, 0])
+    ax.set_xticklabels(["0", "L*"])
+
+    ax.set_title(task_full_names[task])
+
+
+def fig1_gray_avg_all_tasks(tasks, df, kwargs, include_raw, clamp_upper, n_cols, y_normalization=lambda x: x, suffix=""):
+    """
+    Same as fig1_all_tasks, but each subplot shows:
+      - All model‐mean curves in gray
+      - One red curve = the average across all model‐means
+    """
+    n_tasks = len(tasks)
+    n_rows = math.ceil(n_tasks / n_cols)
+    fig, axes = plt.subplots(n_rows, n_cols, figsize=(n_cols * 6, n_rows * 4))
+
+    # Flatten axes array
+    if n_tasks == 1:
+        axes = [axes]
+    else:
+        axes = axes.flatten()
+
+    for i, task in enumerate(tasks):
+        ax = axes[i]
+        ylabel = "Accuracy" if i % n_cols == 0 else None
+        xlabel = "Sequence length (normalized)" if i >= (n_rows - 1) * n_cols else None
+
+        plot_fig1_on_ax_gray_avg(
+            ax, task, df, kwargs,
+            include_raw=include_raw,
+            clamp_upper=clamp_upper,
+            y_normalization=y_normalization,
+            xlabel=xlabel,
+            ylabel=ylabel
+        )
+
+    # Delete any extra axes
+    for j in range(i + 1, len(axes)):
+        fig.delaxes(axes[j])
+
+    # (Optional) draw a small legend for the red line only
+    # Place it beneath the subplots, centered
+    fig.legend(
+        handles=[plt.Line2D([], [], color="red", linewidth=2.5)],
+        labels=["Overall Avg"],
+        loc="lower center",
+        bbox_to_anchor=(0.5, -0.01),
+        frameon=False
+    )
+
+    plt.tight_layout(rect=[0, 0.05, 1, 1])
+    out_pdf = os.path.join(kwargs["foldername"], f"fig1_gray_avg{suffix}.pdf")
+    fig.savefig(out_pdf, bbox_inches="tight")
+    out_png = os.path.join(kwargs["foldername"], f"fig1_gray_avg{suffix}.png")
+    fig.savefig(out_png, bbox_inches="tight")
+    plt.clf()
 
 def plot_fig1_on_ax(ax, task, df, kwargs, include_raw, clamp_upper, y_normalization, ylabel=None, xlabel=None):
     """
@@ -438,15 +615,73 @@ def fig1_all_tasks(tasks, df, kwargs, include_raw, clamp_upper, n_cols, y_normal
     # Remove any extra subplots if the grid has more slots than tasks.
     for j in range(i + 1, len(axes)):
         fig.delaxes(axes[j])
+
+    fig.tight_layout(rect=[0, 0.05, 1, 1])  
+    orange_colors = list(rl_model_colors.values())
+    blue_colors   = list(nonrl_model_colors.values())
+
+    cmap_rl = LinearSegmentedColormap.from_list("rl_gradient", orange_colors)
+    cmap_it = LinearSegmentedColormap.from_list("it_gradient",   blue_colors)
+
+    norm = Normalize(vmin=0, vmax=1)  # both bars go from 0→1
+    # 3) Add two super-thin, short axes for the colorbars
+    bar_height = 0.008    # very thin
+    bar_width  = 0.25    # about a quarter of the figure width
+    y_pos      = 0.05    # 5% up from the bottom
+    x_left     = 0.25
+    x_right    = x_left + bar_width + 0.1  # small gap between bars
+
+    cax1 = fig.add_axes([x_left,  y_pos, bar_width, bar_height])
+    cax2 = fig.add_axes([x_right, y_pos, bar_width, bar_height])
+
+    # 4) Draw horizontal colorbars with no ticks or spines
+    for cax, cmap, label in [
+        (cax1, cmap_rl, "COT-RL Models"),
+        (cax2, cmap_it, "Instruction-tuned Models")
+    ]:
+        cb = fig.colorbar(
+            ScalarMappable(norm=norm, cmap=cmap),
+            cax=cax,
+            orientation="horizontal",
+            ticks=[]      # no tick marks
+        )
+        cb.set_label(label, labelpad=2)
+        # remove any spines
+        for spine in cax.spines.values():
+            spine.set_visible(False)
+        # remove the actual axes lines/ticks
+        cax.set_xticks([])
+        cax.set_yticks([])
+
+    # figure‐coords of the lower‐left corner of the box
+    pad = 0.015        #  padding around bars
+    box_x = x_left - pad
+    box_y = y_pos - 2*bar_height - 0.8*pad
+    # total width: two bars + inter‐bar gap + 2×pad
+    box_w = bar_width*2 + (x_right - x_left - bar_width) + 2*pad
+    box_h = 2*bar_height + 2*pad
+
+    # create a non‐filled rectangle in figure coords
+    rect = Rectangle(
+        (box_x, box_y), box_w, box_h,
+        transform=fig.transFigure,  # interpret x/y/w/h in [0,1] fig coords
+        fill=False,
+        edgecolor="black",
+        linewidth=1
+    )
+    fig.add_artist(rect)
+
     
-    plt.tight_layout()
     out_filename = os.path.join(kwargs["foldername"], f"fig1{suffix}.pdf")
+    plt.savefig(out_filename, bbox_inches="tight")
+    out_filename = os.path.join(kwargs["foldername"], f"fig1{suffix}.png")
     plt.savefig(out_filename, bbox_inches="tight")
     plt.clf()
 
     # make latex table from task_to_model_to_taskwise_Lstars: rows are models, columns are tasks.
     # cells are min and max L*s for the diff k, N configs.. displayed as [low, ... high]
     # Now, produce the LaTeX code for the final summary table:
+
     latex_lines = []
     latex_lines.append(r"\begin{table}[h]")
     latex_lines.append(r"    \centering")
@@ -657,11 +892,84 @@ def fig2(select_tasks, select_models, df, kwargs, fig_suffix, plot_confidence=Fa
             # ax.set_yticklabels([])
             # ax.set_xticklabels([])
 
-    # Tight layout for the entire figure
-    fig.tight_layout()
+    # ===== 1) add extra x‐ticks but only label 0.0 =====
+    for ax in axes:
+        ticks = np.linspace(0, 1, 5)            # e.g. [0.0, 0.25, 0.5, 0.75, 1.0]
+        ax.set_xticks(ticks)
+        ax.set_xticklabels([f"{tick:.1f}" for tick in np.linspace(0, 1, 5)])
+    
+    # ===== 2) make room at the bottom (just enough) =====
+    fig.tight_layout(rect=[0, 0.1, 1, 0.55])  
+    # fig.subplots_adjust(bottom=0.08)  # leave ~18% of figure height for bars
 
-    # Save once, containing both subplots
-    out_filename = os.path.join(kwargs["foldername"], f"fig2{fig_suffix}.pdf")
+    # prepare the two colormaps
+    cmap_rl = LinearSegmentedColormap.from_list("rl_grad", list(rl_model_colors.values()))
+    cmap_it = LinearSegmentedColormap.from_list("it_grad", list(nonrl_model_colors.values()))
+    norm    = Normalize(vmin=0, vmax=1)
+
+    # 2) draw a centered legend title
+    # fig.text(
+    #     0.5,            # x-center
+    #     0.11,           # y just above the bars
+    #     "Model Types",  
+    #     ha="center",
+    #     va="bottom",
+    #     # fontsize="medium",
+    #     # fontweight="bold"
+    # )
+
+    # bar geometry
+    bar_h   = 0.004   # thin
+    bar_w   = 0.3
+    y0      = 0.1   # % up from bottom of fig
+    x0      = 0.2
+    x1      = x0 + bar_w + 0.1
+
+    # tiny axes for the bars
+    cax1 = fig.add_axes([x0,  y0, bar_w, bar_h])
+    cax2 = fig.add_axes([x1,  y0, bar_w, bar_h])
+
+    for cax, cmap, label in [(cax1, cmap_rl, "COT-RL Models"),
+                             (cax2, cmap_it, "Instruction-tuned Models")]:
+        cb = fig.colorbar(
+            ScalarMappable(norm=norm, cmap=cmap),
+            cax=cax, orientation="horizontal", ticks=[]
+        )
+        cb.set_label(label, labelpad=2, fontsize='small')
+
+        # now hide spines & ticks on the cax
+        for spine in cax.spines.values():
+            spine.set_visible(False)
+        cax.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
+
+        # ensure the label is drawn on the colorbar axis
+        # (horizontal colorbars default label position is 'bottom')
+        cb.ax.xaxis.set_label_position('bottom')
+        cb.ax.xaxis.set_ticks_position('none')
+
+
+    # figure‐coords of the lower‐left corner of the box
+    pad = 0.015        #  padding around bars
+    box_x = x0 - pad
+    box_y = y0 - 7*bar_h
+    # total width: two bars + inter‐bar gap + 2×pad
+    box_w = bar_w*2 + (x1 - x0 - bar_w) + 2*pad
+    box_h = 2*bar_h + 2*pad
+
+    # create a non‐filled rectangle in figure coords
+    rect = Rectangle(
+        (box_x, box_y), box_w, box_h,
+        transform=fig.transFigure,  # interpret x/y/w/h in [0,1] fig coords
+        fill=False,
+        edgecolor="black",
+        linewidth=1
+    )
+    fig.add_artist(rect)
+
+    # ===== 3) save, no further tight_layout calls =====
+    out = os.path.join(kwargs["foldername"], f"fig2{fig_suffix}.pdf")
+    fig.savefig(out, bbox_inches="tight")
+    out_filename = os.path.join(kwargs["foldername"], f"fig2{fig_suffix}.png")
     fig.savefig(out_filename, bbox_inches="tight")
     plt.close(fig)
 
@@ -1115,7 +1423,6 @@ def generation_lengths(df, kwargs):
 
     tick_positions = []
     labels = []
-    plotted_something = False
 
     # Iterate over models and optionally by_factor
     for i, (model, model_df) in enumerate(model_data.items(), start=1):
@@ -1278,6 +1585,95 @@ def scatter_len_to_acc(df, kwargs):
     plt.savefig(out_filename, bbox_inches="tight")
     plt.clf()
 
+def compare_nocot(df, df_nocot, kwargs):
+    """
+    Compare average accuracy with vs. without CoT, but only for models
+    that appear in both DataFrames, and only for generations with fewer
+    than 25 “No gen toks”.
+
+    Args:
+      df       : DataFrame containing CoT runs with columns
+                 ['Model','task','k','N','Correct?','No gen toks'].
+      df_nocot : DataFrame containing No-CoT runs with same schema.
+      kwargs   : (unused here, present for API consistency).
+
+    Returns:
+      A string containing a LaTeX tabular (with columns: Task, No-CoT, With-CoT).
+    """
+    # 1) Find the set of models that appear in both DataFrames
+    models_with   = set(df["Model"].unique())
+    models_nocot  = set(df_nocot["Model"].unique())
+    shared_models = sorted(models_with.intersection(models_nocot))
+    if not shared_models:
+        raise ValueError("No shared models between df and df_nocot.")
+
+    # 2) Filter both DataFrames to only those shared models
+    df_shared       = df[df["Model"].isin(shared_models)].copy()
+    df_nocot_shared = df_nocot[df_nocot["Model"].isin(shared_models)].copy()
+
+    # 2a) Further filter to “No gen toks” < 25
+    df_nocot_shared = df_nocot_shared[df_nocot_shared["No gen toks"] < 25]
+
+    # 3) Compute per‐model, per‐task accuracy (averaging over all (k,N) bins)
+    def per_model_task_accuracy(df_in, label_name):
+        """
+        Returns a DataFrame with columns ['Model','task','acc'] where 'acc'
+        is the mean of 'Correct?' across all (k,N) for that model+task.
+        """
+        # First, group by Model, task, k, N and take the mean of "Correct?"
+        grp = (
+            df_in
+            .groupby(["Model", "task", "k", "N"])["Correct?"]
+            .mean()
+            .reset_index(name="acc_kN")
+        )
+        # Next, group by Model, task and average those acc_kN values
+        per_model_task = (
+            grp
+            .groupby(["Model", "task"])["acc_kN"]
+            .mean()
+            .reset_index(name=label_name)
+        )
+        return per_model_task
+
+    df_acc_with   = per_model_task_accuracy(df_shared,       label_name="acc_with")
+    df_acc_nocot  = per_model_task_accuracy(df_nocot_shared, label_name="acc_nocot")
+
+    # 4) Merge the two per‐model‐task tables on (Model, task)
+    merged = pd.merge(
+        df_acc_nocot,
+        df_acc_with,
+        on=["Model", "task"],
+        how="inner"
+    )
+    # Now 'merged' has columns: ['Model','task','acc_nocot','acc_with']
+
+    # 5) For each task, average acc_nocot and acc_with across all shared models
+    result = (
+        merged
+        .groupby("task")[["acc_nocot", "acc_with"]]
+        .mean()
+        .reset_index()
+    )
+    # result now has columns: ['task','acc_nocot','acc_with'] (one row per task)
+
+    # 6) Build a LaTeX tabular
+    lines = []
+    lines.append(r"\begin{tabular}{lrr}")
+    lines.append(r"\toprule")
+    lines.append(r"Task & No-CoT & With-CoT \\")
+    lines.append(r"\midrule")
+    for _, row in result.iterrows():
+        task = row["task"]
+        no   = row["acc_nocot"]
+        wi   = row["acc_with"]
+        lines.append(f"{task} & {no:.2f} & {wi:.2f} \\\\")
+    lines.append(r"\bottomrule")
+    lines.append(r"\end{tabular}")
+
+    return "\n".join(lines)
+
+
 # python src/plot_all_tasks.py --models ${ALL_MODELS_PLOTTING}
 if __name__ == "__main__":
     args = get_args()
@@ -1300,10 +1696,13 @@ if __name__ == "__main__":
         "to_highlight": to_highlight
     }
 
-    # df = load_data(
-    #     args,
-    #     plot_kwargs,
-    # )
+    df = load_data(
+        args,
+        plot_kwargs,
+    )
+
+    # df_nocot = load_data(args, plot_kwargs, include_all=True, nocot=True)
+    # print(compare_nocot(df, df_nocot, plot_kwargs))
 
     # def relative_to_start(y_curve):
     #     original_val = y_curve[0]
@@ -1319,7 +1718,8 @@ if __name__ == "__main__":
     #     norm_y = [(y_val - min_val)/(max_val - min_val) for y_val in y_curve]
     #     return norm_y
         
-    # fig1_all_tasks(args.f1_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix='_9')
+    fig1_gray_avg_all_tasks(args.f1_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix='_9')
+    fig1_all_tasks(args.f1_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix='_9')
     # fig1_all_tasks(args.all_tasks, df, plot_kwargs, include_raw=False, clamp_upper=2, n_cols=3, suffix="_all")
     
     # fig2(args.all_tasks, args.models, df, plot_kwargs, '_all')
@@ -1327,14 +1727,14 @@ if __name__ == "__main__":
     
     # fig3(args.all_tasks, df, plot_kwargs, "")
 
-    nonfiltered_df = load_data(
-        args,
-        plot_kwargs,
-        filter_stddev_count=0,
-        include_all=True,
-    )
+    # nonfiltered_df = load_data(
+    #     args,
+    #     plot_kwargs,
+    #     filter_stddev_count=0,
+    #     include_all=True,
+    # )
     # generation_lengths(nonfiltered_df, plot_kwargs)
-    scatter_len_to_acc(nonfiltered_df, plot_kwargs)
+    # scatter_len_to_acc(nonfiltered_df, plot_kwargs)
 
     # plot_correctness_by_ttoks(df, plot_kwargs)
     # model_pairs = [

@@ -285,9 +285,9 @@ Input: {dyck_word}
             return dyck_string, False
 
     def generate_random(self, generator, kdN):
-        nesting_level = kdN['k']
-        num_symbols = kdN['d']
-        length = kdN['N']
+        nesting_level = int(kdN['k'])
+        num_symbols = int(kdN['d'])
+        length = int(kdN['N'])
 
         prompts = []
         true_answers = []
@@ -385,8 +385,8 @@ truth_value = {expression}
 
     def generate_random(self, generator, kN):
         _ALL_OPERATORS = ["and", "or", "not", "xor"]
-        num_diff_ops = kN['k']
-        nesting_level = kN['N']
+        num_diff_ops = int(kN['k'])
+        nesting_level = int(kN['N'])
         prompts = []
         true_answers = []
         while len(prompts) < generator.max_batch_size:
@@ -491,9 +491,9 @@ class NavigateTask(Task):
         return [template.format(num_steps=num_steps, multiplier_s=multiplier_s, direction=directions[dim_to_move][direction_idx])] + rest_of_navigation, actually_ends_at_start
 
     def generate_random(self, generator, kdN):
-        max_distance_away = kdN['k']
-        num_dimensions = kdN['d']
-        target_length = kdN['N']
+        max_distance_away = int(kdN['k'])
+        num_dimensions = int(kdN['d'])
+        target_length = int(kdN['N'])
         prompts = []
         true_answers = []
         while len(prompts) < generator.max_batch_size:
@@ -631,9 +631,9 @@ answer = {expression}
 
     def generate_random(self, generator, kmN):
         _ALL_OPERATORS = ["+", "*", "-"]
-        num_diff_ops = kmN['k']
-        number_range = kmN['m']
-        num_steps = kmN['N']
+        num_diff_ops = int(kmN['k'])
+        number_range = int(kmN['m'])
+        num_steps = int(kmN['N'])
         prompts = []
         true_answers = []
         while len(prompts) < generator.max_batch_size:
@@ -1014,3 +1014,53 @@ The following sentences each describe a set of {num_objects} objects arranged in
             prompt += self.query_template.format(num_objects=num2words(num_objects), intro=intro_str, sequence=sequence_str, final_question=final_question_str) + "\n"
             prompt += self.generation_instruction
         return prompt
+
+class AddPrimesTask(Task):
+    def  __init__(self):
+        super(AddPrimesTask, self).__init__("add_primes",  r'Answer\s*:\s*(.+)')
+        self.foldername = "add_primes/outputs"
+        self.primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317, 331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443, 449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509, 521, 523, 541]
+
+        self.query_template = """What is the {k_query}sum of the first {N} primes numbers?"""
+        self.generation_instruction = "Provide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]"
+        self.reprompt_string = "[ANSWER]\nAnswer: "
+
+    def create_subfolder_name(self, dfa_kwargs, force_no_cot):
+        subfolder = os.path.join(f"{self.foldername}{'_nocot' if force_no_cot else ''}", f"k{dfa_kwargs['k']}_N{dfa_kwargs['N']}")
+        return subfolder
+
+    def make_prompt(self, generator, k, N):
+        if k == "all": k_query = ""
+        elif str(k) == '10': k_query = "ones digit of the "
+        if 'tokenizer' in dir(generator) and generator.tokenizer.chat_template:
+            if "gemma" in generator.model_name:
+                messages = [{
+                    "role": "user",
+                    "content": self.system_instruction + "\n\n" + self.query_template.format(k_query=k_query, N=N) + "\n" + self.generation_instruction
+                }]
+                prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            elif generator.tokenizer.chat_template:
+                messages = [{
+                    "role": "system",
+                    "content": self.system_instruction
+                },
+                {
+                    "role": "user",
+                    "content": self.query_template.format(k_query=k_query, N=N) + "\n" + self.generation_instruction
+                }]
+                prompt = generator.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            else:
+                breakpoint()
+        else:
+            prompt = self.system_instruction + "\n\n"
+            prompt += self.query_template.format(k_query=k_query, N=N) + "\n"
+            prompt += self.generation_instruction
+        return prompt
+
+    def generate_random(self, generator, kN):
+        k = kN['k']
+        N = kN['N']
+        prompts = [self.make_prompt(generator, k, N)]
+        true_answers = [sum(self.primes[:N])]
+        return prompts, true_answers
+

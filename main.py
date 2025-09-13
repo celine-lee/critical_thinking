@@ -22,25 +22,25 @@ def get_args():
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--num_beams", type=int, default=1)
     parser.add_argument("--num_gens_per", type=int, default=1)
-    parser.add_argument("--max_num_tokens", type=int, default=20000)
+    parser.add_argument("--max_new_tokens", type=int, default=20000)
     parser.add_argument("--min_num_tokens", type=int, default=3)
     parser.add_argument("--n_samples_per", type=int, default=40)
     parser.add_argument("--batch_size", type=int, default=4)
     parser.add_argument("--d_vals", type=int, nargs='+') 
     parser.add_argument("--m_vals", type=int, nargs='+') 
-    parser.add_argument("--k_vals", type=int, nargs='+') 
+    parser.add_argument("--k_vals", nargs='+') 
     parser.add_argument("--N_vals", type=int, nargs='+')
     parser.add_argument("--models", nargs='+')
     parser.add_argument("--disable_cot", action="store_true")
     parser.add_argument("--generator", choices=['hf', 'openai', 'deepseek', 'vllm', 'together'])
-    parser.add_argument("--task", choices=['dyck', 'array_idx', 'cruxeval', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'logical_deduction'])
+    parser.add_argument("--task", choices=['dyck', 'array_idx', 'cruxeval', 'even_odd', 'navigate', 'bool', 'arith', 'shuffled_objects', 'web_of_lies', 'logical_deduction', 'add_primes', 'gsm8k'])
     args = parser.parse_args()
     return args
 
 def run(args):
     print(args.generator)
     gen_kwargs = {
-        "max_new_tokens": args.max_num_tokens,
+        "max_new_tokens": args.max_new_tokens,
         "min_new_tokens": args.min_num_tokens,
         "num_beams": args.num_beams, 
         "stop_strings": ["[/ANSWER]"],
@@ -71,7 +71,11 @@ def run(args):
             task = LogicalDeductionTask()
         case 'cruxeval':
             task = CRUXEvalTask()
-            # experimentor_class = CRUXEvalExperimenter
+        case "add_primes":
+            task = AddPrimesTask()
+        case 'gsm8k':
+            from src.nondfa_task import GSM8kTask
+            task = GSM8kTask()
 
     match args.generator:
         case 'openai':
@@ -93,22 +97,20 @@ def run(args):
             if modelname in modelname_mappings:
                 modelname = modelname_mappings[modelname]
             task.load_remaining_inputs(modelname)
-        # if args.task == 'cruxeval':
-        #     experimentor.run()
-        #     model_generator.free_and_delete()
-        #     continue
 
-        keys = ["k", "N"]
-        values = [args.k_vals, args.N_vals]
-        if args.m_vals: 
-            keys.append("m")
-            values.append(args.m_vals)
-        if args.d_vals: 
-            keys.append("d")
-            values.append(args.d_vals)
+        if args.task != "gsm8k":
+            keys = ["k", "N"]
+            values = [args.k_vals, args.N_vals]
+            if args.m_vals: 
+                keys.append("m")
+                values.append(args.m_vals)
+            if args.d_vals: 
+                keys.append("d")
+                values.append(args.d_vals)
 
-        all_dfa_configs = [dict(zip(keys, combination)) for combination in itertools.product(*values)]
-        
+            all_dfa_configs = [dict(zip(keys, combination)) for combination in itertools.product(*values)]
+        else: all_dfa_configs = [{}]
+
         tokens_generated = 0
         start_time = time.time()
         for dfa_config in all_dfa_configs:
