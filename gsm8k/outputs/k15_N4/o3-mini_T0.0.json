@@ -1,0 +1,29 @@
+[
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nA farmer harvested 250 potatoes. He bundled them in twenty-five's and sold each bundle for $1.90. He also harvested 320 carrots and bundled them in twenty's and sold each bundle for $2. If the farmer sold all his harvested crops, how much did he get in all?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $51\n",
+        "generated_tokens": 154,
+        "pred_answer": "51",
+        "true_answer": "51",
+        "correct": true,
+        "id": "gsm8k_train_1744"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nDaniel works for a sports stadium filling water bottles for athletes. He filled 254 water bottles this season. The football team had 11 players that wanted 6 bottles each. The soccer team had him fill 53 bottles. The lacrosse team needed 12 more bottles than the football team. Each team coach during the season also wanted two bottles apiece. How many bottles did he fill for the rugby team during the final game he worked this season?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "First, we find the bottles filled for each team (excluding the rugby team):\n\n\u2022 Football team players: 11 players \u00d7 6 bottles each = 66 bottles.\n\n\u2022 Soccer team: given as 53 bottles.\n\n\u2022 Lacrosse team: 12 more than the football team, so 66 + 12 = 78 bottles.\n\nNext, consider the coaches. The problem states, \u201cEach team coach during the season also wanted two bottles apiece.\u201d Since there are four teams (football, soccer, lacrosse, and rugby\u2014the final game he worked was a rugby game), there are 4 coaches. Therefore, the coaches used 4 \u00d7 2 = 8 bottles.\n\nNow, add the bottles used for the other teams and the coaches:\n\u200366 (football) + 53 (soccer) + 78 (lacrosse) + 8 (coaches) = 205 bottles.\n\nDaniel filled a total of 254 bottles during the season. Therefore, the number of bottles filled for the rugby team is:\n\u2003254 \u2212 205 = 49 bottles.\n\n[ANSWER]\nAnswer: 49\n",
+        "generated_tokens": 1523,
+        "pred_answer": "49",
+        "true_answer": "49",
+        "correct": true,
+        "id": "gsm8k_train_4448"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nBrittany uses 1/4 ounce of shampoo to wash her hair every other day. She buys shampoo in 14-ounce bottles. How many bottles does she need to get her through a leap year?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 4\n",
+        "generated_tokens": 344,
+        "pred_answer": "4",
+        "true_answer": "4",
+        "correct": true,
+        "id": "gsm8k_train_4593"
+    }
+]

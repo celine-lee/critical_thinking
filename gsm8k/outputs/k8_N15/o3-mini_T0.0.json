@@ -1,0 +1,83 @@
+[
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nThere is very little car traffic on Happy Street. During the week, most cars pass it on Tuesday - 25. On Monday, 20% less than on Tuesday, and on Wednesday, 2 more cars than on Monday. On Thursday and Friday, it is about 10 cars each day. On the weekend, traffic drops to 5 cars per day. How many cars travel down Happy Street from Monday through Sunday?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 97\n",
+        "generated_tokens": 217,
+        "pred_answer": "97",
+        "true_answer": "97",
+        "correct": true,
+        "id": "gsm8k_train_107"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nA plumber is trying to decide which of three different jobs he should take to make the most money.  The first job involves fixing three toilets and three sinks at an apartment complex.  The second involves two toilets and five sinks at a different apartment complex.  The third involves fixing one toilet, two showers and three sinks at a third apartment complex.  If the plumber charges $30 to fix a sink, $40 to fix a shower and $50 to fix a toilet, what is the most money the plumber can earn if he can only choose one of these three jobs?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $250\n",
+        "generated_tokens": 218,
+        "pred_answer": "250",
+        "true_answer": "250",
+        "correct": true,
+        "id": "gsm8k_train_774"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nA company has 1000 employees. There will be three rounds of layoffs. For each round of layoff, 10% of the remaining employees will be laid off. How many employees will be laid off in total?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 271\n",
+        "generated_tokens": 152,
+        "pred_answer": "271",
+        "true_answer": "271",
+        "correct": true,
+        "id": "gsm8k_train_2508"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nMilo's parents tell him that he can win cash rewards for good grades. He will get $5 times the average grade he gets. He gets three 2s, four 3s, a 4, and a 5. How much cash does he get?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $15\n",
+        "generated_tokens": 280,
+        "pred_answer": "15",
+        "true_answer": "15",
+        "correct": true,
+        "id": "gsm8k_train_3138"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nA fruit basket consists of 4 bananas, 3 apples, 24 strawberries, 2 avocados, and a bunch of grapes. One banana costs $1. An apple costs $2. 12 strawberries cost $4. An avocado costs $3, and half a bunch of grapes costs $2. What is the total cost of the fruit basket?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $28\n",
+        "generated_tokens": 410,
+        "pred_answer": "28",
+        "true_answer": "28",
+        "correct": true,
+        "id": "gsm8k_train_4517"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nAn employee makes 30 dollars an hour for the first 40 hours in the workweek and an additional 50% for every hour above 40 in the week.  If he works 6 hours for the first 3 days in the workweek and twice as many hours per day for the remaining 2 days, how much money did he make?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 1290\n",
+        "generated_tokens": 281,
+        "pred_answer": "1290",
+        "true_answer": "1290",
+        "correct": true,
+        "id": "gsm8k_train_5894"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nRonald is rolling a die and won't stop rolling until the average of all his rolls is a 3. He rolls a 1, a 3, a 2, a 4, a 3, a 5, a 3, a 4, a 4 and a 2. What does he need to roll on the next roll to be able to stop?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To ensure the overall average is 3 after 11 rolls, we first calculate the total sum needed for an average of 3 over 11 rolls, which is 11 \u00d7 3 = 33. The sum of Ronald's first 10 rolls (1, 3, 2, 4, 3, 5, 3, 4, 4, 2) is 31. Therefore, he must roll a number such that 31 + next roll = 33, meaning his next roll must be 2.\n\n[ANSWER]\nAnswer: 2\n",
+        "generated_tokens": 329,
+        "pred_answer": "2",
+        "true_answer": "2",
+        "correct": true,
+        "id": "gsm8k_train_6083"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nFour days' temperatures were recorded for Wayupnorth, Canada. The temperatures were: -36 degrees Fahrenheit, +13 degrees Fahrenheit, -15 degrees Fahrenheit, and -10 degrees Fahrenheit. What was the average number of degrees (Fahrenheit) in Wayupnorth, Canada on the 4 days recorded?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: -12\n",
+        "generated_tokens": 90,
+        "pred_answer": "-12",
+        "true_answer": "-12",
+        "correct": true,
+        "id": "gsm8k_train_6189"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nJoey needs to take a new prescription. The first day he needs to take one pill. Each day he must take two more pills than the previous day. How many pills will he take in a week?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 49\n",
+        "generated_tokens": 153,
+        "pred_answer": "49",
+        "true_answer": "49",
+        "correct": true,
+        "id": "gsm8k_train_6778"
+    }
+]

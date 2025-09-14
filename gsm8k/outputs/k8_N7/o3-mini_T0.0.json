@@ -655,5 +655,266 @@
         "true_answer": "6",
         "correct": false,
         "id": "gsm8k_train_474"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nKirt has a $6000 monthly salary when he started his job. After a year of working, his salary increased by 30%. How much are his total earnings after 3 years?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $259,200\n",
+        "generated_tokens": 282,
+        "pred_answer": "259200",
+        "true_answer": "259200",
+        "correct": true,
+        "id": "gsm8k_train_480"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nJonah bought 6 pineapples for $3 each. Each pineapple could be cut into 12 pineapple rings. He sold 4 pineapple rings for $5 each. How much profit did Jonah make?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $72\n",
+        "generated_tokens": 472,
+        "pred_answer": "72",
+        "true_answer": "72",
+        "correct": true,
+        "id": "gsm8k_train_487"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nJennifer has ten pears, 20 oranges, and twice as many apples as pears. If she gives her sister two of each fruit, how many fruits does she have left?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 44\n",
+        "generated_tokens": 217,
+        "pred_answer": "44",
+        "true_answer": "44",
+        "correct": true,
+        "id": "gsm8k_train_513"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nCarla needs to drive her car to do a bunch of errands. She needs to drive 8 miles to the grocery store, 6 miles to pick up her kids from school, 12 miles to drop her kids off at soccer practice, and twice the distance from the school to soccer practice to get everyone home again. If Carla's car gets 25 miles per gallon, and gas costs $2.50, how much will Carla have to spend on gas for her trip?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "Let's break down Carla\u2019s trip step-by-step:\n\n1. She drives 8 miles to the grocery store.\n2. Then, she drives 6 miles to pick up her kids from school.\n3. Next, she drives 12 miles to drop her kids off at soccer practice.\n4. After that, she must drive \u201ctwice the distance from the school to soccer practice\u201d to get everyone home. Since the distance from school to soccer practice is 12 miles (from step 3), twice that distance is 2 \u00d7 12 = 24 miles.\n\nNow, add up all the distances:\n\u20038 + 6 + 12 + 24 = 50 miles.\n\nCarla\u2019s car gets 25 miles per gallon, so the amount of gas needed for the trip is:\n\u200350 miles \u00f7 25 mpg = 2 gallons.\n\nWith gas costing $2.50 per gallon, the total cost of the gas is:\n\u20032 gallons \u00d7 $2.50/gallon = $5.00.\n\n[ANSWER]\nAnswer: $5.00\n",
+        "generated_tokens": 1133,
+        "pred_answer": "5.00",
+        "true_answer": "5",
+        "correct": true,
+        "id": "gsm8k_train_525"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nEmery looks through the drawer where her mom keeps the cookie cutters. There are 6 cookie cutters shaped like triangles, 4 square ones and 2 hexagons. How many sides are there on the cookie cutters in total?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 46\n",
+        "generated_tokens": 88,
+        "pred_answer": "46",
+        "true_answer": "46",
+        "correct": true,
+        "id": "gsm8k_train_540"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nIn Mary's class, there are 25 students. Their teacher told them they could pay $50 each to finance a big science project that they and their society would benefit greatly from. They all paid the full amount except for 4 students, who paid half. How much was the class able to gather together?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $1150\n",
+        "generated_tokens": 89,
+        "pred_answer": "1150",
+        "true_answer": "1150",
+        "correct": true,
+        "id": "gsm8k_train_543"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nLuna's monthly food budget is equal to 60% of her house rental budget while her phone bill budget is 10% of her food budget. If the total budget of house rental and food budget is $240, how much is Luna's total monthly budget to pay all those expenses?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $249\n",
+        "generated_tokens": 218,
+        "pred_answer": "249",
+        "true_answer": "249",
+        "correct": true,
+        "id": "gsm8k_train_559"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nBetty is 60 years old, and she is the oldest person in the family. Her daughter is 40 percent younger than she is, and her granddaughter is one-third her mother's age. How old is the granddaughter?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 12\n",
+        "generated_tokens": 88,
+        "pred_answer": "12",
+        "true_answer": "12",
+        "correct": true,
+        "id": "gsm8k_train_561"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nAnthony and his friend Leonel read about the importance of keeping pets at home and decided to start adopting cats and dogs from the local rescue center. Anthony has 12 cats and dogs, 2/3 of which are cats. Leonel has half times as many cats as Anthony and seven more dogs than Anthony. How many animals in total do the two have?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "Anthony has 12 pets, with 2/3 of them being cats. That means he has (2/3) \u00d7 12 = 8 cats and 12 \u2013 8 = 4 dogs.\n\nLeonel has half as many cats as Anthony, so he has 1/2 \u00d7 8 = 4 cats. He also has seven more dogs than Anthony, so he has 4 + 7 = 11 dogs.\n\nLeonel's total animals = 4 cats + 11 dogs = 15 animals.\nCombined, Anthony and Leonel have 12 + 15 = 27 animals.\n\n[ANSWER]\nAnswer: 27\n",
+        "generated_tokens": 341,
+        "pred_answer": "27",
+        "true_answer": "27",
+        "correct": true,
+        "id": "gsm8k_train_571"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nWhen it rains, the three holes in the garage roof leak water at different rates.  The largest hole leaks at a rate of 3 ounces of water  per minute.  The medium-sized hole leaks water at one-half the rate of the largest hole.  And the smallest hole leaks water at a rate of one-third the rate of the medium-sized hole.  When it rains, what is the combined amount of water, in ounces, that leak from all three holes over a 2-hour time period?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 600\n",
+        "generated_tokens": 88,
+        "pred_answer": "600",
+        "true_answer": "600",
+        "correct": true,
+        "id": "gsm8k_train_583"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nEd and Jacob already had 2 shells in their shell collection. Then they went to the beach to collect even more. Ed found 7 limpet shells, 2 oyster shells, and 4 conch shells. Jacob found 2 more shells than Ed did. How many shells do the pair have altogether?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 30\n",
+        "generated_tokens": 153,
+        "pred_answer": "30",
+        "true_answer": "30",
+        "correct": true,
+        "id": "gsm8k_train_594"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nJohn is holding a poker night with his friends and is getting the decks of cards ready before his friends show up. After losing so many cards from various decks, John thinks he needs to count exactly how many cards he has to make sure he has enough full decks for the night. Each deck of cards should hold 52 cards. He finds 3 half-full decks of cards and 3 full decks of cards. As he is arranging them, he realizes that the quality of a lot of the cards is quite poor and decides to throw 34 of the cards in the trash. How many cards does John now have?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 200\n",
+        "generated_tokens": 152,
+        "pred_answer": "200",
+        "true_answer": "200",
+        "correct": true,
+        "id": "gsm8k_train_597"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nSantana has 7 brothers. 3 of them have birthdays in March, 1 of them has a birthday in October, 1 has a birthday in November, and another 2 of them were born in December. If Santana always buys each of her brothers a birthday present and a Christmas present, how many more presents does she have to buy in the second half of the year than the first half of the year?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 8\n",
+        "generated_tokens": 664,
+        "pred_answer": "8",
+        "true_answer": "8",
+        "correct": true,
+        "id": "gsm8k_train_604"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nIn a big box, there are marbles in 4 colors. Inside, there are 20 red marbles.  There are three times more green marbles than red.  Yellow marbles make up 20% of the green marbles. How many marbles are of a different color if the total of all marbles in the box is three times more than the number of green marbles?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 88\n",
+        "generated_tokens": 536,
+        "pred_answer": "88",
+        "true_answer": "88",
+        "correct": true,
+        "id": "gsm8k_train_606"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nKris is blowing u balloons for her sister\u2019s party. She has 30 minutes to blow up as many balloons as possible and decides to enlist her brother\u2019s help to increase the number of balloons. Kris can blow up a total of 2 balloon per minute, and her brother works twice as fast. After 15 minutes, her brother doubles his speed and works at this new speed for the remaining 15 minutes. After the 30 minutes, how many balloons, in total, did Kris and her brother blow up?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 240\n",
+        "generated_tokens": 280,
+        "pred_answer": "240",
+        "true_answer": "240",
+        "correct": true,
+        "id": "gsm8k_train_616"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nVaishali has 4 hats, each with three stripes.  She also has three hats with four stripes each, six hats with no stripes, and another two hats with 5 stripes each.  What is the combined total number of stripes Vaishali has on all of her hats?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 34\n",
+        "generated_tokens": 89,
+        "pred_answer": "34",
+        "true_answer": "34",
+        "correct": true,
+        "id": "gsm8k_train_634"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nIn the city, there is a block of flats. This block has 12 floors. Half of the floors have 6 apartments and the other half have 5 apartments. One apartment can accommodate a maximum of 4 residents. What is the maximum number of residents that can live in this block of flats?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 264\n",
+        "generated_tokens": 88,
+        "pred_answer": "264",
+        "true_answer": "264",
+        "correct": true,
+        "id": "gsm8k_train_645"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nA bus has a capacity of 200 people. If it carried 3/4 of its capacity on its first trip from city A to city B and 4/5 of its capacity on its return trip, calculate the total number of people the bus carried on the two trips?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 310\n",
+        "generated_tokens": 89,
+        "pred_answer": "310",
+        "true_answer": "310",
+        "correct": true,
+        "id": "gsm8k_train_646"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nQuinton brought 40 cupcakes to school on his birthday. He gave a cupcake to each of the 18 students in Ms. Delmont's class. He also gave a cupcake to each of the 16 students in Mrs. Donnelly's class. He also gave a cupcake to Ms. Delmont, Mrs. Donnelly, the school nurse, and the school principal. How many cupcakes did he have left over?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 2\n",
+        "generated_tokens": 216,
+        "pred_answer": "2",
+        "true_answer": "2",
+        "correct": true,
+        "id": "gsm8k_train_647"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nJosh had 100 gummy bear candies. He decided to give his 3 siblings 10 candies each. Then he gave half of the remaining candies to his best friend. If he only wants to eat 16 gummy bear candies, how many candies are left to be shared with others?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 19\n",
+        "generated_tokens": 409,
+        "pred_answer": "19",
+        "true_answer": "19",
+        "correct": true,
+        "id": "gsm8k_train_650"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nOlivia earns $9 per hour.  She worked 4 hours on Monday, 3 hours on Wednesday and 6 hours on Friday.  How much money did Olivia make this week?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $117\n",
+        "generated_tokens": 152,
+        "pred_answer": "117",
+        "true_answer": "117",
+        "correct": true,
+        "id": "gsm8k_train_651"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nA box is 8 inches in height, 10 inches in width, and 12 inches in length. A wooden building block is 3 inches in height, 2 inches in width, and 4 inches in length. How many building blocks can fit into the box?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To solve the problem, consider that the wooden block (3\u2033 \u00d7 2\u2033 \u00d7 4\u2033) can be placed in different orientations. We need to choose an orientation that maximizes the number of blocks fitting in the box (8\u2033 \u00d7 10\u2033 \u00d7 12\u2033).\n\nStep 1: List all possible orientations (permutations) of the block dimensions relative to the box dimensions.\n\nFor each orientation, compute how many blocks fit along each dimension of the box by taking the floor of (box dimension / block dimension).\n\nOne optimal orientation is:\n\u2003\u2022 Assign 4\u2033 to the 8\u2033 side,\n\u2003\u2022 Assign 2\u2033 to the 10\u2033 side,\n\u2003\u2022 Assign 3\u2033 to the 12\u2033 side.\n\nStep 2: Calculate how many blocks fit along each dimension:\n\u2003\u2022 Along the 8\u2033 side: floor(8 / 4) = 2 blocks.\n\u2003\u2022 Along the 10\u2033 side: floor(10 / 2) = 5 blocks.\n\u2003\u2022 Along the 12\u2033 side: floor(12 / 3) = 4 blocks.\n\nStep 3: Multiply these to get the total number of blocks:\n\u2003Total blocks = 2 \u00d7 5 \u00d7 4 = 40.\n\nThus, the maximum number of wooden building blocks that can fit into the box is 40.\n\n[ANSWER]\nAnswer: 40\n",
+        "generated_tokens": 1010,
+        "pred_answer": "40",
+        "true_answer": "40",
+        "correct": true,
+        "id": "gsm8k_train_668"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \n3/5 of the mangoes on a mango tree are ripe. If Lindsay eats 60% of the ripe mangoes, calculate the number of ripe mangoes remaining if there were 400 mangoes on the tree to start with.\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 96\n",
+        "generated_tokens": 88,
+        "pred_answer": "96",
+        "true_answer": "96",
+        "correct": true,
+        "id": "gsm8k_train_671"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nCecil has $600. Catherine has $250 less than twice as much as Cecil while Carmela has $50 more than twice Cecil's money. How much money do they have altogether?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 2800\n",
+        "generated_tokens": 153,
+        "pred_answer": "2800",
+        "true_answer": "2800",
+        "correct": true,
+        "id": "gsm8k_train_680"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nStephanie is decorating 24 cupcakes for a birthday party, but she needs more candles. She currently has a total of 30 candles. She wants to decorate half of the cupcakes with 1 candle each and the other half of the cupcakes with 2 candles each. How many additional candles does Stephanie need to complete the cupcakes?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 6\n",
+        "generated_tokens": 153,
+        "pred_answer": "6",
+        "true_answer": "6",
+        "correct": true,
+        "id": "gsm8k_train_687"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nSabrina gave 10 cookies to her brother. Her mother gave Sabrina half the number of cookies she gave her brother. Then Sabrina gave two-thirds of her cookies to her sister. If Sabrina had 20 cookies at the start, how many cookies are left with her?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 5\n",
+        "generated_tokens": 152,
+        "pred_answer": "5",
+        "true_answer": "5",
+        "correct": true,
+        "id": "gsm8k_train_704"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nJimmy bought 3 pens for school for $1 each, 4 notebooks for $3 each and 2 folders for $5 each. If he paid with a $50 bill, how much change will he get back?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 25\n",
+        "generated_tokens": 152,
+        "pred_answer": "25",
+        "true_answer": "25",
+        "correct": true,
+        "id": "gsm8k_train_712"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nLance has 70 cents, Margaret has three-fourths of a dollar, Guy has two quarters and a dime, and Bill has six dimes. How many cents do they have combined?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 265\n",
+        "generated_tokens": 88,
+        "pred_answer": "265",
+        "true_answer": "265",
+        "correct": true,
+        "id": "gsm8k_train_716"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nHenry, John and Leo collected some seashells from the beach. Henry collected 11, Paul 24. If they initially collected 59 seashells in total and Leo gave a quarter of his collection to a younger kid they met, how many do they have in total now?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 53\n",
+        "generated_tokens": 408,
+        "pred_answer": "53",
+        "true_answer": "53",
+        "correct": true,
+        "id": "gsm8k_train_733"
     }
 ]
