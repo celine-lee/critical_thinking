@@ -412,5 +412,23 @@
         "true_answer": "2",
         "correct": true,
         "id": "gsm8k_test_584"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nBilly and Tiffany are having a contest to see how can run the most miles in a week. On Sunday, Monday, and Tuesday, Billy runs 1 mile each day and Tiffany runs 2 miles each day. On Wednesday, Thursday, and Friday, Billy runs 1 mile each day and Tiffany runs a 1/3 of a mile each day. On Saturday Tiffany assumes she's going to win and takes the day off. How many miles does Billy have to run on Saturday to tie Tiffany?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To determine how many miles Billy needs to run on Saturday to tie with Tiffany, we first need to calculate the total miles each of them runs from Sunday to Friday.\n\n**Billy's total miles from Sunday to Friday:**\n- Sunday to Tuesday: 1 mile each day for 3 days = 3 miles\n- Wednesday to Friday: 1 mile each day for 3 days = 3 miles\n- Total for Sunday to Friday = 3 + 3 = 6 miles\n\n**Tiffany's total miles from Sunday to Friday:**\n- Sunday to Tuesday: 2 miles each day for 3 days = 6 miles\n- Wednesday to Friday: 1/3 mile each day for 3 days = 1 mile (since 1/3 * 3 = 1)\n- Total for Sunday to Friday = 6 + 1 = 7 miles\n\nOn Saturday, Tiffany does not run any miles, so her total for the week remains 7 miles.\n\nTo tie with Tiffany, Billy needs to run a total of 7 miles for the week. He has already run 6 miles from Sunday to Friday, so he needs to run 1 more mile on Saturday.\n\nTherefore, Billy needs to run 1 mile on Saturday to tie with Tiffany.\n\n[ANSWER]\nAnswer: 1\n",
+        "generated_tokens": 271,
+        "pred_answer": "1",
+        "true_answer": "1",
+        "correct": true,
+        "id": "gsm8k_train_1567"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nDexter and Jay are using a gallon of white paint to paint the walls. Dexter used 3/8 of the gallon of paint while Jay used 5/8 of a gallon of paint. If a gallon is equal to 4 liters, how many liters of paint were left from Dexter and Jay combined?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To find out how many liters of paint were left, we first need to determine how much paint Dexter and Jay used together.\n\nDexter used \\( \\frac{3}{8} \\) of a gallon, and Jay used \\( \\frac{5}{8} \\) of a gallon. Together, they used:\n\n\\[\n\\frac{3}{8} + \\frac{5}{8} = \\frac{8}{8} = 1 \\text{ gallon}\n\\]\n\nSince they used the entire gallon of paint, there are no liters of paint left.\n\nGiven that 1 gallon is equal to 4 liters, the amount of paint left is:\n\n\\[\n4 \\text{ liters} - 4 \\text{ liters} = 0 \\text{ liters}\n\\]\n\nTherefore, the number of liters of paint left is:\n\n[ANSWER]\nAnswer: 0\n",
+        "generated_tokens": 183,
+        "pred_answer": "0",
+        "true_answer": "4",
+        "correct": false,
+        "id": "gsm8k_train_2882"
     }
 ]

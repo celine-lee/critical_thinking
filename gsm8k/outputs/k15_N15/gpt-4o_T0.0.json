@@ -439,5 +439,14 @@
         "true_answer": "131250",
         "correct": true,
         "id": "gsm8k_test_1086"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nRobby, Jaylen and Miranda are employed at a Cheesecake factory, earning $10 per hour. They work 10 hours a day, five days a week. Robby saves 2/5 of his salary, Jaylene saves 3/5 of his salary, while Miranda saves half of her salary. What are the combined savings of the three employees after four weeks?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To find the combined savings of Robby, Jaylen, and Miranda after four weeks, we need to follow these steps:\n\n1. **Calculate the weekly earnings for each employee:**\n\n   Each employee works 10 hours a day for 5 days a week, earning $10 per hour.\n\n   \\[\n   \\text{Weekly earnings} = 10 \\, \\text{hours/day} \\times 5 \\, \\text{days/week} \\times \\$10/\\text{hour} = \\$500\n   \\]\n\n2. **Calculate the savings for each employee per week:**\n\n   - **Robby's savings:**\n     \\[\n     \\text{Robby's savings per week} = \\frac{2}{5} \\times \\$500 = \\$200\n     \\]\n\n   - **Jaylen's savings:**\n     \\[\n     \\text{Jaylen's savings per week} = \\frac{3}{5} \\times \\$500 = \\$300\n     \\]\n\n   - **Miranda's savings:**\n     \\[\n     \\text{Miranda's savings per week} = \\frac{1}{2} \\times \\$500 = \\$250\n     \\]\n\n3. **Calculate the total savings for each employee after four weeks:**\n\n   - **Robby's total savings:**\n     \\[\n     \\text{Robby's total savings} = \\$200 \\times 4 = \\$800\n     \\]\n\n   - **Jaylen's total savings:**\n     \\[\n     \\text{Jaylen's total savings} = \\$300 \\times 4 = \\$1200\n     \\]\n\n   - **Miranda's total savings:**\n     \\[\n     \\text{Miranda's total savings} = \\$250 \\times 4 = \\$1000\n     \\]\n\n4. **Calculate the combined savings of all three employees after four weeks:**\n\n   \\[\n   \\text{Combined savings} = \\$800 + \\$1200 + \\$1000 = \\$3000\n   \\]\n\nTherefore, the combined savings of Robby, Jaylen, and Miranda after four weeks is:\n\n[ANSWER]\nAnswer: $3000\n",
+        "generated_tokens": 451,
+        "pred_answer": "3000",
+        "true_answer": "3000",
+        "correct": true,
+        "id": "gsm8k_train_6620"
     }
 ]

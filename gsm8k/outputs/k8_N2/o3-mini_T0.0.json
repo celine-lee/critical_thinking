@@ -574,5 +574,32 @@
         "true_answer": "60",
         "correct": true,
         "id": "gsm8k_test_1110"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nOn a road map, 1/4 inch represents 8 miles of actual road distance. The towns of Pence and Hillcrest are represented by points 3 3/8 inches apart on the map. What is the actual distance, in miles, between the towns?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 108\n",
+        "generated_tokens": 153,
+        "pred_answer": "108",
+        "true_answer": "108",
+        "correct": true,
+        "id": "gsm8k_train_256"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nJuanita enters a drumming contest. It costs $10 to enter. She has 2 minutes to hit as many drums as she can. If she hits 200 drums, she can start to make money, equal to 2.5 cents for every drum hit. How many drums does she hit if she lost $7.5 for joining the contest?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "We first interpret the situation carefully. The rules state that if Juanita hits 200 drums, she \u201cstarts to make money,\u201d which means only the drums hit beyond the first 200 earn her money at a rate of 2.5 cents per drum. Since she pays a $10 entry fee and ended up losing $7.50 overall, her earnings (from drumming beyond 200) must have been:\n\n\u2003\u2003Net result = Earnings \u2013 Entry fee\n\nA loss of $7.50 means:\n\u2003\u2003Earnings \u2013 $10 = \u2013$7.50  \n\u2003\u2003Earnings = $10 \u2013 $7.50 = $2.50\n\nLet x be the total number of drums she hit. Only the drums beyond 200 bring in money. Therefore, her earnings come from (x \u2013 200) drums at 2.5 cents each (or $0.025 each):\n\n\u2003\u20030.025 \u00d7 (x \u2013 200) = $2.50\n\nSolving for x:\n\u2003\u2003x \u2013 200 = $2.50 / $0.025 = 100\n\u2003\u2003x = 100 + 200 = 300\n\nThus, Juanita hit 300 drums.\n\n[ANSWER]\nAnswer: 300\n",
+        "generated_tokens": 1617,
+        "pred_answer": "300",
+        "true_answer": "300",
+        "correct": true,
+        "id": "gsm8k_train_4608"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nLouis is making himself a velvet suit for a formal event. The velvet fabric he chose was $24 per yard. He bought a pattern for $15, and two spools of silver thread for $3 each. If he spent $141 for the pattern, thread, and fabric, how many yards of fabric did he buy?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 5\n",
+        "generated_tokens": 88,
+        "pred_answer": "5",
+        "true_answer": "5",
+        "correct": true,
+        "id": "gsm8k_train_6355"
     }
 ]

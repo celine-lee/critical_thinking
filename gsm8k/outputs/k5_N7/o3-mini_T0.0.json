@@ -403,5 +403,41 @@
         "true_answer": "52",
         "correct": true,
         "id": "gsm8k_test_992"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nThere are 25 roses in a garden. There are 40 tulips. There are 35 daisies. What percentage of flowers are not roses?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 75\n",
+        "generated_tokens": 88,
+        "pred_answer": "75",
+        "true_answer": "75",
+        "correct": true,
+        "id": "gsm8k_train_55"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nJonathan enjoys walking and running for exercise, and he has three different exercise routines.  On Mondays, he walks at 2 miles per hour.  On Wednesdays, he walks at 3 miles per hour.  And on Fridays, he runs at 6 miles per hour.  On each exercise day, he travels 6 miles.  What is the combined total time, in hours, he spends exercising in a week?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 6\n",
+        "generated_tokens": 89,
+        "pred_answer": "6",
+        "true_answer": "6",
+        "correct": true,
+        "id": "gsm8k_train_5789"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nJenny is dividing up a pizza with 12 slices. She gives 1/3 to Bill and 1/4 to Mark. If Jenny eats 2 slices, how many slices are left?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 3\n",
+        "generated_tokens": 153,
+        "pred_answer": "3",
+        "true_answer": "3",
+        "correct": true,
+        "id": "gsm8k_test_396"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nTobias, Chikote, and Igneous are the three little wolves who live in the forest and howl at the moon every night. When Tobias howls, each howl lasts for a total of 20 seconds.  Chikote howls for twice as long as Tobias.  And Igneous howls for as long as the other two wolves combined.  What is the combined length of time, in minutes, of the three wolves' howls?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 2\n",
+        "generated_tokens": 152,
+        "pred_answer": "2",
+        "true_answer": "2",
+        "correct": true,
+        "id": "gsm8k_test_994"
     }
 ]

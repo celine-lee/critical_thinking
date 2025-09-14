@@ -601,5 +601,14 @@
         "true_answer": "1",
         "correct": true,
         "id": "gsm8k_train_6307"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nMoses and Tiffany want to see who is faster. But instead of a race, they just start running down the block. Tiffany runs 6 blocks in 3 minutes. Moses runs 12 blocks in 8 minutes. What is the speed (defined as blocks per minute) of the runner with the higher average speed?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To find the speed of each runner, we need to calculate the number of blocks they run per minute.\n\n**Tiffany's speed:**\n\nTiffany runs 6 blocks in 3 minutes. Her speed is calculated as follows:\n\n\\[\n\\text{Tiffany's speed} = \\frac{6 \\text{ blocks}}{3 \\text{ minutes}} = 2 \\text{ blocks per minute}\n\\]\n\n**Moses's speed:**\n\nMoses runs 12 blocks in 8 minutes. His speed is calculated as follows:\n\n\\[\n\\text{Moses's speed} = \\frac{12 \\text{ blocks}}{8 \\text{ minutes}} = 1.5 \\text{ blocks per minute}\n\\]\n\nComparing the two speeds, Tiffany's speed is 2 blocks per minute, and Moses's speed is 1.5 blocks per minute. Therefore, Tiffany is the faster runner.\n\nThe speed of the runner with the higher average speed is 2 blocks per minute.\n\n[ANSWER]\nAnswer: 2\n",
+        "generated_tokens": 216,
+        "pred_answer": "2",
+        "true_answer": "2",
+        "correct": true,
+        "id": "gsm8k_train_3873"
     }
 ]

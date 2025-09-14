@@ -682,5 +682,248 @@
         "true_answer": "168",
         "correct": true,
         "id": "gsm8k_train_877"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nRandy just turned 12 and started playing the piano. His friend Sheila told him about the 10,000-hour rule which says, after 10,000 hours of practice, you become an expert or master in your field. If Randy wants to become a piano expert before he is 20, how many hours a day will he need to practice if he practices every day, Monday \u2013 Friday, and takes two weeks off for vacation each year?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To solve the problem, we first calculate how many practice days Randy will have in each year:\n\n\u2022 There are 52 weeks in a year, and since he practices Monday through Friday, that gives him 5 days per week.\n\u2022 In a full year without any vacations, he\u2019d practice 52 \u00d7 5 = 260 days.\n\u2022 However, he takes 2 weeks off for vacation. Since those 2 weeks account for 2 \u00d7 5 = 10 practice days, he practices 260 \u2212 10 = 250 days per year.\n\nRandy has 8 years (from age 12 to age 20) to complete 10,000 hours. Over 8 years, the total number of practice days is:\n\u2003\u20038 years \u00d7 250 days/year = 2000 days.\n\nFinally, to find how many hours he needs to practice per day:\n\u2003\u200310,000 total hours \u00f7 2000 days = 5 hours per day.\n\n[ANSWER]\nAnswer: 5\n",
+        "generated_tokens": 606,
+        "pred_answer": "5",
+        "true_answer": "5",
+        "correct": true,
+        "id": "gsm8k_train_212"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nCarol is an aviation engineer deciding how much fuel to put in a jet. The empty plane needs 20 gallons of fuel per mile. Each person on the plane increases this amount by 3 gallons per mile, and each bag increases it by 2 gallons per mile. If there are 30 passengers and 5 flight crew, and each person brought two bags, how many gallons of fuel does the plane need for a 400-mile trip?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "To solve the problem, we first determine the total fuel consumption per mile by considering the base fuel needed by the plane, the additional consumption due to each person on board, and the extra fuel required for each bag.\n\n1. The empty plane consumes 20 gallons of fuel per mile.\n\n2. There are 30 passengers and 5 flight crew, so there are 35 people on board. Each person adds 3 gallons per mile:\n\u2003\u200335 \u00d7 3 = 105 gallons per mile.\n\n3. Each person brings 2 bags, so there are a total of:\n\u2003\u200335 \u00d7 2 = 70 bags.\n\u2003Each bag adds 2 gallons per mile, so the bags add:\n\u2003\u200370 \u00d7 2 = 140 gallons per mile.\n\n4. The total fuel consumption per mile is the sum of all three components:\n\u2003\u200320 (empty plane) + 105 (people) + 140 (bags) = 265 gallons per mile.\n\n5. For a 400-mile trip, the total fuel required is:\n\u2003\u2003265 gallons/mile \u00d7 400 miles = 106000 gallons.\n\nThus, the plane needs 106000 gallons of fuel for the 400-mile trip.\n\n[ANSWER]\nAnswer: 106000\n",
+        "generated_tokens": 528,
+        "pred_answer": "106000",
+        "true_answer": "106000",
+        "correct": true,
+        "id": "gsm8k_train_743"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nJack went to a supermarket with $100 and bought 4 bottles of water. Then his mother called him and asked him to buy twice as many bottles as he already bought. Each bottle cost $2. Finally, he also bought half a pound of cheese and 1 pound of cheese costs $10. How much money does Jack have remaining?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "First, note that Jack initially bought 4 bottles of water.\n\nSome might wonder whether his mom\u2019s request means to add twice the number of bottles he already bought (i.e. 2\u00d74 = 8 additional bottles, resulting in 12 total) or to have a total of twice what he originally had (i.e. 2\u00d74 = 8 bottles in total). The phrasing \"buy twice as many bottles as he already bought\" is most naturally interpreted as having a total of 2\u00d74 = 8 bottles. Therefore, after his mother\u2019s call, he ends up with 8 bottles.\n\nEach bottle costs $2, so the total cost for the bottles is:\n\u2003\u20038 bottles \u00d7 $2 per bottle = $16\n\nHe also buys half a pound of cheese. Since 1 pound costs $10, half a pound costs:\n\u2003\u2003$10 \u00f7 2 = $5\n\nAdding the costs together:\n\u2003\u2003Total spent = $16 (water) + $5 (cheese) = $21\n\nJack started with $100. Therefore, his remaining money is:\n\u2003\u2003$100 \u2212 $21 = $79\n\n[ANSWER]\nAnswer: $79\n",
+        "generated_tokens": 2246,
+        "pred_answer": "79",
+        "true_answer": "71",
+        "correct": false,
+        "id": "gsm8k_train_886"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nTeddy has 7 dogs and 8 cats. Ben has 9 more dogs than Teddy, and Dave has 13 more cats and 5 less dogs than Teddy. How many pets do all of them have combined?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 54\n",
+        "generated_tokens": 344,
+        "pred_answer": "54",
+        "true_answer": "54",
+        "correct": true,
+        "id": "gsm8k_train_888"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nKylie makes 10 beaded necklaces on Monday and 2 beaded necklaces on Tuesday. Then Kylie makes 5 beaded bracelets and 7 beaded earrings on Wednesday. 20 beads are needed to make one beaded necklace. 10 beads are needed to make one beaded bracelet. 5 beads are needed to make one beaded earring. How many beads does Kylie use in total to make her jewelry?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 325\n",
+        "generated_tokens": 152,
+        "pred_answer": "325",
+        "true_answer": "325",
+        "correct": true,
+        "id": "gsm8k_train_893"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nBetty picked 16 strawberries. Matthew picked 20 more strawberries than Betty and twice as many as Natalie. They used their strawberries to make jam. One jar of jam used 7 strawberries and they sold each jar at $4. How much money were they able to make from the strawberries they picked?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $40\n",
+        "generated_tokens": 218,
+        "pred_answer": "40",
+        "true_answer": "40",
+        "correct": true,
+        "id": "gsm8k_train_912"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nThere were 90 people at the summer picnic.  There were 50 soda cans, 50 plastic bottles of sparkling water, and 50 glass bottles of juice.  One-half of the guests drank soda, one-third of the guests drank sparkling water, and four-fifths of the juices were consumed.  How many recyclable cans and bottles were collected?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 115\n",
+        "generated_tokens": 280,
+        "pred_answer": "115",
+        "true_answer": "115",
+        "correct": true,
+        "id": "gsm8k_train_921"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nCadence has worked for her new company five months longer than she worked for her old company. If she worked at her old company for 3 years earning $5000 per month, and she's now earning 20% more in the new company, calculate the total amount of money she's earned in both companies in the period she's worked for them?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $426,000\n",
+        "generated_tokens": 474,
+        "pred_answer": "426000",
+        "true_answer": "426000",
+        "correct": true,
+        "id": "gsm8k_train_922"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nBailey needs to buy 2 new sets of towels for the guest bathroom and 4 new sets for her master bathroom.  The set of towels for the guest bathroom are $40.00 each and the master bathroom set is $50.00 each.  The store is currently offering 20% off so how much will Bailey spend on towel sets?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $224.00\n",
+        "generated_tokens": 154,
+        "pred_answer": "224.00",
+        "true_answer": "224",
+        "correct": true,
+        "id": "gsm8k_train_926"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nA club opens up and charges $20 to enter.  James buys 2 rounds for his 5 friends.  He also buys 6 drinks for himself. Drinks cost $6 each.  He decides to eat some food so he orders some fried chicken which costs $14.  He leaves a 30% tip on everything he orders.  How much did he spend for the night?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "First, we need to determine the costs before the tip.\n\n1. James buys 2 rounds for his 5 friends. Assuming a \u201cround\u201d means one drink per friend, that amounts to:\n\u2003\u20032 rounds \u00d7 5 drinks = 10 drinks.\n\u2003\u2003Since each drink costs $6, the cost for his friends\u2019 drinks is 10 \u00d7 $6 = $60.\n\n2. James also buys 6 drinks for himself:\n\u2003\u20036 drinks \u00d7 $6 = $36.\n\n3. He orders fried chicken for $14.\n\nAdding these up (the cost of the drinks and food that he \u201corders\u201d):\n\u2003\u2003$60 (friends\u2019 drinks) + $36 (his drinks) + $14 (chicken) = $110.\n\nNext, he leaves a 30% tip on everything he orders. Here \u201ceverything he orders\u201d refers to his food and drinks (but not the club entrance fee). Thus, his tip is:\n\u2003\u200330% of $110 = 0.30 \u00d7 $110 = $33.\n\nFinally, he also pays a $20 club entrance fee. This fee is separate from the items on which he leaves a tip.\n\nNow, adding everything together:\n\u2003\u2003Club fee: $20\n\u2003\u2003Orders: $110\n\u2003\u2003Tip: $33\n\nTotal spent = $20 + $110 + $33 = $163.\n\n[ANSWER]\nAnswer: $163\n",
+        "generated_tokens": 1718,
+        "pred_answer": "163",
+        "true_answer": "163",
+        "correct": true,
+        "id": "gsm8k_train_996"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nA plant supplier was able to sell 20 pieces of orchids for $50 each and 15 pieces potted Chinese money plant for $25. The money he earned was then used to pay his two workers $40 each and to buy new pots worth $150. How much money was left from the plant supplier's earnings?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 1145\n",
+        "generated_tokens": 217,
+        "pred_answer": "1145",
+        "true_answer": "1145",
+        "correct": true,
+        "id": "gsm8k_train_1001"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nThere were 600 people in the stadium when the football game started. Before the game was over, one-fourth of the boys and one-eighth of the girls left early. How many people remained to see the end of the game if there were 240 girls at the beginning of the game?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 480\n",
+        "generated_tokens": 153,
+        "pred_answer": "480",
+        "true_answer": "480",
+        "correct": true,
+        "id": "gsm8k_train_1031"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nMarge planted 23 seeds in her garden. Five of the seeds never grew into plants. A third of the remaining seeds grew, but the plants were eaten by squirrels and rabbits. A third of the number of uneaten plants were strangled by weeds. Marge pulled two weeds, but liked the flowers on one weed and let the plant grow as part of her garden. How many plants did Marge end up with?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "Let\u2019s work through the events step by step. One acceptable interpretation is as follows:\n\n1. Marge planted 23 seeds. However, 5 of them \u201cnever grew\u201d (failed to germinate). That leaves 23 \u2013 5 = 18 seeds that actually germinated into seedlings.\n\n2. Next, \u201ca third of the remaining seeds grew, but the plants were eaten by squirrels and rabbits.\u201d One reading is that of the 18 viable seeds, 1/3 (that is, 18 \u00f7 3 = 6) produced plants\u2014and unfortunately, those 6 plants were all subsequently eaten. That leaves the remaining seedlings untouched by hungry critters. In our interpretation, the \u201cuneaten\u201d plants (from those that did germinate) are 18 \u2013 6 = 12.\n\n3. Then, \u201ca third of the number of uneaten plants were strangled by weeds.\u201d One third of 12 is 4. So 4 plants become strangled by weeds, while the other 12 \u2013 4 = 8 remain healthy.\n\n4. Finally, Marge \u201cpulled two weeds, but liked the flowers on one weed and let the plant grow as part of her garden.\u201d In other words, of the 4 plants strangled by weeds, she rescued 2 by pulling the weeds, and she also decided to keep the plant whose weed she did not pull. Thus, she recovers 2 + 1 = 3 plants from the group that was initially strangled.\n\n5. Adding the healthy plants (8) to the recovered plants (3) gives a final count of 8 + 3 = 11 plants.\n\nThus, Marge ends up with 11 plants.\n\n[ANSWER]\nAnswer: 11\n",
+        "generated_tokens": 2999,
+        "pred_answer": "11",
+        "true_answer": "9",
+        "correct": false,
+        "id": "gsm8k_train_1038"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nHarry owns 3 geckos, 2 iguanas, and 4 snakes. If he spends $10 to feed each snake, $5 to feed each iguana, and $15 to feed each gecko every month, how much does he spend every year to feed all his pets?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 1140\n",
+        "generated_tokens": 153,
+        "pred_answer": "1140",
+        "true_answer": "1140",
+        "correct": true,
+        "id": "gsm8k_train_1064"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nMaria has 4 dimes, 4 quarters, and 7 nickels in her piggy bank. Her mom gives her 5 quarters. How much money, in dollars, does Maria have now?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $3.00\n",
+        "generated_tokens": 218,
+        "pred_answer": "3.00",
+        "true_answer": "3",
+        "correct": true,
+        "id": "gsm8k_train_1069"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \n1,800 fish swim westward, 3,200 swim eastward, and 500 swim north. What is the number of fish left in the sea, if fishers catch 2/5 of the fish that swam eastward and 3/4 of the fish that swam westward?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 2870\n",
+        "generated_tokens": 345,
+        "pred_answer": "2870",
+        "true_answer": "2870",
+        "correct": true,
+        "id": "gsm8k_train_1073"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nStella\u2019s antique shop has 3 dolls, 2 clocks and 5 glasses for sale. She sells the dolls for $5 each. The clocks are priced at $15 each. The glasses are priced at $4 each. If she spent $40 to buy everything and she sells all of her merchandise, how much profit will she make?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $25\n",
+        "generated_tokens": 218,
+        "pred_answer": "25",
+        "true_answer": "25",
+        "correct": true,
+        "id": "gsm8k_train_1076"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nNine hundred tickets were sold to a concert. Three-fourths of those who bought the ticket came before the start of the concert. Five-ninths of the remaining came few minutes after the first song. Eighty people arrived during the middle part of the concert while the rest did not go. How many of those who bought the tickets did not go?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 20\n",
+        "generated_tokens": 217,
+        "pred_answer": "20",
+        "true_answer": "20",
+        "correct": true,
+        "id": "gsm8k_train_1104"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nGina had $400. She gave 1/4 of her money to her mom,  used 1/8  of her money to buy clothes,  gave 1/5 of her money to a charity,  and kept the remaining money. How much did Gina keep?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 170\n",
+        "generated_tokens": 216,
+        "pred_answer": "170",
+        "true_answer": "170",
+        "correct": true,
+        "id": "gsm8k_train_1105"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nWhen all her clothes are washed and in her closet, Brie has 12 blouses, 6 skirts, and 8 slacks.  Today in her hamper, she has 75% of her blouses, 50% of her skirts, and 25% of her slacks.  How many pieces of clothing will she need to put in the washer?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 14\n",
+        "generated_tokens": 153,
+        "pred_answer": "14",
+        "true_answer": "14",
+        "correct": true,
+        "id": "gsm8k_train_1124"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nMarcus is having a water balloon party. He has 100 balloons. Each balloon holds 3 ounces of water. He can buy 50 ounces of water for $2.5 a bottle. If he walks into the store with 2 $10 bills, how much change will he have after he buys all the water he needs?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $5\n",
+        "generated_tokens": 218,
+        "pred_answer": "5",
+        "true_answer": "5",
+        "correct": true,
+        "id": "gsm8k_train_1133"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nA basketball team played 40 games and won 70% of the games. It still had 10 games to play. How many games can they lose to win 60% of their games?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 8\n",
+        "generated_tokens": 506,
+        "pred_answer": "8",
+        "true_answer": "8",
+        "correct": true,
+        "id": "gsm8k_train_1140"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nA pet store owner had 12 birds, 9 puppies, 5 cats, and 15 spiders. Half the birds were sold and 3 puppies were adopted. Then, someone left the spider enclosure open and 7 of them went loose. How many animals does the pet store owner have left?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 25\n",
+        "generated_tokens": 280,
+        "pred_answer": "25",
+        "true_answer": "25",
+        "correct": true,
+        "id": "gsm8k_train_1141"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nJane's mother agreed to pay her $.50 for every flower bulb that Jane planted.  Jane planted 20 tulip bulbs and half that amount of iris bulbs.  She also planted 30 daffodil bulbs and three times that amount of crocus bulbs.  How much money did Jane earn?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $75\n",
+        "generated_tokens": 152,
+        "pred_answer": "75",
+        "true_answer": "75",
+        "correct": true,
+        "id": "gsm8k_train_1146"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nMandy started reading books with only 8 pages when she was 6 years old. By the time she was twice that age, she was reading books 5 times longer, and 8 years later, she was reading books 3 times longer than that. Presently, she reads books that are 4 times the previous length. How many pages do the books she reads now have?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: 480\n",
+        "generated_tokens": 152,
+        "pred_answer": "480",
+        "true_answer": "480",
+        "correct": true,
+        "id": "gsm8k_train_1149"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nJohn gets his pool cleaned every 3 days.  It cost $150 each time and he gives the guy a 10% tip each time he comes to clean.  Then twice a month he needs to use $200 of chemicals.  How much does his pool cost a month?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $2050\n",
+        "generated_tokens": 282,
+        "pred_answer": "2050",
+        "true_answer": "2050",
+        "correct": true,
+        "id": "gsm8k_train_1153"
+    },
+    {
+        "query": "You are a smart and helpful AI assistant. Please help me with the following task.\n\nAnswer the following mathematics question:\n        \nPearl wants to order 5 monogrammed Christmas stockings for each of her 5 grandchildren and her own 4 children.  The stockings are $20.00 each and currently 10% off.  The monogramming will costs $5.00 per stocking.  How much will the stockings costs?\nProvide your final answer following this template: [ANSWER]\nAnswer: YOUR ANSWER\n[/ANSWER]",
+        "model_generation": "[ANSWER]\nAnswer: $1035\n",
+        "generated_tokens": 412,
+        "pred_answer": "1035",
+        "true_answer": "1035",
+        "correct": true,
+        "id": "gsm8k_train_1154"
     }
 ]
